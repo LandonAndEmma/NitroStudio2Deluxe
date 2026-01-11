@@ -167,7 +167,6 @@ namespace NitroStudio2 {
         /// Play click.
         /// </summary>
         public void PlayClick(object sender, EventArgs e) {
-            Player.SoundOut.Stop();
             Player.Stop();
             Player.LoadStream(WA.Waves[tree.SelectedNode.Index]);
             kermalisPosition.Maximum = (int)Player.GetLength();
@@ -180,21 +179,25 @@ namespace NitroStudio2 {
         /// Pause click.
         /// </summary>
         public void PauseClick(object sender, EventArgs e) {
-            Player.SoundOut.Pause();
+            if (Player != null) {
+                Player.Pause();
+            }
         }
 
         /// <summary>
         /// Stop click.
         /// </summary>
         public void StopClick(object sender, EventArgs e) {
-            Player.SoundOut.Stop();
+            if (Player != null) {
+                Player.Stop();
+            }
         }
 
         /// <summary>
         /// Volume changed.
         /// </summary>
         public void VolumeChanged(object sender, EventArgs e) {
-            Player.SoundOut.Volume = kermalisVolumeSlider.Value / 100f;
+            // Note: Volume control through SoundOut not available with current NAudio integration
         }
 
         /// <summary>

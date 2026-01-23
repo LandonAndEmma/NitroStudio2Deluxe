@@ -7,6 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
 
 namespace NitroFileLoader {
 
@@ -269,6 +272,7 @@ namespace NitroFileLoader {
             }
 
             //Read wave archive info.
+            List<string> invalidWaveErrors = new List<string>();
             r.JumpToOffset("warInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
@@ -280,17 +284,42 @@ namespace NitroFileLoader {
                     WaveArchives.Last().Name = ind > (warNames.Count - 1) ? "WAVE_ARCHIVE_" + ind : warNames[ind];
                     r.Jump(fileOffs[(int)WaveArchives.Last().ReadingFileId].Item1, true);
                     WaveArchives.Last().File = r.ReadFile<WaveArchive>() as WaveArchive;
-                    string md5 = WaveArchives.Last().File.Md5Sum;
-                    if (!md5Ids.ContainsKey(md5)) {
-                        md5Ids.Add(md5, new List<uint>() { WaveArchives.Last().ReadingFileId });
-                    } else {
-                        if (!md5Ids[md5].Contains(WaveArchives.Last().ReadingFileId)) {
-                            WaveArchives.Last().ForceIndividualFile = true;
+                    
+                    try {
+                        string md5 = WaveArchives.Last().File.Md5Sum;
+                        if (!md5Ids.ContainsKey(md5)) {
+                            md5Ids.Add(md5, new List<uint>() { WaveArchives.Last().ReadingFileId });
+                        } else {
+                            if (!md5Ids[md5].Contains(WaveArchives.Last().ReadingFileId)) {
+                                WaveArchives.Last().ForceIndividualFile = true;
+                            }
                         }
+                    } catch (InvalidWaveException ex) {
+                        string archiveName = WaveArchives.Last().Name;
+                        int waveIndex = -1;
+                        
+                        if (WaveArchives.Last().File != null && WaveArchives.Last().File.Waves != null) {
+                            for (int w = 0; w < WaveArchives.Last().File.Waves.Count; w++) {
+                                if (WaveArchives.Last().File.Waves[w].SampleRate == 0) {
+                                    waveIndex = w;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        string errorMsg = $"Wave Archive '{archiveName}' (Index {ind})";
+                        if (waveIndex >= 0) {
+                            errorMsg += $" - Wave {waveIndex}: {ex.Message}";
+                        } else {
+                            errorMsg += $": {ex.Message}";
+                        }
+                        
+                        invalidWaveErrors.Add(errorMsg);
                     }
                 }
                 ind++;
             }
+
 
             //Read bank info.
             r.JumpToOffset("bankInfo");
@@ -442,6 +471,15 @@ namespace NitroFileLoader {
                     }
                 }
                 ind++;
+            }
+
+            //Display error dialog if there are invalid waves.
+            if (invalidWaveErrors.Count > 0) {
+                string message = "The following wave archives contain invalid wave data (sample rate = 0) and could not be verified:\n\n";
+                message += string.Join("\n", invalidWaveErrors);
+                message += "\n\nThe file will continue loading with these unverified waves. Click OK to proceed.";
+                
+                MessageBox.Show(message, "Invalid Wave Data Detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
         }

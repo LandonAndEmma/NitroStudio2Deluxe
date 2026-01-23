@@ -189,12 +189,16 @@ namespace NitroFileLoader {
                     case InstrumentType.Null:
                         return "\t" + ind + " : NULL";
                     default:
-                        if (lastGroup != n.WarId) {
-                            ret.Add("@WGROUP " + n.WarId);
-                            lastGroup = n.WarId;
+                        if (WaveArchives[n.WarId] != null) {
+                            if (lastGroup != n.WarId) {
+                                ret.Add("@WGROUP " + n.WarId);
+                                lastGroup = n.WarId;
+                            }
+                            return "\t" + ind + " : SWAV, \"" + WaveArchives[n.WarId].Name + "/" + n.WaveId.ToString("D4") + ".adpcm.swav" + "\", " + (Notes)n.BaseNote + ", " + n.Attack + ", " + n.Decay + ", " + n.Sustain + ", " + n.Release + ", " + n.Pan;
                         }
-                        return "\t" + ind + " : SWAV, \"" + WaveArchives[n.WarId].Name + "/" + n.WaveId.ToString("D4") + ".adpcm.swav" + "\", " + (Notes)n.BaseNote + ", " + n.Attack + ", " + n.Decay + ", " + n.Sustain + ", " + n.Release + ", " + n.Pan;
+                        break;
                 }
+                return "";
             }
 
             //Write the file.

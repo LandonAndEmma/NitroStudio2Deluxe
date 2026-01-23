@@ -289,7 +289,9 @@ namespace NitroStudio2 {
                 }
                 ((DataGridViewTextBoxCell)v.Cells[3]).Value = e.WaveId;
                 ((DataGridViewTextBoxCell)v.Cells[4]).Value = e.WarId;
-                ((DataGridViewComboBoxCell)v.Cells[5]).Value = ((DataGridViewComboBoxCell)v.Cells[5]).Items[e.BaseNote];
+                var baseNoteCombo = (DataGridViewComboBoxCell)v.Cells[5];
+                byte baseNoteIndex = Math.Min(e.BaseNote, (byte)(baseNoteCombo.Items.Count - 1));
+                baseNoteCombo.Value = baseNoteCombo.Items[baseNoteIndex];
                 ((DataGridViewTextBoxCell)v.Cells[6]).Value = e.Attack;
                 ((DataGridViewTextBoxCell)v.Cells[7]).Value = e.Decay;
                 ((DataGridViewTextBoxCell)v.Cells[8]).Value = e.Sustain;

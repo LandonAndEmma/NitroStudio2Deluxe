@@ -148,6 +148,12 @@ namespace NitroFileLoader {
             //Data.
             w.Write(Loops);
             w.Write((ushort)SampleRate);
+            
+            //Validate sample rate to prevent division by zero.
+            if (SampleRate == 0) {
+                throw new InvalidWaveException("Wave has invalid sample rate (0). This wave cannot be serialized.");
+            }
+            
             ushort nTimeSampleRate = (ushort)(16756991 / SampleRate);
             if (BackupNTime != 0) { w.Write(BackupNTime); } else { w.Write(nTimeSampleRate); }
             if (Loops) { w.Write((ushort)(Sample2Offset(LoopStart, pcmFormat) / 4)); } else { w.Write((ushort)(pcmFormat == PcmFormat.Encoded ? 1 : 0)); }
@@ -238,6 +244,14 @@ namespace NitroFileLoader {
     /// </summary>
     public enum PcmFormat : byte {
         SignedPCM8, PCM16, Encoded
+    }
+
+    /// <summary>
+    /// Exception for invalid wave data.
+    /// </summary>
+    public class InvalidWaveException : Exception {
+        public InvalidWaveException(string message) : base(message) { }
+        public InvalidWaveException(string message, Exception innerException) : base(message, innerException) { }
     }
 
 }

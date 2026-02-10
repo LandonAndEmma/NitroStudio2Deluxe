@@ -83,7 +83,7 @@ namespace GotaSequenceLib.Playback {
         /// <returns>The true volume.</returns>
         public int GetVolume() {
             int lfo = LFOType == LFOType.Volume ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
-            lfo = (int)(((lfo & ~0xFC000000) >> 8) | ((lfo < 0 ? -1 : 0) << 6) | (((uint)lfo >> 26) << 18));
+            lfo = (int)(((uint)(lfo & ~0xFC000000) >> 8) | ((uint)((lfo < 0 ? -1 : 0) << 6)) | (((uint)lfo >> 26) << 18));
             return Utils.SustainTable[Math.Min((byte)127, _player.Volume)] + Utils.SustainTable[Math.Min((byte)127, Volume)] + Utils.SustainTable[Expression] + lfo;
         }
 
@@ -93,7 +93,7 @@ namespace GotaSequenceLib.Playback {
         /// <returns>The true pan.</returns>
         public sbyte GetPan() {
             int lfo = LFOType == LFOType.Panpot ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
-            lfo = (int)(((lfo & ~0xFC000000) >> 8) | ((lfo < 0 ? -1 : 0) << 6) | (((uint)lfo >> 26) << 18));
+            lfo = (int)(((uint)(lfo & ~0xFC000000) >> 8) | ((uint)((lfo < 0 ? -1 : 0) << 6)) | (((uint)lfo >> 26) << 18));
             int p = Panpot + lfo;
             if (p < -0x40) {
                 p = -0x40;

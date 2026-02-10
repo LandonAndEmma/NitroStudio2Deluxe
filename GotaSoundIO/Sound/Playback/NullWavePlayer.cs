@@ -32,7 +32,9 @@ namespace GotaSoundIO.Sound.Playback {
         /// <summary>
         /// Playback stopped.
         /// </summary>
+#pragma warning disable CS0067
         public event EventHandler<StoppedEventArgs> PlaybackStopped;
+#pragma warning restore CS0067
 
         /// <summary>
         /// Play.

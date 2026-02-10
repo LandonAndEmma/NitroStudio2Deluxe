@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using GotaSequenceLib;
 using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
-using Kermalis.SoundFont2;
 using NitroFileLoader;
 
 namespace NitroStudio2 {
@@ -601,7 +600,7 @@ namespace NitroStudio2 {
         /// <summary>
         /// Key press.
         /// </summary>
-        public void KeyPress(object sender, KeyPressEventArgs e) {
+        public new void KeyPress(object sender, KeyPressEventArgs e) {
             if (e.KeyChar == ' ' && tree.SelectedNode.Parent != null) {
                 if (tree.SelectedNode.Parent == null) { return; }
                 Player.Stop();

@@ -3,7 +3,6 @@ using GotaSequenceLib;
 using GotaSequenceLib.Playback;
 using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
-using Kermalis.SoundFont2;
 using Microsoft.VisualBasic;
 using NitroFileLoader;
 using System;
@@ -1624,7 +1623,7 @@ namespace NitroStudio2 {
         /// <summary>
         /// Key press.
         /// </summary>
-        public void KeyPress(object sender, KeyPressEventArgs e) {
+        public new void KeyPress(object sender, KeyPressEventArgs e) {
             if (e.KeyChar == ' ' && tree.SelectedNode.Parent != null) {
                 if (tree.SelectedNode.Parent.Parent != null || tree.SelectedNode.Parent.Name == "sequences") {
                     PlayClick(sender, e);

@@ -668,10 +668,6 @@ namespace GotaSequenceLib {
             //No notewait.
             commands.Add(new SequenceCommand() { CommandType = SequenceCommands.NoteWait, Parameter = false });
 
-            //Loop start command index.
-            int loopStart = -1;
-            bool loopAdded = false;
-
             //Read each event.
             int eventNum = 0;
             int lastTick = 0;

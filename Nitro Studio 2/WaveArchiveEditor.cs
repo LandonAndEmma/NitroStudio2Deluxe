@@ -419,7 +419,7 @@ namespace NitroStudio2 {
         /// <summary>
         /// Key press.
         /// </summary>
-        public void KeyPress(object sender, KeyPressEventArgs e) {
+        public new void KeyPress(object sender, KeyPressEventArgs e) {
             if (e.KeyChar == ' ' && tree.SelectedNode.Parent != null) {
                 PlayClick(sender, e);
             }

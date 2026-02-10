@@ -592,7 +592,7 @@ namespace GotaSoundIO.IO {
             //Flags.
             ulong u = 0;
             for (int i = 0; i < flags.Length; i++) {
-                if (flags[i]) { u |= (ulong)(0b1 << i); }
+                if (flags[i]) { u |= (uint)(0b1 << i); }
             }
 
             //Write.

@@ -59,7 +59,7 @@ namespace NitroFileLoader {
         /// </summary>
         /// <param name="w">The writer.</param>
         public void Write(FileWriter w) {
-            w.Write((uint)(ReadingFileId | (LoadIndividually ? 0x01000000 : 0)));
+            w.Write((uint)((uint)ReadingFileId | (LoadIndividually ? 0x01000000U : 0)));
         }
 
         /// <summary>

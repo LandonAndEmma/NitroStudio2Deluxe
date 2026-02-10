@@ -144,6 +144,26 @@ namespace NitroFileLoader {
         }
 
         /// <summary>
+        /// Get hash code.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode() {
+            unchecked {
+                int hash = 17;
+                hash = hash * 31 + Attack.GetHashCode();
+                hash = hash * 31 + BaseNote.GetHashCode();
+                hash = hash * 31 + Decay.GetHashCode();
+                hash = hash * 31 + InstrumentType.GetHashCode();
+                hash = hash * 31 + Pan.GetHashCode();
+                hash = hash * 31 + Release.GetHashCode();
+                hash = hash * 31 + Sustain.GetHashCode();
+                hash = hash * 31 + WarId.GetHashCode();
+                hash = hash * 31 + WaveId.GetHashCode();
+                return hash;
+            }
+        }
+
+        /// <summary>
         /// Duplicate the note info.
         /// </summary>
         /// <returns>New note info clone.</returns>

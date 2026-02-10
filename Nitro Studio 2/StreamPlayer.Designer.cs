@@ -3,7 +3,9 @@
         /// <summary>
         /// Required designer variable.
         /// </summary>
+#pragma warning disable CS0414
         private System.ComponentModel.IContainer components = null;
+#pragma warning restore CS0414
 
         #region Windows Form Designer generated code
 

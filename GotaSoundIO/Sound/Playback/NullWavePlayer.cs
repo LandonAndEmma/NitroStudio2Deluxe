@@ -24,6 +24,11 @@ namespace GotaSoundIO.Sound.Playback {
         public IWaveProvider OutputWaveProvider { get; set; }
 
         /// <summary>
+        /// Output wave format.
+        /// </summary>
+        public WaveFormat OutputWaveFormat => OutputWaveProvider?.WaveFormat;
+
+        /// <summary>
         /// Playback state.
         /// </summary>
         public PlaybackState PlaybackState => throw new NotImplementedException();

@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>GotaSoundBank</RootNamespace>
     <AssemblyName>GotaSoundBank</AssemblyName>
     <Deterministic>true</Deterministic>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>

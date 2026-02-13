@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>GotaSequenceLib</RootNamespace>
     <AssemblyName>GotaSequenceLib</AssemblyName>
     <Deterministic>true</Deterministic>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Asio" Version="2.2.1" />
     <PackageReference Include="NAudio.Core" Version="2.2.1" />
@@ -17,8 +18,8 @@
     <PackageReference Include="NAudio.WinForms" Version="2.2.1" />
     <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" />
-    <PackageReference Include="System.Security.AccessControl" Version="4.7.0" />
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

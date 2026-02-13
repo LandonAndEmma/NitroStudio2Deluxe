@@ -4,7 +4,7 @@ using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
 using ScintillaNET;
-using ScintillaNET_FindReplaceDialog;
+//using ScintillaNET_FindReplaceDialog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -30,7 +30,7 @@ namespace NitroStudio2 {
         int prevLine = -1;
         bool prevLineBlank = true;
         int seqTableStartLine = -1;
-        private FindReplace MyFindReplace;
+        //private FindReplace MyFindReplace;
         public bool PositionBarFree = true;
         public Timer Timer = new Timer();
 
@@ -132,8 +132,8 @@ namespace NitroStudio2 {
             seqArcSeqBox.ValueChanged += new EventHandler(SeqArcBoxChanged);
             seqArcSeqComboBox.SelectedIndexChanged += new EventHandler(SeqArcComboBoxChanged);
             status.Text = "Editing A Sequence Archive.";
-            MyFindReplace = new FindReplace();
-            MyFindReplace.Scintilla = sequenceEditor;
+            //MyFindReplace = new FindReplace();
+            //MyFindReplace.Scintilla = sequenceEditor;
             sequenceEditor.KeyDown += new KeyEventHandler(genericScintilla_KeyDown);
             splitContainer1.SplitterDistance += 20;
             Timer.Tick += PositionTick;
@@ -196,19 +196,20 @@ namespace NitroStudio2 {
         /// </summary>
         public override void DoInfoStuff() {}
 
-        private void MyFindReplace_KeyPressed(object sender, KeyEventArgs e) {
+        /*private void MyFindReplace_KeyPressed(object sender, KeyEventArgs e) {
             genericScintilla_KeyDown(sender, e);
         }
 
         private void MyFindReplace_FindAllResults(object sender, FindResultsEventArgs FindAllResults) {
             // Pass on find results
             //findAllResultsPanel1.UpdateFindAllResults(FindAllResults.FindReplace, FindAllResults.FindAllResults);
-        }
+        }*/
 
         private void GotoButton_Click(object sender, EventArgs e) {
             // Use the FindReplace Scintilla as this will change based on focus
-            GoTo MyGoTo = new GoTo(MyFindReplace.Scintilla);
-            MyGoTo.ShowGoToDialog();
+            //GoTo MyGoTo = new GoTo(MyFindReplace.Scintilla);
+            //GoTo MyGoTo = new GoTo(sequenceEditor);
+            //MyGoTo.ShowGoToDialog();
         }
 
         /// <summary>
@@ -217,7 +218,7 @@ namespace NitroStudio2 {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void genericScintilla_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.F) {
+            /*if (e.Control && e.KeyCode == Keys.F) {
                 MyFindReplace.ShowFind();
                 e.SuppressKeyPress = true;
             } else if (e.Shift && e.KeyCode == Keys.F3) {
@@ -232,9 +233,9 @@ namespace NitroStudio2 {
             } else if (e.Control && e.KeyCode == Keys.I) {
                 MyFindReplace.ShowIncrementalSearch();
                 e.SuppressKeyPress = true;
-            } else if (e.Control && e.KeyCode == Keys.G) {
-                GoTo MyGoTo = new GoTo((Scintilla)sender);
-                MyGoTo.ShowGoToDialog();
+            } else*/ if (e.Control && e.KeyCode == Keys.G) {
+                //GoTo MyGoTo = new GoTo((Scintilla)sender);
+                //MyGoTo.ShowGoToDialog();
                 e.SuppressKeyPress = true;
             }
         }
@@ -245,9 +246,9 @@ namespace NitroStudio2 {
         /// </summary>
         /// <param name="sender">The Scintilla receiving focus</param>
         /// <param name="e"></param>
-        private void genericScintilla1_Enter(object sender, EventArgs e) {
+        /*private void genericScintilla1_Enter(object sender, EventArgs e) {
             MyFindReplace.Scintilla = (Scintilla)sender;
-        }
+        }*/
 
         /// <summary>
         /// Load the editor.
@@ -273,7 +274,7 @@ namespace NitroStudio2 {
             sequenceEditor.Styles[Style.LineNumber].ForeColor = IntToColor(FORE_COLOR);
             sequenceEditor.Styles[Style.IndentGuide].ForeColor = IntToColor(FORE_COLOR);
             sequenceEditor.Styles[Style.IndentGuide].BackColor = IntToColor(BACK_COLOR);
-            sequenceEditor.Lexer = Lexer.Container;
+            sequenceEditor.LexerName = "container";
             sequenceEditor.StyleNeeded += new EventHandler<StyleNeededEventArgs>(this.SEQ_StyleNeeded);
             //sequenceEditor.UpdateUI += new EventHandler<UpdateUIEventArgs>(this.SEQ_Changed);
             sequenceEditor.TextChanged += new EventHandler(this.SEQ_ChangedText);

@@ -689,6 +689,7 @@ namespace Multimedia.UI
         /// <value>
         /// One of the Orientation values.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyOrientation Orientation
         {
             get
@@ -750,6 +751,7 @@ namespace Multimedia.UI
         /// shape, you may need to adjust its alignment to get the exact shape
         /// you are looking for.  
         /// </remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyShape Shape
         {
             get
@@ -772,6 +774,7 @@ namespace Multimedia.UI
         /// A Color that represents the color used to paint the piano key when
         /// it is in the on state. The default is Color.Blue.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOnColor
         {
             get
@@ -796,6 +799,7 @@ namespace Multimedia.UI
         /// A Color that represents the color used to paint the piano key when
         /// it is in the off state. The default is Color.White.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOffColor
         {
             get

@@ -24,6 +24,7 @@ namespace NitroStudio2 {
         static void Main(string[] args) {
             
             //Start.
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

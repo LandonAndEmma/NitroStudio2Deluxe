@@ -5,53 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSoundBank.SF2 {
-    
-    /// <summary>
-    /// A sample item.
-    /// </summary>
     public class SampleItem : IReadable, IWriteable {
-
-        /// <summary>
-        /// Sample name.
-        /// </summary>
         public string Name = "";
-
-        /// <summary>
-        /// Original pitch.
-        /// </summary>
         public byte OriginalPitch = 60;
-
-        /// <summary>
-        /// Pitch correction.
-        /// </summary>
         public sbyte PitchCorrection;
-
-        /// <summary>
-        /// Sample link.
-        /// </summary>
         public ushort Link;
-
-        /// <summary>
-        /// If rom type.
-        /// </summary>
         public bool IsRomType;
-
-        /// <summary>
-        /// Link type.
-        /// </summary>
         public SF2LinkTypes LinkType;
-
-        /// <summary>
-        /// Mono wave file.
-        /// </summary>
         public RiffWave Wave;
-
-        /// <summary>
-        /// Read the sample item. Set current offset to start of wave table in advance!
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public void Read(FileReader r) {
             Name = r.ReadFixedString(20);
             uint startSample = r.ReadUInt32();
@@ -77,17 +39,8 @@ namespace GotaSoundBank.SF2 {
             LinkType = (SF2LinkTypes)(type & 0b1111);
             IsRomType = (type & 0b1000000000000000) > 0;
         }
-
-        /// <summary>
-        /// Write the sample item. Set the current offset to the start of the wave in advance! Also push into the structure offsets the start of the wave table!
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public void Write(FileWriter w) {
-
-            //Wave table start.
             long waveTableStart = w.StructureOffsets.Pop();
-
-            //Start writing data.
             w.WriteFixedString(Name, 20);
             uint startSample = (uint)((w.CurrentOffset - waveTableStart) / 2);
             w.Write(startSample);
@@ -105,9 +58,6 @@ namespace GotaSoundBank.SF2 {
             ushort val = (ushort)LinkType;
             if (IsRomType) { val |= 0b1000000000000000; }
             w.Write(val);
-
         }
-
     }
-
 }

@@ -4,20 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSequenceLib.Playback {
-
-    /// <summary>
-    /// Channel.
-    /// </summary>
     public class Channel {
-
-        /// <summary>
-        /// Channel index.
-        /// </summary>
         public readonly byte Index;
-
-        //Public members.
         public Track Owner;
         public InstrumentType Type;
         public EnvelopeState State;
@@ -30,49 +19,27 @@ namespace GotaSequenceLib.Playback {
         public int SweepCounter;
         public int SweepLength;
         public short SweepPitch;
-        public int Velocity; // The SEQ Player treats 0 as the 100% amplitude value and -92544 (-723*128) as the 0% amplitude value. The starting ampltitude is 0% (-92544).
-        public byte Volume; // From 0x00-0x7F (Calculated from Utils)
+        public int Velocity; 
+        public byte Volume; 
         public ushort BaseTimer;
         public ushort Timer;
         public int NoteDuration;
-
-        //ADSR.
         private byte _attack;
         private int _sustain;
-        private int _hold; //TODO: ACTUALLY IMPLEMENT!!!
+        private int _hold; 
         private ushort _decay;
         private ushort _release;
-
-        //Position and previous samples.
         private int _pos;
         private short _prevLeft;
         private short _prevRight;
-
-        //PCM data.
         private RiffWave _wave;
         private int _waveSample;
-
-        //PSG data.
         private byte _psgDuty;
         private int _psgCounter;
-
-        //Noise data.
         private ushort _noiseCounter;
-
-        /// <summary>
-        /// Create a new channel.
-        /// </summary>
-        /// <param name="i">The channel index.</param>
         public Channel(byte i) {
             Index = i;
         }
-
-        /// <summary>
-        /// Start PCM.
-        /// </summary>
-        /// <param name="wave">The wave.</param>
-        /// <param name="noteDuration">Note duration.</param>
-        /// <param name="clockSpeed">System clock speed.</param>
         public void StartPCM(RiffWave wave, int noteDuration, uint clockSpeed) {
             Type = InstrumentType.PCM;
             _waveSample = 0;
@@ -80,12 +47,6 @@ namespace GotaSequenceLib.Playback {
             BaseTimer = (ushort)(clockSpeed / _wave.SampleRate);
             Start(noteDuration);
         }
-
-        /// <summary>
-        /// Start PSG.
-        /// </summary>
-        /// <param name="duty">Duty cycle.</param>
-        /// <param name="noteDuration">Note duration.</param>
         public void StartPSG(byte duty, int noteDuration) {
             Type = InstrumentType.PSG;
             _psgCounter = 0;
@@ -93,22 +54,12 @@ namespace GotaSequenceLib.Playback {
             BaseTimer = 8006;
             Start(noteDuration);
         }
-
-        /// <summary>
-        /// Start noise.
-        /// </summary>
-        /// <param name="noteLength">Noise length.</param>
         public void StartNoise(int noteLength) {
             Type = InstrumentType.Noise;
             _noiseCounter = 0x7FFF;
             BaseTimer = 8006;
             Start(noteLength);
         }
-
-        /// <summary>
-        /// Start the channel.
-        /// </summary>
-        /// <param name="noteDuration">Note duration.</param>
         private void Start(int noteDuration) {
             State = EnvelopeState.Attack;
             Velocity = -92544;
@@ -116,10 +67,6 @@ namespace GotaSequenceLib.Playback {
             _prevLeft = _prevRight = 0;
             NoteDuration = noteDuration;
         }
-
-        /// <summary>
-        /// Stop the channel by removing it.
-        /// </summary>
         public void Stop() {
             if (Owner != null) {
                 Owner.Channels.Remove(this);
@@ -127,11 +74,6 @@ namespace GotaSequenceLib.Playback {
             Owner = null;
             Volume = 0;
         }
-
-        /// <summary>
-        /// Sweep main.
-        /// </summary>
-        /// <returns>Sweep.</returns>
         public int SweepMain() {
             if (SweepPitch != 0 && SweepCounter < SweepLength) {
                 int sweep = (int)(Math.BigMul(SweepPitch, SweepLength - SweepCounter) / SweepLength);
@@ -143,50 +85,21 @@ namespace GotaSequenceLib.Playback {
                 return 0;
             }
         }
-
-        /// <summary>
-        /// Set the attack.
-        /// </summary>
-        /// <param name="a">The attack,</param>
         public void SetAttack(int a) {
             _attack = Utils.AttackTable[a];
         }
-
-        /// <summary>
-        /// Set the decay.
-        /// </summary>
-        /// <param name="d">The decay.</param>
         public void SetDecay(int d) {
             _decay = Utils.DecayTable[d];
         }
-
-        /// <summary>
-        /// Set the sustain.
-        /// </summary>
-        /// <param name="s">The sustain.</param>
         public void SetSustain(byte s) {
             _sustain = Utils.SustainTable[s];
         }
-
-        /// <summary>
-        /// Set the hold.
-        /// </summary>
-        /// <param name="s">The hold.</param>
         public void SetHold(byte s) {
             _hold = Utils.SustainTable[s];
         }
-
-        /// <summary>
-        /// Set the release.
-        /// </summary>
-        /// <param name="r">The release.</param>
         public void SetRelease(int r) {
             _release = Utils.DecayTable[r];
         }
-
-        /// <summary>
-        /// Step the envelope.
-        /// </summary>
         public void StepEnvelope() {
             switch (State) {
                 case EnvelopeState.Attack: {
@@ -213,10 +126,6 @@ namespace GotaSequenceLib.Playback {
                 }
             }
         }
-
-        /// <summary>
-        /// Emulate a tick process rather than doing it.
-        /// </summary>
         public void EmulateProcess() {
             if (Timer != 0) {
                 int numSamples = (_pos + 0x100) / Timer;
@@ -232,17 +141,10 @@ namespace GotaSequenceLib.Playback {
                 }
             }
         }
-
-        /// <summary>
-        /// Process the samples.
-        /// </summary>
-        /// <param name="left">The left sample.</param>
-        /// <param name="right">The right sample.</param>
         public void Process(out short left, out short right) {
             if (Timer != 0) {
                 int numSamples = (_pos + 0x100) / Timer;
                 _pos = (_pos + 0x100) % Timer;
-                // prevLeft and prevRight are stored because numSamples can be 0.
                 for (int i = 0; i < numSamples; i++) {
                     short samp = 0;
                     short lSample = 1;
@@ -312,12 +214,7 @@ namespace GotaSequenceLib.Playback {
             left = _prevLeft;
             right = _prevRight;
         }
-
     }
-
-    /// <summary>
-    /// Envelope state.
-    /// </summary>
     public enum EnvelopeState : byte {
         Attack,
         Hold,
@@ -325,12 +222,7 @@ namespace GotaSequenceLib.Playback {
         Sustain,
         Release
     }
-
-    /// <summary>
-    /// Instrument type.
-    /// </summary>
     public enum InstrumentType : byte {
         PCM, PSG, Noise
     }
-
 }

@@ -10,63 +10,21 @@ using GotaSequenceLib;
 using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
 using NitroFileLoader;
-
 namespace NitroStudio2 {
-
-    /// <summary>
-    /// Bank editor.
-    /// </summary>
     public class BankEditor : EditorBase {
-
-        /// <summary>
-        /// The bank file.
-        /// </summary>
         public Bank BK => File as Bank;
-
-        /// <summary>
-        /// Mixer.
-        /// </summary>
         public GotaSequenceLib.Playback.Mixer Mixer = new GotaSequenceLib.Playback.Mixer();
-
-        /// <summary>
-        /// Player.
-        /// </summary>
         public GotaSequenceLib.Playback.Player Player;
-
-        /// <summary>
-        /// Random.
-        /// </summary>
         public Random Random = new Random();
-
-        /// <summary>
-        /// Create a new bank editor.
-        /// </summary>
-        /// <param name="mainWindow">Main window.</param>
         public BankEditor(MainWindow mainWindow) : base(typeof(Bank), "Bank", "bnk", "Bank Editor", mainWindow) {
             Init();
         }
-
-        /// <summary>
-        /// Create a new bank editor.
-        /// </summary>
-        /// <param name="fileToOpen">The file to open.</param>
         public BankEditor(string fileToOpen) : base(typeof(Bank), "Bank", "bnk", "Bank Editor", fileToOpen, null) {
             Init();
         }
-
-        /// <summary>
-        /// Create a new bank editor.
-        /// </summary>
-        /// <param name="fileToOpen">The file to open.</param>
-        /// <param name="mainWindow">The main window.</param>
-        /// <param name="fileName">File name.</param>
         public BankEditor(IOFile fileToOpen, MainWindow mainWindow, string fileName) : base(typeof(Bank), "Bank", "bnk", "Bank Editor", fileToOpen, mainWindow, fileName) {
             Init();
         }
-
-        /// <summary>
-        /// Initialize the editor.
-        /// </summary>
         public void Init() {
             Icon = Properties.Resources.Bnk;
             tree.Nodes.RemoveAt(0);
@@ -76,7 +34,6 @@ namespace NitroStudio2 {
             bankRegions.CellValueChanged += new DataGridViewCellEventHandler(RegionsChanged);
             bankRegions.RowsRemoved += new DataGridViewRowsRemovedEventHandler(RegionsChanged);
             swapAtIndexButton.Click += new EventHandler(SwapIndexButton);
-            //insertAtIndexButton.Click += new EventHandler(InsertAtIndexButton);
             drumSetStartRangeBox.ValueChanged += new EventHandler(DrumSetRangeBoxChanged);
             drumSetStartRangeComboBox.SelectedIndexChanged += new EventHandler(DrumSetRangeComboBoxChanged);
             directBox.CheckedChanged += new EventHandler(InstrumentTypeChanged);
@@ -119,23 +76,13 @@ namespace NitroStudio2 {
             }
             UpdateNodes();
         }
-
-        /// <summary>
-        /// Do info stuff.
-        /// </summary>
         public override void DoInfoStuff() {
-
-            //The base.
             base.DoInfoStuff();
             WritingInfo = true;
-
-            //If file open.
             if (!FileOpen || File == null) {
                 WritingInfo = false;
                 return;
             }
-
-            //Parent is not null.
             if (tree.SelectedNode.Parent != null) {
                 bankEditorPanel.BringToFront();
                 indexPanel.Show();
@@ -188,27 +135,12 @@ namespace NitroStudio2 {
                 noInfoPanel.Show();
                 status.Text = "No Valid Info Selected!";
             }
-
-            //Done with info.
             WritingInfo = false;
-
         }
-
-        /// <summary>
-        /// Update nodes.
-        /// </summary>
         public override void UpdateNodes() {
-
-            //Begin update.
             BeginUpdateNodes();
-
-            //File open and not null.
             if (FileOpen && File != null) {
-
-                //Root menu.
                 tree.Nodes[0].ContextMenuStrip = rootMenu;
-
-                //Load instruments.
                 foreach (var e in BK.Instruments) {
                     switch (e.Type()) {
                         case InstrumentType.PCM:
@@ -235,36 +167,17 @@ namespace NitroStudio2 {
                     }
                     tree.Nodes[0].Nodes[tree.Nodes[0].Nodes.Count - 1].ContextMenuStrip = CreateMenuStrip(nodeMenu, new int[] { 0, 1, 4, 5, 6 }, new EventHandler[] { new EventHandler(addAboveToolStripMenuItem1_Click), new EventHandler(addBelowToolStripMenuItem1_Click), new EventHandler(replaceFileToolStripMenuItem_Click), new EventHandler(exportToolStripMenuItem1_Click), new EventHandler(deleteToolStripMenuItem1_Click) });
                 }
-
-                //Expand.
                 tree.Nodes[0].Expand();
-
             } else {
-
-                //Remove context menus.
                 foreach (TreeNode n in tree.Nodes) {
                     n.ContextMenuStrip = null;
                 }
-
             }
-
-            //End update.
             EndUpdateNodes();
-
         }
-
-        /// <summary>
-        /// Populate the region grid.
-        /// </summary>
         public void PopulateRegionGrid() {
-
-            //Clear items.
             bankRegions.Rows.Clear();
-
-            //Add instruments.
             foreach (var e in BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault().NoteInfo) {
-
-                //Add row.
                 bankRegions.Rows.Add(new DataGridViewRow());
                 var v = bankRegions.Rows[bankRegions.Rows.Count - 2];
                 ((DataGridViewButtonCell)v.Cells[0]).UseColumnTextForButtonValue = true;
@@ -296,14 +209,8 @@ namespace NitroStudio2 {
                 ((DataGridViewTextBoxCell)v.Cells[8]).Value = e.Sustain;
                 ((DataGridViewTextBoxCell)v.Cells[9]).Value = e.Release;
                 ((DataGridViewTextBoxCell)v.Cells[10]).Value = e.Pan;
-
             }
-
         }
-
-        /// <summary>
-        /// Load wave archives.
-        /// </summary>
         public void LoadWaveArchives() {
             if (MainWindow == null) {
                 return;
@@ -327,10 +234,6 @@ namespace NitroStudio2 {
             }
             Player.PrepareForSong(new GotaSequenceLib.Playback.PlayableBank[] { BK }, riffs);
         }
-
-        /// <summary>
-        /// On the piano press.
-        /// </summary>
         public override void OnPianoPress() {
             if (tree.SelectedNode.Parent == null) { return; }
             currentNote.Text = "Playing Note " + NoteDown.ToString() + " (" + (int)(NoteDown) + ").";
@@ -339,18 +242,13 @@ namespace NitroStudio2 {
             Player.LoadSong(new List<GotaSequenceLib.SequenceCommand>() { new GotaSequenceLib.SequenceCommand() { CommandType = GotaSequenceLib.SequenceCommands.ProgramChange, Parameter = (uint)MainWindow.GetIdFromNode(tree.SelectedNode) }, new GotaSequenceLib.SequenceCommand() { CommandType = GotaSequenceLib.SequenceCommands.Note, Parameter = new GotaSequenceLib.NoteParameter() { Note = NoteDown, Length = 0xFFF, Velocity = 127 } }, new SequenceCommand() { CommandType = SequenceCommands.Fin } });
             Player.Play();
         }
-
-        /// <summary>
-        /// On the piano release.
-        /// </summary>
         public override void OnPianoRelease() {
             Player.Stop();
             currentNote.Text = "";
         }
-
         private void bankRegions_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e) {
             e.Control.KeyPress -= new KeyPressEventHandler(Column_KeyPress);
-            if (bankRegions.CurrentCell.ColumnIndex == 2 || bankRegions.CurrentCell.ColumnIndex == 3 || bankRegions.CurrentCell.ColumnIndex == 5 || bankRegions.CurrentCell.ColumnIndex == 6 || bankRegions.CurrentCell.ColumnIndex == 7 || bankRegions.CurrentCell.ColumnIndex == 8 || bankRegions.CurrentCell.ColumnIndex == 9) //Desired Column
+            if (bankRegions.CurrentCell.ColumnIndex == 2 || bankRegions.CurrentCell.ColumnIndex == 3 || bankRegions.CurrentCell.ColumnIndex == 5 || bankRegions.CurrentCell.ColumnIndex == 6 || bankRegions.CurrentCell.ColumnIndex == 7 || bankRegions.CurrentCell.ColumnIndex == 8 || bankRegions.CurrentCell.ColumnIndex == 9) 
             {
                 TextBox tb = e.Control as TextBox;
                 if (tb != null) {
@@ -358,32 +256,19 @@ namespace NitroStudio2 {
                 }
             }
         }
-
         private void Column_KeyPress(object sender, KeyPressEventArgs e) {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
                 e.Handled = true;
             }
         }
-
-        /// <summary>
-        /// Regions changed.
-        /// </summary>
         public void RegionsChanged(object sender, EventArgs e) {
-
-            //Writing info.
             if (WritingInfo) {
                 return;
             }
             WritingInfo = true;
-
-            //Current intrument.
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
-
-            //Read regions.
             List<NoteInfo> regions = new List<NoteInfo>();
             for (int i = 1; i < bankRegions.Rows.Count; i++) {
-
-                //Get the cells.
                 var endNoteCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[1];
                 var instrumentTypeCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[2];
                 var waveCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[3];
@@ -394,8 +279,6 @@ namespace NitroStudio2 {
                 var sustainCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[8];
                 var releaseCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[9];
                 var panCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[10];
-
-                //Test.
                 if (endNoteCell.Value == null || endNoteCell.Value.ToString() == "") {
                     WritingInfo = false;
                     endNoteCell.Value = endNoteCell.Items[127];
@@ -446,8 +329,6 @@ namespace NitroStudio2 {
                     panCell.Value = 64;
                     return;
                 }
-
-                //Get the info.
                 NoteInfo n = new NoteInfo();
                 n.Key = (Notes)Enum.Parse(typeof(Notes), ((string)endNoteCell.Value).Split(' ')[0]);
                 switch ((string)instrumentTypeCell.Value) {
@@ -500,35 +381,24 @@ namespace NitroStudio2 {
                 }
                 n.Pan = byte.Parse(panCell.Value.ToString());
                 regions.Add(n);
-
             }
-
-            //Set note info.
             inst.NoteInfo.Clear();
             inst.NoteInfo = regions;
-
-            //Add fallback region.
             if (inst.NoteInfo.Count < 1) {
                 inst.NoteInfo.Add(new NoteInfo() { Attack = 127, BaseNote = 60, Decay = 127, InstrumentType = InstrumentType.PCM, Key = Notes.gn9, Pan = 64, Release = 127, Sustain = 127, WarId = 0, WaveId = 0 });
                 UpdateNodes();
                 DoInfoStuff();
             }
-
-            //Set type.
             if (regions.Count > 1) {
                 directBox.Enabled = false;
             } else {
                 directBox.Enabled = true;
             }
-
-            //Key split.
             if (regions.Count > 8) {
                 keySplitBox.Enabled = false;
             } else {
                 keySplitBox.Enabled = true;
             }
-
-            //Drum set override.
             if (regions.Count > 8 && inst.Type() != InstrumentType.DrumSet) {
                 BK.Instruments[BK.Instruments.IndexOf(inst)] = new DrumSetInstrument() { Min = 0, Index = inst.Index, NoteInfo = regions, Order = inst.Order };
                 drumSetBox.Checked = true;
@@ -540,38 +410,21 @@ namespace NitroStudio2 {
                 UpdateNodes();
                 return;
             }
-
-            //Key split override.
             if (regions.Count > 1 && inst as DirectInstrument != null) {
                 BK.Instruments[BK.Instruments.IndexOf(inst)] = new KeySplitInstrument() { Index = inst.Index, NoteInfo = regions, Order = inst.Order };
                 keySplitBox.Checked = true;
                 UpdateNodes();
             }
-
-            //Colors.
             ColorNotes(inst as DrumSetInstrument == null ? (byte)0 : (inst as DrumSetInstrument).Min, inst.NoteInfo);
-
-            //Writing info.
             WritingInfo = false;
             UpdateNodes();
-
         }
-
-        /// <summary>
-        /// Instrument type changed.
-        /// </summary>
         public void TypeChanged(object sender, EventArgs e) {
-
-            //Writing info.
             if (WritingInfo) {
                 return;
             }
             WritingInfo = true;
-
-            //Get instrument.
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
-
-            //Set instrument type.
             if (directBox.Checked) {
                 drumSetRangeStartLabel.Enabled = false;
                 drumSetStartRangeBox.Enabled = false;
@@ -588,18 +441,9 @@ namespace NitroStudio2 {
                 drumSetStartRangeComboBox.Enabled = false;
                 BK.Instruments[BK.Instruments.IndexOf(inst)] = new KeySplitInstrument() { Index = inst.Index, NoteInfo = inst.NoteInfo, Order = inst.Order };
             }
-
-            //Update nodes.
             UpdateNodes();
-
-            //Writing info.
             WritingInfo = false;
-
         }
-
-        /// <summary>
-        /// Key press.
-        /// </summary>
         public new void KeyPress(object sender, KeyPressEventArgs e) {
             if (e.KeyChar == ' ' && tree.SelectedNode.Parent != null) {
                 if (tree.SelectedNode.Parent == null) { return; }
@@ -609,13 +453,7 @@ namespace NitroStudio2 {
                 Player.Play();
             }
         }
-
-        /// <summary>
-        /// Root add.
-        /// </summary>
         public override void RootAdd() {
-
-            //Get new index.
             int index = 0;
             try { index = BK.Instruments.Last().Index + 1; } catch { }
             if (index > 0xFFFF) {
@@ -627,21 +465,12 @@ namespace NitroStudio2 {
                 }
                 MessageBox.Show("No available slots left!");
             }
-
-            //Add the instrument.
             BK.Instruments.Add(new DirectInstrument() { Index = index, NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } }, Order = index });
             BK.Instruments = BK.Instruments.OrderBy(x => x.Index).ToList();
             UpdateNodes();
             DoInfoStuff();
-
         }
-
-        /// <summary>
-        /// Add above.
-        /// </summary>
         public override void NodeAddAbove() {
-
-            //Get the instrument.
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
             if (BK.Instruments.Where(x => x.Index == inst.Index - 1).Count() > 0 || inst.Index == 0) {
                 foreach (var i in BK.Instruments) {
@@ -650,23 +479,12 @@ namespace NitroStudio2 {
                     }
                 }
             }
-
-            //Add instrument.
             BK.Instruments.Add(new DirectInstrument() { Index = inst.Index - 1, NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } }, Order = inst.Order - 1 });
             BK.Instruments = BK.Instruments.OrderBy(x => x.Index).ToList();
-
-            //Update.
             UpdateNodes();
             DoInfoStuff();
-
         }
-
-        /// <summary>
-        /// Add below.
-        /// </summary>
         public override void NodeAddBelow() {
-
-            //Get the instrument.
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
             if (BK.Instruments.Where(x => x.Index == inst.Index + 1).Count() > 0 || inst.Index == 0) {
                 foreach (var i in BK.Instruments) {
@@ -675,23 +493,12 @@ namespace NitroStudio2 {
                     }
                 }
             }
-
-            //Add instrument.
             BK.Instruments.Add(new DirectInstrument() { Index = inst.Index + 1, NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } }, Order = inst.Order - 1 });
             BK.Instruments = BK.Instruments.OrderBy(x => x.Index).ToList();
-
-            //Update.
             UpdateNodes();
             DoInfoStuff();
-
         }
-
-        /// <summary>
-        /// Replace the instrument.
-        /// </summary>
         public override void NodeReplace() {
-
-            //Replace the instrument.
             OpenFileDialog o = new OpenFileDialog();
             o.Filter = "Nitro Studio Instrument|*.ns2i;*.nist";
             o.RestoreDirectory = true;
@@ -715,15 +522,8 @@ namespace NitroStudio2 {
                 UpdateNodes();
                 DoInfoStuff();
             }
-
         }
-
-        /// <summary>
-        /// Export.
-        /// </summary>
         public override void NodeExport() {
-
-            //Export the instrument.
             SaveFileDialog s = new SaveFileDialog();
             s.Filter = "Nitro Studio Instrument|*.ns2i;*.nist";
             s.RestoreDirectory = true;
@@ -740,26 +540,14 @@ namespace NitroStudio2 {
                         n.Write(s.FileName);
                         break;
                 }
-
             }
-
         }
-
-        /// <summary>
-        /// Delete the node.
-        /// </summary>
         public override void NodeDelete() {
             BK.Instruments.Remove(BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault());
             UpdateNodes();
             DoInfoStuff();
         }
-
-        /// <summary>
-        /// Swap index button.
-        /// </summary>
         public void SwapIndexButton(object sender, EventArgs e) {
-
-            //See if instrument exists.
             bool instExists = BK.Instruments.Where(x => x.Index == itemIndexBox.Value).Count() > 0;
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
             if (instExists) {
@@ -771,15 +559,8 @@ namespace NitroStudio2 {
             tree.SelectedNode = tree.Nodes[0].Nodes[BK.Instruments.IndexOf(inst)];
             UpdateNodes();
             DoInfoStuff();
-
         }
-
-        /// <summary>
-        /// Insert index button.
-        /// </summary>
         public void InsertAtIndexButton(object sender, EventArgs e) {
-
-            //See if instrument exists.
             var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
             foreach (var i in BK.Instruments) {
                 if (i.Index >= (int)itemIndexBox.Value) {
@@ -791,9 +572,7 @@ namespace NitroStudio2 {
             tree.SelectedNode = tree.Nodes[0].Nodes[BK.Instruments.IndexOf(inst)];
             UpdateNodes();
             DoInfoStuff();
-
         }
-
         public void DrumSetRangeBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -802,7 +581,6 @@ namespace NitroStudio2 {
                 WritingInfo = false;
             }
         }
-
         public void DrumSetRangeComboBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -811,7 +589,6 @@ namespace NitroStudio2 {
                 WritingInfo = false;
             }
         }
-
         public void InstrumentTypeChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 var inst = BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)).FirstOrDefault();
@@ -835,10 +612,6 @@ namespace NitroStudio2 {
                 DoInfoStuff();
             }
         }
-
-        /// <summary>
-        /// Play region button.
-        /// </summary>
         public void PlayRegionButtonClick(object sender, DataGridViewCellEventArgs e) {
             if (e.ColumnIndex != 0 && e.RowIndex >= 0) {
                 return;
@@ -864,14 +637,7 @@ namespace NitroStudio2 {
                 Player.Play();
             }
         }
-
-        /// <summary>
-        /// Color notes.
-        /// </summary>
-        /// <param name="n">The note info.</param>
         public void ColorNotes(byte start, List<NoteInfo> n) {
-
-            //Color.
             int num = 0;
             foreach (var e in n) {
                 if (num == 0) {
@@ -882,12 +648,7 @@ namespace NitroStudio2 {
                 start = (byte)(e.Key + 1);
                 num++;
             }
-
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war0BoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -899,10 +660,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war1BoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -914,10 +671,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war2BoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -929,10 +682,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war3BoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 WritingInfo = true;
@@ -944,10 +693,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war0ComboBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 ushort val = (ushort)war0ComboBox.SelectedIndex;
@@ -967,10 +712,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war1ComboBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 ushort val = (ushort)war1ComboBox.SelectedIndex;
@@ -990,10 +731,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war2ComboBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 ushort val = (ushort)war2ComboBox.SelectedIndex;
@@ -1013,10 +750,6 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Changed.
-        /// </summary>
         public void war3ComboBoxChanged(object sender, EventArgs e) {
             if (!WritingInfo) {
                 ushort val = (ushort)war3ComboBox.SelectedIndex;
@@ -1036,15 +769,9 @@ namespace NitroStudio2 {
                 }
             }
         }
-
-        /// <summary>
-        /// Closing.
-        /// </summary>
         public void EditorClosing(object sender, EventArgs e) {
             Mixer.Dispose();
             Player.Dispose();
         }
-
     }
-
 }

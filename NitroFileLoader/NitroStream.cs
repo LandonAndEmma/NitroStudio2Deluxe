@@ -5,60 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace NitroFileLoader {
-
-    /// <summary>
-    /// Stream.
-    /// </summary>
     public class Stream : SoundFile {
-
-        /// <summary>
-        /// Supported encodings.
-        /// </summary>
-        /// <returns>The supported encodings.</returns>
         public override Type[] SupportedEncodings() => new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
-
-        /// <summary>
-        /// Name.
-        /// </summary>
-        /// <returns>The name.</returns>
         public override string Name() => "STRM";
-
-        /// <summary>
-        /// Extensions.
-        /// </summary>
-        /// <returns>The extensions.</returns>
         public override string[] Extensions() => new string[] { "STRM" };
-
-        /// <summary>
-        /// Description.
-        /// </summary>
-        /// <returns>The description.</returns>
         public override string Description() => "An STRM stream used in Nintendo DS games.";
-
-        /// <summary>
-        /// If the file supports tracks.
-        /// </summary>
-        /// <returns>It doesn't.</returns>
         public override bool SupportsTracks() => false;
-
-        /// <summary>
-        /// Preferred encoding.
-        /// </summary>
-        /// <returns>The preferred encoding.</returns>
         public override Type PreferredEncoding() => typeof(ImaAdpcm);
-
-        /// <summary>
-        /// Read the file.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
-
-            //Read header.
             r.OpenFile<NHeader>(out _);
-
-            //Head block.
             r.OpenBlock(0, out _, out _);
             PcmFormat pcmFormat = (PcmFormat)r.ReadByte();
             Loops = r.ReadBoolean();
@@ -76,8 +32,6 @@ namespace NitroFileLoader {
             uint lastBlockSize = r.ReadUInt32();
             uint lastBlockSamples = r.ReadUInt32();
             r.ReadBytes(32);
-
-            //Encoding type.
             Type encodingType = null;
             switch (pcmFormat) {
                 case PcmFormat.SignedPCM8:
@@ -90,28 +44,14 @@ namespace NitroFileLoader {
                     encodingType = typeof(ImaAdpcm);
                     break;
             }
-
-            //Data block.
             r.JumpToOffset("dataOffset", true, true);
             Audio.Read(r, encodingType, numChannels, numBlocks, blockSize, blockSamples, lastBlockSize, lastBlockSamples, 0);
-
         }
-
-        /// <summary>
-        /// Write the file.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
-
-            //Init header.
             w.InitFile<NHeader>("STRM", ByteOrder.LittleEndian, null, 2);
             long countOff = w.Position - 2;
-
-            //Head block.
             w.Write("HEAD".ToCharArray());
             w.Write((uint)0x50);
-
-            //Format.
             uint blockSamples = (uint)Audio.NumSamples;
             uint blockSize = (uint)Audio.DataSize;
             if (Audio.EncodingType.Equals(typeof(PCM8Signed))) {
@@ -153,27 +93,16 @@ namespace NitroFileLoader {
             w.Position = countOff;
             w.Write((ushort)2);
             w.Position = bak;
-
         }
-
-        /// <summary>
-        /// Before conversion.
-        /// </summary>
         public override void BeforeConversion() {
             if (Audio.BlockSize == -1) {
                 Audio.ChangeBlockSize(0x200);
             }
         }
-
-        /// <summary>
-        /// After conversion.
-        /// </summary>
         public override void AfterConversion() {
             AlignLoopToBlock((uint)Audio.BlockSamples);
             TrimAfterLoopEnd();
             LoopEnd = (uint)Audio.NumSamples;
         }
-
     }
-
 }

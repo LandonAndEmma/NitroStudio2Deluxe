@@ -8,42 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using GotaSoundIO.IO;
 using GotaSoundBank.SF2;
-
 namespace GotaSoundBank.DLS {
-    
-    /// <summary>
-    /// A simplified DLS file. For the sake of simplicity, practically everything but the required chunks are read and written.
-    /// </summary>
     public class DownloadableSounds : IOFile {
-
-        /// <summary>
-        /// Instruments.
-        /// </summary>
         public List<Instrument> Instruments = new List<Instrument>();
-
-        /// <summary>
-        /// Waves.
-        /// </summary>
         public List<RiffWave> Waves = new List<RiffWave>();
-
-        /// <summary>
-        /// Blank constructor.
-        /// </summary>
         public DownloadableSounds() {}
-
-        /// <summary>
-        /// Read a DLS file.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
         public DownloadableSounds(string filePath) : base(filePath) {}
-
-        /// <summary>
-        /// Create a DLS from a sound font.
-        /// </summary>
-        /// <param name="sf2">The SF2 file.</param>
         public DownloadableSounds(SoundFont sf2) {
-
-            //Get waves.
             List<string> waveMd5s = new List<string>();
             Dictionary<int, string> newWaveIds = new Dictionary<int, string>();
             Dictionary<int, sbyte> tunings = new Dictionary<int, sbyte>();
@@ -111,13 +82,9 @@ namespace GotaSoundBank.DLS {
                     }
                 }
             }
-
-            //Get instruments.
             Instruments = new List<Instrument>();
             int instId = 0;
             foreach (var inst in sf2.Instruments) {
-
-                //Instrument.
                 Instrument i = new Instrument();
                 i.Name = inst.Name;
                 i.Regions = new List<Region>();
@@ -133,8 +100,6 @@ namespace GotaSoundBank.DLS {
                     }
                 }
                 instId++;
-
-                //Get regions.
                 foreach (var z in inst.Zones) {
                     var reg = GetInstrumentRegion(z, inst.GlobalZone);
                     if (reg != null) {
@@ -147,24 +112,13 @@ namespace GotaSoundBank.DLS {
                         i.Regions.Add(reg);
                     }
                 }
-
-                //Add instrument.
                 Instruments.Add(i);
-
             }
-
-            //Get an instrument region from an SF2 zone.
             Region GetInstrumentRegion(Zone z, Zone g) {
-
-                //Null region.
                 if (z == null) {
                     return null;
                 }
-
-                //New region.
                 Region r = new Region();
-
-                //Get sample.
                 int sampleNumRaw = SF2Value(SF2Generators.SampleID).UAmount;
                 int sampleNum = waveMd5s.IndexOf(newWaveIds[sampleNumRaw]);
                 r.WaveId = (uint)sampleNum;
@@ -177,8 +131,6 @@ namespace GotaSoundBank.DLS {
                 Articulator art = new Articulator();
                 art.Connections = new List<Connection>();
                 var c = art.Connections;
-    
-                //Get generators.
                 foreach (var gen in z.Generators) {
                     DestinationConnection d = DestinationConnection.Center;
                     switch (gen.Gen) {
@@ -232,8 +184,6 @@ namespace GotaSoundBank.DLS {
                     }
                     c.Add(new Connection() { DestinationConnection = d, Scale = gen.Amount.Amount * 65536 });
                 }
-
-                //Get the SF2 value.
                 SF2GeneratorAmount SF2Value(SF2Generators gen) {
                     var ret = new SF2GeneratorAmount();
                     if (g != null) {
@@ -244,71 +194,33 @@ namespace GotaSoundBank.DLS {
                     if (b != null) { ret.Amount = b.Amount.Amount; }
                     return ret;
                 }
-
-                //Add articulators.
                 r.Articulators = new List<Articulator>() { art };
-
-                //Return the region.
                 return r;
-
             }
-
         }
-
-        /// <summary>
-        /// Read the file.
-        /// </summary>
-        /// <param name="r2">The file reader.</param>
         public override void Read(FileReader r2) {
-
-            //Use a RIFF reader.
             using (RiffReader r = new RiffReader(r2.BaseStream)) {
-
-                //Get the number of instruments.
                 r.OpenChunk(r.GetChunk("colh"));
                 uint numInsts = r.ReadUInt32();
-
-                //Pointer table is skipped since it's just offsets to wave data relative to the first wave identifier.
-
-                //Read wave data.
                 Waves = new List<RiffWave>();
                 foreach (var c in (r.GetChunk("wvpl") as ListChunk).Chunks) {
-
-                    //Open block.
                     r.OpenChunk(c);
-
-                    //Set position for proper RIFF reading.
                     r.BaseStream.Position -= 8;
                     int len = r.ReadInt32() + 8;
                     r.BaseStream.Position -= 8;
                     RiffWave wav = new RiffWave();
                     wav.Read(r.ReadBytes(len));
                     Waves.Add(wav);
-
                 }
-
-                //Read each instrument.
                 foreach (ListChunk c in (r.GetChunk("lins") as ListChunk).Chunks) {
-
-                    //Open block.
                     r.OpenChunk(c);
-
-                    //New instrument.
                     Instrument inst = new Instrument();
-
-                    //Read header.
                     r.OpenChunk(c.GetChunk("insh"));
                     r.ReadUInt32();
                     inst.BankId = r.ReadUInt32();
                     inst.InstrumentId = r.ReadUInt32();
-
-                    //Read regions.
                     foreach (ListChunk g in (c.GetChunk("lrgn") as ListChunk).Chunks) {
-
-                        //New region.
                         Region reg = new Region();
-
-                        //Region header.
                         r.OpenChunk(g.GetChunk("rgnh"));
                         reg.NoteLow = r.ReadUInt16();
                         reg.NoteHigh = r.ReadUInt16();
@@ -317,8 +229,6 @@ namespace GotaSoundBank.DLS {
                         reg.DoublePlayback = r.ReadUInt16() > 0;
                         reg.KeyGroup = (byte)r.ReadUInt16();
                         reg.Layer = r.ReadUInt16();
-
-                        //Note information.
                         r.OpenChunk(g.GetChunk("wsmp"));
                         r.ReadUInt32();
                         reg.RootNote = (byte)r.ReadUInt16();
@@ -334,8 +244,6 @@ namespace GotaSoundBank.DLS {
                             reg.LoopStart = r.ReadUInt32();
                             reg.LoopLength = r.ReadUInt32();
                         }
-
-                        //Wave link.
                         r.OpenChunk(g.GetChunk("wlnk"));
                         uint flg = r.ReadUInt16();
                         reg.PhaseMaster = (flg & 0b1) > 0;
@@ -343,22 +251,16 @@ namespace GotaSoundBank.DLS {
                         reg.PhaseGroup = r.ReadUInt16();
                         reg.ChannelFlags = r.ReadUInt32();
                         reg.WaveId = r.ReadUInt32();
-
-                        //Loop.
                         Waves[(int)reg.WaveId].Loops = reg.Loops;
                         if (reg.Loops) {
                             Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
                             Waves[(int)reg.WaveId].LoopEnd = reg.LoopLength == 0 ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples : reg.LoopStart + reg.LoopLength;
                         }
-
-                        //Articulators.
                         var lar = g.GetChunk("lar2");
                         if (lar == null) {
                             lar = g.GetChunk("lar1");
                         }
                         foreach (Chunk art in (g.GetChunk("lar2") as ListChunk).Chunks) {
-
-                            //Read articulator.
                             Articulator a = new Articulator();
                             r.OpenChunk(art);
                             r.ReadUInt32();
@@ -373,15 +275,9 @@ namespace GotaSoundBank.DLS {
                                 a.Connections.Add(con);
                             }
                             reg.Articulators.Add(a);
-
                         }
-
-                        //Add region.
                         inst.Regions.Add(reg);
-
                     }
-
-                    //Read name.
                     var info = c.GetChunk("INFO");
                     if (info != null) {
                         var inam = (info as ListChunk).GetChunk("INAM");
@@ -392,34 +288,16 @@ namespace GotaSoundBank.DLS {
                             inst.Name = new string(r.ReadChars((int)siz).Where(x => x != 0).ToArray());
                         }
                     }
-
-                    //Add instrument.
                     Instruments.Add(inst);
-
                 }
-
             }
-
         }
-
-        /// <summary>
-        /// Write the file.
-        /// </summary>
-        /// <param name="w2">The file writer.</param>
         public override void Write(FileWriter w2) {
-
-            //Use a RIFF writer.
             using (RiffWriter w = new RiffWriter(w2.BaseStream)) {
-
-                //Init file.
                 w.InitFile("DLS ");
-
-                //Instrument count.
                 w.StartChunk("colh");
                 w.Write((uint)Instruments.Count);
                 w.EndChunk();
-
-                //Instruments.
                 w.StartListChunk("lins");
                 foreach (var inst in Instruments) {
                     w.StartListChunk("ins ");
@@ -500,16 +378,12 @@ namespace GotaSoundBank.DLS {
                     w.EndChunk();
                 }
                 w.EndChunk();
-
-                //Pointer table initializing.
                 w.StartChunk("ptbl");
                 w.Write((uint)8);
                 w.Write((uint)Waves.Count);
                 long ptblStart = w.BaseStream.Position;
                 w.Write(new byte[Waves.Count * 4]);
                 w.EndChunk();
-
-                //Write waves.
                 w.StartListChunk("wvpl");
                 long waveTableStart = w.BaseStream.Position;
                 int waveNum = 0;
@@ -521,39 +395,24 @@ namespace GotaSoundBank.DLS {
                     w.WriteWave(wav);
                 }
                 w.EndChunk();
-
-                //Write info.
                 w.StartListChunk("INFO");
                 w.StartChunk("INAM");
                 w.Write("Instrument Set".ToCharArray());
                 w.EndChunk();
                 w.EndChunk();
-
-                //Close file.
                 w.CloseFile();
-
             }
-
         }
-
-        /// <summary>
-        /// Assign wave loops.
-        /// </summary>
         public void AssignLoops() {
             foreach (var i in Instruments) {
                 foreach (var reg in i.Regions) {
-
-                    //Loop.
                     if (reg.Loops) {
                         Waves[(int)reg.WaveId].Loops = reg.Loops;
                         Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
                         Waves[(int)reg.WaveId].LoopEnd = reg.LoopLength == 0 ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples : reg.LoopStart + reg.LoopLength;
                     }
-
                 }
             }
         }
-
     }
-
 }

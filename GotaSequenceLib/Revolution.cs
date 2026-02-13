@@ -4,18 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSequenceLib {
-
-    /// <summary>
-    /// Wii platform.
-    /// </summary>
     public class Revolution : SequencePlatform {
-
-        /// <summary>
-        /// Command map.
-        /// </summary>
-        /// <returns>The commands mapped.</returns>
         public override Dictionary<SequenceCommands, byte> CommandMap() => new Dictionary<SequenceCommands, byte>() {
             { SequenceCommands.Wait, 0x80 },
             { SequenceCommands.ProgramChange, 0x81 },
@@ -76,11 +66,6 @@ namespace GotaSequenceLib {
             { SequenceCommands.AllocateTrack, 0xFE },
             { SequenceCommands.Fin, 0xFF },
         };
-
-        /// <summary>
-        /// Extended commands.
-        /// </summary>
-        /// <returns>The extended commands mapped.</returns>
         public override Dictionary<SequenceCommands, byte> ExtendedCommands() => new Dictionary<SequenceCommands, byte>() {
             { SequenceCommands.SetVar, 0x80 },
             { SequenceCommands.AddVar, 0x81 },
@@ -102,13 +87,6 @@ namespace GotaSequenceLib {
             { SequenceCommands.CmpNe, 0x95 },
             { SequenceCommands.UserCall, 0xE0 }
         };
-
-        /// <summary>
-        /// Sequence data byte order.
-        /// </summary>
-        /// <returns>The byte order of sequence data.</returns>
         public override ByteOrder SequenceDataByteOrder() => ByteOrder.BigEndian;
-
     }
-
 }

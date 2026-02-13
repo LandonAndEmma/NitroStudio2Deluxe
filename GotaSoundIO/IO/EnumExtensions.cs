@@ -3,22 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSoundIO.IO {
-
-    /// <summary>
-    /// Represents a collection of methods extending enum types. From Syroot.BinaryData.
-    /// </summary>
     internal static class EnumExtensions {
         private static Dictionary<Type, bool> _flagEnums = new Dictionary<Type, bool>();
-
-        /// <summary>
-        /// Returns whether <paramref name="value" /> is a defined value in the enum of the given <paramref name="type" />
-        /// or a valid set of flags for enums decorated with the <see cref="T:System.FlagsAttribute" />.
-        /// </summary>
-        /// <param name="type">The type of the enum.</param>
-        /// <param name="value">The value to check against the enum type.</param>
-        /// <returns><c>true</c> if the value is valid; otherwise <c>false</c>.</returns>
         internal static bool IsValid(Type type, object value) {
             bool flag = Enum.IsDefined(type, value);
             if (!flag && EnumExtensions.IsFlagsEnum(type)) {
@@ -30,7 +17,6 @@ namespace GotaSoundIO.IO {
             }
             return flag;
         }
-
         private static bool IsFlagsEnum(Type type) {
             bool flag;
             if (!EnumExtensions._flagEnums.TryGetValue(type, out flag)) {
@@ -41,5 +27,4 @@ namespace GotaSoundIO.IO {
             return flag;
         }
     }
-
 }

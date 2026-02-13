@@ -5,34 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace NitroFileLoader {
-
-    /// <summary>
-    /// A sequence archive. It's still a sequence. TODO: OVERRIDE LOADING AND SAVING FROM TEXT!!!
-    /// </summary>
     public class SequenceArchive : SequenceFile {
-
-        /// <summary>
-        /// Sequences. The index of each one of these is the same as the public label.
-        /// </summary>
         public List<SequenceArchiveSequence> Sequences = new List<SequenceArchiveSequence>();
-        
-        /// <summary>
-        /// Read the sequence archive.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
-
-            //Open the data block.
             r.OpenFile<NHeader>(out _);
             uint dataSize;
             r.OpenBlock(0, out _, out dataSize);
             long bakPos = r.Position - 8;
             uint seqDataOffset = r.ReadUInt32();
             uint numSeqs = r.ReadUInt32();
-
-            //Read entries.
             Labels = new Dictionary<string, uint>();
             Sequences = new List<SequenceArchiveSequence>();
             for (uint i = 0; i < numSeqs; i++) {
@@ -45,12 +27,8 @@ namespace NitroFileLoader {
                     r.ReadUInt64();
                 }
             }
-
-            //Data.
             r.Jump(seqDataOffset, true);
             var data = r.ReadBytes((int)(dataSize - (r.Position - bakPos))).ToList();
-
-            //Remove padding.
             for (int i = data.Count - 1; i >= 0; i--) {
                 if (data[i] == 0) {
                     data.RemoveAt(i);
@@ -58,23 +36,11 @@ namespace NitroFileLoader {
                     break;
                 }
             }
-
-            //Set raw data.
             RawData = data.ToArray();
-
         }
-
-        /// <summary>
-        /// Write the sequence archive.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
-
-            //Write the data.
             w.InitFile<NHeader>("SSAR", ByteOrder.LittleEndian, null, 1);
             w.InitBlock("DATA");   
-
-            //Write each sequence.
             Sequences = Sequences.OrderBy(x => x.Index).ToList();
             if (Sequences.Count > 0) {
                 w.Write((uint)(0x20 + 12 * (Sequences.Last().Index + 1)));
@@ -95,31 +61,14 @@ namespace NitroFileLoader {
                 w.Write((uint)0x20);
                 w.Write((uint)0);
             }
-
-            //Write data and end.
             w.Write(RawData);
             w.Pad(4);
             w.CloseBlock();
             w.CloseFile();
-
         }
-
-        /// <summary>
-        /// Get the platform.
-        /// </summary>
-        /// <returns>The platform.</returns>
         public override SequencePlatform Platform() => new Nitro();
-
-        /// <summary>
-        /// Convert the file to text.
-        /// </summary>
-        /// <returns>The file as text.</returns>
         public new string[] ToText() {
-
-            //Command list.
             List<string> l = new List<string>();
-
-            //Add header.
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add(";");
             l.Add("; " + Name + ".mus");
@@ -127,8 +76,6 @@ namespace NitroFileLoader {
             l.Add(";");
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add("");
-
-            //Add sequence table.
             l.Add("@SEQ_TABLE");
             for (int i = 0; i < Sequences.Count; i++) {
                 string s = "";
@@ -142,15 +89,9 @@ namespace NitroFileLoader {
                 s += (e.Player == null ? e.ReadingPlayerId.ToString() : e.Player.Name);
                 l.Add(s);
             }
-
-            //Add sequence data.
             l.Add("");
             l.Add("@SEQ_DATA");
-
-            //For each command. Last one isn't counted.
             for (int i = 0; i < Commands.Count - 1; i++) {
-
-                //Add labels.
                 bool labelAdded = false;
                 var labels = PublicLabels.Where(x => x.Value == i).Select(x => x.Key);
                 foreach (var label in labels) {
@@ -167,45 +108,20 @@ namespace NitroFileLoader {
                     l.Add("Command_" + i + ":");
                     labelAdded = true;
                 }
-
-                //Add command.
                 l.Add("\t" + Commands[i].ToString());
-
             }
-
-            //Return the list.
             return l.ToArray();
-
         }
-
-        /// <summary>
-        /// From text.
-        /// </summary>
-        /// <param name="text">The text to parse.</param>
         public new void FromText(List<string> text) {
             FromText(text, null);
         }
-
-        /// <summary>
-        /// From text.
-        /// </summary>
-        /// <param name="text">The text to parse.</param>
-        /// <param name="a">Sound archive.</param>
         public void FromText(List<string> text, SoundArchive a) {
-
-            //Success by default.
             WritingCommandSuccess = true;
-
-            //Get platform.
             var p = Platform();
-
-            //Reset labels.
             PublicLabels = new Dictionary<string, int>();
             OtherLabels = new List<int>();
             Dictionary<string, int> privateLabels = new Dictionary<string, int>();
             List<int> labelLines = new List<int>();
-
-            //Format text.
             List<string> t = text.ToList();
             int comNum = 0;
             for (int i = t.Count - 1; i >= 0; i--) {
@@ -221,22 +137,12 @@ namespace NitroFileLoader {
                     }
                 }
             }
-
-            //Sequence id to label name.
             Dictionary<int, string> seqId2Label = new Dictionary<int, string>();
-
-            //Get sequences.
             Sequences = new List<SequenceArchiveSequence>();
             int currSeqId = 0;
             for (int i = t.IndexOf("@SEQ_TABLE") + 1; i < t.IndexOf("@SEQ_DATA"); i++) {
-
-                //New sequence.
                 SequenceArchiveSequence s = new SequenceArchiveSequence();
-
-                //Get sequence data.
                 string[] seqData = t[i].Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Split(',');
-
-                //Get sequence.
                 string label = seqData[0].Split(':')[1];
                 string seqNameData = seqData[0].Split(':')[0];
                 if (seqNameData.Contains("=")) {
@@ -248,8 +154,6 @@ namespace NitroFileLoader {
                 s.Index = currSeqId;
                 seqId2Label.Add(currSeqId++, label);
                 s.LabelName = label;
-
-                //Bank.
                 string bnk = seqData[1];
                 if (ushort.TryParse(bnk, out _)) {
                     s.ReadingBankId = ushort.Parse(bnk);
@@ -266,13 +170,9 @@ namespace NitroFileLoader {
                 } else {
                     throw new Exception("Can't use a name when there is no sound archive open!");
                 }
-
-                //Data.
                 s.Volume = byte.Parse(seqData[2]);
                 s.ChannelPriority = byte.Parse(seqData[3]);
                 s.PlayerPriority = byte.Parse(seqData[4]);
-
-                //Player
                 string ply = seqData[5];
                 if (ushort.TryParse(ply, out _)) {
                     s.ReadingPlayerId = byte.Parse(ply);
@@ -289,17 +189,10 @@ namespace NitroFileLoader {
                 } else {
                     throw new Exception("Can't use a name when there is no sound archive open!");
                 }
-
-                //Add sequence.
                 Sequences.Add(s);
-
             }
-
-            //Fetch labels.
             int strt = t.IndexOf("@SEQ_DATA") + 1;
             for (int i = strt; i < t.Count; i++) {
-
-                //If it's a label.
                 if (t[i].EndsWith(":")) {
                     labelLines.Add(i);
                     string lbl = t[i].Replace(":", "");
@@ -312,10 +205,7 @@ namespace NitroFileLoader {
                 } else {
                     comNum++;
                 }
-
             }
-
-            //Get commands.
             Commands = new List<SequenceCommand>();
             for (int i = t.IndexOf("@SEQ_DATA") + 1; i < t.Count; i++) {
                 if (labelLines.Contains(i)) {
@@ -325,80 +215,25 @@ namespace NitroFileLoader {
                 try { seq.FromString(t[i], PublicLabels, privateLabels); } catch { WritingCommandSuccess = false; throw new Exception("Command " + i + ": \"" + t[i] + "\" is invalid."); }
                 Commands.Add(seq);
             }
-
-            //Fin.
             Commands.Add(new SequenceCommand() { CommandType = SequenceCommands.Fin });
-
-            //Backup labels.
             var bakLabels = PublicLabels;
             PublicLabels = new Dictionary<string, int>();
             foreach (var seq in Sequences) {
                 PublicLabels.Add(seq.Name, bakLabels[seq.LabelName]);
             }
-
         }
-
     } 
-
-    /// <summary>
-    /// A sequence inside of the sequence archive.
-    /// </summary>
     public class SequenceArchiveSequence : IReadable, IWriteable {
-        
-        /// <summary>
-        /// Sequence archive name.
-        /// </summary>
         public string Name;
-
-        /// <summary>
-        /// Sequence index.
-        /// </summary>
         public int Index;
-
-        /// <summary>
-        /// Bank.
-        /// </summary>
         public BankInfo Bank;
-
-        /// <summary>
-        /// Player.
-        /// </summary>
         public PlayerInfo Player;
-
-        /// <summary>
-        /// Volume.
-        /// </summary>
         public byte Volume = 100;
-
-        /// <summary>
-        /// Channel priority.
-        /// </summary>
         public byte ChannelPriority = 0x40;
-
-        /// <summary>
-        /// Player priority.
-        /// </summary>
         public byte PlayerPriority = 0x40;
-
-        /// <summary>
-        /// Reading bank Id.
-        /// </summary>
         public ushort ReadingBankId;
-
-        /// <summary>
-        /// Reading player Id.
-        /// </summary>
         public byte ReadingPlayerId;
-
-        /// <summary>
-        /// Label name. FOR CONVERSION ONLY, DON'T USE!
-        /// </summary>
         public string LabelName;
-
-        /// <summary>
-        /// Read the sequence info.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public void Read(FileReader r) {
             ReadingBankId = r.ReadUInt16();
             Volume = r.ReadByte();
@@ -407,11 +242,6 @@ namespace NitroFileLoader {
             ReadingPlayerId = r.ReadByte();
             r.ReadUInt16();
         }
-
-        /// <summary>
-        /// Write the sequence info.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public void Write(FileWriter w) {
             w.Write(Bank != null ? (ushort)Bank.Index : (ushort)ReadingBankId);
             w.Write(Volume);
@@ -420,7 +250,5 @@ namespace NitroFileLoader {
             w.Write(Player != null ? (byte)Player.Index : (byte)ReadingPlayerId);
             w.Write((ushort)0);
         }
-
     }
-
 }

@@ -4,60 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSoundIO.Sound.Playback {
-
-    /// <summary>
-    /// Null wave provider.
-    /// </summary>
     public class NullWavePlayer : IWavePlayer {
-
-        /// <summary>
-        /// Volume.
-        /// </summary>
         public float Volume { get => m_Volume; set => m_Volume = value; }
         private float m_Volume = 1f;
-
-        /// <summary>
-        /// Output wave format.
-        /// </summary>
         public IWaveProvider OutputWaveProvider { get; set; }
-
-        /// <summary>
-        /// Output wave format.
-        /// </summary>
         public WaveFormat OutputWaveFormat => OutputWaveProvider?.WaveFormat;
-
-        /// <summary>
-        /// Playback state.
-        /// </summary>
         public PlaybackState PlaybackState => throw new NotImplementedException();
         private PlaybackState m_PlaybackState;
-
-        /// <summary>
-        /// Playback stopped.
-        /// </summary>
 #pragma warning disable CS0067
         public event EventHandler<StoppedEventArgs> PlaybackStopped;
 #pragma warning restore CS0067
-
-        /// <summary>
-        /// Play.
-        /// </summary>
         public void Play() {
             m_PlaybackState = PlaybackState.Playing;
         }
-
-        /// <summary>
-        /// Stop.
-        /// </summary>
         public void Stop() {
             m_PlaybackState = PlaybackState.Stopped;
         }
-
-        /// <summary>
-        /// Pause.
-        /// </summary>
         public void Pause() {
             if (m_PlaybackState == PlaybackState.Paused) {
                 m_PlaybackState = PlaybackState.Playing;
@@ -65,19 +28,9 @@ namespace GotaSoundIO.Sound.Playback {
                 m_PlaybackState = PlaybackState.Paused;
             }
         }
-
-        /// <summary>
-        /// Init.
-        /// </summary>
         public void Init(IWaveProvider waveProvider) {
             OutputWaveProvider = waveProvider;
         }
-
-        /// <summary>
-        /// There's nothing to dispose.
-        /// </summary>
         public void Dispose() {}
-
     }
-
 }

@@ -5,42 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSoundIO {
-
-    /// <summary>
-    /// A table.
-    /// </summary>
-    /// <typeparam name="T">Type represented in the table.</typeparam>
     public class Table<T> : IList<T>, IReadable, IWriteable {
-
-        /// <summary>
-        /// Items.
-        /// </summary>
         private List<T> items = new List<T>();
-
-        /// <summary>
-        /// Get the items in the table as a list.
-        /// </summary>
-        /// <param name="t">Table.</param>
         public static implicit operator List<T>(Table<T> t) => t.items;
-
-        /// <summary>
-        /// Make a table from a list of items.
-        /// </summary>
-        /// <param name="l">List.</param>
         public static explicit operator Table<T>(List<T> l) { return new Table<T>() { items = l }; }
-
-        /// <summary>
-        /// Read the table.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public void Read(FileReader r) {
-
-            //Get count.
             uint count = r.ReadUInt32();
-
-            //Types.
             if (typeof(T).Equals(typeof(ulong))) {
                 items = r.ReadUInt64s((int)count).ConvertTo<T>().ToList();
             } else if (typeof(T).Equals(typeof(uint))) {
@@ -66,26 +37,14 @@ namespace GotaSoundIO {
             } else if (typeof(T).Equals(typeof(double))) {
                 items = r.ReadDoubles((int)count).ConvertTo<T>().ToList();
             }
-
-            //Custom.
             else {
                 for (int i = 0; i < count; i++) {
                     items.Add(r.Read<T>());
                 }
             }
-
         }
-
-        /// <summary>
-        /// Write the table.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public void Write(FileWriter w) {
-
-            //Write count.
             w.Write((uint)items.Count);
-
-            //Types.
             if (typeof(T).Equals(typeof(ulong))) {
                 w.Write(items.ConvertTo<ulong>());
             } else if (typeof(T).Equals(typeof(uint))) {
@@ -111,67 +70,46 @@ namespace GotaSoundIO {
             } else if (typeof(T).Equals(typeof(double))) {
                 w.Write(items.ConvertTo<double>());
             }
-
-            //Custom.
             else {
                 foreach (var i in items) {
                     w.Write(i as IWriteable);
                 }
             }
-
         }
-
-        //List stuff.
         #region ListStuff
-
         public T this[int index] { get => items[index]; set => items[index] = value; }
-
         public int Count => items.Count();
-
         public bool IsReadOnly => false;
-
         public void Add(T item) {
             items.Add(item);
         }
-
         public void Clear() {
             items.Clear();
         }
-
         public bool Contains(T item) {
             return items.Contains(item);
         }
-
         public void CopyTo(T[] array, int arrayIndex) {
             items.CopyTo(array, arrayIndex);
         }
-
         public IEnumerator<T> GetEnumerator() {
             return items.GetEnumerator();
         }
-
         public int IndexOf(T item) {
             return items.IndexOf(item);
         }
-
         public void Insert(int index, T item) {
             items.Insert(index, item);
         }
-
         public bool Remove(T item) {
             return items.Remove(item);
         }
-
         public void RemoveAt(int index) {
             items.RemoveAt(index);
         }
-
         IEnumerator IEnumerable.GetEnumerator() {
             return items.GetEnumerator();
         }
-
         #endregion
-
     }
-
 }

@@ -10,29 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GotaSoundBank.DLS;
 using GotaSoundBank.SF2;
-
 namespace NitroFileLoader {
-
-    /// <summary>
-    /// Bank.
-    /// </summary>
     public class Bank : IOFile, PlayableBank {
-
-        /// <summary>
-        /// Instruments.
-        /// </summary>
         public List<Instrument> Instruments = new List<Instrument>();
-
-        /// <summary>
-        /// Max order.
-        /// </summary>
         public long MaxOrder => Instruments.Select(x => x.GetOrder).Max();
-
-        /// <summary>
-        /// Duplicate an instrument.
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
         public static Instrument DuplicateInstrument(Instrument i) {
             Instrument n = null;
             switch (i.Type()) {
@@ -54,18 +35,9 @@ namespace NitroFileLoader {
             }
             return n;
         }
-
-        /// <summary>
-        /// Read the file.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
-
-            //Open block.
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _);
-
-            //Read info.
             r.ReadUInt32s(8);
             uint numInsts = r.ReadUInt32();
             List<InstrumentType> records = new List<InstrumentType>();
@@ -75,18 +47,10 @@ namespace NitroFileLoader {
                 offs.Add(r.ReadUInt16());
                 r.ReadByte();
             }
-
-            //Read the instrument.
             for (int i = 0; i < records.Count; i++) {
-
-                //Switch the instrument type.
                 switch (records[i]) {
-
-                    //Blank.
                     case InstrumentType.Blank:
                         break;
-
-                    //Direct.
                     case InstrumentType.PCM:
                     case InstrumentType.PSG:
                     case InstrumentType.Noise:
@@ -98,41 +62,25 @@ namespace NitroFileLoader {
                         Instruments[Instruments.Count - 1].NoteInfo[0].InstrumentType = records[i];
                         Instruments[Instruments.Count - 1].Order = offs[i];
                         break;
-
-                    //Drum set.
                     case InstrumentType.DrumSet:
                         r.Jump(offs[i], true);
                         Instruments.Add(r.Read<DrumSetInstrument>());
                         Instruments[Instruments.Count - 1].Index = i;
                         Instruments[Instruments.Count - 1].Order = offs[i];
                         break;
-
-                    //Key split.
                     case InstrumentType.KeySplit:
                         r.Jump(offs[i], true);
                         Instruments.Add(r.Read<KeySplitInstrument>());
                         Instruments[Instruments.Count - 1].Index = i;
                         Instruments[Instruments.Count - 1].Order = offs[i];
                         break;
-
                 }
-
             }
-
         }
-
-        /// <summary>
-        /// Write the file.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
-
-            //Write the bank.
             w.InitFile<NHeader>("SBNK", ByteOrder.LittleEndian, null, 1);
             w.InitBlock("DATA");
             w.Write(new uint[8]);
-
-            //Instruments.
             if (Instruments.Count > 0) {
                 Instruments = Instruments.OrderBy(x => x.Index).ToList();
                 w.Write((uint)(Instruments.Last().Index + 1));
@@ -148,8 +96,6 @@ namespace NitroFileLoader {
                         w.Write((uint)0);
                     }
                 }
-
-                //Write each instrument.
                 var sortedInsts = Instruments.OrderBy(x => x.GetOrder).ToList();
                 for (int i = 0; i < sortedInsts.Count; i++) {
                     long bak = w.Position;
@@ -161,24 +107,11 @@ namespace NitroFileLoader {
             } else {
                 w.Write((uint)0);
             }
-
-            //Close.
             w.Pad(4);
             w.CloseBlock();
             w.CloseFile();
-
         }
-
-        /// <summary>
-        /// Get note playback info.
-        /// </summary>
-        /// <param name="program">Program number.</param>
-        /// <param name="note">Note to play.</param>
-        /// <param name="velocity">Note velocity.</param>
-        /// <returns>The note playback info.</returns>
         public NotePlayBackInfo GetNotePlayBackInfo(int program, Notes note, byte velocity) {
-
-            //Has program.
             var q = Instruments.Where(x => x.Index == program).FirstOrDefault();
             if (q != null) {
                 var e = q.GetNoteInfo(note);
@@ -190,56 +123,24 @@ namespace NitroFileLoader {
             } else {
                 return null;
             }
-
         }
-
-        /// <summary>
-        /// Convert the SBNK into a sound font.
-        /// </summary>
-        /// <param name="a">The sound archive.</param>
-        /// <param name="b">The bank info.</param>
-        /// <returns>This as a soundfont.</returns>
         public SoundFont ToSoundFont(SoundArchive a, BankInfo b) {
-
-            //Laziness.
             return new SoundFont(ToDLS(a, b));
-
         }
-
-        /// <summary>
-        /// Convert the bank to downloadable sounds.
-        /// </summary>
-        /// <param name="a">The sound archive.</param>
-        /// <param name="b">The bank info.</param>
-        /// <returns>The bank as DLS.</returns>
         public DownloadableSounds ToDLS(SoundArchive a, BankInfo b) {
-
-            //New DLS.
             DownloadableSounds d = new DownloadableSounds();
-
-            //Wave map.
             Dictionary<uint, RiffWave> waveMap = new Dictionary<uint, RiffWave>();
             Dictionary<ushort, RiffWave> psgMap = new Dictionary<ushort, RiffWave>();
             Dictionary<ushort, RiffWave> noiseMap = new Dictionary<ushort, RiffWave>();
             d.Waves.Add(new RiffWave("Hardware/Null.wav"));
-
-            //Add each instrument.
             foreach (var inst in Instruments) {
-
-                //New instrument.
                 GotaSoundBank.DLS.Instrument im = new GotaSoundBank.DLS.Instrument();
                 im.BankId = (uint)(inst.Index / 128);
                 im.InstrumentId = (uint)(inst.Index % 128);
                 im.Name = "Instrument " + im.InstrumentId;
-
-                //Add regions.
                 byte lastNote = inst as DrumSetInstrument != null ? (inst as DrumSetInstrument).Min : (byte)0;
                 foreach (var n in inst.NoteInfo) {
-
-                    //New region.
                     Region r = new Region();
-
-                    //Set note info.
                     r.VelocityLow = 0;
                     r.VelocityHigh = 127;
                     r.NoteLow = lastNote;
@@ -250,8 +151,6 @@ namespace NitroFileLoader {
                     r.Layer = 1;
                     r.NoTruncation = true;
                     r.RootNote = (byte)n.BaseNote;
-
-                    //Wave data.
                     int wavInd = 0;
                     switch (n.InstrumentType) {
                         case InstrumentType.PCM:
@@ -289,8 +188,6 @@ namespace NitroFileLoader {
                             }
                             break;
                     }
-
-                    //Set wave data.
                     r.WaveId = (uint)wavInd;
                     r.Loops = d.Waves[wavInd].Loops;
                     if (r.Loops) {
@@ -298,8 +195,6 @@ namespace NitroFileLoader {
                         r.LoopLength = d.Waves[wavInd].LoopEnd - d.Waves[wavInd].LoopStart;
                         if (r.LoopLength < 0) { r.LoopLength = 0; }
                     }
-
-                    //Articulator.
                     Articulator ar = new Articulator();
                     ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1AttackTime, Scale = n.Attack >= 127 ? int.MinValue : MillisecondsToTimecents(AttackTable[n.Attack]) * 65536 });
                     ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1DecayTime, Scale = n.Decay >= 127 ? int.MinValue : MillisecondsToTimecents(MaxReleaseTimes[n.Decay]) * 65536 });
@@ -307,27 +202,12 @@ namespace NitroFileLoader {
                     ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1ReleaseTime, Scale = n.Release >= 127 ? int.MinValue : MillisecondsToTimecents(MaxReleaseTimes[n.Release]) * 65536 });
                     ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.Pan, Scale = GetPan(n.Pan) * 65536 });
                     r.Articulators.Add(ar);
-
-                    //Add region.
                     im.Regions.Add(r);
-
                 }
-
-                //Add the instrument.
                 d.Instruments.Add(im);
-            
             }
-
-            //Return the DLS.
             return d;
-
         }
-
-        /// <summary>
-        /// Get the pan.
-        /// </summary>
-        /// <param name="pan">Pan.</param>
-        /// <returns>Pan.</returns>
         public static int GetPan(byte pan) {
             if (pan > 127) { pan = 127; }
             double ret = .5;
@@ -336,12 +216,6 @@ namespace NitroFileLoader {
             }
             return (int)(ret * 1000 - 500);
         }
-
-        /// <summary>
-        /// Set the pan value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The output pan.</returns>
         public static byte SetPan(int value) {
             double num = (value + 500) / 1000d;
             byte pan = 64;
@@ -350,49 +224,18 @@ namespace NitroFileLoader {
             }
             return pan;
         }
-
-        /// <summary>
-        /// Convert milliseconds to timecents.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>Milliseconds to timecents.</returns>
         public static int MillisecondsToTimecents(double value) {
             return (int)Math.Round(1200 * Math.Log(value / 1000, 2), MidpointRounding.AwayFromZero);
         }
-
-        /// <summary>
-        /// Convert timecents to milliseconds.
-        /// </summary>
-        /// <param name="value">Time cents.</param>
-        /// <returns>The value in milliseconds.</returns>
         public static double TimecentsToMilliseconds(int value) {
             return Math.Pow(2, value / 1200d) * 1000;
         }
-
-        /// <summary>
-        /// Convert sustain to a fraction.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The fraction.</returns>
         public static double Sustain2Fraction(byte value) {
             return Math.Pow(value / 127d, 2);
         }
-
-        /// <summary>
-        /// Convert a fraction value to a sustain value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The sustain.</returns>
         public static byte Fraction2Sustain(double value) {
             return (byte)(Math.Sqrt(value) * 127);
         }
-
-        /// <summary>
-        /// Get the table index nearest to a value.
-        /// </summary>
-        /// <param name="value">Value to compare to.</param>
-        /// <param name="table">Table of values.</param>
-        /// <returns>Nearest index.</returns>
         public static byte GetNearestTableIndex(double value, double[] table) {
             byte ret = 127;
             double minDis = double.MaxValue;
@@ -405,10 +248,6 @@ namespace NitroFileLoader {
             }
             return ret;
         }
-
-        /// <summary>
-        /// Attack table to milliseconds.
-        /// </summary>
         public static double[] AttackTable = new double[] {
             8606.1, 4756.3, 3339.3, 2594.4, 2130.7, 1807.7, 1573.3, 1401.4,
             1255.5, 1140.9, 1047.1, 963.8, 896.0, 838.7, 786.6, 745.0,
@@ -427,10 +266,6 @@ namespace NitroFileLoader {
             78.2, 72.9, 67.7, 62.5, 57.3, 52.1, 46.9, 41.7,
             36.5, 31.3, 26.1, 20.8, 15.6, 10.4, 10.4, 0.0
         };
-
-        /// <summary>
-        /// Decay release table to milliseconds.
-        /// </summary>
         public static double[] DecayReleaseTable = new double[] {
             -0.0002, -0.0005, -0.0008, -0.0011, -0.0014, -0.0017, -0.0020, -0.0023,
             -0.0026, -0.0029, -0.0032, -0.0035, -0.0038, -0.0041, -0.0044, -0.0047,
@@ -449,10 +284,6 @@ namespace NitroFileLoader {
             -0.0824, -0.0888, -0.0962, -0.1049, -0.1154, -0.1282, -0.1442, -0.1648,
             -0.1923, -0.2308, -0.2885, -0.3846, -0.5769, -1.1538, -2.2897, -9.8460
         };
-
-        /// <summary>
-        /// Maximum release times in milliseconds.
-        /// </summary>
         public static double[] MaxReleaseTimes = new double[] {
             481228.8, 160409.6, 96241.6, 68744.0, 53466.4, 43747.6, 37013.6, 32078.8,
             28303.6, 25324.0, 22911.2, 20919.6, 19245.2, 17820.4, 16593.2, 15522.0,
@@ -471,7 +302,5 @@ namespace NitroFileLoader {
             873.6, 811.2, 748.8, 686.4, 624.0, 561.6, 499.2, 436.8,
             374.4, 312.0, 249.6, 187.2, 124.8, 62.4, 31.2, 5.2
         };
-
     }
-
 }

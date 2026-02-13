@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSequenceLib {
-
-    /// <summary>
-    /// Sequence command type.
-    /// </summary>
     public enum SequenceCommandParameter {
         NoteParam,
         OpenTrack,
@@ -29,5 +24,4 @@ namespace GotaSequenceLib {
         U8S16,
         None
     }
-
 }

@@ -10,15 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace NitroStudio2 {
     public partial class CreateStreamTool : Form {
-
-        /// <summary>
-        /// Swav mode.
-        /// </summary>
         bool SwavMode;
-
         public CreateStreamTool(bool swavMode) {
             InitializeComponent();
             outputFormat.SelectedIndex = 2;
@@ -28,7 +22,6 @@ namespace NitroStudio2 {
                 Icon = Properties.Resources.Wav;
             }
         }
-
         private void impFileButton_Click(object sender, EventArgs e) {
             OpenFileDialog o = new OpenFileDialog();
             o.RestoreDirectory = true;
@@ -41,7 +34,6 @@ namespace NitroStudio2 {
                 impFileBox.Refresh();
             }
         }
-
         private void outFileButton_Click(object sender, EventArgs e) {
             SaveFileDialog s = new SaveFileDialog();
             s.RestoreDirectory = true;
@@ -54,10 +46,7 @@ namespace NitroStudio2 {
                 outFileBox.Refresh();
             }
         }
-
         private void exportButton_Click(object sender, EventArgs e) {
-
-            //Test.
             if (impFileBox.Text.Equals("")) {
                 MessageBox.Show("No Input File Selected!");
                 return;
@@ -66,16 +55,12 @@ namespace NitroStudio2 {
                 MessageBox.Show("No Output File Selected!");
                 return;
             }
-
-            //Sound file.
             SoundFile s;
             if (SwavMode) {
                 s = new Wave();
             } else {
                 s = new NitroFileLoader.Stream();
             }
-
-            //Switch input file.
             SoundFile i;
             switch (Path.GetExtension(impFileBox.Text)) {
                 case ".swav":
@@ -89,8 +74,6 @@ namespace NitroStudio2 {
                     break;
             }
             i.Read(impFileBox.Text);
-
-            //Get conversion type.
             Type convType;
             switch (outputFormat.SelectedIndex) {
                 case 0:
@@ -103,14 +86,8 @@ namespace NitroStudio2 {
                     convType = typeof(ImaAdpcm);
                     break;
             }
-
-            //Convert the file.
             s.FromOtherStreamFile(i, convType);
-
-            //Save the file.
             s.Write(outFileBox.Text);
-
         }
-
     }
 }

@@ -6,47 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace NitroStudio2 {
-
-    /// <summary>
-    /// A Nitro Studio 2 Instrument.
-    /// </summary>
     public class NitroStudio2Instrument : IOFile {
-
-        /// <summary>
-        /// The actual instrument.
-        /// </summary>
         public Instrument Inst;
-
-        /// <summary>
-        /// Waves.
-        /// </summary>
         public List<WaveEntry> Waves;
-
-        /// <summary>
-        /// Blank constructor.
-        /// </summary>
         public NitroStudio2Instrument() {}
-
-        /// <summary>
-        /// Create a Nitro Studio 2 Instrument.
-        /// </summary>
-        /// <param name="inst">The instrument.</param>
-        /// <param name="s">Sound archive.</param>
-        /// <param name="war0">Wave archive 0.</param>
-        /// <param name="war1">Wave archive 1.</param>
-        /// <param name="war2">Wave archive 2.</param>
-        /// <param name="war3">Wave archive 3.</param>
         public NitroStudio2Instrument(Instrument inst, SoundArchive s, ushort war0, ushort war1, ushort war2, ushort war3) {
-
-            //Set instrument.
             Inst = inst;
-
-            //No archive.
             if (s == null) { return; }
-
-            //Load waves.
             Waves = new List<WaveEntry>();
             foreach (var n in inst.NoteInfo) {
                 WaveEntry w = new WaveEntry();
@@ -74,19 +41,9 @@ namespace NitroStudio2 {
                 }
                 Waves.Add(w);
             }
-        
         }
-
-        /// <summary>
-        /// Read the instrument.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
-
-            //Skip header.
             r.ReadUInt32();
-
-            //Get type.
             switch (r.ReadByte()) {
                 case 0:
                     Inst = new DirectInstrument();
@@ -98,14 +55,10 @@ namespace NitroStudio2 {
                     Inst = new KeySplitInstrument();
                     break;
             }
-
-            //Read data.
             Inst.Read(r);
             if (Inst as DirectInstrument != null) {
                 Inst.NoteInfo[0].InstrumentType = (InstrumentType)r.ReadByte();
             }
-
-            //Read waves.
             Waves = null;
             if (!r.ReadBoolean()) { return; }
             Waves = new List<WaveEntry>();
@@ -117,31 +70,13 @@ namespace NitroStudio2 {
                     Waves[Waves.Count - 1].Wave = (Wave)r.ReadFile<Wave>();
                 }
             }
-
         }
-
-        /// <summary>
-        /// Write an instrument.
-        /// </summary>
-        /// <param name="bnk">The bank.</param>
-        /// <param name="instrumentId">The instrument Id.</param>
-        /// <param name="a">Sound archive.</param>
-        /// <param name="war0">Wave archive 0.</param>
-        /// <param name="war1">Wave archive 1.</param>
-        /// <param name="war2">Wave archive 2.</param>
-        /// <param name="war3">Wave archive 3.</param>
         public void WriteInstrument(Bank bnk, int instrumentId, SoundArchive a, ushort war0, ushort war1, ushort war2, ushort war3) {
-
-            //Set the instrument.
             var repl = bnk.Instruments.Where(x => x.Index == instrumentId).FirstOrDefault();
             Inst.Index = instrumentId;
-
-            //Sound archive check.
             if (a == null) {
                 return;
             }
-
-            //Get wave archives.
             WaveArchiveInfo[] wars = new WaveArchiveInfo[4];
             if (war0 != 0xFFFF) {
                 wars[0] = a.WaveArchives.Where(x => x.Index == (int)war0).FirstOrDefault();
@@ -155,40 +90,24 @@ namespace NitroStudio2 {
             if (war3 != 0xFFFF) {
                 wars[3] = a.WaveArchives.Where(x => x.Index == (int)war3).FirstOrDefault();
             }
-
-            //Make sure there are linked wave archives.
             if (wars.Where(x => x != null).Count() < 1) {
                 return;
             }
-
-            //For each region in the instrument.
             foreach (var r in Inst.NoteInfo) {
-
-                //PCM type.
                 if (r.InstrumentType != InstrumentType.PCM) {
                     continue;
                 }
-
-                //Waves are not null.
                 if (Waves == null) {
                     continue;
                 }
-
-                //Get entry.
                 var e = Waves.Where(x => x.WarId == r.WarId && x.WaveId == r.WaveId).FirstOrDefault();
                 if (e == null) {
                     continue;
                 }
-
-                //Wave is not null.
                 if (e.Wave == null) {
                     continue;
                 }
-
-                //Get MD5SUM of wave.
                 string md5 = e.Wave.Md5Sum;
-
-                //Try and find matching wave.
                 bool found = false;
                 for (int i = 0; i < wars.Length; i++) {
                     if (wars[i] != null) {
@@ -201,8 +120,6 @@ namespace NitroStudio2 {
                         }
                     }
                 }
-
-                //Not found.
                 if (!found) {
                     RiffWave riff = new RiffWave();
                     riff.FromOtherStreamFile(e.Wave);
@@ -216,24 +133,11 @@ namespace NitroStudio2 {
                     r.WaveId = (ushort)(a.WaveArchives.Where(x => x.Index == mapper.WarMap[0]).FirstOrDefault().File.Waves.Count() - 1);
                     r.WarId = (ushort)wars.ToList().IndexOf(a.WaveArchives.Where(x => x.Index == mapper.WarMap[0]).FirstOrDefault());
                 }
-
             }
-
-            //Set instrument.
             bnk.Instruments[bnk.Instruments.IndexOf(repl)] = Inst;
-
         }
-
-        /// <summary>
-        /// Write the instrument.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
-
-            //Write header.
             w.Write("NS2I".ToCharArray());
-
-            //Write instrument type.
             switch (Inst.Type()) {
                 case InstrumentType.DrumSet:
                     w.Write((byte)1);
@@ -245,14 +149,10 @@ namespace NitroStudio2 {
                     w.Write((byte)0);
                     break;
             }
-
-            //Write instrument.
             w.Write(Inst);
             if (Inst as DirectInstrument != null) {
                 w.Write((byte)Inst.NoteInfo[0].InstrumentType);
             }
-
-            //Write waves.
             w.Write(Waves != null);
             if (Waves == null) { return; }
             w.Write((uint)Waves.Count);
@@ -264,31 +164,11 @@ namespace NitroStudio2 {
                     w.WriteFile(v.Wave);
                 }
             }
-
         }
-
-        /// <summary>
-        /// Wave entry.
-        /// </summary>
         public class WaveEntry {
-
-            /// <summary>
-            /// Wave archive Id.
-            /// </summary>
             public ushort WarId;
-
-            /// <summary>
-            /// Wave Id.
-            /// </summary>
             public ushort WaveId;
-
-            /// <summary>
-            /// Actual wave data.
-            /// </summary>
             public Wave Wave;
-
         }
-
     }
-
 }

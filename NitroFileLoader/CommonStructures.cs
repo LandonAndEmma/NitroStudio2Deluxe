@@ -4,23 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace NitroFileLoader {
-
-    /// <summary>
-    /// SDAT header.
-    /// </summary>
     public class SDATHeader : FileHeader {
-
-        /// <summary>
-        /// Read the header.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
             Magic = new string(r.ReadChars(4));
             r.ByteOrder = ByteOrder.BigEndian;
             r.ByteOrder = ByteOrder = r.ReadUInt16() == 0xFEFF ?ByteOrder.BigEndian : ByteOrder.LittleEndian;
-            r.ReadUInt16(); //Version is always constant.
+            r.ReadUInt16(); 
             FileSize = r.ReadUInt32();
             HeaderSize = r.ReadUInt16();
             ushort numBlocks = r.ReadUInt16();
@@ -33,11 +23,6 @@ namespace NitroFileLoader {
             }
             r.Align(0x20);
         }
-
-        /// <summary>
-        /// Write the header.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
             w.ByteOrder = ByteOrder.LittleEndian;
             w.Write(Magic.ToCharArray());
@@ -53,33 +38,18 @@ namespace NitroFileLoader {
             }
             w.Align(0x20);
         }
-
     }
-
-    /// <summary>
-    /// NDS header.
-    /// </summary>
     public class NHeader : FileHeader {
-
-        /// <summary>
-        /// Read the header.
-        /// </summary>
-        /// <param name="r">The reader.</param>
         public override void Read(FileReader r) {
             Magic = new string(r.ReadChars(4));    
             r.ByteOrder = ByteOrder.BigEndian;
             r.ByteOrder = ByteOrder = r.ReadUInt16() == 0xFEFF ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
-            r.ReadUInt16(); //Version is always constant.
+            r.ReadUInt16(); 
             FileSize = r.ReadUInt32();
             HeaderSize = r.ReadUInt16();
             r.ReadUInt16();
             BlockOffsets = new long[] { 0x10 };
         }
-
-        /// <summary>
-        /// Write the header.
-        /// </summary>
-        /// <param name="w">The writer.</param>
         public override void Write(FileWriter w) {
             HeaderSize = 0x10;
             w.ByteOrder = ByteOrder.LittleEndian;
@@ -90,7 +60,5 @@ namespace NitroFileLoader {
             w.Write((ushort)HeaderSize);
             w.Write((ushort)1);
         }
-
     }
-
 }

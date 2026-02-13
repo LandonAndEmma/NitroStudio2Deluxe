@@ -3,7 +3,6 @@ using Sanford.Multimedia.Midi;
 namespace GotaSequenceLib.Playback {
     public class MidiTrack: AbstractTrack {
         private readonly Sanford.Multimedia.Midi.Track _track = new Sanford.Multimedia.Midi.Track();
-        // *SEQ properties
         private bool _tie = false;
         override public bool Tie {
             set {
@@ -11,9 +10,8 @@ namespace GotaSequenceLib.Playback {
                 Message(new ChannelMessage(ChannelCommand.Controller, Index, (int)ControllerType.AllNotesOff));
             }
         }
-
         private bool _noteWait = true;
-        override public bool NoteWait { set { _noteWait = value; } } // AKA NoteWait?
+        override public bool NoteWait { set { _noteWait = value; } } 
         private bool _portamento;
         override public bool Portamento { set { _portamento = value; } }
         private int _voice;
@@ -64,13 +62,10 @@ namespace GotaSequenceLib.Playback {
         override public short SweepPitch { set { _sweepPitch = value; } }
         private int _bankNum;
         override public int BankNum { set { _bankNum = value; } }
-
         private void Message(ChannelMessage message) {
             _track.Insert((int)_player.ElapsedTicks, message);
         }
-
         public MidiTrack(byte idx, Player player): base(idx, player) {
-            
         }
     }
 }

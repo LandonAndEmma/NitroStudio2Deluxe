@@ -3,9 +3,6 @@ namespace GotaSequenceLib.Playback {
     public abstract class AbstractTrack {
         public readonly byte Index;
         protected readonly Player _player;
-
-
-        // Track state
         public bool Allocated;
         public bool Enabled;
         public bool Stopped;
@@ -15,12 +12,10 @@ namespace GotaSequenceLib.Playback {
         public int[] CallStack = new int[3];
         public byte[] CallStackLoops = new byte[3];
         public byte CallStackDepth;
-        public bool WaitingForNoteToFinishBeforeContinuingXD; // Is this necessary?
+        public bool WaitingForNoteToFinishBeforeContinuingXD; 
         public bool NoteDown;
-
-        // *SEQ properties 
         abstract public bool Tie { set; }
-        abstract public bool NoteWait { set; } // previously known as Mono
+        abstract public bool NoteWait { set; } 
         abstract public bool Portamento { set; }
         abstract public int Voice { set; }
         abstract public byte Priority { set; }
@@ -46,11 +41,9 @@ namespace GotaSequenceLib.Playback {
         abstract public byte PortamentoTime { set; }
         abstract public short SweepPitch { set; }
         abstract public int BankNum { set; }
-
         public class TrackVars {
             private readonly Player _player;
             private readonly short[] _trackVars = new short[0x10];
-
             public short this[int i] {
                 get {
                     if (i < 0x20) {
@@ -67,27 +60,15 @@ namespace GotaSequenceLib.Playback {
                     }
                 }
             }
-
             internal TrackVars(Player player) {
                 _player = player;
             }
         }
-
         public readonly TrackVars Vars;
-
         protected AbstractTrack(byte idx, Player player) {
             Index = idx;
             _player = player;
             Vars = new TrackVars(player);
         }
-
-
     }
-
-    // public enum LFOType
-    // {
-    //     Pitch,
-    //     Volume,
-    //     Panpot
-    // }
 }

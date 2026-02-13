@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSoundBank.SF2 {
-
-    /// <summary>
-    /// SF2 modulator.
-    /// </summary>
     public enum SF2Modulators : ushort {
         None = 0,
         NoteOnVelocity = 1,
@@ -19,5 +14,4 @@ namespace GotaSoundBank.SF2 {
         PitchWheelSensivity = 0x10,
         Link = 127
     }
-
 }

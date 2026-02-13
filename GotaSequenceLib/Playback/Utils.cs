@@ -1,10 +1,5 @@
 ﻿namespace GotaSequenceLib.Playback {
-
-    /// <summary>
-    /// Utils.
-    /// </summary>
     public static class Utils {
-
         public static readonly byte[] AttackTable = new byte[128]
         {
             255, 254, 253, 252, 251, 250, 249, 248,
@@ -24,7 +19,6 @@
             127, 123, 116, 109, 100, 92, 84, 73,
             63, 51, 38, 26, 14, 5, 1, 0
         };
-
         public static readonly ushort[] DecayTable = new ushort[128]
         {
             1, 3, 5, 7, 9, 11, 13, 15,
@@ -44,7 +38,6 @@
             549, 591, 640, 698, 768, 853, 960, 1097,
             1280, 1536, 1920, 2560, 3840, 7680, 15360, 65535
         };
-
         public static readonly int[] SustainTable = new int[128]
         {
             -92544, -92416, -92288, -83328, -76928, -71936, -67840, -64384,
@@ -64,7 +57,6 @@
             -2816, -2560, -2432, -2176, -2048, -1792, -1664, -1408,
             -1280, -1024, -896, -768, -512, -384, -128, 0
         };
-
         private static readonly sbyte[] _sinTable = new sbyte[33]
         {
             000, 006, 012, 019, 025, 031, 037, 043,
@@ -73,7 +65,6 @@
             117, 120, 122, 123, 125, 126, 126, 127,
             127
         };
-
         public static int Sin(int index) {
             if (index < 0x20) {
                 return _sinTable[index];
@@ -81,12 +72,11 @@
                 return _sinTable[0x20 - (index - 0x20)];
             } else if (index < 0x60) {
                 return -_sinTable[index - 0x40];
-            } else // < 0x80
+            } else 
               {
                 return -_sinTable[0x20 - (index - 0x60)];
             }
         }
-
         private static readonly ushort[] _pitchTable = new ushort[768]
         {
             0, 59, 118, 178, 237, 296, 356, 415,
@@ -186,7 +176,6 @@
             63657, 63774, 63890, 64007, 64124, 64241, 64358, 64476,
             64593, 64711, 64828, 64946, 65064, 65182, 65300, 65418
         };
-
         private static readonly byte[] _volumeTable = new byte[724]
         {
             0, 0, 0, 0, 0, 0, 0, 0,
@@ -281,21 +270,17 @@
             113, 114, 115, 117, 118, 119, 121, 122,
             124, 125, 126, 127
         };
-
         public static ushort GetChannelTimer(ushort baseTimer, int pitch) {
             int shift = 0;
             pitch = -pitch;
-
             while (pitch < 0) {
                 shift--;
                 pitch += 0x300;
             }
-
             while (pitch >= 0x300) {
                 shift++;
                 pitch -= 0x300;
             }
-
             ulong timer = (_pitchTable[pitch] + 0x10000uL) * baseTimer;
             shift -= 16;
             if (shift <= 0) {
@@ -308,7 +293,6 @@
             } else {
                 return ushort.MaxValue;
             }
-
             if (timer < 0x10) {
                 return 0x10;
             }
@@ -317,7 +301,6 @@
             }
             return (ushort)timer;
         }
-
         public static byte GetChannelVolume(int vol) {
             int a = vol / 0x80;
             if (a < -723) {
@@ -327,7 +310,5 @@
             }
             return _volumeTable[a + 723];
         }
-
     }
-
 }

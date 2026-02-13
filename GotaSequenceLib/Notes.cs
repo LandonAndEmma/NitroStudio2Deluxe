@@ -3,15 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GotaSequenceLib {
-
-    /// <summary>
-    /// Raw note.
-    /// </summary>
     public enum Notes : byte {
-
-        //-1
         cnm1,
         csm1,
         dnm1,
@@ -24,8 +17,6 @@ namespace GotaSequenceLib {
         anm1,
         asm1,
         bnm1,
-
-        //0
         cn0,
         cs0,
         dn0,
@@ -38,8 +29,6 @@ namespace GotaSequenceLib {
         an0,
         as0,
         bn0,
-
-        //1
         cn1,
         cs1,
         dn1,
@@ -52,8 +41,6 @@ namespace GotaSequenceLib {
         an1,
         as1,
         bn1,
-
-        //2
         cn2,
         cs2,
         dn2,
@@ -66,8 +53,6 @@ namespace GotaSequenceLib {
         an2,
         as2,
         bn2,
-
-        //3
         cn3,
         cs3,
         dn3,
@@ -80,8 +65,6 @@ namespace GotaSequenceLib {
         an3,
         as3,
         bn3,
-
-        //4
         cn4,
         cs4,
         dn4,
@@ -94,8 +77,6 @@ namespace GotaSequenceLib {
         an4,
         as4,
         bn4,
-
-        //5
         cn5,
         cs5,
         dn5,
@@ -108,8 +89,6 @@ namespace GotaSequenceLib {
         an5,
         as5,
         bn5,
-
-        //6
         cn6,
         cs6,
         dn6,
@@ -122,8 +101,6 @@ namespace GotaSequenceLib {
         an6,
         as6,
         bn6,
-
-        //7
         cn7,
         cs7,
         dn7,
@@ -136,8 +113,6 @@ namespace GotaSequenceLib {
         an7,
         as7,
         bn7,
-
-        //8
         cn8,
         cs8,
         dn8,
@@ -150,8 +125,6 @@ namespace GotaSequenceLib {
         an8,
         as8,
         bn8,
-
-        //9
         cn9,
         cs9,
         dn9,
@@ -160,7 +133,5 @@ namespace GotaSequenceLib {
         fn9,
         fs9,
         gn9,
-
     }
-
 }

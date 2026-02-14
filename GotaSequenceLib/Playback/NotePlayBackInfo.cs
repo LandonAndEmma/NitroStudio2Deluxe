@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSequenceLib.Playback {
-    public class NotePlayBackInfo {
+
+namespace GotaSequenceLib.Playback
+{
+    public class NotePlayBackInfo
+    {
         public int WaveId;
         public int WarId;
         public InstrumentType InstrumentType;

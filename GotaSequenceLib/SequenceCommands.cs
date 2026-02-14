@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSequenceLib {
-    public enum SequenceCommands {
+
+namespace GotaSequenceLib
+{
+    public enum SequenceCommands
+    {
         Note,
         Wait = 0x80,
         ProgramChange,
@@ -111,6 +114,6 @@ namespace GotaSequenceLib {
         Mod4Range,
         Mod4Delay,
         Mod4Period,
-        UserCall
+        UserCall,
     }
 }

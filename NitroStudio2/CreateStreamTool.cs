@@ -1,6 +1,4 @@
-﻿using GotaSoundIO.Sound;
-using NitroFileLoader;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,59 +8,81 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-namespace NitroStudio2 {
-    public partial class CreateStreamTool : Form {
+using GotaSoundIO.Sound;
+using NitroFileLoader;
+
+namespace NitroStudio2
+{
+    public partial class CreateStreamTool : Form
+    {
         bool SwavMode;
-        public CreateStreamTool(bool swavMode) {
+
+        public CreateStreamTool(bool swavMode)
+        {
             InitializeComponent();
             outputFormat.SelectedIndex = 2;
             SwavMode = swavMode;
-            if (SwavMode) {
+            if (SwavMode)
+            {
                 Text = "Create Wave";
                 Icon = Properties.Resources.Wav;
             }
         }
-        private void impFileButton_Click(object sender, EventArgs e) {
+
+        private void impFileButton_Click(object sender, EventArgs e)
+        {
             OpenFileDialog o = new OpenFileDialog();
             o.RestoreDirectory = true;
             o.Filter = "Supported Sound Files|*.wav;*.swav;*.strm";
             o.ShowDialog();
-            if (o.FileName != "") {
+            if (o.FileName != "")
+            {
                 impFileBox.Text = o.FileName;
                 impFileBox.SelectionStart = outFileBox.Text.Length;
                 impFileBox.ScrollToCaret();
                 impFileBox.Refresh();
             }
         }
-        private void outFileButton_Click(object sender, EventArgs e) {
+
+        private void outFileButton_Click(object sender, EventArgs e)
+        {
             SaveFileDialog s = new SaveFileDialog();
             s.RestoreDirectory = true;
             s.Filter = SwavMode ? "Sound Wave|*.swav" : "Sound Stream|*.strm";
             s.ShowDialog();
-            if (s.FileName != "") {
+            if (s.FileName != "")
+            {
                 outFileBox.Text = s.FileName;
                 outFileBox.SelectionStart = outFileBox.Text.Length;
                 outFileBox.ScrollToCaret();
                 outFileBox.Refresh();
             }
         }
-        private void exportButton_Click(object sender, EventArgs e) {
-            if (impFileBox.Text.Equals("")) {
+
+        private void exportButton_Click(object sender, EventArgs e)
+        {
+            if (impFileBox.Text.Equals(""))
+            {
                 MessageBox.Show("No Input File Selected!");
                 return;
             }
-            if (outFileBox.Text.Equals("")) {
+            if (outFileBox.Text.Equals(""))
+            {
                 MessageBox.Show("No Output File Selected!");
                 return;
             }
             SoundFile s;
-            if (SwavMode) {
+            if (SwavMode)
+            {
                 s = new Wave();
-            } else {
+            }
+            else
+            {
                 s = new NitroFileLoader.Stream();
             }
             SoundFile i;
-            switch (Path.GetExtension(impFileBox.Text)) {
+            switch (Path.GetExtension(impFileBox.Text))
+            {
                 case ".swav":
                     i = new Wave();
                     break;
@@ -75,7 +95,8 @@ namespace NitroStudio2 {
             }
             i.Read(impFileBox.Text);
             Type convType;
-            switch (outputFormat.SelectedIndex) {
+            switch (outputFormat.SelectedIndex)
+            {
                 case 0:
                     convType = typeof(PCM8Signed);
                     break;

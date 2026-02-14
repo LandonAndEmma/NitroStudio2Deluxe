@@ -1,11 +1,14 @@
-﻿using GotaSoundIO.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace NitroFileLoader {
-    public class SequenceInfo : IReadable, IWriteable {
+using GotaSoundIO.IO;
+
+namespace NitroFileLoader
+{
+    public class SequenceInfo : IReadable, IWriteable
+    {
         public string Name;
         public int Index;
         public bool ForceIndividualFile;
@@ -18,7 +21,9 @@ namespace NitroFileLoader {
         public uint ReadingFileId;
         public ushort ReadingBankId;
         public byte ReadingPlayerId;
-        public void Read(FileReader r) {
+
+        public void Read(FileReader r)
+        {
             ReadingFileId = r.ReadUInt32();
             ReadingBankId = r.ReadUInt16();
             Volume = r.ReadByte();
@@ -27,7 +32,9 @@ namespace NitroFileLoader {
             ReadingPlayerId = r.ReadByte();
             r.ReadUInt16();
         }
-        public void Write(FileWriter w) {
+
+        public void Write(FileWriter w)
+        {
             w.Write(ReadingFileId);
             w.Write((ushort)(Bank != null ? Bank.Index : ReadingBankId));
             w.Write(Volume);

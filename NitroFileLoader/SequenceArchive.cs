@@ -1,14 +1,19 @@
-﻿using GotaSequenceLib;
-using GotaSoundIO.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace NitroFileLoader {
-    public class SequenceArchive : SequenceFile {
+using GotaSequenceLib;
+using GotaSoundIO.IO;
+
+namespace NitroFileLoader
+{
+    public class SequenceArchive : SequenceFile
+    {
         public List<SequenceArchiveSequence> Sequences = new List<SequenceArchiveSequence>();
-        public override void Read(FileReader r) {
+
+        public override void Read(FileReader r)
+        {
             r.OpenFile<NHeader>(out _);
             uint dataSize;
             r.OpenBlock(0, out _, out dataSize);
@@ -17,47 +22,64 @@ namespace NitroFileLoader {
             uint numSeqs = r.ReadUInt32();
             Labels = new Dictionary<string, uint>();
             Sequences = new List<SequenceArchiveSequence>();
-            for (uint i = 0; i < numSeqs; i++) {
+            for (uint i = 0; i < numSeqs; i++)
+            {
                 uint off = r.ReadUInt32();
-                if (off != 0xFFFFFFFF) {
+                if (off != 0xFFFFFFFF)
+                {
                     Labels.Add("Sequence_" + i, off);
                     Sequences.Add(r.Read<SequenceArchiveSequence>());
                     Sequences.Last().Index = (int)i;
-                } else {
+                }
+                else
+                {
                     r.ReadUInt64();
                 }
             }
             r.Jump(seqDataOffset, true);
             var data = r.ReadBytes((int)(dataSize - (r.Position - bakPos))).ToList();
-            for (int i = data.Count - 1; i >= 0; i--) {
-                if (data[i] == 0) {
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                if (data[i] == 0)
+                {
                     data.RemoveAt(i);
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
             RawData = data.ToArray();
         }
-        public override void Write(FileWriter w) {
+
+        public override void Write(FileWriter w)
+        {
             w.InitFile<NHeader>("SSAR", ByteOrder.LittleEndian, null, 1);
-            w.InitBlock("DATA");   
+            w.InitBlock("DATA");
             Sequences = Sequences.OrderBy(x => x.Index).ToList();
-            if (Sequences.Count > 0) {
+            if (Sequences.Count > 0)
+            {
                 w.Write((uint)(0x20 + 12 * (Sequences.Last().Index + 1)));
                 w.Write((uint)(Sequences.Last().Index + 1));
                 int num = 0;
-                for (int i = 0; i <= Sequences.Last().Index; i++) {
+                for (int i = 0; i <= Sequences.Last().Index; i++)
+                {
                     var e = Sequences.Where(x => x.Index == i).FirstOrDefault();
-                    if (e == null) {
+                    if (e == null)
+                    {
                         w.Write((uint)0xFFFFFFFF);
                         w.Write((ulong)0);
-                    } else {
+                    }
+                    else
+                    {
                         w.Write(Labels.Values.ElementAt(num));
                         w.Write(e);
                         num++;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 w.Write((uint)0x20);
                 w.Write((uint)0);
             }
@@ -66,8 +88,11 @@ namespace NitroFileLoader {
             w.CloseBlock();
             w.CloseFile();
         }
+
         public override SequencePlatform Platform() => new Nitro();
-        public new string[] ToText() {
+
+        public new string[] ToText()
+        {
             List<string> l = new List<string>();
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add(";");
@@ -77,10 +102,15 @@ namespace NitroFileLoader {
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add("");
             l.Add("@SEQ_TABLE");
-            for (int i = 0; i < Sequences.Count; i++) {
+            for (int i = 0; i < Sequences.Count; i++)
+            {
                 string s = "";
                 var e = Sequences[i];
-                s += (e.Name == null ? ("Sequence_" + Sequences[i].Index) : e.Name) + " = " + Sequences[i].Index + ":\t";
+                s +=
+                    (e.Name == null ? ("Sequence_" + Sequences[i].Index) : e.Name)
+                    + " = "
+                    + Sequences[i].Index
+                    + ":\t";
                 s += Labels.Keys.ElementAt(i) + ",\t";
                 s += (e.Bank == null ? e.ReadingBankId.ToString() : e.Bank.Name) + ",\t";
                 s += e.Volume + ",\t";
@@ -91,18 +121,31 @@ namespace NitroFileLoader {
             }
             l.Add("");
             l.Add("@SEQ_DATA");
-            for (int i = 0; i < Commands.Count - 1; i++) {
+            for (int i = 0; i < Commands.Count - 1; i++)
+            {
                 bool labelAdded = false;
                 var labels = PublicLabels.Where(x => x.Value == i).Select(x => x.Key);
-                foreach (var label in labels) {
-                    if (i != 0 && !labelAdded && Commands[i - 1].CommandType == SequenceCommands.Fin) {
+                foreach (var label in labels)
+                {
+                    if (
+                        i != 0
+                        && !labelAdded
+                        && Commands[i - 1].CommandType == SequenceCommands.Fin
+                    )
+                    {
                         l.Add(" ");
                     }
                     l.Add(label + ":");
                     labelAdded = true;
                 }
-                if (OtherLabels.Contains(i)) {
-                    if (i != 0 && !labelAdded && Commands[i - 1].CommandType == SequenceCommands.Fin) {
+                if (OtherLabels.Contains(i))
+                {
+                    if (
+                        i != 0
+                        && !labelAdded
+                        && Commands[i - 1].CommandType == SequenceCommands.Fin
+                    )
+                    {
                         l.Add(" ");
                     }
                     l.Add("Command_" + i + ":");
@@ -112,10 +155,14 @@ namespace NitroFileLoader {
             }
             return l.ToArray();
         }
-        public new void FromText(List<string> text) {
+
+        public new void FromText(List<string> text)
+        {
             FromText(text, null);
         }
-        public void FromText(List<string> text, SoundArchive a) {
+
+        public void FromText(List<string> text, SoundArchive a)
+        {
             WritingCommandSuccess = true;
             var p = Platform();
             PublicLabels = new Dictionary<string, int>();
@@ -124,15 +171,28 @@ namespace NitroFileLoader {
             List<int> labelLines = new List<int>();
             List<string> t = text.ToList();
             int comNum = 0;
-            for (int i = t.Count - 1; i >= 0; i--) {
+            for (int i = t.Count - 1; i >= 0; i--)
+            {
                 t[i] = t[i].Replace("\t", "").Replace("\r", "");
-                try { t[i] = t[i].Split(';')[0]; } catch { }
-                if (t[i].Replace(" ", "").Length == 0) { t.RemoveAt(i); continue; }
-                for (int j = 0; j < t[i].Length; j++) {
-                    if (t[i][j].Equals(' ')) {
+                try
+                {
+                    t[i] = t[i].Split(';')[0];
+                }
+                catch { }
+                if (t[i].Replace(" ", "").Length == 0)
+                {
+                    t.RemoveAt(i);
+                    continue;
+                }
+                for (int j = 0; j < t[i].Length; j++)
+                {
+                    if (t[i][j].Equals(' '))
+                    {
                         t[i] = t[i].Substring(j + 1);
                         j--;
-                    } else {
+                    }
+                    else
+                    {
                         break;
                     }
                 }
@@ -140,90 +200,135 @@ namespace NitroFileLoader {
             Dictionary<int, string> seqId2Label = new Dictionary<int, string>();
             Sequences = new List<SequenceArchiveSequence>();
             int currSeqId = 0;
-            for (int i = t.IndexOf("@SEQ_TABLE") + 1; i < t.IndexOf("@SEQ_DATA"); i++) {
+            for (int i = t.IndexOf("@SEQ_TABLE") + 1; i < t.IndexOf("@SEQ_DATA"); i++)
+            {
                 SequenceArchiveSequence s = new SequenceArchiveSequence();
-                string[] seqData = t[i].Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "").Split(',');
+                string[] seqData = t[i]
+                    .Replace("\n", "")
+                    .Replace(" ", "")
+                    .Replace("\t", "")
+                    .Replace("\r", "")
+                    .Split(',');
                 string label = seqData[0].Split(':')[1];
                 string seqNameData = seqData[0].Split(':')[0];
-                if (seqNameData.Contains("=")) {
+                if (seqNameData.Contains("="))
+                {
                     currSeqId = int.Parse(seqNameData.Split('=')[1]);
                     s.Name = seqNameData.Split('=')[0];
-                } else {
+                }
+                else
+                {
                     s.Name = seqNameData;
                 }
                 s.Index = currSeqId;
                 seqId2Label.Add(currSeqId++, label);
                 s.LabelName = label;
                 string bnk = seqData[1];
-                if (ushort.TryParse(bnk, out _)) {
+                if (ushort.TryParse(bnk, out _))
+                {
                     s.ReadingBankId = ushort.Parse(bnk);
-                    if (a != null) {
+                    if (a != null)
+                    {
                         s.Bank = a.Banks.Where(x => x.Index == s.ReadingBankId).FirstOrDefault();
                     }
-                } else if (a != null) {
+                }
+                else if (a != null)
+                {
                     var bnkReal = a.Banks.Where(x => x.Name.Equals(bnk)).FirstOrDefault();
-                    if (bnkReal == null) {
+                    if (bnkReal == null)
+                    {
                         throw new Exception("Bank " + bnk + " does not exist!");
                     }
                     s.ReadingBankId = (ushort)bnkReal.Index;
                     s.Bank = bnkReal;
-                } else {
+                }
+                else
+                {
                     throw new Exception("Can't use a name when there is no sound archive open!");
                 }
                 s.Volume = byte.Parse(seqData[2]);
                 s.ChannelPriority = byte.Parse(seqData[3]);
                 s.PlayerPriority = byte.Parse(seqData[4]);
                 string ply = seqData[5];
-                if (ushort.TryParse(ply, out _)) {
+                if (ushort.TryParse(ply, out _))
+                {
                     s.ReadingPlayerId = byte.Parse(ply);
-                    if (a != null) {
-                        s.Player = a.Players.Where(x => x.Index == s.ReadingPlayerId).FirstOrDefault();
+                    if (a != null)
+                    {
+                        s.Player = a
+                            .Players.Where(x => x.Index == s.ReadingPlayerId)
+                            .FirstOrDefault();
                     }
-                } else if (a != null) {
+                }
+                else if (a != null)
+                {
                     var plyReal = a.Players.Where(x => x.Name.Equals(ply)).FirstOrDefault();
-                    if (plyReal == null) {
+                    if (plyReal == null)
+                    {
                         throw new Exception("Player " + ply + " does not exist!");
                     }
                     s.ReadingPlayerId = (byte)plyReal.Index;
                     s.Player = plyReal;
-                } else {
+                }
+                else
+                {
                     throw new Exception("Can't use a name when there is no sound archive open!");
                 }
                 Sequences.Add(s);
             }
             int strt = t.IndexOf("@SEQ_DATA") + 1;
-            for (int i = strt; i < t.Count; i++) {
-                if (t[i].EndsWith(":")) {
+            for (int i = strt; i < t.Count; i++)
+            {
+                if (t[i].EndsWith(":"))
+                {
                     labelLines.Add(i);
                     string lbl = t[i].Replace(":", "");
-                    if (!seqId2Label.ContainsValue(lbl)) {
+                    if (!seqId2Label.ContainsValue(lbl))
+                    {
                         privateLabels.Add(lbl, comNum);
                         OtherLabels.Add(comNum);
-                    } else {
+                    }
+                    else
+                    {
                         PublicLabels.Add(lbl, comNum);
                     }
-                } else {
+                }
+                else
+                {
                     comNum++;
                 }
             }
             Commands = new List<SequenceCommand>();
-            for (int i = t.IndexOf("@SEQ_DATA") + 1; i < t.Count; i++) {
-                if (labelLines.Contains(i)) {
+            for (int i = t.IndexOf("@SEQ_DATA") + 1; i < t.Count; i++)
+            {
+                if (labelLines.Contains(i))
+                {
                     continue;
                 }
                 SequenceCommand seq = new SequenceCommand();
-                try { seq.FromString(t[i], PublicLabels, privateLabels); } catch { WritingCommandSuccess = false; throw new Exception("Command " + i + ": \"" + t[i] + "\" is invalid."); }
+                try
+                {
+                    seq.FromString(t[i], PublicLabels, privateLabels);
+                }
+                catch
+                {
+                    WritingCommandSuccess = false;
+                    throw new Exception("Command " + i + ": \"" + t[i] + "\" is invalid.");
+                }
                 Commands.Add(seq);
             }
             Commands.Add(new SequenceCommand() { CommandType = SequenceCommands.Fin });
             var bakLabels = PublicLabels;
             PublicLabels = new Dictionary<string, int>();
-            foreach (var seq in Sequences) {
+            foreach (var seq in Sequences)
+            {
                 PublicLabels.Add(seq.Name, bakLabels[seq.LabelName]);
             }
         }
-    } 
-    public class SequenceArchiveSequence : IReadable, IWriteable {
+    }
+
+    public class SequenceArchiveSequence : IReadable, IWriteable
+    {
         public string Name;
         public int Index;
         public BankInfo Bank;
@@ -234,7 +339,9 @@ namespace NitroFileLoader {
         public ushort ReadingBankId;
         public byte ReadingPlayerId;
         public string LabelName;
-        public void Read(FileReader r) {
+
+        public void Read(FileReader r)
+        {
             ReadingBankId = r.ReadUInt16();
             Volume = r.ReadByte();
             ChannelPriority = r.ReadByte();
@@ -242,7 +349,9 @@ namespace NitroFileLoader {
             ReadingPlayerId = r.ReadByte();
             r.ReadUInt16();
         }
-        public void Write(FileWriter w) {
+
+        public void Write(FileWriter w)
+        {
             w.Write(Bank != null ? (ushort)Bank.Index : (ushort)ReadingBankId);
             w.Write(Volume);
             w.Write(ChannelPriority);

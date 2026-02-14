@@ -1,19 +1,30 @@
-﻿using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace NitroFileLoader {
-    public class Stream : SoundFile {
-        public override Type[] SupportedEncodings() => new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound;
+
+namespace NitroFileLoader
+{
+    public class Stream : SoundFile
+    {
+        public override Type[] SupportedEncodings() =>
+            new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+
         public override string Name() => "STRM";
+
         public override string[] Extensions() => new string[] { "STRM" };
+
         public override string Description() => "An STRM stream used in Nintendo DS games.";
+
         public override bool SupportsTracks() => false;
+
         public override Type PreferredEncoding() => typeof(ImaAdpcm);
-        public override void Read(FileReader r) {
+
+        public override void Read(FileReader r)
+        {
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _);
             PcmFormat pcmFormat = (PcmFormat)r.ReadByte();
@@ -24,7 +35,10 @@ namespace NitroFileLoader {
             r.ReadUInt16();
             LoopStart = r.ReadUInt32();
             uint numSamples = r.ReadUInt32();
-            if (Loops) { LoopEnd = numSamples; }
+            if (Loops)
+            {
+                LoopEnd = numSamples;
+            }
             r.OpenOffset("dataOffset");
             uint numBlocks = r.ReadUInt32();
             uint blockSize = r.ReadUInt32();
@@ -33,7 +47,8 @@ namespace NitroFileLoader {
             uint lastBlockSamples = r.ReadUInt32();
             r.ReadBytes(32);
             Type encodingType = null;
-            switch (pcmFormat) {
+            switch (pcmFormat)
+            {
                 case PcmFormat.SignedPCM8:
                     encodingType = typeof(PCM8Signed);
                     break;
@@ -45,24 +60,43 @@ namespace NitroFileLoader {
                     break;
             }
             r.JumpToOffset("dataOffset", true, true);
-            Audio.Read(r, encodingType, numChannels, numBlocks, blockSize, blockSamples, lastBlockSize, lastBlockSamples, 0);
+            Audio.Read(
+                r,
+                encodingType,
+                numChannels,
+                numBlocks,
+                blockSize,
+                blockSamples,
+                lastBlockSize,
+                lastBlockSamples,
+                0
+            );
         }
-        public override void Write(FileWriter w) {
+
+        public override void Write(FileWriter w)
+        {
             w.InitFile<NHeader>("STRM", ByteOrder.LittleEndian, null, 2);
             long countOff = w.Position - 2;
             w.Write("HEAD".ToCharArray());
             w.Write((uint)0x50);
             uint blockSamples = (uint)Audio.NumSamples;
             uint blockSize = (uint)Audio.DataSize;
-            if (Audio.EncodingType.Equals(typeof(PCM8Signed))) {
+            if (Audio.EncodingType.Equals(typeof(PCM8Signed)))
+            {
                 w.Write((byte)PcmFormat.SignedPCM8);
-            } else if (Audio.EncodingType.Equals(typeof(PCM16))) {
+            }
+            else if (Audio.EncodingType.Equals(typeof(PCM16)))
+            {
                 w.Write((byte)PcmFormat.PCM16);
-            } else if (Audio.EncodingType.Equals(typeof(ImaAdpcm))) {
+            }
+            else if (Audio.EncodingType.Equals(typeof(ImaAdpcm)))
+            {
                 w.Write((byte)PcmFormat.Encoded);
                 blockSize = (uint)Audio.BlockSize;
                 blockSamples = (blockSize - 4) * 2;
-            } else {
+            }
+            else
+            {
                 throw new Exception("Invalid channel format!");
             }
             w.Write(Loops);
@@ -94,12 +128,17 @@ namespace NitroFileLoader {
             w.Write((ushort)2);
             w.Position = bak;
         }
-        public override void BeforeConversion() {
-            if (Audio.BlockSize == -1) {
+
+        public override void BeforeConversion()
+        {
+            if (Audio.BlockSize == -1)
+            {
                 Audio.ChangeBlockSize(0x200);
             }
         }
-        public override void AfterConversion() {
+
+        public override void AfterConversion()
+        {
             AlignLoopToBlock((uint)Audio.BlockSamples);
             TrimAfterLoopEnd();
             LoopEnd = (uint)Audio.NumSamples;

@@ -1,28 +1,31 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Data;
 using System.Windows.Forms;
+
 namespace Multimedia.UI
 {
     public enum PianoKeyOrientation
     {
         Vertical,
         HorizontalLeft,
-        HorizontalRight
+        HorizontalRight,
     }
+
     public enum PianoKeyShape
     {
         LShape,
         LShapeBackwards,
         TShape,
-        RectShape
+        RectShape,
     }
-	public class PianoKey : Control
-	{
+
+    public class PianoKey : Control
+    {
         #region Constants
         private const int PointCountLShape = 7;
         private const int PointCountTShape = 9;
@@ -49,124 +52,138 @@ namespace Multimedia.UI
             this.orientation = PianoKeyOrientation.Vertical;
             this.shape = PianoKeyShape.LShape;
             Size = new Size(19, 51);
-        }        
+        }
         #endregion
         #region Methods
         public void TurnKeyOn()
         {
-            if(!IsKeyOn())
+            if (!IsKeyOn())
             {
                 keyOn = true;
-                if(StateChanged != null)
+                if (StateChanged != null)
                 {
                     StateChanged(this, new EventArgs());
                 }
                 Invalidate(Region);
             }
         }
+
         public void TurnKeyOff()
         {
-            if(IsKeyOn())
+            if (IsKeyOn())
             {
                 keyOn = false;
-                if(StateChanged != null)
+                if (StateChanged != null)
                 {
                     StateChanged(this, new EventArgs());
                 }
                 Invalidate(Region);
             }
         }
+
         public bool IsKeyOn()
         {
             return keyOn;
         }
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if( components != null )
-					components.Dispose();
-			}
-			base.Dispose( disposing );
-		}
-		#region Component Designer generated code
-		private void InitializeComponent()
-		{
-			components = new System.ComponentModel.Container();
-		}
-		#endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+        }
+        #endregion
         protected override void OnMouseEnter(EventArgs e)
         {
-            if(Control.MouseButtons == MouseButtons.Left)
+            if (Control.MouseButtons == MouseButtons.Left)
             {
                 TurnKeyOn();
             }
-            base.OnMouseEnter (e);
+            base.OnMouseEnter(e);
         }
+
         protected override void OnMouseLeave(EventArgs e)
         {
-            if(IsKeyOn())
+            if (IsKeyOn())
             {
                 TurnKeyOff();
             }
-            base.OnMouseLeave (e);
+            base.OnMouseLeave(e);
         }
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             TurnKeyOn();
-            base.OnMouseDown (e);
+            base.OnMouseDown(e);
         }
+
         protected override void OnMouseUp(MouseEventArgs e)
         {
             TurnKeyOff();
-            base.OnMouseUp (e);
+            base.OnMouseUp(e);
         }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if(IsKeyOn())
+            if (IsKeyOn())
             {
-                if(!Region.IsVisible(new Point(e.X, e.Y)))
+                if (!Region.IsVisible(new Point(e.X, e.Y)))
                 {
                     TurnKeyOff();
                     Capture = false;
                 }
             }
-            base.OnMouseMove (e);
+            base.OnMouseMove(e);
         }
-		protected override void OnPaint(PaintEventArgs pe)
-		{
-            if(IsKeyOn())
+
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            if (IsKeyOn())
             {
                 pe.Graphics.FillRegion(keyOnBrush, Region);
             }
             else
             {
-                pe.Graphics.FillRegion(keyOffBrush, Region);                
-            }           
-            pe.Graphics.DrawPolygon(borderPen, points);             
-			base.OnPaint(pe);
+                pe.Graphics.FillRegion(keyOffBrush, Region);
+            }
+            pe.Graphics.DrawPolygon(borderPen, points);
+            base.OnPaint(pe);
         }
+
         protected override void OnSizeChanged(EventArgs e)
         {
             InitPoints();
             CreateRegion();
-            base.OnSizeChanged (e);
+            base.OnSizeChanged(e);
         }
+
         private void InitPoints()
         {
-            if(Orientation == PianoKeyOrientation.HorizontalLeft ||
-                Orientation == PianoKeyOrientation.HorizontalRight)
+            if (
+                Orientation == PianoKeyOrientation.HorizontalLeft
+                || Orientation == PianoKeyOrientation.HorizontalRight
+            )
             {
-                InitPointsHorz();                
+                InitPointsHorz();
             }
             else
             {
                 InitPointsVert();
-            }            
+            }
         }
+
         private void InitPointsHorz()
         {
-            switch(shape)
+            switch (shape)
             {
                 case PianoKeyShape.LShape:
                     InitPointsHorzLShape();
@@ -184,14 +201,15 @@ namespace Multimedia.UI
                     Debug.Assert(false);
                     break;
             }
-            if(Orientation == PianoKeyOrientation.HorizontalRight)
+            if (Orientation == PianoKeyOrientation.HorizontalRight)
             {
                 FlipHorizontally();
             }
         }
+
         private void InitPointsVert()
         {
-            switch(shape)
+            switch (shape)
             {
                 case PianoKeyShape.LShape:
                     InitPointsVertLShape();
@@ -210,8 +228,9 @@ namespace Multimedia.UI
                     break;
             }
         }
+
         private void InitPointsHorzLShape()
-        { 
+        {
             points = new Point[PointCountLShape];
             points[0].X = 0;
             points[0].Y = (int)Math.Round(Size.Height * (1.0 - FlatKeyOffset));
@@ -225,13 +244,15 @@ namespace Multimedia.UI
             points[4].Y = 0;
             points[5].X = points[4].X;
             points[5].Y = points[0].Y;
-            points[6] = points[0];            
+            points[6] = points[0];
         }
+
         private void InitPointsHorzLShapeBackwards()
         {
             InitPointsHorzLShape();
             FlipVertically();
         }
+
         private void InitPointsVertLShape()
         {
             points = new Point[PointCountLShape];
@@ -248,13 +269,15 @@ namespace Multimedia.UI
             points[5].X = 0;
             points[5].Y = Size.Height;
             points[6].X = points[0].X;
-            points[6].Y = points[0].Y;            
+            points[6].Y = points[0].Y;
         }
+
         private void InitPointsVertLShapeBackwards()
         {
             InitPointsVertLShape();
             FlipHorizontally();
         }
+
         private void InitPointsHorzTShape()
         {
             points = new Point[PointCountTShape];
@@ -274,8 +297,9 @@ namespace Multimedia.UI
             points[6].Y = (int)Math.Round(Size.Height * FlatKeyOffset);
             points[7].X = 0;
             points[7].Y = points[6].Y;
-            points[8] = points[0];            
+            points[8] = points[0];
         }
+
         private void InitPointsVertTShape()
         {
             points = new Point[PointCountTShape];
@@ -295,8 +319,9 @@ namespace Multimedia.UI
             points[6].Y = points[2].Y;
             points[7].X = points[0].X;
             points[7].Y = points[2].Y;
-            points[8] = points[0];            
+            points[8] = points[0];
         }
+
         private void InitPointsRectShape()
         {
             points = new Point[PointCountRectShape];
@@ -310,54 +335,56 @@ namespace Multimedia.UI
             points[3].Y = Size.Height;
             points[4] = points[0];
         }
+
         private void FlipHorizontally()
         {
-            for(int i = 0; i < points.Length; i++)
+            for (int i = 0; i < points.Length; i++)
             {
                 points[i].X = Size.Width - points[i].X;
             }
         }
+
         private void FlipVertically()
         {
-            for(int i = 0; i < points.Length; i++)
+            for (int i = 0; i < points.Length; i++)
             {
                 points[i].Y = Size.Height - points[i].Y;
             }
         }
+
         private void CreateRegion()
-        {  
+        {
             byte[] types = new byte[points.Length];
-            for(int i = 0; i < types.Length; i++)
+            for (int i = 0; i < types.Length; i++)
             {
                 types[i] = (byte)PathPointType.Line;
             }
             GraphicsPath path = new GraphicsPath(points, types);
-            Region = new Region(path); 
+            Region = new Region(path);
             Invalidate(Region);
-        }   
+        }
         #endregion
         #region Properties
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyOrientation Orientation
         {
-            get
-            {
-                return orientation;
-            }
+            get { return orientation; }
             set
             {
-                if(orientation == PianoKeyOrientation.Vertical)
+                if (orientation == PianoKeyOrientation.Vertical)
                 {
-                    if(value == PianoKeyOrientation.HorizontalLeft ||
-                        value == PianoKeyOrientation.HorizontalRight)
+                    if (
+                        value == PianoKeyOrientation.HorizontalLeft
+                        || value == PianoKeyOrientation.HorizontalRight
+                    )
                     {
                         orientation = value;
                         Size = new Size(Height, Width);
                     }
-                }  
+                }
                 else
                 {
-                    if(value == PianoKeyOrientation.Vertical)
+                    if (value == PianoKeyOrientation.Vertical)
                     {
                         orientation = value;
                         Size = new Size(Height, Width);
@@ -371,13 +398,11 @@ namespace Multimedia.UI
                 }
             }
         }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyShape Shape
         {
-            get
-            {
-                return shape;
-            }
+            get { return shape; }
             set
             {
                 shape = value;
@@ -385,33 +410,29 @@ namespace Multimedia.UI
                 CreateRegion();
             }
         }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOnColor
         {
-            get
-            {
-                return keyOnBrush.Color;
-            }
+            get { return keyOnBrush.Color; }
             set
             {
                 keyOnBrush.Color = value;
-                if(IsKeyOn())
+                if (IsKeyOn())
                 {
                     Invalidate(Region);
                 }
             }
-        }  
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOffColor
         {
-            get
-            {
-                return keyOffBrush.Color;
-            }
+            get { return keyOffBrush.Color; }
             set
             {
                 keyOffBrush.Color = value;
-                if(!IsKeyOn())
+                if (!IsKeyOn())
                 {
                     Invalidate(Region);
                 }

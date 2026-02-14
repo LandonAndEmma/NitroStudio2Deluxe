@@ -1,54 +1,80 @@
-﻿using GotaSoundBank;
-using GotaSequenceLib;
-using GotaSequenceLib.Playback;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GotaSequenceLib;
+using GotaSequenceLib.Playback;
+using GotaSoundBank;
 using GotaSoundBank.DLS;
 using GotaSoundBank.SF2;
-namespace NitroFileLoader {
-    public class Bank : IOFile, PlayableBank {
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound;
+
+namespace NitroFileLoader
+{
+    public class Bank : IOFile, PlayableBank
+    {
         public List<Instrument> Instruments = new List<Instrument>();
         public long MaxOrder => Instruments.Select(x => x.GetOrder).Max();
-        public static Instrument DuplicateInstrument(Instrument i) {
+
+        public static Instrument DuplicateInstrument(Instrument i)
+        {
             Instrument n = null;
-            switch (i.Type()) {
+            switch (i.Type())
+            {
                 case InstrumentType.DrumSet:
-                    n = new DrumSetInstrument() { Index = i.Index, NoteInfo = new List<NoteInfo>(), Min = ((DrumSetInstrument)i).Min };
-                    foreach (var r in i.NoteInfo) {
+                    n = new DrumSetInstrument()
+                    {
+                        Index = i.Index,
+                        NoteInfo = new List<NoteInfo>(),
+                        Min = ((DrumSetInstrument)i).Min,
+                    };
+                    foreach (var r in i.NoteInfo)
+                    {
                         n.NoteInfo.Add(r.Duplicate());
                     }
                     break;
                 case InstrumentType.KeySplit:
-                    n = new KeySplitInstrument() { Index = i.Index, NoteInfo = new List<NoteInfo>() };
-                    foreach (var r in i.NoteInfo) {
+                    n = new KeySplitInstrument()
+                    {
+                        Index = i.Index,
+                        NoteInfo = new List<NoteInfo>(),
+                    };
+                    foreach (var r in i.NoteInfo)
+                    {
                         n.NoteInfo.Add(r.Duplicate());
                     }
                     break;
                 default:
-                    n = new DirectInstrument() { Index = i.Index, NoteInfo = new List<NoteInfo>() { i.NoteInfo[0].Duplicate() } };
+                    n = new DirectInstrument()
+                    {
+                        Index = i.Index,
+                        NoteInfo = new List<NoteInfo>() { i.NoteInfo[0].Duplicate() },
+                    };
                     break;
             }
             return n;
         }
-        public override void Read(FileReader r) {
+
+        public override void Read(FileReader r)
+        {
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _);
             r.ReadUInt32s(8);
             uint numInsts = r.ReadUInt32();
             List<InstrumentType> records = new List<InstrumentType>();
             List<uint> offs = new List<uint>();
-            for (uint i = 0; i < numInsts; i++) {
+            for (uint i = 0; i < numInsts; i++)
+            {
                 records.Add((InstrumentType)r.ReadByte());
                 offs.Add(r.ReadUInt16());
                 r.ReadByte();
             }
-            for (int i = 0; i < records.Count; i++) {
-                switch (records[i]) {
+            for (int i = 0; i < records.Count; i++)
+            {
+                switch (records[i])
+                {
                     case InstrumentType.Blank:
                         break;
                     case InstrumentType.PCM:
@@ -77,69 +103,94 @@ namespace NitroFileLoader {
                 }
             }
         }
-        public override void Write(FileWriter w) {
+
+        public override void Write(FileWriter w)
+        {
             w.InitFile<NHeader>("SBNK", ByteOrder.LittleEndian, null, 1);
             w.InitBlock("DATA");
             w.Write(new uint[8]);
-            if (Instruments.Count > 0) {
+            if (Instruments.Count > 0)
+            {
                 Instruments = Instruments.OrderBy(x => x.Index).ToList();
                 w.Write((uint)(Instruments.Last().Index + 1));
                 Dictionary<int, long> bakPos = new Dictionary<int, long>();
-                for (int i = 0; i <= Instruments.Last().Index; i++) {
-                    if (Instruments.Where(x => x.Index == i).Count() > 0) {
+                for (int i = 0; i <= Instruments.Last().Index; i++)
+                {
+                    if (Instruments.Where(x => x.Index == i).Count() > 0)
+                    {
                         var inst = Instruments.Where(x => x.Index == i).FirstOrDefault();
                         w.Write((byte)inst.Type());
                         bakPos.Add(i, w.Position);
                         w.Write((ushort)0);
                         w.Write((byte)0);
-                    } else {
+                    }
+                    else
+                    {
                         w.Write((uint)0);
                     }
                 }
                 var sortedInsts = Instruments.OrderBy(x => x.GetOrder).ToList();
-                for (int i = 0; i < sortedInsts.Count; i++) {
+                for (int i = 0; i < sortedInsts.Count; i++)
+                {
                     long bak = w.Position;
                     w.Position = bakPos[sortedInsts[i].Index];
                     w.Write((ushort)(bak - w.FileOffset));
                     w.Position = bak;
                     w.Write(sortedInsts[i]);
                 }
-            } else {
+            }
+            else
+            {
                 w.Write((uint)0);
             }
             w.Pad(4);
             w.CloseBlock();
             w.CloseFile();
         }
-        public NotePlayBackInfo GetNotePlayBackInfo(int program, Notes note, byte velocity) {
+
+        public NotePlayBackInfo GetNotePlayBackInfo(int program, Notes note, byte velocity)
+        {
             var q = Instruments.Where(x => x.Index == program).FirstOrDefault();
-            if (q != null) {
+            if (q != null)
+            {
                 var e = q.GetNoteInfo(note);
-                if (e != null) {
+                if (e != null)
+                {
                     return e.ToNotePlayBackInfo();
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
-        public SoundFont ToSoundFont(SoundArchive a, BankInfo b) {
+
+        public SoundFont ToSoundFont(SoundArchive a, BankInfo b)
+        {
             return new SoundFont(ToDLS(a, b));
         }
-        public DownloadableSounds ToDLS(SoundArchive a, BankInfo b) {
+
+        public DownloadableSounds ToDLS(SoundArchive a, BankInfo b)
+        {
             DownloadableSounds d = new DownloadableSounds();
             Dictionary<uint, RiffWave> waveMap = new Dictionary<uint, RiffWave>();
             Dictionary<ushort, RiffWave> psgMap = new Dictionary<ushort, RiffWave>();
             Dictionary<ushort, RiffWave> noiseMap = new Dictionary<ushort, RiffWave>();
             d.Waves.Add(new RiffWave("Hardware/Null.wav"));
-            foreach (var inst in Instruments) {
+            foreach (var inst in Instruments)
+            {
                 GotaSoundBank.DLS.Instrument im = new GotaSoundBank.DLS.Instrument();
                 im.BankId = (uint)(inst.Index / 128);
                 im.InstrumentId = (uint)(inst.Index % 128);
                 im.Name = "Instrument " + im.InstrumentId;
-                byte lastNote = inst as DrumSetInstrument != null ? (inst as DrumSetInstrument).Min : (byte)0;
-                foreach (var n in inst.NoteInfo) {
+                byte lastNote =
+                    inst as DrumSetInstrument != null ? (inst as DrumSetInstrument).Min : (byte)0;
+                foreach (var n in inst.NoteInfo)
+                {
                     Region r = new Region();
                     r.VelocityLow = 0;
                     r.VelocityHigh = 127;
@@ -152,17 +203,24 @@ namespace NitroFileLoader {
                     r.NoTruncation = true;
                     r.RootNote = (byte)n.BaseNote;
                     int wavInd = 0;
-                    switch (n.InstrumentType) {
+                    switch (n.InstrumentType)
+                    {
                         case InstrumentType.PCM:
                             uint key = 0xFFFFFFFF;
-                            try {
+                            try
+                            {
                                 var p = b.WaveArchives[n.WarId].File.Waves[n.WaveId];
                                 key = (uint)(b.WaveArchives[n.WarId].Index << 16) | n.WaveId;
-                            } catch { }
-                            if (key != 0xFFFFFFFF) {
-                                if (!waveMap.ContainsKey(key)) {
+                            }
+                            catch { }
+                            if (key != 0xFFFFFFFF)
+                            {
+                                if (!waveMap.ContainsKey(key))
+                                {
                                     RiffWave pcm = new RiffWave();
-                                    pcm.FromOtherStreamFile(b.WaveArchives[n.WarId].File.Waves[n.WaveId]);
+                                    pcm.FromOtherStreamFile(
+                                        b.WaveArchives[n.WarId].File.Waves[n.WaveId]
+                                    );
                                     waveMap.Add(key, pcm);
                                     d.Waves.Add(pcm);
                                 }
@@ -170,37 +228,91 @@ namespace NitroFileLoader {
                             }
                             break;
                         case InstrumentType.PSG:
-                            if (!psgMap.ContainsKey(n.WaveId)) {
-                                RiffWave psg = new RiffWave("Hardware/DutyCycle" + (n.WaveId + 1) + ".wav");
+                            if (!psgMap.ContainsKey(n.WaveId))
+                            {
+                                RiffWave psg = new RiffWave(
+                                    "Hardware/DutyCycle" + (n.WaveId + 1) + ".wav"
+                                );
                                 psgMap.Add(n.WaveId, psg);
                                 d.Waves.Add(psg);
                             }
                             wavInd = d.Waves.IndexOf(psgMap[n.WaveId]);
                             break;
                         case InstrumentType.Noise:
-                            if (!noiseMap.ContainsKey(0)) {
+                            if (!noiseMap.ContainsKey(0))
+                            {
                                 RiffWave noise = new RiffWave("Hardware/WhiteNoise.wav");
                                 noiseMap.Add(0, noise);
                                 d.Waves.Add(noise);
                                 wavInd = d.Waves.IndexOf(noise);
-                            } else {
+                            }
+                            else
+                            {
                                 wavInd = d.Waves.IndexOf(noiseMap[0]);
                             }
                             break;
                     }
                     r.WaveId = (uint)wavInd;
                     r.Loops = d.Waves[wavInd].Loops;
-                    if (r.Loops) {
+                    if (r.Loops)
+                    {
                         r.LoopStart = d.Waves[wavInd].LoopStart;
                         r.LoopLength = d.Waves[wavInd].LoopEnd - d.Waves[wavInd].LoopStart;
-                        if (r.LoopLength < 0) { r.LoopLength = 0; }
+                        if (r.LoopLength < 0)
+                        {
+                            r.LoopLength = 0;
+                        }
                     }
                     Articulator ar = new Articulator();
-                    ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1AttackTime, Scale = n.Attack >= 127 ? int.MinValue : MillisecondsToTimecents(AttackTable[n.Attack]) * 65536 });
-                    ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1DecayTime, Scale = n.Decay >= 127 ? int.MinValue : MillisecondsToTimecents(MaxReleaseTimes[n.Decay]) * 65536 });
-                    ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1SustainLevel, Scale = (int)Math.Round(Sustain2Fraction(n.Sustain) * 1000, MidpointRounding.AwayFromZero) * 65536 });
-                    ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.EG1ReleaseTime, Scale = n.Release >= 127 ? int.MinValue : MillisecondsToTimecents(MaxReleaseTimes[n.Release]) * 65536 });
-                    ar.Connections.Add(new Connection() { DestinationConnection = DestinationConnection.Pan, Scale = GetPan(n.Pan) * 65536 });
+                    ar.Connections.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = DestinationConnection.EG1AttackTime,
+                            Scale =
+                                n.Attack >= 127
+                                    ? int.MinValue
+                                    : MillisecondsToTimecents(AttackTable[n.Attack]) * 65536,
+                        }
+                    );
+                    ar.Connections.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = DestinationConnection.EG1DecayTime,
+                            Scale =
+                                n.Decay >= 127
+                                    ? int.MinValue
+                                    : MillisecondsToTimecents(MaxReleaseTimes[n.Decay]) * 65536,
+                        }
+                    );
+                    ar.Connections.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = DestinationConnection.EG1SustainLevel,
+                            Scale =
+                                (int)
+                                    Math.Round(
+                                        Sustain2Fraction(n.Sustain) * 1000,
+                                        MidpointRounding.AwayFromZero
+                                    ) * 65536,
+                        }
+                    );
+                    ar.Connections.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = DestinationConnection.EG1ReleaseTime,
+                            Scale =
+                                n.Release >= 127
+                                    ? int.MinValue
+                                    : MillisecondsToTimecents(MaxReleaseTimes[n.Release]) * 65536,
+                        }
+                    );
+                    ar.Connections.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = DestinationConnection.Pan,
+                            Scale = GetPan(n.Pan) * 65536,
+                        }
+                    );
                     r.Articulators.Add(ar);
                     im.Regions.Add(r);
                 }
@@ -208,99 +320,460 @@ namespace NitroFileLoader {
             }
             return d;
         }
-        public static int GetPan(byte pan) {
-            if (pan > 127) { pan = 127; }
+
+        public static int GetPan(byte pan)
+        {
+            if (pan > 127)
+            {
+                pan = 127;
+            }
             double ret = .5;
-            if (pan != 64) {
+            if (pan != 64)
+            {
                 ret = pan / 127d;
             }
             return (int)(ret * 1000 - 500);
         }
-        public static byte SetPan(int value) {
+
+        public static byte SetPan(int value)
+        {
             double num = (value + 500) / 1000d;
             byte pan = 64;
-            if (value != 0) {
+            if (value != 0)
+            {
                 pan = (byte)(num * 127);
             }
             return pan;
         }
-        public static int MillisecondsToTimecents(double value) {
+
+        public static int MillisecondsToTimecents(double value)
+        {
             return (int)Math.Round(1200 * Math.Log(value / 1000, 2), MidpointRounding.AwayFromZero);
         }
-        public static double TimecentsToMilliseconds(int value) {
+
+        public static double TimecentsToMilliseconds(int value)
+        {
             return Math.Pow(2, value / 1200d) * 1000;
         }
-        public static double Sustain2Fraction(byte value) {
+
+        public static double Sustain2Fraction(byte value)
+        {
             return Math.Pow(value / 127d, 2);
         }
-        public static byte Fraction2Sustain(double value) {
+
+        public static byte Fraction2Sustain(double value)
+        {
             return (byte)(Math.Sqrt(value) * 127);
         }
-        public static byte GetNearestTableIndex(double value, double[] table) {
+
+        public static byte GetNearestTableIndex(double value, double[] table)
+        {
             byte ret = 127;
             double minDis = double.MaxValue;
-            for (byte i = 0; i < table.Length; i++) {
+            for (byte i = 0; i < table.Length; i++)
+            {
                 double dist = Math.Abs(value - table[i]);
-                if (dist < minDis) {
+                if (dist < minDis)
+                {
                     minDis = dist;
                     ret = i;
                 }
             }
             return ret;
         }
-        public static double[] AttackTable = new double[] {
-            8606.1, 4756.3, 3339.3, 2594.4, 2130.7, 1807.7, 1573.3, 1401.4,
-            1255.5, 1140.9, 1047.1, 963.8, 896.0, 838.7, 786.6, 745.0,
-            703.3, 666.8, 630.4, 599.1, 578.3, 547.0, 526.2, 505.3,
-            484.5, 468.9, 448.0, 437.6, 416.8, 406.4, 395.9, 385.5,
-            369.9, 359.5, 349.0, 338.6, 328.2, 323.0, 312.6, 307.4,
-            297.0, 291.7, 286.5, 276.1, 270.9, 265.7, 260.5, 255.3,
-            250.1, 244.9, 239.6, 234.4, 229.2, 224.0, 218.8, 213.6,
-            213.6, 208.4, 203.2, 203.2, 198.0, 198.0, 192.8, 192.8,
-            182.3, 182.3, 177.1, 177.1, 171.9, 171.9, 166.7, 166.7,
-            161.5, 161.5, 156.3, 156.3, 151.1, 151.1, 145.9, 145.9,
-            145.9, 145.9, 140.7, 140.7, 140.7, 130.2, 130.2, 130.2,
-            125.0, 125.0, 125.0, 125.0, 119.8, 119.8, 119.8, 114.6,
-            114.6, 114.6, 114.6, 109.4, 109.4, 109.4, 109.4, 109.4,
-            104.2, 104.2, 104.2, 104.2, 99.0, 93.8, 88.6, 83.4,
-            78.2, 72.9, 67.7, 62.5, 57.3, 52.1, 46.9, 41.7,
-            36.5, 31.3, 26.1, 20.8, 15.6, 10.4, 10.4, 0.0
+
+        public static double[] AttackTable = new double[]
+        {
+            8606.1,
+            4756.3,
+            3339.3,
+            2594.4,
+            2130.7,
+            1807.7,
+            1573.3,
+            1401.4,
+            1255.5,
+            1140.9,
+            1047.1,
+            963.8,
+            896.0,
+            838.7,
+            786.6,
+            745.0,
+            703.3,
+            666.8,
+            630.4,
+            599.1,
+            578.3,
+            547.0,
+            526.2,
+            505.3,
+            484.5,
+            468.9,
+            448.0,
+            437.6,
+            416.8,
+            406.4,
+            395.9,
+            385.5,
+            369.9,
+            359.5,
+            349.0,
+            338.6,
+            328.2,
+            323.0,
+            312.6,
+            307.4,
+            297.0,
+            291.7,
+            286.5,
+            276.1,
+            270.9,
+            265.7,
+            260.5,
+            255.3,
+            250.1,
+            244.9,
+            239.6,
+            234.4,
+            229.2,
+            224.0,
+            218.8,
+            213.6,
+            213.6,
+            208.4,
+            203.2,
+            203.2,
+            198.0,
+            198.0,
+            192.8,
+            192.8,
+            182.3,
+            182.3,
+            177.1,
+            177.1,
+            171.9,
+            171.9,
+            166.7,
+            166.7,
+            161.5,
+            161.5,
+            156.3,
+            156.3,
+            151.1,
+            151.1,
+            145.9,
+            145.9,
+            145.9,
+            145.9,
+            140.7,
+            140.7,
+            140.7,
+            130.2,
+            130.2,
+            130.2,
+            125.0,
+            125.0,
+            125.0,
+            125.0,
+            119.8,
+            119.8,
+            119.8,
+            114.6,
+            114.6,
+            114.6,
+            114.6,
+            109.4,
+            109.4,
+            109.4,
+            109.4,
+            109.4,
+            104.2,
+            104.2,
+            104.2,
+            104.2,
+            99.0,
+            93.8,
+            88.6,
+            83.4,
+            78.2,
+            72.9,
+            67.7,
+            62.5,
+            57.3,
+            52.1,
+            46.9,
+            41.7,
+            36.5,
+            31.3,
+            26.1,
+            20.8,
+            15.6,
+            10.4,
+            10.4,
+            0.0,
         };
-        public static double[] DecayReleaseTable = new double[] {
-            -0.0002, -0.0005, -0.0008, -0.0011, -0.0014, -0.0017, -0.0020, -0.0023,
-            -0.0026, -0.0029, -0.0032, -0.0035, -0.0038, -0.0041, -0.0044, -0.0047,
-            -0.0050, -0.0053, -0.0056, -0.0059, -0.0062, -0.0065, -0.0068, -0.0071,
-            -0.0074, -0.0077, -0.0080, -0.0083, -0.0086, -0.0089, -0.0092, -0.0095,
-            -0.0098, -0.0101, -0.0104, -0.0107, -0.0110, -0.0113, -0.0116, -0.0119,
-            -0.0122, -0.0125, -0.0128, -0.0131, -0.0134, -0.0137, -0.0140, -0.0143,
-            -0.0146, -0.0149, -0.0152, -0.0154, -0.0156, -0.0158, -0.0160, -0.0163,
-            -0.0165, -0.0167, -0.0170, -0.0172, -0.0175, -0.0178, -0.0180, -0.0183,
-            -0.0186, -0.0189, -0.0192, -0.0196, -0.0199, -0.0202, -0.0206, -0.0210,
-            -0.0214, -0.0218, -0.0222, -0.0226, -0.0231, -0.0235, -0.0240, -0.0245,
-            -0.0251, -0.0256, -0.0262, -0.0268, -0.0275, -0.0281, -0.0288, -0.0296,
-            -0.0304, -0.0312, -0.0321, -0.0330, -0.0339, -0.0350, -0.0361, -0.0372,
-            -0.0385, -0.0398, -0.0412, -0.0427, -0.0444, -0.0462, -0.0481, -0.0502,
-            -0.0524, -0.0549, -0.0577, -0.0607, -0.0641, -0.0679, -0.0721, -0.0769,
-            -0.0824, -0.0888, -0.0962, -0.1049, -0.1154, -0.1282, -0.1442, -0.1648,
-            -0.1923, -0.2308, -0.2885, -0.3846, -0.5769, -1.1538, -2.2897, -9.8460
+        public static double[] DecayReleaseTable = new double[]
+        {
+            -0.0002,
+            -0.0005,
+            -0.0008,
+            -0.0011,
+            -0.0014,
+            -0.0017,
+            -0.0020,
+            -0.0023,
+            -0.0026,
+            -0.0029,
+            -0.0032,
+            -0.0035,
+            -0.0038,
+            -0.0041,
+            -0.0044,
+            -0.0047,
+            -0.0050,
+            -0.0053,
+            -0.0056,
+            -0.0059,
+            -0.0062,
+            -0.0065,
+            -0.0068,
+            -0.0071,
+            -0.0074,
+            -0.0077,
+            -0.0080,
+            -0.0083,
+            -0.0086,
+            -0.0089,
+            -0.0092,
+            -0.0095,
+            -0.0098,
+            -0.0101,
+            -0.0104,
+            -0.0107,
+            -0.0110,
+            -0.0113,
+            -0.0116,
+            -0.0119,
+            -0.0122,
+            -0.0125,
+            -0.0128,
+            -0.0131,
+            -0.0134,
+            -0.0137,
+            -0.0140,
+            -0.0143,
+            -0.0146,
+            -0.0149,
+            -0.0152,
+            -0.0154,
+            -0.0156,
+            -0.0158,
+            -0.0160,
+            -0.0163,
+            -0.0165,
+            -0.0167,
+            -0.0170,
+            -0.0172,
+            -0.0175,
+            -0.0178,
+            -0.0180,
+            -0.0183,
+            -0.0186,
+            -0.0189,
+            -0.0192,
+            -0.0196,
+            -0.0199,
+            -0.0202,
+            -0.0206,
+            -0.0210,
+            -0.0214,
+            -0.0218,
+            -0.0222,
+            -0.0226,
+            -0.0231,
+            -0.0235,
+            -0.0240,
+            -0.0245,
+            -0.0251,
+            -0.0256,
+            -0.0262,
+            -0.0268,
+            -0.0275,
+            -0.0281,
+            -0.0288,
+            -0.0296,
+            -0.0304,
+            -0.0312,
+            -0.0321,
+            -0.0330,
+            -0.0339,
+            -0.0350,
+            -0.0361,
+            -0.0372,
+            -0.0385,
+            -0.0398,
+            -0.0412,
+            -0.0427,
+            -0.0444,
+            -0.0462,
+            -0.0481,
+            -0.0502,
+            -0.0524,
+            -0.0549,
+            -0.0577,
+            -0.0607,
+            -0.0641,
+            -0.0679,
+            -0.0721,
+            -0.0769,
+            -0.0824,
+            -0.0888,
+            -0.0962,
+            -0.1049,
+            -0.1154,
+            -0.1282,
+            -0.1442,
+            -0.1648,
+            -0.1923,
+            -0.2308,
+            -0.2885,
+            -0.3846,
+            -0.5769,
+            -1.1538,
+            -2.2897,
+            -9.8460,
         };
-        public static double[] MaxReleaseTimes = new double[] {
-            481228.8, 160409.6, 96241.6, 68744.0, 53466.4, 43747.6, 37013.6, 32078.8,
-            28303.6, 25324.0, 22911.2, 20919.6, 19245.2, 17820.4, 16593.2, 15522.0,
-            14580.8, 13748.8, 13005.2, 12334.4, 11736.4, 11190.4, 10691.2, 10238.8,
-            9817.6, 9432.8, 9079.2, 8746.4, 8439.6, 8153.6, 7888.4, 7633.6,
-            7399.6, 7181.2, 6973.2, 6775.6, 6588.4, 6411.6, 6245.2, 6089.2,
-            5938.4, 5792.8, 5657.6, 5527.6, 5402.8, 5283.2, 5174.0, 5064.8,
-            4960.8, 4856.8, 4758.0, 4695.6, 4633.2, 4570.8, 4508.4, 4446.0,
-            4383.6, 4321.2, 4258.8, 4196.4, 4134.0, 4071.6, 4009.2, 3946.8,
-            3884.4, 3822.0, 3759.6, 3692.0, 3629.6, 3567.2, 3504.8, 3442.4,
-            3380.0, 3317.6, 3255.2, 3192.8, 3130.4, 3068.0, 3005.6, 2943.2,
-            2880.8, 2818.4, 2756.0, 2693.6, 2631.2, 2568.8, 2506.4, 2438.8,
-            2376.4, 2314.0, 2251.6, 2189.2, 2126.8, 2064.4, 2002.0, 1939.6,
-            1877.2, 1814.8, 1752.4, 1690.0, 1627.6, 1565.2, 1502.8, 1440.4,
-            1378.0, 1315.6, 1253.2, 1185.6, 1123.2, 1060.8, 998.4, 936.0,
-            873.6, 811.2, 748.8, 686.4, 624.0, 561.6, 499.2, 436.8,
-            374.4, 312.0, 249.6, 187.2, 124.8, 62.4, 31.2, 5.2
+        public static double[] MaxReleaseTimes = new double[]
+        {
+            481228.8,
+            160409.6,
+            96241.6,
+            68744.0,
+            53466.4,
+            43747.6,
+            37013.6,
+            32078.8,
+            28303.6,
+            25324.0,
+            22911.2,
+            20919.6,
+            19245.2,
+            17820.4,
+            16593.2,
+            15522.0,
+            14580.8,
+            13748.8,
+            13005.2,
+            12334.4,
+            11736.4,
+            11190.4,
+            10691.2,
+            10238.8,
+            9817.6,
+            9432.8,
+            9079.2,
+            8746.4,
+            8439.6,
+            8153.6,
+            7888.4,
+            7633.6,
+            7399.6,
+            7181.2,
+            6973.2,
+            6775.6,
+            6588.4,
+            6411.6,
+            6245.2,
+            6089.2,
+            5938.4,
+            5792.8,
+            5657.6,
+            5527.6,
+            5402.8,
+            5283.2,
+            5174.0,
+            5064.8,
+            4960.8,
+            4856.8,
+            4758.0,
+            4695.6,
+            4633.2,
+            4570.8,
+            4508.4,
+            4446.0,
+            4383.6,
+            4321.2,
+            4258.8,
+            4196.4,
+            4134.0,
+            4071.6,
+            4009.2,
+            3946.8,
+            3884.4,
+            3822.0,
+            3759.6,
+            3692.0,
+            3629.6,
+            3567.2,
+            3504.8,
+            3442.4,
+            3380.0,
+            3317.6,
+            3255.2,
+            3192.8,
+            3130.4,
+            3068.0,
+            3005.6,
+            2943.2,
+            2880.8,
+            2818.4,
+            2756.0,
+            2693.6,
+            2631.2,
+            2568.8,
+            2506.4,
+            2438.8,
+            2376.4,
+            2314.0,
+            2251.6,
+            2189.2,
+            2126.8,
+            2064.4,
+            2002.0,
+            1939.6,
+            1877.2,
+            1814.8,
+            1752.4,
+            1690.0,
+            1627.6,
+            1565.2,
+            1502.8,
+            1440.4,
+            1378.0,
+            1315.6,
+            1253.2,
+            1185.6,
+            1123.2,
+            1060.8,
+            998.4,
+            936.0,
+            873.6,
+            811.2,
+            748.8,
+            686.4,
+            624.0,
+            561.6,
+            499.2,
+            436.8,
+            374.4,
+            312.0,
+            249.6,
+            187.2,
+            124.8,
+            62.4,
+            31.2,
+            5.2,
         };
     }
 }

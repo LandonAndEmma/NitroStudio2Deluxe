@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ScintillaNET;
-using System.Diagnostics;
 using GotaSequenceLib;
+using GotaSoundBank.DLS;
+using GotaSoundBank.SF2;
 using GotaSoundIO.IO;
 using Multimedia.UI;
-using System.Drawing;
 using NitroFileLoader;
-using GotaSoundBank.SF2;
-using GotaSoundBank.DLS;
-namespace NitroStudio2 {
-    public abstract class EditorBase : Form {
+using ScintillaNET;
+
+namespace NitroStudio2
+{
+    public abstract class EditorBase : Form
+    {
         public IOFile File;
         public IOFile ExtFile;
         public string FileName;
@@ -359,7 +362,15 @@ namespace NitroStudio2 {
         public Button exportWavButton;
         public Button exportMidiButton;
         public static MainWindow MainWindow;
-        public EditorBase(Type fileType, string extensionDescription, string extension, string editorName, MainWindow mainWindow) {
+
+        public EditorBase(
+            Type fileType,
+            string extensionDescription,
+            string extension,
+            string editorName,
+            MainWindow mainWindow
+        )
+        {
             InitializeComponent();
             MainWindow = mainWindow;
             FileType = fileType;
@@ -370,7 +381,16 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
-        public EditorBase(Type fileType, string extensionDescription, string extension, string editorName, string fileToOpen, MainWindow mainWindow) {
+
+        public EditorBase(
+            Type fileType,
+            string extensionDescription,
+            string extension,
+            string editorName,
+            string fileToOpen,
+            MainWindow mainWindow
+        )
+        {
             InitializeComponent();
             MainWindow = mainWindow;
             FileType = fileType;
@@ -386,7 +406,17 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
-        public EditorBase(Type fileType, string extensionDescription, string extension, string editorName, IOFile fileToOpen, MainWindow mainWindow, string fileName) {
+
+        public EditorBase(
+            Type fileType,
+            string extensionDescription,
+            string extension,
+            string editorName,
+            IOFile fileToOpen,
+            MainWindow mainWindow,
+            string fileName
+        )
+        {
             InitializeComponent();
             MainWindow = mainWindow;
             FileType = fileType;
@@ -398,7 +428,8 @@ namespace NitroStudio2 {
             File.Read(ExtFile.Write());
             FilePath = "";
             string name = fileName;
-            if (name == null) {
+            if (name == null)
+            {
                 name = "{ Null File Name }";
             }
             Text = EditorName + " - " + name + ".s" + extension;
@@ -407,6 +438,7 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
+
         public MenuStrip menuStrip;
         public ToolStripMenuItem newToolStripMenuItem;
         public ToolStripMenuItem openToolStripMenuItem;
@@ -454,10 +486,17 @@ namespace NitroStudio2 {
         private ToolStripMenuItem sarExport;
         private ToolStripMenuItem sarRename;
         private ToolStripMenuItem sarDelete;
-        public void InitializeComponent() {
+
+        public void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorBase));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("File Information", 10, 10);
+            System.ComponentModel.ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(EditorBase));
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode(
+                "File Information",
+                10,
+                10
+            );
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -472,7 +511,8 @@ namespace NitroStudio2 {
             this.exportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sequenceEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sequenceArchiveEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sequenceArchiveEditorToolStripMenuItem =
+                new System.Windows.Forms.ToolStripMenuItem();
             this.bankEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waveArchiveEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bankGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -481,7 +521,8 @@ namespace NitroStudio2 {
             this.exportSDKProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sF2ToDLSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dLSToSF2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.batchExportMIDIDLSSF2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchExportMIDIDLSSF2ToolStripMenuItem =
+                new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -944,24 +985,32 @@ namespace NitroStudio2 {
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.sarEntryMenu.SuspendLayout();
             this.SuspendLayout();
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileMenu,
-            this.editToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.menuStrip.Items.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.fileMenu,
+                    this.editToolStripMenuItem,
+                    this.toolsToolStripMenuItem,
+                    this.helpToolStripMenuItem,
+                    this.aboutToolStripMenuItem,
+                }
+            );
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(984, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
-            this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.closeToolStripMenuItem,
-            this.quitToolStripMenuItem});
+            this.fileMenu.DropDownItems.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.newToolStripMenuItem,
+                    this.openToolStripMenuItem,
+                    this.saveToolStripMenuItem,
+                    this.saveAsToolStripMenuItem,
+                    this.closeToolStripMenuItem,
+                    this.quitToolStripMenuItem,
+                }
+            );
             this.fileMenu.Name = "fileMenu";
             this.fileMenu.Size = new System.Drawing.Size(37, 20);
             this.fileMenu.Text = "File";
@@ -969,126 +1018,211 @@ namespace NitroStudio2 {
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            this.newToolStripMenuItem.Click += new System.EventHandler(
+                this.newToolStripMenuItem_Click
+            );
             this.openToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Open;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.openToolStripMenuItem.Click += new System.EventHandler(
+                this.openToolStripMenuItem_Click
+            );
             this.saveToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.saveToolStripMenuItem.Click += new System.EventHandler(
+                this.saveToolStripMenuItem_Click
+            );
             this.saveAsToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save_As;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(
+                this.saveAsToolStripMenuItem_Click
+            );
             this.closeToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Close;
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            this.closeToolStripMenuItem.Click += new System.EventHandler(
+                this.closeToolStripMenuItem_Click
+            );
             this.quitToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Quit;
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.quitToolStripMenuItem.Text = "Quit";
-            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.blankFileToolStripMenuItem,
-            this.importFileToolStripMenuItem,
-            this.exportFileToolStripMenuItem});
+            this.quitToolStripMenuItem.Click += new System.EventHandler(
+                this.quitToolStripMenuItem_Click
+            );
+            this.editToolStripMenuItem.DropDownItems.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.blankFileToolStripMenuItem,
+                    this.importFileToolStripMenuItem,
+                    this.exportFileToolStripMenuItem,
+                }
+            );
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
-            this.blankFileToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Rename;
+            this.blankFileToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Rename;
             this.blankFileToolStripMenuItem.Name = "blankFileToolStripMenuItem";
             this.blankFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.blankFileToolStripMenuItem.Text = "Blank File";
-            this.blankFileToolStripMenuItem.Click += new System.EventHandler(this.blankFileToolStripMenuItem_Click);
-            this.importFileToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Import;
+            this.blankFileToolStripMenuItem.Click += new System.EventHandler(
+                this.blankFileToolStripMenuItem_Click
+            );
+            this.importFileToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Import;
             this.importFileToolStripMenuItem.Name = "importFileToolStripMenuItem";
             this.importFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.importFileToolStripMenuItem.Text = "Import File";
-            this.importFileToolStripMenuItem.Click += new System.EventHandler(this.importFileToolStripMenuItem_Click);
-            this.exportFileToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Export;
+            this.importFileToolStripMenuItem.Click += new System.EventHandler(
+                this.importFileToolStripMenuItem_Click
+            );
+            this.exportFileToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Export;
             this.exportFileToolStripMenuItem.Name = "exportFileToolStripMenuItem";
             this.exportFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.exportFileToolStripMenuItem.Text = "Export File";
-            this.exportFileToolStripMenuItem.Click += new System.EventHandler(this.exportFileToolStripMenuItem_Click);
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sequenceEditorToolStripMenuItem,
-            this.sequenceArchiveEditorToolStripMenuItem,
-            this.bankEditorToolStripMenuItem,
-            this.waveArchiveEditorToolStripMenuItem,
-            this.bankGeneratorToolStripMenuItem,
-            this.creaveWaveToolStripMenuItem,
-            this.createStreamToolStripMenuItem,
-            this.exportSDKProjectToolStripMenuItem,
-            this.sF2ToDLSToolStripMenuItem,
-            this.dLSToSF2ToolStripMenuItem,
-            this.batchExportMIDIDLSSF2ToolStripMenuItem});
+            this.exportFileToolStripMenuItem.Click += new System.EventHandler(
+                this.exportFileToolStripMenuItem_Click
+            );
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.sequenceEditorToolStripMenuItem,
+                    this.sequenceArchiveEditorToolStripMenuItem,
+                    this.bankEditorToolStripMenuItem,
+                    this.waveArchiveEditorToolStripMenuItem,
+                    this.bankGeneratorToolStripMenuItem,
+                    this.creaveWaveToolStripMenuItem,
+                    this.createStreamToolStripMenuItem,
+                    this.exportSDKProjectToolStripMenuItem,
+                    this.sF2ToDLSToolStripMenuItem,
+                    this.dLSToSF2ToolStripMenuItem,
+                    this.batchExportMIDIDLSSF2ToolStripMenuItem,
+                }
+            );
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             this.toolsToolStripMenuItem.Visible = false;
-            this.sequenceEditorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sequenceEditorToolStripMenuItem.Image")));
+            this.sequenceEditorToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("sequenceEditorToolStripMenuItem.Image"))
+            );
             this.sequenceEditorToolStripMenuItem.Name = "sequenceEditorToolStripMenuItem";
             this.sequenceEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.sequenceEditorToolStripMenuItem.Text = "Sequence Editor";
-            this.sequenceEditorToolStripMenuItem.Click += new System.EventHandler(this.SequenceEditorToolStripMenuItem_Click);
-            this.sequenceArchiveEditorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sequenceArchiveEditorToolStripMenuItem.Image")));
-            this.sequenceArchiveEditorToolStripMenuItem.Name = "sequenceArchiveEditorToolStripMenuItem";
+            this.sequenceEditorToolStripMenuItem.Click += new System.EventHandler(
+                this.SequenceEditorToolStripMenuItem_Click
+            );
+            this.sequenceArchiveEditorToolStripMenuItem.Image = (
+                (System.Drawing.Image)(
+                    resources.GetObject("sequenceArchiveEditorToolStripMenuItem.Image")
+                )
+            );
+            this.sequenceArchiveEditorToolStripMenuItem.Name =
+                "sequenceArchiveEditorToolStripMenuItem";
             this.sequenceArchiveEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.sequenceArchiveEditorToolStripMenuItem.Text = "Sequence Archive Editor";
-            this.sequenceArchiveEditorToolStripMenuItem.Click += new System.EventHandler(this.SequenceArchiveEditorToolStripMenuItem_Click);
+            this.sequenceArchiveEditorToolStripMenuItem.Click += new System.EventHandler(
+                this.SequenceArchiveEditorToolStripMenuItem_Click
+            );
             this.bankEditorToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Bank;
             this.bankEditorToolStripMenuItem.Name = "bankEditorToolStripMenuItem";
             this.bankEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.bankEditorToolStripMenuItem.Text = "Bank Editor";
-            this.bankEditorToolStripMenuItem.Click += new System.EventHandler(this.BankEditorToolStripMenuItem_Click);
-            this.waveArchiveEditorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("waveArchiveEditorToolStripMenuItem.Image")));
+            this.bankEditorToolStripMenuItem.Click += new System.EventHandler(
+                this.BankEditorToolStripMenuItem_Click
+            );
+            this.waveArchiveEditorToolStripMenuItem.Image = (
+                (System.Drawing.Image)(
+                    resources.GetObject("waveArchiveEditorToolStripMenuItem.Image")
+                )
+            );
             this.waveArchiveEditorToolStripMenuItem.Name = "waveArchiveEditorToolStripMenuItem";
             this.waveArchiveEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.waveArchiveEditorToolStripMenuItem.Text = "Wave Archive Editor";
-            this.waveArchiveEditorToolStripMenuItem.Click += new System.EventHandler(this.WaveArchiveEditorToolStripMenuItem_Click);
-            this.bankGeneratorToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("bankGeneratorToolStripMenuItem.Image")));
+            this.waveArchiveEditorToolStripMenuItem.Click += new System.EventHandler(
+                this.WaveArchiveEditorToolStripMenuItem_Click
+            );
+            this.bankGeneratorToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("bankGeneratorToolStripMenuItem.Image"))
+            );
             this.bankGeneratorToolStripMenuItem.Name = "bankGeneratorToolStripMenuItem";
             this.bankGeneratorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.bankGeneratorToolStripMenuItem.Text = "Bank Generator";
-            this.bankGeneratorToolStripMenuItem.Click += new System.EventHandler(this.BankGeneratorToolStripMenuItem_Click);
-            this.creaveWaveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("creaveWaveToolStripMenuItem.Image")));
+            this.bankGeneratorToolStripMenuItem.Click += new System.EventHandler(
+                this.BankGeneratorToolStripMenuItem_Click
+            );
+            this.creaveWaveToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("creaveWaveToolStripMenuItem.Image"))
+            );
             this.creaveWaveToolStripMenuItem.Name = "creaveWaveToolStripMenuItem";
             this.creaveWaveToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.creaveWaveToolStripMenuItem.Text = "Creave Wave";
-            this.creaveWaveToolStripMenuItem.Click += new System.EventHandler(this.CreaveWaveToolStripMenuItem_Click);
-            this.createStreamToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("createStreamToolStripMenuItem.Image")));
+            this.creaveWaveToolStripMenuItem.Click += new System.EventHandler(
+                this.CreaveWaveToolStripMenuItem_Click
+            );
+            this.createStreamToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("createStreamToolStripMenuItem.Image"))
+            );
             this.createStreamToolStripMenuItem.Name = "createStreamToolStripMenuItem";
             this.createStreamToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.createStreamToolStripMenuItem.Text = "Create Stream";
-            this.createStreamToolStripMenuItem.Click += new System.EventHandler(this.CreateStreamToolStripMenuItem_Click);
-            this.exportSDKProjectToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.NSM;
+            this.createStreamToolStripMenuItem.Click += new System.EventHandler(
+                this.CreateStreamToolStripMenuItem_Click
+            );
+            this.exportSDKProjectToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .NSM;
             this.exportSDKProjectToolStripMenuItem.Name = "exportSDKProjectToolStripMenuItem";
             this.exportSDKProjectToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.exportSDKProjectToolStripMenuItem.Text = "Export SDK Project";
-            this.exportSDKProjectToolStripMenuItem.Click += new System.EventHandler(this.ExportSDKProjectToolStripMenuItem_Click);
-            this.sF2ToDLSToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sF2ToDLSToolStripMenuItem.Image")));
+            this.exportSDKProjectToolStripMenuItem.Click += new System.EventHandler(
+                this.ExportSDKProjectToolStripMenuItem_Click
+            );
+            this.sF2ToDLSToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("sF2ToDLSToolStripMenuItem.Image"))
+            );
             this.sF2ToDLSToolStripMenuItem.Name = "sF2ToDLSToolStripMenuItem";
             this.sF2ToDLSToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.sF2ToDLSToolStripMenuItem.Text = "SF2 To DLS";
-            this.sF2ToDLSToolStripMenuItem.Click += new System.EventHandler(this.sF2ToDLSToolStripMenuItem_Click);
-            this.dLSToSF2ToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("dLSToSF2ToolStripMenuItem.Image")));
+            this.sF2ToDLSToolStripMenuItem.Click += new System.EventHandler(
+                this.sF2ToDLSToolStripMenuItem_Click
+            );
+            this.dLSToSF2ToolStripMenuItem.Image = (
+                (System.Drawing.Image)(resources.GetObject("dLSToSF2ToolStripMenuItem.Image"))
+            );
             this.dLSToSF2ToolStripMenuItem.Name = "dLSToSF2ToolStripMenuItem";
             this.dLSToSF2ToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.dLSToSF2ToolStripMenuItem.Text = "DLS To SF2";
-            this.dLSToSF2ToolStripMenuItem.Click += new System.EventHandler(this.dLSToSF2ToolStripMenuItem_Click);
-            this.batchExportMIDIDLSSF2ToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("batchExportMIDIDLSSF2ToolStripMenuItem.Image")));
-            this.batchExportMIDIDLSSF2ToolStripMenuItem.Name = "batchExportMIDIDLSSF2ToolStripMenuItem";
+            this.dLSToSF2ToolStripMenuItem.Click += new System.EventHandler(
+                this.dLSToSF2ToolStripMenuItem_Click
+            );
+            this.batchExportMIDIDLSSF2ToolStripMenuItem.Image = (
+                (System.Drawing.Image)(
+                    resources.GetObject("batchExportMIDIDLSSF2ToolStripMenuItem.Image")
+                )
+            );
+            this.batchExportMIDIDLSSF2ToolStripMenuItem.Name =
+                "batchExportMIDIDLSSF2ToolStripMenuItem";
             this.batchExportMIDIDLSSF2ToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.batchExportMIDIDLSSF2ToolStripMenuItem.Text = "Batch Export MIDI/DLS/SF2";
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.getHelpToolStripMenuItem});
+            this.helpToolStripMenuItem.DropDownItems.AddRange(
+                new System.Windows.Forms.ToolStripItem[] { this.getHelpToolStripMenuItem }
+            );
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -1096,17 +1230,25 @@ namespace NitroStudio2 {
             this.getHelpToolStripMenuItem.Name = "getHelpToolStripMenuItem";
             this.getHelpToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.getHelpToolStripMenuItem.Text = "Get Help";
-            this.getHelpToolStripMenuItem.Click += new System.EventHandler(this.GetHelpToolStripMenuItem_Click);
-            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutNitroStudio2ToolStripMenuItem});
+            this.getHelpToolStripMenuItem.Click += new System.EventHandler(
+                this.GetHelpToolStripMenuItem_Click
+            );
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(
+                new System.Windows.Forms.ToolStripItem[] { this.aboutNitroStudio2ToolStripMenuItem }
+            );
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutNitroStudio2ToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Ico;
+            this.aboutNitroStudio2ToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Ico;
             this.aboutNitroStudio2ToolStripMenuItem.Name = "aboutNitroStudio2ToolStripMenuItem";
             this.aboutNitroStudio2ToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.aboutNitroStudio2ToolStripMenuItem.Text = "About Nitro Studio 2";
-            this.aboutNitroStudio2ToolStripMenuItem.Click += new System.EventHandler(this.AboutNitroStudio2ToolStripMenuItem_Click);
+            this.aboutNitroStudio2ToolStripMenuItem.Click += new System.EventHandler(
+                this.AboutNitroStudio2ToolStripMenuItem_Click
+            );
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
@@ -1145,17 +1287,31 @@ namespace NitroStudio2 {
             this.seqBankPanel.Size = new System.Drawing.Size(325, 204);
             this.seqBankPanel.TabIndex = 18;
             this.seqBankPanel.Visible = false;
-            this.tableLayoutPanel36.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel36.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel36.ColumnCount = 2;
-            this.tableLayoutPanel36.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel36.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel36.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel36.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel36.Controls.Add(this.exportWavButton, 0, 0);
             this.tableLayoutPanel36.Controls.Add(this.exportMidiButton, 0, 0);
             this.tableLayoutPanel36.Location = new System.Drawing.Point(14, 244);
             this.tableLayoutPanel36.Name = "tableLayoutPanel36";
             this.tableLayoutPanel36.RowCount = 1;
-            this.tableLayoutPanel36.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel36.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel36.Size = new System.Drawing.Size(298, 25);
             this.tableLayoutPanel36.TabIndex = 30;
             this.exportWavButton.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1174,11 +1330,23 @@ namespace NitroStudio2 {
             this.exportMidiButton.TabIndex = 4;
             this.exportMidiButton.Text = "Export MIDI";
             this.exportMidiButton.UseVisualStyleBackColor = true;
-            this.tableLayoutPanel20.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel20.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel20.ColumnCount = 2;
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel20.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel20.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel20.Controls.Add(this.tableLayoutPanel35, 1, 7);
             this.tableLayoutPanel20.Controls.Add(this.tableLayoutPanel34, 1, 6);
             this.tableLayoutPanel20.Controls.Add(this.tableLayoutPanel33, 1, 5);
@@ -1198,20 +1366,42 @@ namespace NitroStudio2 {
             this.tableLayoutPanel20.Location = new System.Drawing.Point(14, 62);
             this.tableLayoutPanel20.Name = "tableLayoutPanel20";
             this.tableLayoutPanel20.RowCount = 8;
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
+            this.tableLayoutPanel20.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F)
+            );
             this.tableLayoutPanel20.Size = new System.Drawing.Size(298, 176);
             this.tableLayoutPanel20.TabIndex = 28;
             this.tableLayoutPanel35.ColumnCount = 3;
-            this.tableLayoutPanel35.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel35.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel35.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel35.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel35.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel35.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel35.Controls.Add(this.track15Box, 0, 0);
             this.tableLayoutPanel35.Controls.Add(this.track15Picture, 2, 0);
             this.tableLayoutPanel35.Controls.Add(this.track15Solo, 1, 0);
@@ -1220,8 +1410,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel35.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel35.Name = "tableLayoutPanel35";
             this.tableLayoutPanel35.RowCount = 1;
-            this.tableLayoutPanel35.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel35.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel35.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel35.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel35.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel35.TabIndex = 41;
             this.track15Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1252,9 +1446,15 @@ namespace NitroStudio2 {
             this.track15Solo.Text = "Solo";
             this.track15Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel34.ColumnCount = 3;
-            this.tableLayoutPanel34.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel34.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel34.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel34.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel34.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel34.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel34.Controls.Add(this.track13Box, 0, 0);
             this.tableLayoutPanel34.Controls.Add(this.track13Picture, 2, 0);
             this.tableLayoutPanel34.Controls.Add(this.track13Solo, 1, 0);
@@ -1263,8 +1463,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel34.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel34.Name = "tableLayoutPanel34";
             this.tableLayoutPanel34.RowCount = 1;
-            this.tableLayoutPanel34.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel34.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel34.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel34.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel34.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel34.TabIndex = 40;
             this.track13Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1295,9 +1499,15 @@ namespace NitroStudio2 {
             this.track13Solo.Text = "Solo";
             this.track13Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel33.ColumnCount = 3;
-            this.tableLayoutPanel33.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel33.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel33.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel33.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel33.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel33.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel33.Controls.Add(this.track11Box, 0, 0);
             this.tableLayoutPanel33.Controls.Add(this.track11Picture, 2, 0);
             this.tableLayoutPanel33.Controls.Add(this.track11Solo, 1, 0);
@@ -1306,8 +1516,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel33.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel33.Name = "tableLayoutPanel33";
             this.tableLayoutPanel33.RowCount = 1;
-            this.tableLayoutPanel33.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel33.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel33.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel33.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel33.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel33.TabIndex = 39;
             this.track11Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1338,9 +1552,15 @@ namespace NitroStudio2 {
             this.track11Solo.Text = "Solo";
             this.track11Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel32.ColumnCount = 3;
-            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel32.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel32.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel32.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel32.Controls.Add(this.track9Box, 0, 0);
             this.tableLayoutPanel32.Controls.Add(this.track9Picture, 2, 0);
             this.tableLayoutPanel32.Controls.Add(this.track9Solo, 1, 0);
@@ -1349,8 +1569,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel32.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel32.Name = "tableLayoutPanel32";
             this.tableLayoutPanel32.RowCount = 1;
-            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel32.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel32.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel32.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel32.TabIndex = 38;
             this.track9Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1381,9 +1605,15 @@ namespace NitroStudio2 {
             this.track9Solo.Text = "Solo";
             this.track9Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel31.ColumnCount = 3;
-            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel31.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel31.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel31.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel31.Controls.Add(this.track7Box, 0, 0);
             this.tableLayoutPanel31.Controls.Add(this.track7Picture, 2, 0);
             this.tableLayoutPanel31.Controls.Add(this.track7Solo, 1, 0);
@@ -1392,8 +1622,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel31.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel31.Name = "tableLayoutPanel31";
             this.tableLayoutPanel31.RowCount = 1;
-            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel31.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel31.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel31.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel31.TabIndex = 37;
             this.track7Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1424,9 +1658,15 @@ namespace NitroStudio2 {
             this.track7Solo.Text = "Solo";
             this.track7Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel30.ColumnCount = 3;
-            this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel30.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel30.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel30.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel30.Controls.Add(this.track5Box, 0, 0);
             this.tableLayoutPanel30.Controls.Add(this.track5Picture, 2, 0);
             this.tableLayoutPanel30.Controls.Add(this.track5Solo, 1, 0);
@@ -1435,8 +1675,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel30.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel30.Name = "tableLayoutPanel30";
             this.tableLayoutPanel30.RowCount = 1;
-            this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel30.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel30.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel30.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel30.TabIndex = 36;
             this.track5Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1467,9 +1711,15 @@ namespace NitroStudio2 {
             this.track5Solo.Text = "Solo";
             this.track5Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel29.ColumnCount = 3;
-            this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel29.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel29.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel29.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel29.Controls.Add(this.track3Box, 0, 0);
             this.tableLayoutPanel29.Controls.Add(this.track3Picture, 2, 0);
             this.tableLayoutPanel29.Controls.Add(this.track3Solo, 1, 0);
@@ -1478,8 +1728,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel29.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel29.Name = "tableLayoutPanel29";
             this.tableLayoutPanel29.RowCount = 1;
-            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel29.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel29.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel29.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel29.TabIndex = 35;
             this.track3Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1510,9 +1764,15 @@ namespace NitroStudio2 {
             this.track3Solo.Text = "Solo";
             this.track3Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel28.ColumnCount = 3;
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel28.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel28.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel28.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel28.Controls.Add(this.track14Box, 0, 0);
             this.tableLayoutPanel28.Controls.Add(this.track14Picture, 2, 0);
             this.tableLayoutPanel28.Controls.Add(this.track14Solo, 1, 0);
@@ -1521,7 +1781,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel28.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel28.Name = "tableLayoutPanel28";
             this.tableLayoutPanel28.RowCount = 1;
-            this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel28.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel28.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel28.TabIndex = 34;
             this.track14Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1552,9 +1814,15 @@ namespace NitroStudio2 {
             this.track14Solo.Text = "Solo";
             this.track14Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel27.ColumnCount = 3;
-            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel27.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel27.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel27.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel27.Controls.Add(this.track12Box, 0, 0);
             this.tableLayoutPanel27.Controls.Add(this.track12Picture, 2, 0);
             this.tableLayoutPanel27.Controls.Add(this.track12Solo, 1, 0);
@@ -1563,7 +1831,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel27.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel27.Name = "tableLayoutPanel27";
             this.tableLayoutPanel27.RowCount = 1;
-            this.tableLayoutPanel27.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel27.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel27.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel27.TabIndex = 33;
             this.track12Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1594,9 +1864,15 @@ namespace NitroStudio2 {
             this.track12Solo.Text = "Solo";
             this.track12Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel26.ColumnCount = 3;
-            this.tableLayoutPanel26.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel26.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel26.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel26.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel26.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel26.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel26.Controls.Add(this.track10Box, 0, 0);
             this.tableLayoutPanel26.Controls.Add(this.track10Picture, 2, 0);
             this.tableLayoutPanel26.Controls.Add(this.track10Solo, 1, 0);
@@ -1605,7 +1881,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel26.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel26.Name = "tableLayoutPanel26";
             this.tableLayoutPanel26.RowCount = 1;
-            this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel26.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel26.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel26.TabIndex = 32;
             this.track10Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1636,9 +1914,15 @@ namespace NitroStudio2 {
             this.track10Solo.Text = "Solo";
             this.track10Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel25.ColumnCount = 3;
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel25.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel25.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel25.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel25.Controls.Add(this.track8Box, 0, 0);
             this.tableLayoutPanel25.Controls.Add(this.track8Picture, 2, 0);
             this.tableLayoutPanel25.Controls.Add(this.track8Solo, 1, 0);
@@ -1647,7 +1931,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel25.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel25.Name = "tableLayoutPanel25";
             this.tableLayoutPanel25.RowCount = 1;
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel25.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel25.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel25.TabIndex = 31;
             this.track8Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1678,9 +1964,15 @@ namespace NitroStudio2 {
             this.track8Solo.Text = "Solo";
             this.track8Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel24.ColumnCount = 3;
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel24.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel24.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel24.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel24.Controls.Add(this.track6Box, 0, 0);
             this.tableLayoutPanel24.Controls.Add(this.track6Picture, 2, 0);
             this.tableLayoutPanel24.Controls.Add(this.track6Solo, 1, 0);
@@ -1689,7 +1981,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel24.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel24.Name = "tableLayoutPanel24";
             this.tableLayoutPanel24.RowCount = 1;
-            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel24.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel24.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel24.TabIndex = 30;
             this.track6Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1720,9 +2014,15 @@ namespace NitroStudio2 {
             this.track6Solo.Text = "Solo";
             this.track6Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel23.ColumnCount = 3;
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel23.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel23.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel23.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel23.Controls.Add(this.track4Box, 0, 0);
             this.tableLayoutPanel23.Controls.Add(this.track4Picture, 2, 0);
             this.tableLayoutPanel23.Controls.Add(this.track4Solo, 1, 0);
@@ -1731,7 +2031,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel23.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel23.Name = "tableLayoutPanel23";
             this.tableLayoutPanel23.RowCount = 1;
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel23.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel23.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel23.TabIndex = 29;
             this.track4Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1762,9 +2064,15 @@ namespace NitroStudio2 {
             this.track4Solo.Text = "Solo";
             this.track4Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel22.ColumnCount = 3;
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel22.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel22.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel22.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel22.Controls.Add(this.track2Box, 0, 0);
             this.tableLayoutPanel22.Controls.Add(this.track2Picture, 2, 0);
             this.tableLayoutPanel22.Controls.Add(this.track2Solo, 1, 0);
@@ -1773,7 +2081,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel22.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel22.Name = "tableLayoutPanel22";
             this.tableLayoutPanel22.RowCount = 1;
-            this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel22.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel22.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel22.TabIndex = 28;
             this.track2Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1804,9 +2114,15 @@ namespace NitroStudio2 {
             this.track2Solo.Text = "Solo";
             this.track2Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel21.ColumnCount = 3;
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel21.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel21.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel21.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel21.Controls.Add(this.track1Box, 0, 0);
             this.tableLayoutPanel21.Controls.Add(this.track1Picture, 2, 0);
             this.tableLayoutPanel21.Controls.Add(this.track1Solo, 1, 0);
@@ -1815,8 +2131,12 @@ namespace NitroStudio2 {
             this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel21.Name = "tableLayoutPanel21";
             this.tableLayoutPanel21.RowCount = 1;
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel21.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
+            this.tableLayoutPanel21.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F)
+            );
             this.tableLayoutPanel21.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel21.TabIndex = 27;
             this.track1Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1847,9 +2167,15 @@ namespace NitroStudio2 {
             this.track1Solo.Text = "Solo";
             this.track1Solo.UseVisualStyleBackColor = true;
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel1.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel1.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel1.Controls.Add(this.track0Box, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.track0Picture, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.track0Solo, 1, 0);
@@ -1858,7 +2184,9 @@ namespace NitroStudio2 {
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel1.Size = new System.Drawing.Size(149, 22);
             this.tableLayoutPanel1.TabIndex = 26;
             this.track0Box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1888,29 +2216,55 @@ namespace NitroStudio2 {
             this.track0Solo.TabIndex = 3;
             this.track0Solo.Text = "Solo";
             this.track0Solo.UseVisualStyleBackColor = true;
-            this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label28.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label28.Location = new System.Drawing.Point(11, 3);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(301, 20);
             this.label28.TabIndex = 25;
             this.label28.Text = "Preview Bank:";
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel12.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel12.ColumnCount = 2;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel12.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel12.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel12.Controls.Add(this.seqEditorBankComboBox, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.seqEditorBankBox, 1, 0);
             this.tableLayoutPanel12.Location = new System.Drawing.Point(14, 25);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 1;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel12.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel12.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel12.TabIndex = 24;
             this.seqEditorBankComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.seqEditorBankComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.seqEditorBankComboBox.DropDownStyle = System
+                .Windows
+                .Forms
+                .ComboBoxStyle
+                .DropDownList;
             this.seqEditorBankComboBox.FormattingEnabled = true;
             this.seqEditorBankComboBox.Location = new System.Drawing.Point(3, 3);
             this.seqEditorBankComboBox.Name = "seqEditorBankComboBox";
@@ -1919,15 +2273,14 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.seqEditorBankComboBox, "Bank to use with the sequence.");
             this.seqEditorBankBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.seqEditorBankBox.Location = new System.Drawing.Point(256, 3);
-            this.seqEditorBankBox.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
+            this.seqEditorBankBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             this.seqEditorBankBox.Name = "seqEditorBankBox";
             this.seqEditorBankBox.Size = new System.Drawing.Size(39, 20);
             this.seqEditorBankBox.TabIndex = 7;
-            this.toolTip.SetToolTip(this.seqEditorBankBox, "Id of the bank to use with the sequence.");
+            this.toolTip.SetToolTip(
+                this.seqEditorBankBox,
+                "Id of the bank to use with the sequence."
+            );
             this.bankEditorPanel.Controls.Add(this.bankRegions);
             this.bankEditorPanel.Controls.Add(this.label32);
             this.bankEditorPanel.Controls.Add(this.tableLayoutPanel15);
@@ -1940,23 +2293,44 @@ namespace NitroStudio2 {
             this.bankEditorPanel.Size = new System.Drawing.Size(325, 204);
             this.bankEditorPanel.TabIndex = 21;
             this.bankEditorPanel.Visible = false;
-            this.bankRegions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.bankRegions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.bankRegions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.bankRegions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.playSampleButton,
-            this.endNote,
-            this.instrumentType,
-            this.waveId,
-            this.waveArchiveId,
-            this.baseNote,
-            this.attack,
-            this.decay,
-            this.sustain,
-            this.release,
-            this.pan});
+            this.bankRegions.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            (
+                                System.Windows.Forms.AnchorStyles.Top
+                                | System.Windows.Forms.AnchorStyles.Bottom
+                            ) | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
+            this.bankRegions.AutoSizeColumnsMode = System
+                .Windows
+                .Forms
+                .DataGridViewAutoSizeColumnsMode
+                .DisplayedCells;
+            this.bankRegions.ColumnHeadersHeightSizeMode = System
+                .Windows
+                .Forms
+                .DataGridViewColumnHeadersHeightSizeMode
+                .AutoSize;
+            this.bankRegions.Columns.AddRange(
+                new System.Windows.Forms.DataGridViewColumn[]
+                {
+                    this.playSampleButton,
+                    this.endNote,
+                    this.instrumentType,
+                    this.waveId,
+                    this.waveArchiveId,
+                    this.baseNote,
+                    this.attack,
+                    this.decay,
+                    this.sustain,
+                    this.release,
+                    this.pan,
+                }
+            );
             this.bankRegions.Location = new System.Drawing.Point(14, 141);
             this.bankRegions.Name = "bankRegions";
             this.bankRegions.Size = new System.Drawing.Size(298, 54);
@@ -1968,144 +2342,145 @@ namespace NitroStudio2 {
             this.playSampleButton.Width = 33;
             this.endNote.FillWeight = 50F;
             this.endNote.HeaderText = "End Note";
-            this.endNote.Items.AddRange(new object[] {
-            "cnm1 (0)",
-            "csm1 (1)",
-            "dnm1 (2)",
-            "dsm1 (3)",
-            "enm1 (4)",
-            "fnm1 (5)",
-            "fsm1 (6)",
-            "gnm1 (7)",
-            "gsm1 (8)",
-            "anm1 (9)",
-            "asm1 (10)",
-            "bnm1 (11)",
-            "cn0 (12)",
-            "cs0 (13)",
-            "dn0 (14)",
-            "ds0 (15)",
-            "en0 (16)",
-            "fn0 (17)",
-            "fs0 (18)",
-            "gn0 (19)",
-            "gs0 (20)",
-            "an0 (21)",
-            "as0 (22)",
-            "bn0 (23)",
-            "cn1 (24)",
-            "cs1 (25)",
-            "dn1 (26)",
-            "ds1 (27)",
-            "en1 (28)",
-            "fn1 (29)",
-            "fs1 (30)",
-            "gn1 (31)",
-            "gs1 (32)",
-            "an1 (33)",
-            "as1 (34)",
-            "bn1 (35)",
-            "cn2 (36)",
-            "cs2 (37)",
-            "dn2 (38)",
-            "ds2 (39)",
-            "en2 (40)",
-            "fn2 (41)",
-            "fs2 (42)",
-            "gn2 (43)",
-            "gs2 (44)",
-            "an2 (45)",
-            "as2 (46)",
-            "bn2 (47)",
-            "cn3 (48)",
-            "cs3 (49)",
-            "dn3 (50)",
-            "ds3 (51)",
-            "en3 (52)",
-            "fn3 (53)",
-            "fs3 (54)",
-            "gn3 (55)",
-            "gs3 (56)",
-            "an3 (57)",
-            "as3 (58)",
-            "bn3 (59)",
-            "cn4 (60)",
-            "cs4 (61)",
-            "dn4 (62)",
-            "ds4 (63)",
-            "en4 (64)",
-            "fn4 (65)",
-            "fs4 (66)",
-            "gn4 (67)",
-            "gs4 (68)",
-            "an4 (69)",
-            "as4 (70)",
-            "bn4 (71)",
-            "cn5 (72)",
-            "cs5 (73)",
-            "dn5 (74)",
-            "ds5 (75)",
-            "en5 (76)",
-            "fn5 (77)",
-            "fs5 (78)",
-            "gn5 (79)",
-            "gs5 (80)",
-            "an5 (81)",
-            "as5 (82)",
-            "bn5 (83)",
-            "cn6 (84)",
-            "cs6 (85)",
-            "dn6 (86)",
-            "ds6 (87)",
-            "en6 (88)",
-            "fn6 (89)",
-            "fs6 (90)",
-            "gn6 (91)",
-            "gs6 (92)",
-            "an6 (93)",
-            "as6 (94)",
-            "bn6 (95)",
-            "cn7 (96)",
-            "cs7 (97)",
-            "dn7 (98)",
-            "ds7 (99)",
-            "en7 (100)",
-            "fn7 (101)",
-            "fs7 (102)",
-            "gn7 (103)",
-            "gs7 (104)",
-            "an7 (105)",
-            "as7 (106)",
-            "bn7 (107)",
-            "cn8 (108)",
-            "cs8 (109)",
-            "dn8 (110)",
-            "ds8 (111)",
-            "en8 (112)",
-            "fn8 (113)",
-            "fs8 (114)",
-            "gn8 (115)",
-            "gs8 (116)",
-            "an8 (117)",
-            "as8 (118)",
-            "bn8 (119)",
-            "cn9 (120)",
-            "cs9 (121)",
-            "dn9 (122)",
-            "ds9 (123)",
-            "en9 (124)",
-            "fn9 (125)",
-            "fs9 (126)",
-            "gn9 (127)"});
+            this.endNote.Items.AddRange(
+                new object[]
+                {
+                    "cnm1 (0)",
+                    "csm1 (1)",
+                    "dnm1 (2)",
+                    "dsm1 (3)",
+                    "enm1 (4)",
+                    "fnm1 (5)",
+                    "fsm1 (6)",
+                    "gnm1 (7)",
+                    "gsm1 (8)",
+                    "anm1 (9)",
+                    "asm1 (10)",
+                    "bnm1 (11)",
+                    "cn0 (12)",
+                    "cs0 (13)",
+                    "dn0 (14)",
+                    "ds0 (15)",
+                    "en0 (16)",
+                    "fn0 (17)",
+                    "fs0 (18)",
+                    "gn0 (19)",
+                    "gs0 (20)",
+                    "an0 (21)",
+                    "as0 (22)",
+                    "bn0 (23)",
+                    "cn1 (24)",
+                    "cs1 (25)",
+                    "dn1 (26)",
+                    "ds1 (27)",
+                    "en1 (28)",
+                    "fn1 (29)",
+                    "fs1 (30)",
+                    "gn1 (31)",
+                    "gs1 (32)",
+                    "an1 (33)",
+                    "as1 (34)",
+                    "bn1 (35)",
+                    "cn2 (36)",
+                    "cs2 (37)",
+                    "dn2 (38)",
+                    "ds2 (39)",
+                    "en2 (40)",
+                    "fn2 (41)",
+                    "fs2 (42)",
+                    "gn2 (43)",
+                    "gs2 (44)",
+                    "an2 (45)",
+                    "as2 (46)",
+                    "bn2 (47)",
+                    "cn3 (48)",
+                    "cs3 (49)",
+                    "dn3 (50)",
+                    "ds3 (51)",
+                    "en3 (52)",
+                    "fn3 (53)",
+                    "fs3 (54)",
+                    "gn3 (55)",
+                    "gs3 (56)",
+                    "an3 (57)",
+                    "as3 (58)",
+                    "bn3 (59)",
+                    "cn4 (60)",
+                    "cs4 (61)",
+                    "dn4 (62)",
+                    "ds4 (63)",
+                    "en4 (64)",
+                    "fn4 (65)",
+                    "fs4 (66)",
+                    "gn4 (67)",
+                    "gs4 (68)",
+                    "an4 (69)",
+                    "as4 (70)",
+                    "bn4 (71)",
+                    "cn5 (72)",
+                    "cs5 (73)",
+                    "dn5 (74)",
+                    "ds5 (75)",
+                    "en5 (76)",
+                    "fn5 (77)",
+                    "fs5 (78)",
+                    "gn5 (79)",
+                    "gs5 (80)",
+                    "an5 (81)",
+                    "as5 (82)",
+                    "bn5 (83)",
+                    "cn6 (84)",
+                    "cs6 (85)",
+                    "dn6 (86)",
+                    "ds6 (87)",
+                    "en6 (88)",
+                    "fn6 (89)",
+                    "fs6 (90)",
+                    "gn6 (91)",
+                    "gs6 (92)",
+                    "an6 (93)",
+                    "as6 (94)",
+                    "bn6 (95)",
+                    "cn7 (96)",
+                    "cs7 (97)",
+                    "dn7 (98)",
+                    "ds7 (99)",
+                    "en7 (100)",
+                    "fn7 (101)",
+                    "fs7 (102)",
+                    "gn7 (103)",
+                    "gs7 (104)",
+                    "an7 (105)",
+                    "as7 (106)",
+                    "bn7 (107)",
+                    "cn8 (108)",
+                    "cs8 (109)",
+                    "dn8 (110)",
+                    "ds8 (111)",
+                    "en8 (112)",
+                    "fn8 (113)",
+                    "fs8 (114)",
+                    "gn8 (115)",
+                    "gs8 (116)",
+                    "an8 (117)",
+                    "as8 (118)",
+                    "bn8 (119)",
+                    "cn9 (120)",
+                    "cs9 (121)",
+                    "dn9 (122)",
+                    "ds9 (123)",
+                    "en9 (124)",
+                    "fn9 (125)",
+                    "fs9 (126)",
+                    "gn9 (127)",
+                }
+            );
             this.endNote.Name = "endNote";
             this.endNote.Width = 52;
             this.instrumentType.HeaderText = "Instrument Type";
-            this.instrumentType.Items.AddRange(new object[] {
-            "PCM",
-            "PSG",
-            "Noise",
-            "Direct PCM",
-            "Null"});
+            this.instrumentType.Items.AddRange(
+                new object[] { "PCM", "PSG", "Noise", "Direct PCM", "Null" }
+            );
             this.instrumentType.Name = "instrumentType";
             this.instrumentType.Width = 80;
             this.waveId.HeaderText = "Wave Id/PSG Cycle";
@@ -2116,138 +2491,146 @@ namespace NitroStudio2 {
             this.waveArchiveId.HeaderText = "Wave Archive Id";
             this.waveArchiveId.MaxInputLength = 5;
             this.waveArchiveId.Name = "waveArchiveId";
-            this.waveArchiveId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.waveArchiveId.SortMode = System
+                .Windows
+                .Forms
+                .DataGridViewColumnSortMode
+                .NotSortable;
             this.waveArchiveId.Width = 76;
             this.baseNote.HeaderText = "Base Note";
-            this.baseNote.Items.AddRange(new object[] {
-            "cnm1 (0)",
-            "csm1 (1)",
-            "dnm1 (2)",
-            "dsm1 (3)",
-            "enm1 (4)",
-            "fnm1 (5)",
-            "fsm1 (6)",
-            "gnm1 (7)",
-            "gsm1 (8)",
-            "anm1 (9)",
-            "asm1 (10)",
-            "bnm1 (11)",
-            "cn0 (12)",
-            "cs0 (13)",
-            "dn0 (14)",
-            "ds0 (15)",
-            "en0 (16)",
-            "fn0 (17)",
-            "fs0 (18)",
-            "gn0 (19)",
-            "gs0 (20)",
-            "an0 (21)",
-            "as0 (22)",
-            "bn0 (23)",
-            "cn1 (24)",
-            "cs1 (25)",
-            "dn1 (26)",
-            "ds1 (27)",
-            "en1 (28)",
-            "fn1 (29)",
-            "fs1 (30)",
-            "gn1 (31)",
-            "gs1 (32)",
-            "an1 (33)",
-            "as1 (34)",
-            "bn1 (35)",
-            "cn2 (36)",
-            "cs2 (37)",
-            "dn2 (38)",
-            "ds2 (39)",
-            "en2 (40)",
-            "fn2 (41)",
-            "fs2 (42)",
-            "gn2 (43)",
-            "gs2 (44)",
-            "an2 (45)",
-            "as2 (46)",
-            "bn2 (47)",
-            "cn3 (48)",
-            "cs3 (49)",
-            "dn3 (50)",
-            "ds3 (51)",
-            "en3 (52)",
-            "fn3 (53)",
-            "fs3 (54)",
-            "gn3 (55)",
-            "gs3 (56)",
-            "an3 (57)",
-            "as3 (58)",
-            "bn3 (59)",
-            "cn4 (60)",
-            "cs4 (61)",
-            "dn4 (62)",
-            "ds4 (63)",
-            "en4 (64)",
-            "fn4 (65)",
-            "fs4 (66)",
-            "gn4 (67)",
-            "gs4 (68)",
-            "an4 (69)",
-            "as4 (70)",
-            "bn4 (71)",
-            "cn5 (72)",
-            "cs5 (73)",
-            "dn5 (74)",
-            "ds5 (75)",
-            "en5 (76)",
-            "fn5 (77)",
-            "fs5 (78)",
-            "gn5 (79)",
-            "gs5 (80)",
-            "an5 (81)",
-            "as5 (82)",
-            "bn5 (83)",
-            "cn6 (84)",
-            "cs6 (85)",
-            "dn6 (86)",
-            "ds6 (87)",
-            "en6 (88)",
-            "fn6 (89)",
-            "fs6 (90)",
-            "gn6 (91)",
-            "gs6 (92)",
-            "an6 (93)",
-            "as6 (94)",
-            "bn6 (95)",
-            "cn7 (96)",
-            "cs7 (97)",
-            "dn7 (98)",
-            "ds7 (99)",
-            "en7 (100)",
-            "fn7 (101)",
-            "fs7 (102)",
-            "gn7 (103)",
-            "gs7 (104)",
-            "an7 (105)",
-            "as7 (106)",
-            "bn7 (107)",
-            "cn8 (108)",
-            "cs8 (109)",
-            "dn8 (110)",
-            "ds8 (111)",
-            "en8 (112)",
-            "fn8 (113)",
-            "fs8 (114)",
-            "gn8 (115)",
-            "gs8 (116)",
-            "an8 (117)",
-            "as8 (118)",
-            "bn8 (119)",
-            "cn9 (120)",
-            "cs9 (121)",
-            "dn9 (122)",
-            "ds9 (123)",
-            "en9 (124)",
-            "fn9 (125)",
-            "fs9 (126)",
-            "gn9 (127)"});
+            this.baseNote.Items.AddRange(
+                new object[]
+                {
+                    "cnm1 (0)",
+                    "csm1 (1)",
+                    "dnm1 (2)",
+                    "dsm1 (3)",
+                    "enm1 (4)",
+                    "fnm1 (5)",
+                    "fsm1 (6)",
+                    "gnm1 (7)",
+                    "gsm1 (8)",
+                    "anm1 (9)",
+                    "asm1 (10)",
+                    "bnm1 (11)",
+                    "cn0 (12)",
+                    "cs0 (13)",
+                    "dn0 (14)",
+                    "ds0 (15)",
+                    "en0 (16)",
+                    "fn0 (17)",
+                    "fs0 (18)",
+                    "gn0 (19)",
+                    "gs0 (20)",
+                    "an0 (21)",
+                    "as0 (22)",
+                    "bn0 (23)",
+                    "cn1 (24)",
+                    "cs1 (25)",
+                    "dn1 (26)",
+                    "ds1 (27)",
+                    "en1 (28)",
+                    "fn1 (29)",
+                    "fs1 (30)",
+                    "gn1 (31)",
+                    "gs1 (32)",
+                    "an1 (33)",
+                    "as1 (34)",
+                    "bn1 (35)",
+                    "cn2 (36)",
+                    "cs2 (37)",
+                    "dn2 (38)",
+                    "ds2 (39)",
+                    "en2 (40)",
+                    "fn2 (41)",
+                    "fs2 (42)",
+                    "gn2 (43)",
+                    "gs2 (44)",
+                    "an2 (45)",
+                    "as2 (46)",
+                    "bn2 (47)",
+                    "cn3 (48)",
+                    "cs3 (49)",
+                    "dn3 (50)",
+                    "ds3 (51)",
+                    "en3 (52)",
+                    "fn3 (53)",
+                    "fs3 (54)",
+                    "gn3 (55)",
+                    "gs3 (56)",
+                    "an3 (57)",
+                    "as3 (58)",
+                    "bn3 (59)",
+                    "cn4 (60)",
+                    "cs4 (61)",
+                    "dn4 (62)",
+                    "ds4 (63)",
+                    "en4 (64)",
+                    "fn4 (65)",
+                    "fs4 (66)",
+                    "gn4 (67)",
+                    "gs4 (68)",
+                    "an4 (69)",
+                    "as4 (70)",
+                    "bn4 (71)",
+                    "cn5 (72)",
+                    "cs5 (73)",
+                    "dn5 (74)",
+                    "ds5 (75)",
+                    "en5 (76)",
+                    "fn5 (77)",
+                    "fs5 (78)",
+                    "gn5 (79)",
+                    "gs5 (80)",
+                    "an5 (81)",
+                    "as5 (82)",
+                    "bn5 (83)",
+                    "cn6 (84)",
+                    "cs6 (85)",
+                    "dn6 (86)",
+                    "ds6 (87)",
+                    "en6 (88)",
+                    "fn6 (89)",
+                    "fs6 (90)",
+                    "gn6 (91)",
+                    "gs6 (92)",
+                    "an6 (93)",
+                    "as6 (94)",
+                    "bn6 (95)",
+                    "cn7 (96)",
+                    "cs7 (97)",
+                    "dn7 (98)",
+                    "ds7 (99)",
+                    "en7 (100)",
+                    "fn7 (101)",
+                    "fs7 (102)",
+                    "gn7 (103)",
+                    "gs7 (104)",
+                    "an7 (105)",
+                    "as7 (106)",
+                    "bn7 (107)",
+                    "cn8 (108)",
+                    "cs8 (109)",
+                    "dn8 (110)",
+                    "ds8 (111)",
+                    "en8 (112)",
+                    "fn8 (113)",
+                    "fs8 (114)",
+                    "gn8 (115)",
+                    "gs8 (116)",
+                    "an8 (117)",
+                    "as8 (118)",
+                    "bn8 (119)",
+                    "cn9 (120)",
+                    "cs9 (121)",
+                    "dn9 (122)",
+                    "ds9 (123)",
+                    "en9 (124)",
+                    "fn9 (125)",
+                    "fs9 (126)",
+                    "gn9 (127)",
+                }
+            );
             this.baseNote.Name = "baseNote";
             this.baseNote.Width = 57;
             this.attack.HeaderText = "Attack";
@@ -2275,196 +2658,261 @@ namespace NitroStudio2 {
             this.pan.Name = "pan";
             this.pan.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.pan.Width = 32;
-            this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label32.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label32.Location = new System.Drawing.Point(11, 118);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(301, 20);
             this.label32.TabIndex = 25;
             this.label32.Text = "Regions:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel15.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel15.ColumnCount = 2;
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel15.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel15.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel15.Controls.Add(this.drumSetStartRangeComboBox, 0, 0);
             this.tableLayoutPanel15.Controls.Add(this.drumSetStartRangeBox, 1, 0);
             this.tableLayoutPanel15.Location = new System.Drawing.Point(14, 84);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 1;
-            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel15.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel15.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel15.TabIndex = 24;
             this.drumSetStartRangeComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.drumSetStartRangeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.drumSetStartRangeComboBox.DropDownStyle = System
+                .Windows
+                .Forms
+                .ComboBoxStyle
+                .DropDownList;
             this.drumSetStartRangeComboBox.FormattingEnabled = true;
-            this.drumSetStartRangeComboBox.Items.AddRange(new object[] {
-            "cnm1",
-            "csm1",
-            "dnm1",
-            "dsm1",
-            "enm1",
-            "fnm1",
-            "fsm1",
-            "gnm1",
-            "gsm1",
-            "anm1",
-            "asm1",
-            "bnm1",
-            "cn0",
-            "cs0",
-            "dn0",
-            "ds0",
-            "en0",
-            "fn0",
-            "fs0",
-            "gn0",
-            "gs0",
-            "an0",
-            "as0",
-            "bn0",
-            "cn1",
-            "cs1",
-            "dn1",
-            "ds1",
-            "en1",
-            "fn1",
-            "fs1",
-            "gn1",
-            "gs1",
-            "an1",
-            "as1",
-            "bn1",
-            "cn2",
-            "cs2",
-            "dn2",
-            "ds2",
-            "en2",
-            "fn2",
-            "fs2",
-            "gn2",
-            "gs2",
-            "an2",
-            "as2",
-            "bn2",
-            "cn3",
-            "cs3",
-            "dn3",
-            "ds3",
-            "en3",
-            "fn3",
-            "fs3",
-            "gn3",
-            "gs3",
-            "an3",
-            "as3",
-            "bn3",
-            "cn4",
-            "cs4",
-            "dn4",
-            "ds4",
-            "en4",
-            "fn4",
-            "fs4",
-            "gn4",
-            "gs4",
-            "an4",
-            "as4",
-            "bn4",
-            "cn5",
-            "cs5",
-            "dn5",
-            "ds5",
-            "en5",
-            "fn5",
-            "fs5",
-            "gn5",
-            "gs5",
-            "an5",
-            "as5",
-            "bn5",
-            "cn6",
-            "cs6",
-            "dn6",
-            "ds6",
-            "en6",
-            "fn6",
-            "fs6",
-            "gn6",
-            "gs6",
-            "an6",
-            "as6",
-            "bn6",
-            "cn7",
-            "cs7",
-            "dn7",
-            "ds7",
-            "en7",
-            "fn7",
-            "fs7",
-            "gn7",
-            "gs7",
-            "an7",
-            "as7",
-            "bn7",
-            "cn8",
-            "cs8",
-            "dn8",
-            "ds8",
-            "en8",
-            "fn8",
-            "fs8",
-            "gn8",
-            "gs8",
-            "an8",
-            "as8",
-            "bn8",
-            "cn9",
-            "cs9",
-            "dn9",
-            "ds9",
-            "en9",
-            "fn9",
-            "fs9",
-            "gn9"});
+            this.drumSetStartRangeComboBox.Items.AddRange(
+                new object[]
+                {
+                    "cnm1",
+                    "csm1",
+                    "dnm1",
+                    "dsm1",
+                    "enm1",
+                    "fnm1",
+                    "fsm1",
+                    "gnm1",
+                    "gsm1",
+                    "anm1",
+                    "asm1",
+                    "bnm1",
+                    "cn0",
+                    "cs0",
+                    "dn0",
+                    "ds0",
+                    "en0",
+                    "fn0",
+                    "fs0",
+                    "gn0",
+                    "gs0",
+                    "an0",
+                    "as0",
+                    "bn0",
+                    "cn1",
+                    "cs1",
+                    "dn1",
+                    "ds1",
+                    "en1",
+                    "fn1",
+                    "fs1",
+                    "gn1",
+                    "gs1",
+                    "an1",
+                    "as1",
+                    "bn1",
+                    "cn2",
+                    "cs2",
+                    "dn2",
+                    "ds2",
+                    "en2",
+                    "fn2",
+                    "fs2",
+                    "gn2",
+                    "gs2",
+                    "an2",
+                    "as2",
+                    "bn2",
+                    "cn3",
+                    "cs3",
+                    "dn3",
+                    "ds3",
+                    "en3",
+                    "fn3",
+                    "fs3",
+                    "gn3",
+                    "gs3",
+                    "an3",
+                    "as3",
+                    "bn3",
+                    "cn4",
+                    "cs4",
+                    "dn4",
+                    "ds4",
+                    "en4",
+                    "fn4",
+                    "fs4",
+                    "gn4",
+                    "gs4",
+                    "an4",
+                    "as4",
+                    "bn4",
+                    "cn5",
+                    "cs5",
+                    "dn5",
+                    "ds5",
+                    "en5",
+                    "fn5",
+                    "fs5",
+                    "gn5",
+                    "gs5",
+                    "an5",
+                    "as5",
+                    "bn5",
+                    "cn6",
+                    "cs6",
+                    "dn6",
+                    "ds6",
+                    "en6",
+                    "fn6",
+                    "fs6",
+                    "gn6",
+                    "gs6",
+                    "an6",
+                    "as6",
+                    "bn6",
+                    "cn7",
+                    "cs7",
+                    "dn7",
+                    "ds7",
+                    "en7",
+                    "fn7",
+                    "fs7",
+                    "gn7",
+                    "gs7",
+                    "an7",
+                    "as7",
+                    "bn7",
+                    "cn8",
+                    "cs8",
+                    "dn8",
+                    "ds8",
+                    "en8",
+                    "fn8",
+                    "fs8",
+                    "gn8",
+                    "gs8",
+                    "an8",
+                    "as8",
+                    "bn8",
+                    "cn9",
+                    "cs9",
+                    "dn9",
+                    "ds9",
+                    "en9",
+                    "fn9",
+                    "fs9",
+                    "gn9",
+                }
+            );
             this.drumSetStartRangeComboBox.Location = new System.Drawing.Point(3, 3);
             this.drumSetStartRangeComboBox.Name = "drumSetStartRangeComboBox";
             this.drumSetStartRangeComboBox.Size = new System.Drawing.Size(247, 21);
             this.drumSetStartRangeComboBox.TabIndex = 6;
-            this.toolTip.SetToolTip(this.drumSetStartRangeComboBox, "What note to start the drum set range at.");
+            this.toolTip.SetToolTip(
+                this.drumSetStartRangeComboBox,
+                "What note to start the drum set range at."
+            );
             this.drumSetStartRangeBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drumSetStartRangeBox.Location = new System.Drawing.Point(256, 3);
-            this.drumSetStartRangeBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.drumSetStartRangeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.drumSetStartRangeBox.Name = "drumSetStartRangeBox";
             this.drumSetStartRangeBox.Size = new System.Drawing.Size(39, 20);
             this.drumSetStartRangeBox.TabIndex = 7;
-            this.toolTip.SetToolTip(this.drumSetStartRangeBox, "What note to start the drum set range at.");
-            this.drumSetRangeStartLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.drumSetStartRangeBox,
+                "What note to start the drum set range at."
+            );
+            this.drumSetRangeStartLabel.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.drumSetRangeStartLabel.Location = new System.Drawing.Point(8, 61);
             this.drumSetRangeStartLabel.Name = "drumSetRangeStartLabel";
             this.drumSetRangeStartLabel.Size = new System.Drawing.Size(301, 20);
             this.drumSetRangeStartLabel.TabIndex = 3;
             this.drumSetRangeStartLabel.Text = "Drum Set Range Start:";
             this.drumSetRangeStartLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel14.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel14.ColumnCount = 3;
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel14.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(
+                    System.Windows.Forms.SizeType.Percent,
+                    33.33333F
+                )
+            );
+            this.tableLayoutPanel14.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(
+                    System.Windows.Forms.SizeType.Percent,
+                    33.33333F
+                )
+            );
+            this.tableLayoutPanel14.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(
+                    System.Windows.Forms.SizeType.Percent,
+                    33.33333F
+                )
+            );
             this.tableLayoutPanel14.Controls.Add(this.keySplitBox, 2, 0);
             this.tableLayoutPanel14.Controls.Add(this.drumSetBox, 1, 0);
             this.tableLayoutPanel14.Controls.Add(this.directBox, 0, 0);
             this.tableLayoutPanel14.Location = new System.Drawing.Point(14, 28);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 1;
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel14.Size = new System.Drawing.Size(298, 28);
             this.tableLayoutPanel14.TabIndex = 2;
             this.toolTip.SetToolTip(this.tableLayoutPanel14, "Type of instrument.");
@@ -2492,8 +2940,16 @@ namespace NitroStudio2 {
             this.directBox.TabStop = true;
             this.directBox.Text = "Direct";
             this.directBox.UseVisualStyleBackColor = true;
-            this.label30.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label30.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label30.Location = new System.Drawing.Point(11, 3);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(301, 20);
@@ -2508,25 +2964,47 @@ namespace NitroStudio2 {
             this.seqArcSeqPanel.Size = new System.Drawing.Size(325, 64);
             this.seqArcSeqPanel.TabIndex = 20;
             this.seqArcSeqPanel.Visible = false;
-            this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label29.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label29.Location = new System.Drawing.Point(11, 3);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(301, 20);
             this.label29.TabIndex = 25;
             this.label29.Text = "Preview Sequence:";
             this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel13.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel13.ColumnCount = 2;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel13.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel13.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel13.Controls.Add(this.seqArcSeqComboBox, 0, 0);
             this.tableLayoutPanel13.Controls.Add(this.seqArcSeqBox, 1, 0);
             this.tableLayoutPanel13.Location = new System.Drawing.Point(14, 25);
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
             this.tableLayoutPanel13.RowCount = 1;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel13.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel13.TabIndex = 24;
             this.seqArcSeqComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2539,11 +3017,7 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.seqArcSeqComboBox, "Sequence to play.");
             this.seqArcSeqBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.seqArcSeqBox.Location = new System.Drawing.Point(256, 3);
-            this.seqArcSeqBox.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
+            this.seqArcSeqBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             this.seqArcSeqBox.Name = "seqArcSeqBox";
             this.seqArcSeqBox.Size = new System.Drawing.Size(39, 20);
             this.seqArcSeqBox.TabIndex = 7;
@@ -2555,8 +3029,16 @@ namespace NitroStudio2 {
             this.seqArcPanel.Size = new System.Drawing.Size(325, 268);
             this.seqArcPanel.TabIndex = 19;
             this.seqArcPanel.Visible = false;
-            this.seqArcOpenFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqArcOpenFileButton.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqArcOpenFileButton.Location = new System.Drawing.Point(14, 6);
             this.seqArcOpenFileButton.Name = "seqArcOpenFileButton";
             this.seqArcOpenFileButton.Size = new System.Drawing.Size(298, 25);
@@ -2579,17 +3061,31 @@ namespace NitroStudio2 {
             this.seqPanel.Size = new System.Drawing.Size(325, 268);
             this.seqPanel.TabIndex = 17;
             this.seqPanel.Visible = false;
-            this.tableLayoutPanel11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel11.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel11.ColumnCount = 2;
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel11.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel11.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel11.Controls.Add(this.seqPlayerComboBox, 0, 0);
             this.tableLayoutPanel11.Controls.Add(this.seqPlayerBox, 1, 0);
             this.tableLayoutPanel11.Location = new System.Drawing.Point(14, 220);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel11.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel11.TabIndex = 23;
             this.seqPlayerComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2602,96 +3098,156 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.seqPlayerComboBox, "Player to play the sequence.");
             this.seqPlayerBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.seqPlayerBox.Location = new System.Drawing.Point(256, 3);
-            this.seqPlayerBox.Maximum = new decimal(new int[] {
-            31,
-            0,
-            0,
-            0});
+            this.seqPlayerBox.Maximum = new decimal(new int[] { 31, 0, 0, 0 });
             this.seqPlayerBox.Name = "seqPlayerBox";
             this.seqPlayerBox.Size = new System.Drawing.Size(39, 20);
             this.seqPlayerBox.TabIndex = 7;
             this.toolTip.SetToolTip(this.seqPlayerBox, "Id of the player to play the sequence.");
-            this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label27.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label27.Location = new System.Drawing.Point(11, 198);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(301, 22);
             this.label27.TabIndex = 22;
             this.label27.Text = "Player:";
             this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.seqPlayerPriorityBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqPlayerPriorityBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqPlayerPriorityBox.Location = new System.Drawing.Point(14, 175);
-            this.seqPlayerPriorityBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.seqPlayerPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.seqPlayerPriorityBox.Name = "seqPlayerPriorityBox";
             this.seqPlayerPriorityBox.Size = new System.Drawing.Size(298, 20);
             this.seqPlayerPriorityBox.TabIndex = 21;
-            this.toolTip.SetToolTip(this.seqPlayerPriorityBox, "If the sounds can not all be played at once, the one with the highest priority wi" +
-        "ll play.");
-            this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.seqPlayerPriorityBox,
+                "If the sounds can not all be played at once, the one with the highest priority wi"
+                    + "ll play."
+            );
+            this.label26.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label26.Location = new System.Drawing.Point(11, 152);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(301, 22);
             this.label26.TabIndex = 20;
             this.label26.Text = "Player Priority:";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.seqChannelPriorityBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqChannelPriorityBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqChannelPriorityBox.Location = new System.Drawing.Point(14, 129);
-            this.seqChannelPriorityBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.seqChannelPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.seqChannelPriorityBox.Name = "seqChannelPriorityBox";
             this.seqChannelPriorityBox.Size = new System.Drawing.Size(298, 20);
             this.seqChannelPriorityBox.TabIndex = 19;
-            this.toolTip.SetToolTip(this.seqChannelPriorityBox, "If the sounds can not all be played at once, the one with the highest priority wi" +
-        "ll play.");
-            this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.seqChannelPriorityBox,
+                "If the sounds can not all be played at once, the one with the highest priority wi"
+                    + "ll play."
+            );
+            this.label25.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label25.Location = new System.Drawing.Point(11, 106);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(301, 22);
             this.label25.TabIndex = 18;
             this.label25.Text = "Channel Priority:";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.seqVolumeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqVolumeBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqVolumeBox.Location = new System.Drawing.Point(14, 82);
-            this.seqVolumeBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.seqVolumeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.seqVolumeBox.Name = "seqVolumeBox";
             this.seqVolumeBox.Size = new System.Drawing.Size(298, 20);
             this.seqVolumeBox.TabIndex = 17;
             this.toolTip.SetToolTip(this.seqVolumeBox, "The volume of the sequence.");
-            this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label24.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label24.Location = new System.Drawing.Point(11, 59);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(301, 22);
             this.label24.TabIndex = 16;
             this.label24.Text = "Volume:";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel10.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel10.ColumnCount = 2;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel10.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel10.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel10.Controls.Add(this.seqBankComboBox, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.seqBankBox, 1, 0);
             this.tableLayoutPanel10.Location = new System.Drawing.Point(14, 25);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel10.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel10.TabIndex = 15;
             this.seqBankComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2704,17 +3260,21 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.seqBankComboBox, "Bank to use with the sequence.");
             this.seqBankBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.seqBankBox.Location = new System.Drawing.Point(256, 3);
-            this.seqBankBox.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
+            this.seqBankBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             this.seqBankBox.Name = "seqBankBox";
             this.seqBankBox.Size = new System.Drawing.Size(39, 20);
             this.seqBankBox.TabIndex = 7;
             this.toolTip.SetToolTip(this.seqBankBox, "Id of the bank to use with the sequence.");
-            this.label23.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label23.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label23.Location = new System.Drawing.Point(11, 3);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(301, 22);
@@ -2733,13 +3293,29 @@ namespace NitroStudio2 {
             this.playerPanel.Size = new System.Drawing.Size(325, 268);
             this.playerPanel.TabIndex = 15;
             this.playerPanel.Visible = false;
-            this.tableLayoutPanel8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel8.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel8.ColumnCount = 4;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel8.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel8.Controls.Add(this.playerFlag15Box, 3, 3);
             this.tableLayoutPanel8.Controls.Add(this.playerFlag14Box, 2, 3);
             this.tableLayoutPanel8.Controls.Add(this.playerFlag13Box, 1, 3);
@@ -2759,13 +3335,24 @@ namespace NitroStudio2 {
             this.tableLayoutPanel8.Location = new System.Drawing.Point(14, 118);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
             this.tableLayoutPanel8.RowCount = 4;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel8.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
+            this.tableLayoutPanel8.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            );
             this.tableLayoutPanel8.Size = new System.Drawing.Size(298, 100);
             this.tableLayoutPanel8.TabIndex = 10;
-            this.toolTip.SetToolTip(this.tableLayoutPanel8, "Which channels the player is allowed to use.");
+            this.toolTip.SetToolTip(
+                this.tableLayoutPanel8,
+                "Which channels the player is allowed to use."
+            );
             this.playerFlag15Box.AutoSize = true;
             this.playerFlag15Box.Location = new System.Drawing.Point(225, 78);
             this.playerFlag15Box.Name = "playerFlag15Box";
@@ -2878,49 +3465,87 @@ namespace NitroStudio2 {
             this.playerFlag0Box.TabIndex = 0;
             this.playerFlag0Box.Text = "0";
             this.playerFlag0Box.UseVisualStyleBackColor = true;
-            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label19.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label19.Location = new System.Drawing.Point(11, 93);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(301, 22);
             this.label19.TabIndex = 9;
             this.label19.Text = "Channel Flags:";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.playerHeapSizeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.playerHeapSizeBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.playerHeapSizeBox.Hexadecimal = true;
             this.playerHeapSizeBox.Location = new System.Drawing.Point(14, 70);
-            this.playerHeapSizeBox.Maximum = new decimal(new int[] {
-            -1,
-            0,
-            0,
-            0});
+            this.playerHeapSizeBox.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
             this.playerHeapSizeBox.Name = "playerHeapSizeBox";
             this.playerHeapSizeBox.Size = new System.Drawing.Size(298, 20);
             this.playerHeapSizeBox.TabIndex = 8;
-            this.toolTip.SetToolTip(this.playerHeapSizeBox, "How much memory to reserve in the sound heap for the player.");
-            this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.playerHeapSizeBox,
+                "How much memory to reserve in the sound heap for the player."
+            );
+            this.label18.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label18.Location = new System.Drawing.Point(11, 48);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(301, 22);
             this.label18.TabIndex = 7;
             this.label18.Text = "Heap Size:";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.playerMaxSequencesBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.playerMaxSequencesBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.playerMaxSequencesBox.Location = new System.Drawing.Point(14, 25);
-            this.playerMaxSequencesBox.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
+            this.playerMaxSequencesBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             this.playerMaxSequencesBox.Name = "playerMaxSequencesBox";
             this.playerMaxSequencesBox.Size = new System.Drawing.Size(298, 20);
             this.playerMaxSequencesBox.TabIndex = 6;
-            this.toolTip.SetToolTip(this.playerMaxSequencesBox, "Max number of sequences the player can play.");
-            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.playerMaxSequencesBox,
+                "Max number of sequences the player can play."
+            );
+            this.label17.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label17.Location = new System.Drawing.Point(11, 3);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(301, 22);
@@ -2941,42 +3566,83 @@ namespace NitroStudio2 {
             this.stmPanel.Size = new System.Drawing.Size(325, 268);
             this.stmPanel.TabIndex = 14;
             this.stmPanel.Visible = false;
-            this.stmMonoToStereoBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stmMonoToStereoBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.stmMonoToStereoBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.stmMonoToStereoBox.Location = new System.Drawing.Point(11, 171);
             this.stmMonoToStereoBox.Name = "stmMonoToStereoBox";
             this.stmMonoToStereoBox.Size = new System.Drawing.Size(301, 24);
             this.stmMonoToStereoBox.TabIndex = 17;
-            this.toolTip.SetToolTip(this.stmMonoToStereoBox, "If the stream is mono, play it through two channels.");
+            this.toolTip.SetToolTip(
+                this.stmMonoToStereoBox,
+                "If the stream is mono, play it through two channels."
+            );
             this.stmMonoToStereoBox.UseVisualStyleBackColor = true;
-            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label16.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label16.Location = new System.Drawing.Point(11, 149);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(301, 22);
             this.label16.TabIndex = 16;
             this.label16.Text = "Mono To Stereo:";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label15.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label15.Location = new System.Drawing.Point(11, 93);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(301, 22);
             this.label15.TabIndex = 15;
             this.label15.Text = "Player:";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel7.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel7.ColumnCount = 2;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel7.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel7.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel7.Controls.Add(this.stmPlayerComboBox, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.stmPlayerBox, 1, 0);
             this.tableLayoutPanel7.Location = new System.Drawing.Point(14, 115);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel7.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel7.TabIndex = 14;
             this.stmPlayerComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2989,50 +3655,73 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.stmPlayerComboBox, "The player to play the stream.");
             this.stmPlayerBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stmPlayerBox.Location = new System.Drawing.Point(256, 3);
-            this.stmPlayerBox.Maximum = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
+            this.stmPlayerBox.Maximum = new decimal(new int[] { 3, 0, 0, 0 });
             this.stmPlayerBox.Name = "stmPlayerBox";
             this.stmPlayerBox.Size = new System.Drawing.Size(39, 20);
             this.stmPlayerBox.TabIndex = 7;
             this.toolTip.SetToolTip(this.stmPlayerBox, "Id of the player to play the stream.");
-            this.stmPriorityBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stmPriorityBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.stmPriorityBox.Location = new System.Drawing.Point(14, 70);
-            this.stmPriorityBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.stmPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.stmPriorityBox.Name = "stmPriorityBox";
             this.stmPriorityBox.Size = new System.Drawing.Size(298, 20);
             this.stmPriorityBox.TabIndex = 7;
-            this.toolTip.SetToolTip(this.stmPriorityBox, "If the sounds can not all be played at once, the one with the highest priority wi" +
-        "ll play.");
-            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.stmPriorityBox,
+                "If the sounds can not all be played at once, the one with the highest priority wi"
+                    + "ll play."
+            );
+            this.label14.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label14.Location = new System.Drawing.Point(11, 48);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(301, 22);
             this.label14.TabIndex = 6;
             this.label14.Text = "Priority:";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.stmVolumeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stmVolumeBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.stmVolumeBox.Location = new System.Drawing.Point(14, 25);
-            this.stmVolumeBox.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
+            this.stmVolumeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
             this.stmVolumeBox.Name = "stmVolumeBox";
             this.stmVolumeBox.Size = new System.Drawing.Size(298, 20);
             this.stmVolumeBox.TabIndex = 5;
             this.toolTip.SetToolTip(this.stmVolumeBox, "The volume of the stream.");
-            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label13.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label13.Location = new System.Drawing.Point(11, 3);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(301, 22);
@@ -3048,31 +3737,61 @@ namespace NitroStudio2 {
             this.streamPlayerPanel.Size = new System.Drawing.Size(325, 268);
             this.streamPlayerPanel.TabIndex = 13;
             this.streamPlayerPanel.Visible = false;
-            this.stmPlayerChannelType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stmPlayerChannelType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.stmPlayerChannelType.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
+            this.stmPlayerChannelType.DropDownStyle = System
+                .Windows
+                .Forms
+                .ComboBoxStyle
+                .DropDownList;
             this.stmPlayerChannelType.FormattingEnabled = true;
-            this.stmPlayerChannelType.Items.AddRange(new object[] {
-            "Mono",
-            "Stereo"});
+            this.stmPlayerChannelType.Items.AddRange(new object[] { "Mono", "Stereo" });
             this.stmPlayerChannelType.Location = new System.Drawing.Point(14, 28);
             this.stmPlayerChannelType.Name = "stmPlayerChannelType";
             this.stmPlayerChannelType.Size = new System.Drawing.Size(298, 21);
             this.stmPlayerChannelType.TabIndex = 4;
             this.toolTip.SetToolTip(this.stmPlayerChannelType, "If the stream is stereo or mono.");
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label12.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label12.Location = new System.Drawing.Point(11, 3);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(301, 22);
             this.label12.TabIndex = 3;
             this.label12.Text = "Channel Type:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel6.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel6.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel6.Controls.Add(this.stmPlayerLeftChannelBox, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.stmPlayerRightChannelBox, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.rightChannelLabel, 1, 0);
@@ -3080,32 +3799,31 @@ namespace NitroStudio2 {
             this.tableLayoutPanel6.Location = new System.Drawing.Point(14, 55);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel6.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel6.Size = new System.Drawing.Size(298, 45);
             this.tableLayoutPanel6.TabIndex = 0;
             this.stmPlayerLeftChannelBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stmPlayerLeftChannelBox.Location = new System.Drawing.Point(3, 25);
-            this.stmPlayerLeftChannelBox.Maximum = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
+            this.stmPlayerLeftChannelBox.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
             this.stmPlayerLeftChannelBox.Name = "stmPlayerLeftChannelBox";
             this.stmPlayerLeftChannelBox.Size = new System.Drawing.Size(143, 20);
             this.stmPlayerLeftChannelBox.TabIndex = 4;
             this.toolTip.SetToolTip(this.stmPlayerLeftChannelBox, "Channel to use for the stream.");
             this.stmPlayerRightChannelBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stmPlayerRightChannelBox.Location = new System.Drawing.Point(152, 25);
-            this.stmPlayerRightChannelBox.Maximum = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
+            this.stmPlayerRightChannelBox.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
             this.stmPlayerRightChannelBox.Name = "stmPlayerRightChannelBox";
             this.stmPlayerRightChannelBox.Size = new System.Drawing.Size(143, 20);
             this.stmPlayerRightChannelBox.TabIndex = 3;
-            this.toolTip.SetToolTip(this.stmPlayerRightChannelBox, "Channel to use for the stream.");
+            this.toolTip.SetToolTip(
+                this.stmPlayerRightChannelBox,
+                "Channel to use for the stream."
+            );
             this.rightChannelLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rightChannelLabel.Location = new System.Drawing.Point(152, 0);
             this.rightChannelLabel.Name = "rightChannelLabel";
@@ -3129,10 +3847,14 @@ namespace NitroStudio2 {
             this.grpPanel.Visible = false;
             this.grpEntries.AllowUserToOrderColumns = true;
             this.grpEntries.AllowUserToResizeRows = false;
-            this.grpEntries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grpEntries.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.item,
-            this.loadFlags});
+            this.grpEntries.ColumnHeadersHeightSizeMode = System
+                .Windows
+                .Forms
+                .DataGridViewColumnHeadersHeightSizeMode
+                .AutoSize;
+            this.grpEntries.Columns.AddRange(
+                new System.Windows.Forms.DataGridViewColumn[] { this.item, this.loadFlags }
+            );
             this.grpEntries.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpEntries.Location = new System.Drawing.Point(0, 0);
             this.grpEntries.Name = "grpEntries";
@@ -3161,17 +3883,31 @@ namespace NitroStudio2 {
             this.bankPanel.Size = new System.Drawing.Size(325, 268);
             this.bankPanel.TabIndex = 11;
             this.bankPanel.Visible = false;
-            this.tableLayoutPanel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel5.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel5.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel5.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel5.Controls.Add(this.bnkWar3ComboBox, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.bnkWar3Box, 1, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(14, 193);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel5.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel5.TabIndex = 13;
             this.bnkWar3ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3184,39 +3920,56 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.bnkWar3ComboBox, "Wave archive to be used for the bank.");
             this.bnkWar3Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bnkWar3Box.Location = new System.Drawing.Point(256, 3);
-            this.bnkWar3Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.bnkWar3Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.bnkWar3Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.bnkWar3Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.bnkWar3Box.Name = "bnkWar3Box";
             this.bnkWar3Box.Size = new System.Drawing.Size(39, 20);
             this.bnkWar3Box.TabIndex = 7;
-            this.toolTip.SetToolTip(this.bnkWar3Box, "Id of the wave archive to use for this bank.");
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.bnkWar3Box,
+                "Id of the wave archive to use for this bank."
+            );
+            this.label11.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label11.Location = new System.Drawing.Point(11, 171);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(301, 22);
             this.label11.TabIndex = 12;
             this.label11.Text = "Wave Archive 3:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel4.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel4.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel4.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel4.Controls.Add(this.bnkWar2ComboBox, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.bnkWar2Box, 1, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(14, 137);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel4.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel4.TabIndex = 11;
             this.bnkWar2ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3229,39 +3982,56 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.bnkWar2ComboBox, "Wave archive to be used for the bank.");
             this.bnkWar2Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bnkWar2Box.Location = new System.Drawing.Point(256, 3);
-            this.bnkWar2Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.bnkWar2Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.bnkWar2Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.bnkWar2Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.bnkWar2Box.Name = "bnkWar2Box";
             this.bnkWar2Box.Size = new System.Drawing.Size(39, 20);
             this.bnkWar2Box.TabIndex = 7;
-            this.toolTip.SetToolTip(this.bnkWar2Box, "Id of the wave archive to use for this bank.");
-            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.bnkWar2Box,
+                "Id of the wave archive to use for this bank."
+            );
+            this.label10.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label10.Location = new System.Drawing.Point(11, 115);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(301, 22);
             this.label10.TabIndex = 10;
             this.label10.Text = "Wave Archive 2:";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel3.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel3.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel3.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel3.Controls.Add(this.bnkWar1ComboBox, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.bnkWar1Box, 1, 0);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(14, 81);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel3.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel3.TabIndex = 9;
             this.bnkWar1ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3274,39 +4044,56 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.bnkWar1ComboBox, "Wave archive to be used for the bank.");
             this.bnkWar1Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bnkWar1Box.Location = new System.Drawing.Point(256, 3);
-            this.bnkWar1Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.bnkWar1Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.bnkWar1Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.bnkWar1Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.bnkWar1Box.Name = "bnkWar1Box";
             this.bnkWar1Box.Size = new System.Drawing.Size(39, 20);
             this.bnkWar1Box.TabIndex = 7;
-            this.toolTip.SetToolTip(this.bnkWar1Box, "Id of the wave archive to use for this bank.");
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.bnkWar1Box,
+                "Id of the wave archive to use for this bank."
+            );
+            this.label7.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label7.Location = new System.Drawing.Point(11, 59);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(301, 22);
             this.label7.TabIndex = 8;
             this.label7.Text = "Wave Archive 1:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel2.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel2.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel2.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel2.Controls.Add(this.bnkWar0ComboBox, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.bnkWar0Box, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(14, 25);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel2.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel2.TabIndex = 7;
             this.bnkWar0ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3319,22 +4106,25 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.bnkWar0ComboBox, "Wave archive to be used for the bank.");
             this.bnkWar0Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bnkWar0Box.Location = new System.Drawing.Point(256, 3);
-            this.bnkWar0Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.bnkWar0Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.bnkWar0Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.bnkWar0Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.bnkWar0Box.Name = "bnkWar0Box";
             this.bnkWar0Box.Size = new System.Drawing.Size(39, 20);
             this.bnkWar0Box.TabIndex = 7;
-            this.toolTip.SetToolTip(this.bnkWar0Box, "Id of the wave archive to use for this bank.");
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.bnkWar0Box,
+                "Id of the wave archive to use for this bank."
+            );
+            this.label6.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label6.Location = new System.Drawing.Point(11, 3);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(301, 22);
@@ -3355,17 +4145,36 @@ namespace NitroStudio2 {
             this.warPanel.Size = new System.Drawing.Size(325, 268);
             this.warPanel.TabIndex = 9;
             this.warPanel.Visible = false;
-            this.loadIndividuallyBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadIndividuallyBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.loadIndividuallyBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.loadIndividuallyBox.Location = new System.Drawing.Point(11, 25);
             this.loadIndividuallyBox.Name = "loadIndividuallyBox";
             this.loadIndividuallyBox.Size = new System.Drawing.Size(301, 24);
             this.loadIndividuallyBox.TabIndex = 1;
-            this.toolTip.SetToolTip(this.loadIndividuallyBox, "If the wave archive should be loaded individually.");
+            this.toolTip.SetToolTip(
+                this.loadIndividuallyBox,
+                "If the wave archive should be loaded individually."
+            );
             this.loadIndividuallyBox.UseVisualStyleBackColor = true;
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label9.Location = new System.Drawing.Point(11, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(301, 22);
@@ -3380,19 +4189,38 @@ namespace NitroStudio2 {
             this.forceUniqueFilePanel.Size = new System.Drawing.Size(325, 39);
             this.forceUniqueFilePanel.TabIndex = 8;
             this.forceUniqueFilePanel.Visible = false;
-            this.forceUniqueFileBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.forceUniqueFileBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.forceUniqueFileBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.forceUniqueFileBox.Location = new System.Drawing.Point(11, 19);
             this.forceUniqueFileBox.Name = "forceUniqueFileBox";
             this.forceUniqueFileBox.Size = new System.Drawing.Size(301, 18);
             this.forceUniqueFileBox.TabIndex = 1;
-            this.toolTip.SetToolTip(this.forceUniqueFileBox, "Write this file in the sound archive as its own file, even if it has the exact sa" +
-        "me data as another one. If this is not checked, files will be shared between ent" +
-        "ries for efficiency.");
+            this.toolTip.SetToolTip(
+                this.forceUniqueFileBox,
+                "Write this file in the sound archive as its own file, even if it has the exact sa"
+                    + "me data as another one. If this is not checked, files will be shared between ent"
+                    + "ries for efficiency."
+            );
             this.forceUniqueFileBox.UseVisualStyleBackColor = true;
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label8.Location = new System.Drawing.Point(11, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(301, 17);
@@ -3408,30 +4236,56 @@ namespace NitroStudio2 {
             this.indexPanel.Size = new System.Drawing.Size(325, 81);
             this.indexPanel.TabIndex = 0;
             this.indexPanel.Visible = false;
-            this.swapAtIndexButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.swapAtIndexButton.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.swapAtIndexButton.Location = new System.Drawing.Point(14, 49);
             this.swapAtIndexButton.Name = "swapAtIndexButton";
             this.swapAtIndexButton.Size = new System.Drawing.Size(298, 25);
             this.swapAtIndexButton.TabIndex = 0;
             this.swapAtIndexButton.Text = "Swap With Index";
-            this.toolTip.SetToolTip(this.swapAtIndexButton, "Swap this entry with the one at the new index. If that entry doesn\'t exist, simpl" +
-        "y just change the index.");
+            this.toolTip.SetToolTip(
+                this.swapAtIndexButton,
+                "Swap this entry with the one at the new index. If that entry doesn\'t exist, simpl"
+                    + "y just change the index."
+            );
             this.swapAtIndexButton.UseVisualStyleBackColor = true;
-            this.itemIndexBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.itemIndexBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.itemIndexBox.Location = new System.Drawing.Point(14, 23);
-            this.itemIndexBox.Maximum = new decimal(new int[] {
-            -1,
-            0,
-            0,
-            0});
+            this.itemIndexBox.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
             this.itemIndexBox.Name = "itemIndexBox";
             this.itemIndexBox.Size = new System.Drawing.Size(298, 20);
             this.itemIndexBox.TabIndex = 1;
-            this.toolTip.SetToolTip(this.itemIndexBox, "The index of the item as referenced to by the game.");
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.itemIndexBox,
+                "The index of the item as referenced to by the game."
+            );
+            this.label5.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label5.Location = new System.Drawing.Point(11, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(301, 20);
@@ -3450,59 +4304,113 @@ namespace NitroStudio2 {
             this.settingsPanel.Size = new System.Drawing.Size(325, 388);
             this.settingsPanel.TabIndex = 1;
             this.settingsPanel.Visible = false;
-            this.seqExportModeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqExportModeBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqExportModeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.seqExportModeBox.FormattingEnabled = true;
-            this.seqExportModeBox.Items.AddRange(new object[] {
-            "Nitro Studio",
-            "Sseq2Midi"});
+            this.seqExportModeBox.Items.AddRange(new object[] { "Nitro Studio", "Sseq2Midi" });
             this.seqExportModeBox.Location = new System.Drawing.Point(11, 126);
             this.seqExportModeBox.Name = "seqExportModeBox";
             this.seqExportModeBox.Size = new System.Drawing.Size(301, 21);
             this.seqExportModeBox.TabIndex = 5;
-            this.toolTip.SetToolTip(this.seqExportModeBox, "What program should be used to export sequences. Nitro Studio is my custom export" +
-        "er, while Sseq2Midi is the exe included. I recommend you use my exporter.");
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.seqExportModeBox,
+                "What program should be used to export sequences. Nitro Studio is my custom export"
+                    + "er, while Sseq2Midi is the exe included. I recommend you use my exporter."
+            );
+            this.label4.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label4.Location = new System.Drawing.Point(11, 101);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(301, 22);
             this.label4.TabIndex = 4;
             this.label4.Text = "Sequence Export Mode:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.seqImportModeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seqImportModeBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.seqImportModeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.seqImportModeBox.FormattingEnabled = true;
-            this.seqImportModeBox.Items.AddRange(new object[] {
-            "Nitro Studio",
-            "Midi2Sseq",
-            "Nintendo Tools"});
+            this.seqImportModeBox.Items.AddRange(
+                new object[] { "Nitro Studio", "Midi2Sseq", "Nintendo Tools" }
+            );
             this.seqImportModeBox.Location = new System.Drawing.Point(11, 77);
             this.seqImportModeBox.Name = "seqImportModeBox";
             this.seqImportModeBox.Size = new System.Drawing.Size(301, 21);
             this.seqImportModeBox.TabIndex = 3;
-            this.toolTip.SetToolTip(this.seqImportModeBox, resources.GetString("seqImportModeBox.ToolTip"));
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolTip.SetToolTip(
+                this.seqImportModeBox,
+                resources.GetString("seqImportModeBox.ToolTip")
+            );
+            this.label3.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label3.Location = new System.Drawing.Point(11, 52);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(301, 22);
             this.label3.TabIndex = 2;
             this.label3.Text = "Sequence Import Mode:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.writeNamesBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.writeNamesBox.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.writeNamesBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.writeNamesBox.Location = new System.Drawing.Point(11, 25);
             this.writeNamesBox.Name = "writeNamesBox";
             this.writeNamesBox.Size = new System.Drawing.Size(301, 24);
             this.writeNamesBox.TabIndex = 1;
-            this.toolTip.SetToolTip(this.writeNamesBox, "If the editor should export names for the sound archive.");
+            this.toolTip.SetToolTip(
+                this.writeNamesBox,
+                "If the editor should export names for the sound archive."
+            );
             this.writeNamesBox.UseVisualStyleBackColor = true;
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label2.Location = new System.Drawing.Point(11, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(301, 22);
@@ -3532,8 +4440,16 @@ namespace NitroStudio2 {
             this.kermalisSoundPlayerPanel.Size = new System.Drawing.Size(325, 150);
             this.kermalisSoundPlayerPanel.TabIndex = 16;
             this.kermalisSoundPlayerPanel.Visible = false;
-            this.kermalisPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.kermalisPosition.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.kermalisPosition.LargeChange = 20;
             this.kermalisPosition.Location = new System.Drawing.Point(14, 118);
             this.kermalisPosition.Maximum = 100;
@@ -3542,11 +4458,23 @@ namespace NitroStudio2 {
             this.kermalisPosition.TabIndex = 5;
             this.kermalisPosition.TickFrequency = 5;
             this.toolTip.SetToolTip(this.kermalisPosition, "Sound position.");
-            this.tableLayoutPanel9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel9.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel9.ColumnCount = 2;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
+            this.tableLayoutPanel9.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            );
             this.tableLayoutPanel9.Controls.Add(this.label22, 1, 1);
             this.tableLayoutPanel9.Controls.Add(this.label21, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.kermalisStopButton, 1, 0);
@@ -3556,9 +4484,15 @@ namespace NitroStudio2 {
             this.tableLayoutPanel9.Location = new System.Drawing.Point(14, 49);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 3;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            this.tableLayoutPanel9.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F)
+            );
+            this.tableLayoutPanel9.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F)
+            );
+            this.tableLayoutPanel9.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F)
+            );
             this.tableLayoutPanel9.Size = new System.Drawing.Size(298, 63);
             this.tableLayoutPanel9.TabIndex = 4;
             this.label22.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3606,23 +4540,46 @@ namespace NitroStudio2 {
             this.kermalisLoopBox.Size = new System.Drawing.Size(143, 21);
             this.kermalisLoopBox.TabIndex = 3;
             this.kermalisLoopBox.UseVisualStyleBackColor = true;
-            this.kermalisPlayButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.kermalisPlayButton.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.kermalisPlayButton.Location = new System.Drawing.Point(14, 25);
             this.kermalisPlayButton.Name = "kermalisPlayButton";
             this.kermalisPlayButton.Size = new System.Drawing.Size(298, 20);
             this.kermalisPlayButton.TabIndex = 3;
             this.kermalisPlayButton.Text = "Play";
             this.kermalisPlayButton.UseVisualStyleBackColor = true;
-            this.soundPlayerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.soundPlayerLabel.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.soundPlayerLabel.Location = new System.Drawing.Point(11, 3);
             this.soundPlayerLabel.Name = "soundPlayerLabel";
             this.soundPlayerLabel.Size = new System.Drawing.Size(301, 22);
             this.soundPlayerLabel.TabIndex = 1;
             this.soundPlayerLabel.Text = "Kermalis Sound Player:";
             this.soundPlayerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.pnlPianoKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlPianoKeys.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        System.Windows.Forms.AnchorStyles.Bottom
+                        | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.pnlPianoKeys.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.pnlPianoKeys.Controls.Add(this.pkeyC7);
             this.pnlPianoKeys.Controls.Add(this.pkeyE7);
@@ -4522,7 +5479,14 @@ namespace NitroStudio2 {
             this.pkeyC8.Size = new System.Drawing.Size(12, 42);
             this.pkeyC8.TabIndex = 60;
             this.pkeyC8.StateChanged += new System.EventHandler(this.PianoChanged);
-            this.bankEditorWars.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bankEditorWars.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        System.Windows.Forms.AnchorStyles.Top
+                        | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.bankEditorWars.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.bankEditorWars.Controls.Add(this.tableLayoutPanel16);
             this.bankEditorWars.Controls.Add(this.label31);
@@ -4537,17 +5501,31 @@ namespace NitroStudio2 {
             this.bankEditorWars.Size = new System.Drawing.Size(325, 253);
             this.bankEditorWars.TabIndex = 13;
             this.bankEditorWars.Visible = false;
-            this.tableLayoutPanel16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel16.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel16.ColumnCount = 2;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel16.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel16.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel16.Controls.Add(this.war3ComboBox, 0, 0);
             this.tableLayoutPanel16.Controls.Add(this.war3Box, 1, 0);
             this.tableLayoutPanel16.Location = new System.Drawing.Point(14, 193);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
             this.tableLayoutPanel16.RowCount = 1;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel16.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel16.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel16.TabIndex = 13;
             this.war3ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4560,39 +5538,53 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.war3ComboBox, "Wave archive to be used for the bank.");
             this.war3Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.war3Box.Location = new System.Drawing.Point(256, 3);
-            this.war3Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.war3Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.war3Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.war3Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.war3Box.Name = "war3Box";
             this.war3Box.Size = new System.Drawing.Size(39, 20);
             this.war3Box.TabIndex = 7;
             this.toolTip.SetToolTip(this.war3Box, "Id of the wave archive to use for this bank.");
-            this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label31.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label31.Location = new System.Drawing.Point(11, 171);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(301, 22);
             this.label31.TabIndex = 12;
             this.label31.Text = "Wave Archive 3:";
             this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel17.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel17.ColumnCount = 2;
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel17.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel17.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel17.Controls.Add(this.war2ComboBox, 0, 0);
             this.tableLayoutPanel17.Controls.Add(this.war2Box, 1, 0);
             this.tableLayoutPanel17.Location = new System.Drawing.Point(14, 137);
             this.tableLayoutPanel17.Name = "tableLayoutPanel17";
             this.tableLayoutPanel17.RowCount = 1;
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel17.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel17.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel17.TabIndex = 11;
             this.war2ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4605,39 +5597,53 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.war2ComboBox, "Wave archive to be used for the bank.");
             this.war2Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.war2Box.Location = new System.Drawing.Point(256, 3);
-            this.war2Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.war2Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.war2Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.war2Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.war2Box.Name = "war2Box";
             this.war2Box.Size = new System.Drawing.Size(39, 20);
             this.war2Box.TabIndex = 7;
             this.toolTip.SetToolTip(this.war2Box, "Id of the wave archive to use for this bank.");
-            this.label33.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label33.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label33.Location = new System.Drawing.Point(11, 115);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(301, 22);
             this.label33.TabIndex = 10;
             this.label33.Text = "Wave Archive 2:";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel18.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel18.ColumnCount = 2;
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel18.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel18.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel18.Controls.Add(this.war1ComboBox, 0, 0);
             this.tableLayoutPanel18.Controls.Add(this.war1Box, 1, 0);
             this.tableLayoutPanel18.Location = new System.Drawing.Point(14, 81);
             this.tableLayoutPanel18.Name = "tableLayoutPanel18";
             this.tableLayoutPanel18.RowCount = 1;
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel18.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel18.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel18.TabIndex = 9;
             this.war1ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4650,39 +5656,53 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.war1ComboBox, "Wave archive to be used for the bank.");
             this.war1Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.war1Box.Location = new System.Drawing.Point(256, 3);
-            this.war1Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.war1Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.war1Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.war1Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.war1Box.Name = "war1Box";
             this.war1Box.Size = new System.Drawing.Size(39, 20);
             this.war1Box.TabIndex = 7;
             this.toolTip.SetToolTip(this.war1Box, "Id of the wave archive to use for this bank.");
-            this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label34.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label34.Location = new System.Drawing.Point(11, 59);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(301, 22);
             this.label34.TabIndex = 8;
             this.label34.Text = "Wave Archive 1:";
             this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tableLayoutPanel19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel19.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.tableLayoutPanel19.ColumnCount = 2;
-            this.tableLayoutPanel19.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel19.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tableLayoutPanel19.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            );
+            this.tableLayoutPanel19.ColumnStyles.Add(
+                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            );
             this.tableLayoutPanel19.Controls.Add(this.war0ComboBox, 0, 0);
             this.tableLayoutPanel19.Controls.Add(this.war0Box, 1, 0);
             this.tableLayoutPanel19.Location = new System.Drawing.Point(14, 25);
             this.tableLayoutPanel19.Name = "tableLayoutPanel19";
             this.tableLayoutPanel19.RowCount = 1;
-            this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel19.RowStyles.Add(
+                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            );
             this.tableLayoutPanel19.Size = new System.Drawing.Size(298, 31);
             this.tableLayoutPanel19.TabIndex = 7;
             this.war0ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4695,22 +5715,22 @@ namespace NitroStudio2 {
             this.toolTip.SetToolTip(this.war0ComboBox, "Wave archive to be used for the bank.");
             this.war0Box.Dock = System.Windows.Forms.DockStyle.Fill;
             this.war0Box.Location = new System.Drawing.Point(256, 3);
-            this.war0Box.Maximum = new decimal(new int[] {
-            65534,
-            0,
-            0,
-            0});
-            this.war0Box.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
+            this.war0Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
+            this.war0Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
             this.war0Box.Name = "war0Box";
             this.war0Box.Size = new System.Drawing.Size(39, 20);
             this.war0Box.TabIndex = 7;
             this.toolTip.SetToolTip(this.war0Box, "Id of the wave archive to use for this bank.");
-            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label35.Anchor = (
+                (System.Windows.Forms.AnchorStyles)(
+                    (
+                        (
+                            System.Windows.Forms.AnchorStyles.Top
+                            | System.Windows.Forms.AnchorStyles.Left
+                        ) | System.Windows.Forms.AnchorStyles.Right
+                    )
+                )
+            );
             this.label35.Location = new System.Drawing.Point(11, 3);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(301, 22);
@@ -4727,16 +5747,24 @@ namespace NitroStudio2 {
             treeNode1.Name = "fileInfo";
             treeNode1.SelectedImageIndex = 10;
             treeNode1.Text = "File Information";
-            this.tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            this.tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] { treeNode1 });
             this.tree.SelectedImageIndex = 0;
             this.tree.ShowLines = false;
             this.tree.Size = new System.Drawing.Size(651, 538);
             this.tree.TabIndex = 0;
-            this.tree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tree_NodeMouseClick);
-            this.tree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tree_NodeMouseDoubleClick);
+            this.tree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(
+                this.tree_NodeMouseClick
+            );
+            this.tree.NodeMouseDoubleClick +=
+                new System.Windows.Forms.TreeNodeMouseClickEventHandler(
+                    this.tree_NodeMouseDoubleClick
+                );
             this.tree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tree_NodeKey);
-            this.treeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("treeIcons.ImageStream")));
+            this.treeIcons.ImageStream = (
+                (System.Windows.Forms.ImageListStreamer)(
+                    resources.GetObject("treeIcons.ImageStream")
+                )
+            );
             this.treeIcons.TransparentColor = System.Drawing.Color.Transparent;
             this.treeIcons.Images.SetKeyName(0, "blank.png");
             this.treeIcons.Images.SetKeyName(1, "version.png");
@@ -4770,9 +5798,9 @@ namespace NitroStudio2 {
             this.sequenceEditor.Size = new System.Drawing.Size(651, 538);
             this.sequenceEditor.TabIndex = 0;
             this.openFileDialog.RestoreDirectory = true;
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.status,
-            this.currentNote});
+            this.statusStrip.Items.AddRange(
+                new System.Windows.Forms.ToolStripItem[] { this.status, this.currentNote }
+            );
             this.statusStrip.Location = new System.Drawing.Point(0, 564);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(984, 22);
@@ -4784,83 +5812,124 @@ namespace NitroStudio2 {
             this.currentNote.Name = "currentNote";
             this.currentNote.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.currentNote.Size = new System.Drawing.Size(0, 17);
-            this.rootMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addToolStripMenuItem,
-            this.expandToolStripMenuItem,
-            this.collapseToolStripMenuItem});
+            this.rootMenu.Items.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.addToolStripMenuItem,
+                    this.expandToolStripMenuItem,
+                    this.collapseToolStripMenuItem,
+                }
+            );
             this.rootMenu.Name = "rootMenu";
             this.rootMenu.Size = new System.Drawing.Size(120, 70);
             this.addToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.New;
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
             this.addToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.addToolStripMenuItem.Text = "Add";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            this.addToolStripMenuItem.Click += new System.EventHandler(
+                this.addToolStripMenuItem_Click
+            );
             this.expandToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save;
             this.expandToolStripMenuItem.Name = "expandToolStripMenuItem";
             this.expandToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.expandToolStripMenuItem.Text = "Expand";
-            this.expandToolStripMenuItem.Click += new System.EventHandler(this.expandToolStripMenuItem_Click);
-            this.collapseToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save_As;
+            this.expandToolStripMenuItem.Click += new System.EventHandler(
+                this.expandToolStripMenuItem_Click
+            );
+            this.collapseToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Save_As;
             this.collapseToolStripMenuItem.Name = "collapseToolStripMenuItem";
             this.collapseToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.collapseToolStripMenuItem.Text = "Collapse";
-            this.collapseToolStripMenuItem.Click += new System.EventHandler(this.collapseToolStripMenuItem_Click);
+            this.collapseToolStripMenuItem.Click += new System.EventHandler(
+                this.collapseToolStripMenuItem_Click
+            );
             this.nodeMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.nodeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAboveToolStripMenuItem1,
-            this.addBelowToolStripMenuItem1,
-            this.moveUpToolStripMenuItem1,
-            this.moveDownToolStripMenuItem1,
-            this.replaceFileToolStripMenuItem,
-            this.exportToolStripMenuItem1,
-            this.deleteToolStripMenuItem1});
+            this.nodeMenu.Items.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.addAboveToolStripMenuItem1,
+                    this.addBelowToolStripMenuItem1,
+                    this.moveUpToolStripMenuItem1,
+                    this.moveDownToolStripMenuItem1,
+                    this.replaceFileToolStripMenuItem,
+                    this.exportToolStripMenuItem1,
+                    this.deleteToolStripMenuItem1,
+                }
+            );
             this.nodeMenu.Name = "contextMenuStrip1";
             this.nodeMenu.Size = new System.Drawing.Size(139, 158);
             this.addAboveToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.New;
             this.addAboveToolStripMenuItem1.Name = "addAboveToolStripMenuItem1";
             this.addAboveToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.addAboveToolStripMenuItem1.Text = "Add Above";
-            this.addAboveToolStripMenuItem1.Click += new System.EventHandler(this.addAboveToolStripMenuItem1_Click);
+            this.addAboveToolStripMenuItem1.Click += new System.EventHandler(
+                this.addAboveToolStripMenuItem1_Click
+            );
             this.addBelowToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Open;
             this.addBelowToolStripMenuItem1.Name = "addBelowToolStripMenuItem1";
             this.addBelowToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.addBelowToolStripMenuItem1.Text = "Add Below";
-            this.addBelowToolStripMenuItem1.Click += new System.EventHandler(this.addBelowToolStripMenuItem1_Click);
+            this.addBelowToolStripMenuItem1.Click += new System.EventHandler(
+                this.addBelowToolStripMenuItem1_Click
+            );
             this.moveUpToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Save;
             this.moveUpToolStripMenuItem1.Name = "moveUpToolStripMenuItem1";
             this.moveUpToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.moveUpToolStripMenuItem1.Text = "Move Up";
-            this.moveUpToolStripMenuItem1.Click += new System.EventHandler(this.moveUpToolStripMenuItem1_Click);
-            this.moveDownToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Save_As;
+            this.moveUpToolStripMenuItem1.Click += new System.EventHandler(
+                this.moveUpToolStripMenuItem1_Click
+            );
+            this.moveDownToolStripMenuItem1.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Save_As;
             this.moveDownToolStripMenuItem1.Name = "moveDownToolStripMenuItem1";
             this.moveDownToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.moveDownToolStripMenuItem1.Text = "Move Down";
-            this.moveDownToolStripMenuItem1.Click += new System.EventHandler(this.moveDownToolStripMenuItem1_Click);
-            this.replaceFileToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Import;
+            this.moveDownToolStripMenuItem1.Click += new System.EventHandler(
+                this.moveDownToolStripMenuItem1_Click
+            );
+            this.replaceFileToolStripMenuItem.Image = global::NitroStudio2
+                .Properties
+                .Resources
+                .Import;
             this.replaceFileToolStripMenuItem.Name = "replaceFileToolStripMenuItem";
             this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.replaceFileToolStripMenuItem.Text = "Replace";
-            this.replaceFileToolStripMenuItem.Click += new System.EventHandler(this.replaceFileToolStripMenuItem_Click);
+            this.replaceFileToolStripMenuItem.Click += new System.EventHandler(
+                this.replaceFileToolStripMenuItem_Click
+            );
             this.exportToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Export;
             this.exportToolStripMenuItem1.Name = "exportToolStripMenuItem1";
             this.exportToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.exportToolStripMenuItem1.Text = "Export";
-            this.exportToolStripMenuItem1.Click += new System.EventHandler(this.exportToolStripMenuItem1_Click);
+            this.exportToolStripMenuItem1.Click += new System.EventHandler(
+                this.exportToolStripMenuItem1_Click
+            );
             this.deleteToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Close;
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
             this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
             this.deleteToolStripMenuItem1.Text = "Delete";
-            this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.deleteToolStripMenuItem1_Click);
+            this.deleteToolStripMenuItem1.Click += new System.EventHandler(
+                this.deleteToolStripMenuItem1_Click
+            );
             this.sarEntryMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.sarEntryMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sarAddAbove,
-            this.sarAddBelow,
-            this.sarMoveUp,
-            this.sarMoveDown,
-            this.sarReplace,
-            this.sarExport,
-            this.sarRename,
-            this.sarDelete});
+            this.sarEntryMenu.Items.AddRange(
+                new System.Windows.Forms.ToolStripItem[]
+                {
+                    this.sarAddAbove,
+                    this.sarAddBelow,
+                    this.sarMoveUp,
+                    this.sarMoveDown,
+                    this.sarReplace,
+                    this.sarExport,
+                    this.sarRename,
+                    this.sarDelete,
+                }
+            );
             this.sarEntryMenu.Name = "contextMenuStrip1";
             this.sarEntryMenu.Size = new System.Drawing.Size(139, 180);
             this.sarAddAbove.Image = global::NitroStudio2.Properties.Resources.New;
@@ -5028,79 +6097,114 @@ namespace NitroStudio2 {
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-        public string GetFileOpenerPath(string description, string extension) {
+
+        public string GetFileOpenerPath(string description, string extension)
+        {
             openFileDialog.FileName = "";
             openFileDialog.Filter = description + "|" + "*.s" + extension.ToLower();
             openFileDialog.ShowDialog();
             return openFileDialog.FileName;
         }
-        public string GetFileSaverPath(string description, string extension) {
+
+        public string GetFileSaverPath(string description, string extension)
+        {
             saveFileDialog.FileName = "";
             saveFileDialog.Filter = description + "|" + "*.s" + extension.ToLower();
-            saveFileDialog.ShowDialog();            
-            if (saveFileDialog.FileName != "") {
-                if (Path.GetExtension(saveFileDialog.FileName) == "") {
+            saveFileDialog.ShowDialog();
+            if (saveFileDialog.FileName != "")
+            {
+                if (Path.GetExtension(saveFileDialog.FileName) == "")
+                {
                     saveFileDialog.FileName += ".s" + extension.ToLower();
                 }
             }
             return saveFileDialog.FileName;
         }
-        private void form_Close(object sender, FormClosingEventArgs e) {
+
+        private void form_Close(object sender, FormClosingEventArgs e)
+        {
             OnClosing();
         }
-        public virtual void OnClosing() {}
-        public ContextMenuStrip CreateMenuStrip(ContextMenuStrip orig, int[] indices, EventHandler[] eventHandlers) {
+
+        public virtual void OnClosing() { }
+
+        public ContextMenuStrip CreateMenuStrip(
+            ContextMenuStrip orig,
+            int[] indices,
+            EventHandler[] eventHandlers
+        )
+        {
             ContextMenuStrip c = new ContextMenuStrip();
             int num = 0;
-            foreach (int ind in indices) {
+            foreach (int ind in indices)
+            {
                 var i = orig.Items[ind];
                 c.Items.Add(i.Text, i.Image, eventHandlers[num++]);
             }
             return c;
         }
+
         #region Updating
-        public virtual void DoInfoStuff() {
-            if (tree.SelectedNode == null) {
+        public virtual void DoInfoStuff()
+        {
+            if (tree.SelectedNode == null)
+            {
                 tree.SelectedNode = tree.Nodes[0];
             }
-            if (!FileOpen) {
+            if (!FileOpen)
+            {
                 noInfoPanel.BringToFront();
                 noInfoPanel.Show();
                 status.Text = "No Valid Info Selected!";
             }
         }
+
         Stack<int> nodeIndices;
         List<string> expandedNodes;
-        public void BeginUpdateNodes() {
+
+        public void BeginUpdateNodes()
+        {
             tree.BeginUpdate();
             expandedNodes = collectExpandedNodes(tree.Nodes);
-            if (tree.SelectedNode == null) {
+            if (tree.SelectedNode == null)
+            {
                 tree.SelectedNode = tree.Nodes[0];
             }
             nodeIndices = new Stack<int>();
             nodeIndices.Push(tree.SelectedNode.Index);
-            while (tree.SelectedNode.Parent != null) {
+            while (tree.SelectedNode.Parent != null)
+            {
                 tree.SelectedNode = tree.SelectedNode.Parent;
                 nodeIndices.Push(tree.SelectedNode.Index);
             }
-            for (int i = 0; i < tree.Nodes.Count; i++) {
+            for (int i = 0; i < tree.Nodes.Count; i++)
+            {
                 tree.Nodes[i].Nodes.Clear();
             }
         }
+
         public abstract void UpdateNodes();
-        public void EndUpdateNodes() {
-            if (expandedNodes.Count > 0) {
+
+        public void EndUpdateNodes()
+        {
+            if (expandedNodes.Count > 0)
+            {
                 TreeNode IamExpandedNode;
-                for (int i = 0; i < expandedNodes.Count; i++) {
+                for (int i = 0; i < expandedNodes.Count; i++)
+                {
                     IamExpandedNode = FindNodeByName(tree.Nodes, expandedNodes[i]);
                     expandNodePath(IamExpandedNode);
                 }
             }
             tree.SelectedNode = tree.Nodes[nodeIndices.Pop()];
-            while (nodeIndices.Count > 0) {
-                try {
+            while (nodeIndices.Count > 0)
+            {
+                try
+                {
                     tree.SelectedNode = tree.SelectedNode.Nodes[nodeIndices.Pop()];
-                } catch {
+                }
+                catch
+                {
                     nodeIndices.Clear();
                 }
             }
@@ -5109,8 +6213,10 @@ namespace NitroStudio2 {
         }
         #endregion
         #region fileMenu
-        public virtual void newToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, true)) {
+        public virtual void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, true))
+            {
                 return;
             }
             File = (IOFile)Activator.CreateInstance(FileType);
@@ -5121,12 +6227,16 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
-        public virtual void openToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, true)) {
+
+        public virtual void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, true))
+            {
                 return;
             }
             string path = GetFileOpenerPath(ExtensionDescription, Extension);
-            if (path != "") {
+            if (path != "")
+            {
                 File = (IOFile)Activator.CreateInstance(FileType);
                 ExtFile = null;
                 FilePath = path;
@@ -5137,43 +6247,58 @@ namespace NitroStudio2 {
                 DoInfoStuff();
             }
         }
-        public virtual void saveToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+
+        public virtual void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
-            if (ExtFile == null && FilePath == "") {
+            if (ExtFile == null && FilePath == "")
+            {
                 saveAsToolStripMenuItem_Click(sender, e);
                 return;
             }
-            if (ExtFile != null) {
+            if (ExtFile != null)
+            {
                 ExtFile.Read(File.Write());
-                if (MainWindow != null) {
+                if (MainWindow != null)
+                {
                     MainWindow.UpdateNodes();
                     MainWindow.DoInfoStuff();
                 }
-                if (OtherEditor != null) {
+                if (OtherEditor != null)
+                {
                     OtherEditor.UpdateNodes();
                     OtherEditor.DoInfoStuff();
                 }
             }
-            else {
+            else
+            {
                 File.Write(FilePath);
             }
         }
-        public void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+
+        public void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
             string path = GetFileSaverPath(ExtensionDescription, Extension);
-            if (path != "") {
+            if (path != "")
+            {
                 FilePath = path;
                 ExtFile = null;
                 Text = EditorName + " - " + Path.GetFileName(path);
                 saveToolStripMenuItem_Click(sender, e);
             }
         }
-        public virtual void closeToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, true, true)) {
+
+        public virtual void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, true, true))
+            {
                 return;
             }
             File = null;
@@ -5184,50 +6309,69 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (FileOpen) {
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (FileOpen)
+            {
                 SaveQuitDialog q = new SaveQuitDialog(this);
                 q.ShowDialog();
-            } else {
+            }
+            else
+            {
                 Close();
             }
         }
         #endregion
         #region editMenu
-        public virtual void blankFileToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+        public virtual void blankFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
             File = (IOFile)Activator.CreateInstance(FileType);
             UpdateNodes();
             DoInfoStuff();
         }
-        public virtual void importFileToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+
+        public virtual void importFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
             string path = GetFileOpenerPath(ExtensionDescription, Extension);
-            if (path != "") {
+            if (path != "")
+            {
                 File = (IOFile)Activator.CreateInstance(FileType);
                 File.Read(path);
                 UpdateNodes();
                 DoInfoStuff();
             }
         }
-        public virtual void exportFileToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+
+        public virtual void exportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
             string path = GetFileSaverPath(ExtensionDescription, Extension);
-            if (path != "") {
+            if (path != "")
+            {
                 File.Write(path);
             }
         }
-        private void nullifyFileToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileTest(sender, e, false, true)) {
+
+        private void nullifyFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileTest(sender, e, false, true))
+            {
                 return;
             }
-            if (ExtFile == null) {
+            if (ExtFile == null)
+            {
                 MessageBox.Show("You can't nullify data that is not in a parent file!", "Notice:");
                 return;
             }
@@ -5235,11 +6379,16 @@ namespace NitroStudio2 {
             UpdateNodes();
             DoInfoStuff();
         }
-        public bool FileTest(object sender, EventArgs e, bool save, bool forceOpen = false) {
-            if (FileOpen) {
-                if (save) {
+
+        public bool FileTest(object sender, EventArgs e, bool save, bool forceOpen = false)
+        {
+            if (FileOpen)
+            {
+                if (save)
+                {
                     SaveCloseDialog c = new SaveCloseDialog();
-                    switch (c.getValue()) {
+                    switch (c.getValue())
+                    {
                         case 0:
                             saveToolStripMenuItem_Click(sender, e);
                             return true;
@@ -5250,52 +6399,76 @@ namespace NitroStudio2 {
                     }
                 }
                 return true;
-            } else {
-                if (forceOpen) {
+            }
+            else
+            {
+                if (forceOpen)
+                {
                     MessageBox.Show("There must be a file open to do this!", "Notice:");
                     return false;
-                } else {
+                }
+                else
+                {
                     return true;
                 }
             }
         }
         #endregion
         #region nodeShit
-        void expandNodePath(TreeNode node) {
+        void expandNodePath(TreeNode node)
+        {
             if (node == null)
                 return;
-            if (node.Level != 0) 
+            if (node.Level != 0)
             {
                 node.Expand();
                 expandNodePath(node.Parent);
-            } else {
-                node.Expand(); 
+            }
+            else
+            {
+                node.Expand();
             }
         }
-        void tree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
-            if (e.Button == MouseButtons.Right) {
+
+        void tree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
                 tree.SelectedNode = tree.GetNodeAt(e.X, e.Y);
-            } else if (e.Button == MouseButtons.Left) {
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
                 tree.SelectedNode = tree.GetNodeAt(e.X, e.Y);
             }
             DoInfoStuff();
         }
-        void tree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
-            if (e.Button == MouseButtons.Right) {
+
+        void tree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
                 tree.SelectedNode = tree.GetNodeAt(e.X, e.Y);
-            } else if (e.Button == MouseButtons.Left) {
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
                 tree.SelectedNode = tree.GetNodeAt(e.X, e.Y);
             }
             DoInfoStuff();
             NodeMouseDoubleClick();
         }
-        public virtual void NodeMouseDoubleClick() {}
-        void tree_NodeKey(object sender, KeyEventArgs e) {
+
+        public virtual void NodeMouseDoubleClick() { }
+
+        void tree_NodeKey(object sender, KeyEventArgs e)
+        {
             DoInfoStuff();
         }
-        List<string> collectExpandedNodes(TreeNodeCollection Nodes) {
+
+        List<string> collectExpandedNodes(TreeNodeCollection Nodes)
+        {
             List<string> _lst = new List<string>();
-            foreach (TreeNode checknode in Nodes) {
+            foreach (TreeNode checknode in Nodes)
+            {
                 if (checknode.IsExpanded)
                     _lst.Add(checknode.Name);
                 if (checknode.Nodes.Count > 0)
@@ -5303,16 +6476,19 @@ namespace NitroStudio2 {
             }
             return _lst;
         }
-        TreeNode FindNodeByName(TreeNodeCollection NodesCollection, string Name) {
-            TreeNode returnNode = null; 
-            foreach (TreeNode checkNode in NodesCollection) {
-                if (checkNode.Name == Name)  
+
+        TreeNode FindNodeByName(TreeNodeCollection NodesCollection, string Name)
+        {
+            TreeNode returnNode = null;
+            foreach (TreeNode checkNode in NodesCollection)
+            {
+                if (checkNode.Name == Name)
                     returnNode = checkNode;
-                else if (checkNode.Nodes.Count > 0) 
+                else if (checkNode.Nodes.Count > 0)
                 {
                     returnNode = FindNodeByName(checkNode.Nodes, Name);
                 }
-                if (returnNode != null) 
+                if (returnNode != null)
                 {
                     return returnNode;
                 }
@@ -5321,76 +6497,121 @@ namespace NitroStudio2 {
         }
         #endregion
         #region soundPlayerDeluxe
-        private void playSoundTrack_Click(object sender, EventArgs e) {
+        private void playSoundTrack_Click(object sender, EventArgs e)
+        {
             Play();
         }
-        private void pauseSoundTrack_Click(object sender, EventArgs e) {
+
+        private void pauseSoundTrack_Click(object sender, EventArgs e)
+        {
             Pause();
         }
-        private void stopSoundTrack_Click(object sender, EventArgs e) {
+
+        private void stopSoundTrack_Click(object sender, EventArgs e)
+        {
             Stop();
         }
-        public virtual void Play() {}
-        public virtual void Pause() {}
-        public virtual void Stop() {}
+
+        public virtual void Play() { }
+
+        public virtual void Pause() { }
+
+        public virtual void Stop() { }
         #endregion
         #region otherButtons
-        private void forceWaveVersionButton_Click(object sender, EventArgs e) {
+        private void forceWaveVersionButton_Click(object sender, EventArgs e)
+        {
             ForceWaveVersionButtonClick();
         }
-        public virtual void ForceWaveVersionButtonClick() {}
+
+        public virtual void ForceWaveVersionButtonClick() { }
         #endregion
         #region rootMenu
-        private void addToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             RootAdd();
         }
-        public void expandToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public void expandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             tree.SelectedNode.Expand();
         }
-        public void collapseToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public void collapseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             tree.SelectedNode.Collapse();
         }
-        public virtual void RootAdd() {}
+
+        public virtual void RootAdd() { }
         #endregion
         #region nodeMenu
-        public void addAboveToolStripMenuItem1_Click(object sender, EventArgs e) {
+        public void addAboveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeAddAbove();
         }
-        public void addBelowToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void addBelowToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeAddBelow();
         }
-        public void moveUpToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void moveUpToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeMoveUp();
         }
-        public void moveDownToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void moveDownToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeMoveDown();
         }
-        public void blankToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public void blankToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             NodeBlank();
         }
-        public void replaceFileToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public void replaceFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             NodeReplace();
         }
-        public void exportToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void exportToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeExport();
         }
-        public void nullifyToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void nullifyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeNullify();
         }
-        public void deleteToolStripMenuItem1_Click(object sender, EventArgs e) {
+
+        public void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             NodeDelete();
         }
-        public virtual void NodeAddAbove() {}
-        public virtual void NodeAddBelow() {}
-        public virtual void NodeMoveUp() {}
-        public virtual void NodeMoveDown() {}
-        public virtual void NodeBlank() {}
-        public virtual void NodeReplace() {}
-        public virtual void NodeExport() {}
-        public virtual void NodeNullify() {}
-        public virtual void NodeDelete() {}
-        public bool Swap<T>(IList<T> objects, int a, int b) {
-            if (a < 0 || a >= objects.Count || b < 0 || b >= objects.Count) {
+
+        public virtual void NodeAddAbove() { }
+
+        public virtual void NodeAddBelow() { }
+
+        public virtual void NodeMoveUp() { }
+
+        public virtual void NodeMoveDown() { }
+
+        public virtual void NodeBlank() { }
+
+        public virtual void NodeReplace() { }
+
+        public virtual void NodeExport() { }
+
+        public virtual void NodeNullify() { }
+
+        public virtual void NodeDelete() { }
+
+        public bool Swap<T>(IList<T> objects, int a, int b)
+        {
+            if (a < 0 || a >= objects.Count || b < 0 || b >= objects.Count)
+            {
                 return false;
             }
             T temp = objects[a];
@@ -5400,803 +6621,1384 @@ namespace NitroStudio2 {
         }
         #endregion
         #region warBoxes
-        private void vMajBoxWar_ValueChanged(object sender, EventArgs e) {
+        private void vMajBoxWar_ValueChanged(object sender, EventArgs e)
+        {
             BoxWarMajChanged();
         }
-        private void vMinBoxWar_ValueChanged(object sender, EventArgs e) {
+
+        private void vMinBoxWar_ValueChanged(object sender, EventArgs e)
+        {
             BoxWarMinChanged();
         }
-        private void vRevBoxWar_ValueChanged(object sender, EventArgs e) {
+
+        private void vRevBoxWar_ValueChanged(object sender, EventArgs e)
+        {
             BoxWarRevChanged();
         }
-        private void vWavMajBox_ValueChanged(object sender, EventArgs e) {
+
+        private void vWavMajBox_ValueChanged(object sender, EventArgs e)
+        {
             BoxWavMajChanged();
         }
-        private void vWavMinBox_ValueChanged(object sender, EventArgs e) {
+
+        private void vWavMinBox_ValueChanged(object sender, EventArgs e)
+        {
             BoxWavMinChanged();
         }
-        private void vWavRevBox_ValueChanged(object sender, EventArgs e) {
+
+        private void vWavRevBox_ValueChanged(object sender, EventArgs e)
+        {
             BoxWavRevChanged();
         }
-        public virtual void BoxWarMajChanged() {}
-        public virtual void BoxWarMinChanged() {}
-        public virtual void BoxWarRevChanged() {}
-        public virtual void BoxWavMajChanged() {}
-        public virtual void BoxWavMinChanged() {}
-        public virtual void BoxWavRevChanged() {}
+
+        public virtual void BoxWarMajChanged() { }
+
+        public virtual void BoxWarMinChanged() { }
+
+        public virtual void BoxWarRevChanged() { }
+
+        public virtual void BoxWavMajChanged() { }
+
+        public virtual void BoxWavMinChanged() { }
+
+        public virtual void BoxWavRevChanged() { }
         #endregion
         #region warTools
-        private void batchExtractWavesToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void batchExtractWavesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             WarExtractWave();
         }
-        private void batchExtract3dsWavesToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void batchExtract3dsWavesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             WarExtractWave3ds();
         }
-        private void batchExtractWiiUWavesToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void batchExtractWiiUWavesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             WarExtractWaveWiiU();
         }
-        private void batchExtractSwitchWavesToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void batchExtractSwitchWavesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             WarExtractWaveSwitch();
         }
-        private void batchImportToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void batchImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             WarBatchImport();
         }
-        public virtual void WarExtractWave() {}
-        public virtual void WarExtractWave3ds() {}
-        public virtual void WarExtractWaveWiiU() {}
-        public virtual void WarExtractWaveSwitch() {}
-        public virtual void WarBatchImport() {}
+
+        public virtual void WarExtractWave() { }
+
+        public virtual void WarExtractWave3ds() { }
+
+        public virtual void WarExtractWaveWiiU() { }
+
+        public virtual void WarExtractWaveSwitch() { }
+
+        public virtual void WarBatchImport() { }
         #endregion
         #region grpVersions
-        private void grpSeqForceButton_Click(object sender, EventArgs e) {
-            if (!WritingInfo) {
+        private void grpSeqForceButton_Click(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupForceSequenceVersion();
             }
         }
-        private void grpBnkForceButton_Click(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpBnkForceButton_Click(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupForceBankVersion();
             }
         }
-        private void grpWarForceButton_Click(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWarForceButton_Click(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupForceWaveArchiveVersion();
             }
         }
-        private void grpWsdForceButton_Click(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWsdForceButton_Click(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupForceWaveSoundDataVersion();
             }
         }
-        private void grpStpForceButton_Click(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpStpForceButton_Click(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupForcePrefetchVersion();
             }
         }
-        private void grpMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpSeqMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpSeqMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpSeqMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpSeqMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpSeqRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpSeqRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpBnkMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpBnkMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpBnkMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpBnkMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpBnkRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpBnkRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWarMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWarMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWarMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWarMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWarRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWarRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWsdMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWsdMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWsdMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWsdMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpWsdRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpWsdRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpStpMajBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpStpMajBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpStpMinBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpStpMinBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        private void grpStpRevBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpStpRevBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupVersionChanged();
             }
         }
-        public virtual void GroupForceSequenceVersion() {}
-        public virtual void GroupForceBankVersion() {}
-        public virtual void GroupForceWaveArchiveVersion() {}
-        public virtual void GroupForceWaveSoundDataVersion() {}
-        public virtual void GroupForcePrefetchVersion() {}
-        public virtual void GroupVersionChanged() {}
+
+        public virtual void GroupForceSequenceVersion() { }
+
+        public virtual void GroupForceBankVersion() { }
+
+        public virtual void GroupForceWaveArchiveVersion() { }
+
+        public virtual void GroupForceWaveSoundDataVersion() { }
+
+        public virtual void GroupForcePrefetchVersion() { }
+
+        public virtual void GroupVersionChanged() { }
         #endregion
         #region grpFile
-        private void grpFileIdComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+        private void grpFileIdComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupFileIdComboChanged();
             }
         }
-        private void grpFileIdBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpFileIdBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupFileIdNumBoxChanged();
             }
         }
-        private void grpEmbedModeBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpEmbedModeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupFileIdEmbedModeChanged();
             }
         }
-        public virtual void GroupFileIdComboChanged() {}
-        public virtual void GroupFileIdNumBoxChanged() {}
-        public virtual void GroupFileIdEmbedModeChanged() {}
+
+        public virtual void GroupFileIdComboChanged() { }
+
+        public virtual void GroupFileIdNumBoxChanged() { }
+
+        public virtual void GroupFileIdEmbedModeChanged() { }
         #endregion
         #region grpDependency
-        private void grpDepEntryTypeBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+        private void grpDepEntryTypeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupDependencyTypeChanged();
             }
         }
-        private void grpDepEntryNumComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpDepEntryNumComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupDependencyEntryComboChanged();
             }
         }
-        private void grpDepEntryNumBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpDepEntryNumBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupDependencyEntryNumBoxChanged();
             }
         }
-        private void grpDepLoadFlagsBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void grpDepLoadFlagsBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 GroupDependencyFlagsChanged();
             }
         }
-        public virtual void GroupDependencyTypeChanged() {}
-        public virtual void GroupDependencyEntryComboChanged() {}
-        public virtual void GroupDependencyEntryNumBoxChanged() {}
-        public virtual void GroupDependencyFlagsChanged() {}
+
+        public virtual void GroupDependencyTypeChanged() { }
+
+        public virtual void GroupDependencyEntryComboChanged() { }
+
+        public virtual void GroupDependencyEntryNumBoxChanged() { }
+
+        public virtual void GroupDependencyFlagsChanged() { }
         #endregion
         #region SARProjectInfo
-        private void MaxSeqNumBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+        private void MaxSeqNumBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxSeqTrackNumBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxSeqTrackNumBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxStreamNumBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxStreamNumBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxStreamNumTracksBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxStreamNumTracksBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxStreamNumChannelsBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxStreamNumChannelsBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxWaveNumBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxWaveNumBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void MaxWaveNumTracksBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void MaxWaveNumTracksBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void StreamBufferTimesBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void StreamBufferTimesBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void OptionsPIBox_ValueChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void OptionsPIBox_ValueChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
-        private void SarIncludeStringBlock_CheckedChanged(object sender, EventArgs e) {
-            if (!WritingInfo) {
+
+        private void SarIncludeStringBlock_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!WritingInfo)
+            {
                 SarProjectInfoUpdated();
             }
         }
+
         public virtual void SarProjectInfoUpdated() { }
         #endregion
-        public virtual void StmSound3dButton_Click(object sender, EventArgs e) {}
-        public virtual void WsdSound3dButton_Click(object sender, EventArgs e) {}
-        public virtual void SeqEditSound3dInfoButton_Click(object sender, EventArgs e) {}
-        public virtual void SeqEditSoundInfoButton_Click(object sender, EventArgs e) {}
-        public virtual void WsdEditSoundInfoButton_Click(object sender, EventArgs e) {}
-        public virtual void StmSoundInfoButton_Click(object sender, EventArgs e) {}
-        public virtual void FileTypeBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void PlayerSoundLimitBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void PlayerEnableSoundLimitBox_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void PlayerHeapSizeBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SarGrpFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SarWarFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void WarLoadIndividuallyBox_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WarIncludeWaveCountBox_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SarBnkFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void BnkWarsChanged(object sender, EventArgs e) {}
-        public virtual void SoundGrpStartIndex_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SoundGrpEndIndex_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SoundGroupFilesChanged(object sender, EventArgs e) {}
-        public virtual void SoundGroupWarsChanged(object sender, EventArgs e) {}
-        public virtual void SarSeqFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SarSeqPlay_Click(object sender, EventArgs e) {}
-        public virtual void SarSeqPause_Click(object sender, EventArgs e) {}
-        public virtual void SarSeqStop_Click(object sender, EventArgs e) {}
-        public virtual void SeqSound3dInfoExists_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqBank0Box_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SeqBank1Box_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SeqBank2Box_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SeqBank3Box_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SeqOffsetFromLabelButton_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqOffsetManualButton_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqOffsetFromLabelBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SeqOffsetManualBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SeqChannelPriorityBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SeqIsReleasePriorityBox_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC0_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC1_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC2_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC3_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC4_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC5_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC6_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC7_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC8_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC9_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC10_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC11_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC12_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC13_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC14_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SeqC15_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void SarWsdFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void SarWsdPlay_Click(object sender, EventArgs e) {}
-        public virtual void SarWsdPause_Click(object sender, EventArgs e) {}
-        public virtual void SarWsdStop_Click(object sender, EventArgs e) {}
-        public virtual void WsdSound3dEnable_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdWaveIndex_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdTracksToAllocate_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdCopyCount_Click(object sender, EventArgs e) {}
-        public virtual void WsdChannelPriority_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdFixPriority_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void StmPlay_Click(object sender, EventArgs e) {}
-        public virtual void StmPause_Click(object sender, EventArgs e) {}
-        public virtual void StmStop_Click(object sender, EventArgs e) {}
-        public virtual void StmSound3dEnable_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmWriteTrackInfo_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmUpdateTrackInfo_Click(object sender, EventArgs e) {}
-        public virtual void StmTrack0_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack1_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack2_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack3_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack4_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack5_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack6_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack7_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack8_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack9_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack10_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack11_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack12_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack13_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack14_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmTrack15_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmStreamType_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void StmAllocateChannelsNum_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmCopyChannelCountFromFile_Click(object sender, EventArgs e) {}
-        public virtual void StmPitch_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmIncludeExtension_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmLoopStartFrame_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmLoopEndFrame_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmCopyExtensionFromFile_Click(object sender, EventArgs e) {}
-        public virtual void StmGeneratePrefetch_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void StmPrefetchFileIdBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void StmUpdatePrefetchInfo_Click(object sender, EventArgs e) {}
-        public virtual void StmCreateUniquePrefetchFile_Click(object sender, EventArgs e) {}
-        public virtual void StmSendMain_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmSendA_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmSendB_ValueChanged(object sender, EventArgs e) {}
-        public virtual void StmSendC_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackVolume_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackPan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSpan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSurround_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void TrackLPFFrequency_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackBiquadType_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void TrackBiquadValue_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSendMain_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSendA_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSendB_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackSendC_ValueChanged(object sender, EventArgs e) {}
-        public virtual void TrackChannelsChanged(object sender, EventArgs e) {}
-        public virtual void ByteOrderBox_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void VersionMax_ValueChanged(object sender, EventArgs e) {}
-        public virtual void VersionMin_ValueChanged(object sender, EventArgs e) {}
-        public virtual void VersionRev_ValueChanged(object sender, EventArgs e) {}
-        public virtual void SeqVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void BankVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void WarVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void WsdVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void GrpVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void StmVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void StpVersionUpdate_Click(object sender, EventArgs e) {}
-        public virtual void FilesIncludeGroups_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void FilesGroupGridCellChanged(object sender, EventArgs e) {}
-        public virtual void ReplaceToolStripMenuItem_Click(object sender, EventArgs e) {}
-        public virtual void ExportToolStripMenuItem_Click(object sender, EventArgs e) {}
-        public virtual void ChangeExternalPathToolStripMenuItem_Click(object sender, EventArgs e) {}
-        public virtual void SarAddAbove_Click(object sender, EventArgs e) {}
-        public virtual void SarAddBelow_Click(object sender, EventArgs e) {}
-        public virtual void SarAddInside_Click(object sender, EventArgs e) {}
-        public virtual void SarMoveUp_Click(object sender, EventArgs e) {}
-        public virtual void SarMoveDown_Click(object sender, EventArgs e) {}
-        public virtual void SarReplace_Click(object sender, EventArgs e) {}
-        public virtual void SarExport_Click(object sender, EventArgs e) {}
-        public virtual void SarRename_Click(object sender, EventArgs e) {}
-        public virtual void SarNullify_Click(object sender, EventArgs e) {}
-        public virtual void SarDelete_Click(object sender, EventArgs e) {}
+        public virtual void StmSound3dButton_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdSound3dButton_Click(object sender, EventArgs e) { }
+
+        public virtual void SeqEditSound3dInfoButton_Click(object sender, EventArgs e) { }
+
+        public virtual void SeqEditSoundInfoButton_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdEditSoundInfoButton_Click(object sender, EventArgs e) { }
+
+        public virtual void StmSoundInfoButton_Click(object sender, EventArgs e) { }
+
+        public virtual void FileTypeBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void PlayerSoundLimitBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void PlayerEnableSoundLimitBox_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void PlayerHeapSizeBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SarGrpFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SarWarFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void WarLoadIndividuallyBox_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WarIncludeWaveCountBox_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SarBnkFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void BnkWarsChanged(object sender, EventArgs e) { }
+
+        public virtual void SoundGrpStartIndex_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SoundGrpEndIndex_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SoundGroupFilesChanged(object sender, EventArgs e) { }
+
+        public virtual void SoundGroupWarsChanged(object sender, EventArgs e) { }
+
+        public virtual void SarSeqFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SarSeqPlay_Click(object sender, EventArgs e) { }
+
+        public virtual void SarSeqPause_Click(object sender, EventArgs e) { }
+
+        public virtual void SarSeqStop_Click(object sender, EventArgs e) { }
+
+        public virtual void SeqSound3dInfoExists_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqBank0Box_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqBank1Box_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqBank2Box_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqBank3Box_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqOffsetFromLabelButton_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqOffsetManualButton_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqOffsetFromLabelBox_SelectedIndexChanged(
+            object sender,
+            EventArgs e
+        ) { }
+
+        public virtual void SeqOffsetManualBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqChannelPriorityBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqIsReleasePriorityBox_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC0_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC1_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC2_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC3_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC4_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC5_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC6_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC7_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC8_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC9_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC10_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC11_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC12_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC13_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC14_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqC15_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void SarWsdFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void SarWsdPlay_Click(object sender, EventArgs e) { }
+
+        public virtual void SarWsdPause_Click(object sender, EventArgs e) { }
+
+        public virtual void SarWsdStop_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdSound3dEnable_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdWaveIndex_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdTracksToAllocate_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdCopyCount_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdChannelPriority_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdFixPriority_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmFileIdBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void StmPlay_Click(object sender, EventArgs e) { }
+
+        public virtual void StmPause_Click(object sender, EventArgs e) { }
+
+        public virtual void StmStop_Click(object sender, EventArgs e) { }
+
+        public virtual void StmSound3dEnable_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmWriteTrackInfo_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmUpdateTrackInfo_Click(object sender, EventArgs e) { }
+
+        public virtual void StmTrack0_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack1_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack2_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack3_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack4_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack5_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack6_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack7_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack8_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack9_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack10_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack11_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack12_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack13_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack14_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmTrack15_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmStreamType_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void StmAllocateChannelsNum_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmCopyChannelCountFromFile_Click(object sender, EventArgs e) { }
+
+        public virtual void StmPitch_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmIncludeExtension_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmLoopStartFrame_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmLoopEndFrame_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmCopyExtensionFromFile_Click(object sender, EventArgs e) { }
+
+        public virtual void StmGeneratePrefetch_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void StmPrefetchFileIdBox_SelectedIndexChanged(
+            object sender,
+            EventArgs e
+        ) { }
+
+        public virtual void StmUpdatePrefetchInfo_Click(object sender, EventArgs e) { }
+
+        public virtual void StmCreateUniquePrefetchFile_Click(object sender, EventArgs e) { }
+
+        public virtual void StmSendMain_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmSendA_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmSendB_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void StmSendC_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackVolume_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackPan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSpan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSurround_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackLPFFrequency_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackBiquadType_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackBiquadValue_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSendMain_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSendA_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSendB_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackSendC_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void TrackChannelsChanged(object sender, EventArgs e) { }
+
+        public virtual void ByteOrderBox_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void VersionMax_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void VersionMin_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void VersionRev_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void SeqVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void BankVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void WarVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void GrpVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void StmVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void StpVersionUpdate_Click(object sender, EventArgs e) { }
+
+        public virtual void FilesIncludeGroups_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void FilesGroupGridCellChanged(object sender, EventArgs e) { }
+
+        public virtual void ReplaceToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        public virtual void ExportToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        public virtual void ChangeExternalPathToolStripMenuItem_Click(
+            object sender,
+            EventArgs e
+        ) { }
+
+        public virtual void SarAddAbove_Click(object sender, EventArgs e) { }
+
+        public virtual void SarAddBelow_Click(object sender, EventArgs e) { }
+
+        public virtual void SarAddInside_Click(object sender, EventArgs e) { }
+
+        public virtual void SarMoveUp_Click(object sender, EventArgs e) { }
+
+        public virtual void SarMoveDown_Click(object sender, EventArgs e) { }
+
+        public virtual void SarReplace_Click(object sender, EventArgs e) { }
+
+        public virtual void SarExport_Click(object sender, EventArgs e) { }
+
+        public virtual void SarRename_Click(object sender, EventArgs e) { }
+
+        public virtual void SarNullify_Click(object sender, EventArgs e) { }
+
+        public virtual void SarDelete_Click(object sender, EventArgs e) { }
+
         #region WsdEditor
-        public virtual void WsdTrackPlay_Click(object sender, EventArgs e) {}
-        public virtual void WsdTrackPause_Click(object sender, EventArgs e) {}
-        public virtual void WsdTrackStop_Click(object sender, EventArgs e) {}
-        public virtual void WsdTrackPlayOnce_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdTrackPlayLoop_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdPlayNext_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdEventGrid_CellChange(object sende, EventArgs e) {}
-        public virtual void WsdEntryPlay_Click(object sender, EventArgs e) {}
-        public virtual void WsdEntryPause_Click(object sender, EventArgs e) {}
-        public virtual void WsdEntryStop_Click(object sender, EventArgs e) {}
-        public virtual void WsdEntryPlayOnce_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdEntryPlayLoop_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdEntryPlayNext_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdAttack_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdDecay_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSustain_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdRelease_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdHold_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdLPF_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdBiquadType_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void WsdBiquadValue_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSendMain_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSendA_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSendB_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSendC_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdPan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdSpan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdPitch_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdReference_CellChanged(object sender, EventArgs e) {}
-        public virtual void WsdReferencePlay_Click(object sender, EventArgs e) {}
-        public virtual void WsdReferencePause_Click(object sender, EventArgs e) {}
-        public virtual void WsdReferenceStop_Click(object sender, EventArgs e) {}
-        public virtual void WsdReferencePlayOnce_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdReferencePlayLoop_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdReferencePlayNext_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void WsdRefArchiveCombo_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void WsdRefArchiveBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void WsdRefWaveCombo_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void WsdRefWaveBox_ValueChanged(object sender, EventArgs e) {}
+        public virtual void WsdTrackPlay_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdTrackPause_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdTrackStop_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdTrackPlayOnce_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdTrackPlayLoop_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdPlayNext_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdEventGrid_CellChange(object sende, EventArgs e) { }
+
+        public virtual void WsdEntryPlay_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdEntryPause_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdEntryStop_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdEntryPlayOnce_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdEntryPlayLoop_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdEntryPlayNext_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdAttack_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdDecay_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSustain_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdRelease_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdHold_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdLPF_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdBiquadType_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdBiquadValue_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSendMain_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSendA_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSendB_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSendC_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdPan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdSpan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdPitch_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdReference_CellChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdReferencePlay_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdReferencePause_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdReferenceStop_Click(object sender, EventArgs e) { }
+
+        public virtual void WsdReferencePlayOnce_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdReferencePlayLoop_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdReferencePlayNext_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdRefArchiveCombo_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdRefArchiveBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdRefWaveCombo_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void WsdRefWaveBox_ValueChanged(object sender, EventArgs e) { }
         #endregion
         #region VersionChange
-        public virtual void VMajBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void VMinBox_ValueChanged(object sender, EventArgs e) {}
-        public virtual void VRevBox_ValueChanged(object sender, EventArgs e) {}
+        public virtual void VMajBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void VMinBox_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void VRevBox_ValueChanged(object sender, EventArgs e) { }
         #endregion
         #region NoteInfo
-        public virtual void NoteReferenceWave_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void NoteInterpolationType_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void NotePercussionMode_CheckedChanged(object sender, EventArgs e) {}
-        public virtual void NotePitchSemitones_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NotePitchCents_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteVolume_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NotePan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteSurroundPan_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteOriginalKey_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteKeyGroup_SelectedIndexChanged(object sender, EventArgs e) {}
-        public virtual void NoteAttack_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteDecay_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteSustain_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteRelease_ValueChanged(object sender, EventArgs e) {}
-        public virtual void NoteHold_ValueChanged(object sender, EventArgs e) {}
-        public virtual void InstrumentApplyChanges_Click(object sender, EventArgs e) {}
+        public virtual void NoteReferenceWave_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteInterpolationType_SelectedIndexChanged(
+            object sender,
+            EventArgs e
+        ) { }
+
+        public virtual void NotePercussionMode_CheckedChanged(object sender, EventArgs e) { }
+
+        public virtual void NotePitchSemitones_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NotePitchCents_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteVolume_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NotePan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteSurroundPan_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteOriginalKey_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteKeyGroup_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteAttack_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteDecay_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteSustain_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteRelease_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void NoteHold_ValueChanged(object sender, EventArgs e) { }
+
+        public virtual void InstrumentApplyChanges_Click(object sender, EventArgs e) { }
         #endregion
-        private void PianoChanged(object sender, EventArgs e) {
-            if (pkeyC1.IsKeyOn()) {
+        private void PianoChanged(object sender, EventArgs e)
+        {
+            if (pkeyC1.IsKeyOn())
+            {
                 NoteDown = Notes.cn1;
                 OnPianoPress();
-            } else if (pkeyC2.IsKeyOn()) {
+            }
+            else if (pkeyC2.IsKeyOn())
+            {
                 NoteDown = Notes.cn2;
                 OnPianoPress();
-            } else if (pkeyC3.IsKeyOn()) {
+            }
+            else if (pkeyC3.IsKeyOn())
+            {
                 NoteDown = Notes.cn3;
                 OnPianoPress();
-            } else if (pkeyC4.IsKeyOn()) {
+            }
+            else if (pkeyC4.IsKeyOn())
+            {
                 NoteDown = Notes.cn4;
                 OnPianoPress();
-            } else if (pkeyC5.IsKeyOn()) {
+            }
+            else if (pkeyC5.IsKeyOn())
+            {
                 NoteDown = Notes.cn5;
                 OnPianoPress();
-            } else if (pkeyC6.IsKeyOn()) {
+            }
+            else if (pkeyC6.IsKeyOn())
+            {
                 NoteDown = Notes.cn6;
                 OnPianoPress();
-            } else if (pkeyC7.IsKeyOn()) {
+            }
+            else if (pkeyC7.IsKeyOn())
+            {
                 NoteDown = Notes.cn7;
                 OnPianoPress();
-            } else if (pkeyC8.IsKeyOn()) {
+            }
+            else if (pkeyC8.IsKeyOn())
+            {
                 NoteDown = Notes.cn8;
                 OnPianoPress();
-            } else if (pkeyD1.IsKeyOn()) {
+            }
+            else if (pkeyD1.IsKeyOn())
+            {
                 NoteDown = Notes.dn1;
                 OnPianoPress();
-            } else if (pkeyD2.IsKeyOn()) {
+            }
+            else if (pkeyD2.IsKeyOn())
+            {
                 NoteDown = Notes.dn2;
                 OnPianoPress();
-            } else if (pkeyD3.IsKeyOn()) {
+            }
+            else if (pkeyD3.IsKeyOn())
+            {
                 NoteDown = Notes.dn3;
                 OnPianoPress();
-            } else if (pkeyD4.IsKeyOn()) {
+            }
+            else if (pkeyD4.IsKeyOn())
+            {
                 NoteDown = Notes.dn4;
                 OnPianoPress();
-            } else if (pkeyD5.IsKeyOn()) {
+            }
+            else if (pkeyD5.IsKeyOn())
+            {
                 NoteDown = Notes.dn5;
                 OnPianoPress();
-            } else if (pkeyD6.IsKeyOn()) {
+            }
+            else if (pkeyD6.IsKeyOn())
+            {
                 NoteDown = Notes.dn6;
                 OnPianoPress();
-            } else if (pkeyD7.IsKeyOn()) {
+            }
+            else if (pkeyD7.IsKeyOn())
+            {
                 NoteDown = Notes.dn7;
                 OnPianoPress();
-            } else if (pkeyE1.IsKeyOn()) {
+            }
+            else if (pkeyE1.IsKeyOn())
+            {
                 NoteDown = Notes.en1;
                 OnPianoPress();
-            } else if (pkeyE2.IsKeyOn()) {
+            }
+            else if (pkeyE2.IsKeyOn())
+            {
                 NoteDown = Notes.en2;
                 OnPianoPress();
-            } else if (pkeyE3.IsKeyOn()) {
+            }
+            else if (pkeyE3.IsKeyOn())
+            {
                 NoteDown = Notes.en3;
                 OnPianoPress();
-            } else if (pkeyE4.IsKeyOn()) {
+            }
+            else if (pkeyE4.IsKeyOn())
+            {
                 NoteDown = Notes.en4;
                 OnPianoPress();
-            } else if (pkeyE5.IsKeyOn()) {
+            }
+            else if (pkeyE5.IsKeyOn())
+            {
                 NoteDown = Notes.en5;
                 OnPianoPress();
-            } else if (pkeyE6.IsKeyOn()) {
+            }
+            else if (pkeyE6.IsKeyOn())
+            {
                 NoteDown = Notes.en6;
                 OnPianoPress();
-            } else if (pkeyE7.IsKeyOn()) {
+            }
+            else if (pkeyE7.IsKeyOn())
+            {
                 NoteDown = Notes.en7;
                 OnPianoPress();
-            } else if (pkeyF1.IsKeyOn()) {
+            }
+            else if (pkeyF1.IsKeyOn())
+            {
                 NoteDown = Notes.fn1;
                 OnPianoPress();
-            } else if (pkeyF2.IsKeyOn()) {
+            }
+            else if (pkeyF2.IsKeyOn())
+            {
                 NoteDown = Notes.fn2;
                 OnPianoPress();
-            } else if (pkeyF3.IsKeyOn()) {
+            }
+            else if (pkeyF3.IsKeyOn())
+            {
                 NoteDown = Notes.fn3;
                 OnPianoPress();
-            } else if (pkeyF4.IsKeyOn()) {
+            }
+            else if (pkeyF4.IsKeyOn())
+            {
                 NoteDown = Notes.fn4;
                 OnPianoPress();
-            } else if (pkeyF5.IsKeyOn()) {
+            }
+            else if (pkeyF5.IsKeyOn())
+            {
                 NoteDown = Notes.fn5;
                 OnPianoPress();
-            } else if (pkeyF6.IsKeyOn()) {
+            }
+            else if (pkeyF6.IsKeyOn())
+            {
                 NoteDown = Notes.fn6;
                 OnPianoPress();
-            } else if (pkeyF7.IsKeyOn()) {
+            }
+            else if (pkeyF7.IsKeyOn())
+            {
                 NoteDown = Notes.fn7;
                 OnPianoPress();
-            } else if (pkeyG1.IsKeyOn()) {
+            }
+            else if (pkeyG1.IsKeyOn())
+            {
                 NoteDown = Notes.gn1;
                 OnPianoPress();
-            } else if (pkeyG2.IsKeyOn()) {
+            }
+            else if (pkeyG2.IsKeyOn())
+            {
                 NoteDown = Notes.gn2;
                 OnPianoPress();
-            } else if (pkeyG3.IsKeyOn()) {
+            }
+            else if (pkeyG3.IsKeyOn())
+            {
                 NoteDown = Notes.gn3;
                 OnPianoPress();
-            } else if (pkeyG4.IsKeyOn()) {
+            }
+            else if (pkeyG4.IsKeyOn())
+            {
                 NoteDown = Notes.gn4;
                 OnPianoPress();
-            } else if (pkeyG5.IsKeyOn()) {
+            }
+            else if (pkeyG5.IsKeyOn())
+            {
                 NoteDown = Notes.gn5;
                 OnPianoPress();
-            } else if (pkeyG6.IsKeyOn()) {
+            }
+            else if (pkeyG6.IsKeyOn())
+            {
                 NoteDown = Notes.gn6;
                 OnPianoPress();
-            } else if (pkeyG7.IsKeyOn()) {
+            }
+            else if (pkeyG7.IsKeyOn())
+            {
                 NoteDown = Notes.gn7;
                 OnPianoPress();
-            } else if (pkeyA1.IsKeyOn()) {
+            }
+            else if (pkeyA1.IsKeyOn())
+            {
                 NoteDown = Notes.an1;
                 OnPianoPress();
-            } else if (pkeyA2.IsKeyOn()) {
+            }
+            else if (pkeyA2.IsKeyOn())
+            {
                 NoteDown = Notes.an2;
                 OnPianoPress();
-            } else if (pkeyA3.IsKeyOn()) {
+            }
+            else if (pkeyA3.IsKeyOn())
+            {
                 NoteDown = Notes.an3;
                 OnPianoPress();
-            } else if (pkeyA4.IsKeyOn()) {
+            }
+            else if (pkeyA4.IsKeyOn())
+            {
                 NoteDown = Notes.an4;
                 OnPianoPress();
-            } else if (pkeyA5.IsKeyOn()) {
+            }
+            else if (pkeyA5.IsKeyOn())
+            {
                 NoteDown = Notes.an5;
                 OnPianoPress();
-            } else if (pkeyA6.IsKeyOn()) {
+            }
+            else if (pkeyA6.IsKeyOn())
+            {
                 NoteDown = Notes.an6;
                 OnPianoPress();
-            } else if (pkeyA7.IsKeyOn()) {
+            }
+            else if (pkeyA7.IsKeyOn())
+            {
                 NoteDown = Notes.an7;
                 OnPianoPress();
-            } else if (pkeyB1.IsKeyOn()) {
+            }
+            else if (pkeyB1.IsKeyOn())
+            {
                 NoteDown = Notes.bn1;
                 OnPianoPress();
-            } else if (pkeyB2.IsKeyOn()) {
+            }
+            else if (pkeyB2.IsKeyOn())
+            {
                 NoteDown = Notes.bn2;
                 OnPianoPress();
-            } else if (pkeyB3.IsKeyOn()) {
+            }
+            else if (pkeyB3.IsKeyOn())
+            {
                 NoteDown = Notes.bn3;
                 OnPianoPress();
-            } else if (pkeyB4.IsKeyOn()) {
+            }
+            else if (pkeyB4.IsKeyOn())
+            {
                 NoteDown = Notes.bn4;
                 OnPianoPress();
-            } else if (pkeyB5.IsKeyOn()) {
+            }
+            else if (pkeyB5.IsKeyOn())
+            {
                 NoteDown = Notes.bn5;
                 OnPianoPress();
-            } else if (pkeyB6.IsKeyOn()) {
+            }
+            else if (pkeyB6.IsKeyOn())
+            {
                 NoteDown = Notes.bn6;
                 OnPianoPress();
-            } else if (pkeyB7.IsKeyOn()) {
+            }
+            else if (pkeyB7.IsKeyOn())
+            {
                 NoteDown = Notes.bn7;
                 OnPianoPress();
-            } else if (pkeyCSharp1.IsKeyOn()) {
+            }
+            else if (pkeyCSharp1.IsKeyOn())
+            {
                 NoteDown = Notes.cs1;
                 OnPianoPress();
-            } else if (pkeyCSharp2.IsKeyOn()) {
+            }
+            else if (pkeyCSharp2.IsKeyOn())
+            {
                 NoteDown = Notes.cs2;
                 OnPianoPress();
-            } else if (pkeyCSharp3.IsKeyOn()) {
+            }
+            else if (pkeyCSharp3.IsKeyOn())
+            {
                 NoteDown = Notes.cs3;
                 OnPianoPress();
-            } else if (pkeyCSharp4.IsKeyOn()) {
+            }
+            else if (pkeyCSharp4.IsKeyOn())
+            {
                 NoteDown = Notes.cs4;
                 OnPianoPress();
-            } else if (pkeyCSharp5.IsKeyOn()) {
+            }
+            else if (pkeyCSharp5.IsKeyOn())
+            {
                 NoteDown = Notes.cs5;
                 OnPianoPress();
-            } else if (pkeyCSharp6.IsKeyOn()) {
+            }
+            else if (pkeyCSharp6.IsKeyOn())
+            {
                 NoteDown = Notes.cs6;
                 OnPianoPress();
-            } else if (pkeyCSharp7.IsKeyOn()) {
+            }
+            else if (pkeyCSharp7.IsKeyOn())
+            {
                 NoteDown = Notes.cs7;
                 OnPianoPress();
-            } else if (pkeyDSharp1.IsKeyOn()) {
+            }
+            else if (pkeyDSharp1.IsKeyOn())
+            {
                 NoteDown = Notes.ds1;
                 OnPianoPress();
-            } else if (pkeyDSharp2.IsKeyOn()) {
+            }
+            else if (pkeyDSharp2.IsKeyOn())
+            {
                 NoteDown = Notes.ds2;
                 OnPianoPress();
-            } else if (pkeyDSharp3.IsKeyOn()) {
+            }
+            else if (pkeyDSharp3.IsKeyOn())
+            {
                 NoteDown = Notes.ds3;
                 OnPianoPress();
-            } else if (pkeyDSharp4.IsKeyOn()) {
+            }
+            else if (pkeyDSharp4.IsKeyOn())
+            {
                 NoteDown = Notes.ds4;
                 OnPianoPress();
-            } else if (pkeyDSharp5.IsKeyOn()) {
+            }
+            else if (pkeyDSharp5.IsKeyOn())
+            {
                 NoteDown = Notes.ds5;
                 OnPianoPress();
-            } else if (pkeyDSharp6.IsKeyOn()) {
+            }
+            else if (pkeyDSharp6.IsKeyOn())
+            {
                 NoteDown = Notes.ds6;
                 OnPianoPress();
-            } else if (pkeyDSharp7.IsKeyOn()) {
+            }
+            else if (pkeyDSharp7.IsKeyOn())
+            {
                 NoteDown = Notes.ds7;
                 OnPianoPress();
-            } else if (pkeyFSharp1.IsKeyOn()) {
+            }
+            else if (pkeyFSharp1.IsKeyOn())
+            {
                 NoteDown = Notes.fs1;
                 OnPianoPress();
-            } else if (pkeyFSharp2.IsKeyOn()) {
+            }
+            else if (pkeyFSharp2.IsKeyOn())
+            {
                 NoteDown = Notes.fs2;
                 OnPianoPress();
-            } else if (pkeyFSharp3.IsKeyOn()) {
+            }
+            else if (pkeyFSharp3.IsKeyOn())
+            {
                 NoteDown = Notes.fs3;
                 OnPianoPress();
-            } else if (pkeyFSharp4.IsKeyOn()) {
+            }
+            else if (pkeyFSharp4.IsKeyOn())
+            {
                 NoteDown = Notes.fs4;
                 OnPianoPress();
-            } else if (pkeyFSharp5.IsKeyOn()) {
+            }
+            else if (pkeyFSharp5.IsKeyOn())
+            {
                 NoteDown = Notes.fs5;
                 OnPianoPress();
-            } else if (pkeyFSharp6.IsKeyOn()) {
+            }
+            else if (pkeyFSharp6.IsKeyOn())
+            {
                 NoteDown = Notes.fs6;
                 OnPianoPress();
-            } else if (pkeyFSharp7.IsKeyOn()) {
+            }
+            else if (pkeyFSharp7.IsKeyOn())
+            {
                 NoteDown = Notes.fs7;
                 OnPianoPress();
-            } else if (pkeyGSharp1.IsKeyOn()) {
+            }
+            else if (pkeyGSharp1.IsKeyOn())
+            {
                 NoteDown = Notes.gs1;
                 OnPianoPress();
-            } else if (pkeyGSharp2.IsKeyOn()) {
+            }
+            else if (pkeyGSharp2.IsKeyOn())
+            {
                 NoteDown = Notes.gs2;
                 OnPianoPress();
-            } else if (pkeyGSharp3.IsKeyOn()) {
+            }
+            else if (pkeyGSharp3.IsKeyOn())
+            {
                 NoteDown = Notes.gs3;
                 OnPianoPress();
-            } else if (pkeyGSharp4.IsKeyOn()) {
+            }
+            else if (pkeyGSharp4.IsKeyOn())
+            {
                 NoteDown = Notes.gs4;
                 OnPianoPress();
-            } else if (pkeyGSharp5.IsKeyOn()) {
+            }
+            else if (pkeyGSharp5.IsKeyOn())
+            {
                 NoteDown = Notes.gs5;
                 OnPianoPress();
-            } else if (pkeyGSharp6.IsKeyOn()) {
+            }
+            else if (pkeyGSharp6.IsKeyOn())
+            {
                 NoteDown = Notes.gs6;
                 OnPianoPress();
-            } else if (pkeyGSharp7.IsKeyOn()) {
+            }
+            else if (pkeyGSharp7.IsKeyOn())
+            {
                 NoteDown = Notes.gs7;
                 OnPianoPress();
-            } else if (pkeyASharp1.IsKeyOn()) {
+            }
+            else if (pkeyASharp1.IsKeyOn())
+            {
                 NoteDown = Notes.as1;
                 OnPianoPress();
-            } else if (pkeyASharp2.IsKeyOn()) {
+            }
+            else if (pkeyASharp2.IsKeyOn())
+            {
                 NoteDown = Notes.as2;
                 OnPianoPress();
-            } else if (pkeyASharp3.IsKeyOn()) {
+            }
+            else if (pkeyASharp3.IsKeyOn())
+            {
                 NoteDown = Notes.as3;
                 OnPianoPress();
-            } else if (pkeyASharp4.IsKeyOn()) {
+            }
+            else if (pkeyASharp4.IsKeyOn())
+            {
                 NoteDown = Notes.as4;
                 OnPianoPress();
-            } else if (pkeyASharp5.IsKeyOn()) {
+            }
+            else if (pkeyASharp5.IsKeyOn())
+            {
                 NoteDown = Notes.as5;
                 OnPianoPress();
-            } else if (pkeyASharp6.IsKeyOn()) {
+            }
+            else if (pkeyASharp6.IsKeyOn())
+            {
                 NoteDown = Notes.as6;
                 OnPianoPress();
-            } else if (pkeyASharp7.IsKeyOn()) {
+            }
+            else if (pkeyASharp7.IsKeyOn())
+            {
                 NoteDown = Notes.as7;
                 OnPianoPress();
-            } else {
+            }
+            else
+            {
                 OnPianoRelease();
             }
         }
-        public virtual void OnPianoPress() {}
-        public virtual void OnPianoRelease() {}
-        private void ExportStringsToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public virtual void OnPianoPress() { }
+
+        public virtual void OnPianoRelease() { }
+
+        private void ExportStringsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             ExportStrings();
         }
-        public virtual void ExportStrings() {}
-        private void SequenceEditorToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        public virtual void ExportStrings() { }
+
+        private void SequenceEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var ed = new SequenceEditor(this as MainWindow);
             ed.Show();
         }
-        private void SequenceArchiveEditorToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void SequenceArchiveEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var ed = new SequenceArchiveEditor(this as MainWindow);
             ed.Show();
         }
-        private void BankEditorToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void BankEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var ed = new BankEditor(this as MainWindow);
             ed.Show();
         }
-        private void WaveArchiveEditorToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void WaveArchiveEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var ed = new WaveArchiveEditor(this as MainWindow);
             ed.Show();
         }
-        private void BankGeneratorToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (!FileOpen || File == null) {
+
+        private void BankGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!FileOpen || File == null)
+            {
                 MessageBox.Show("There must be a file open to do this!");
                 return;
             }
             var ed = new BankGenerator(this as MainWindow);
             ed.Show();
         }
-        private void CreaveWaveToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void CreaveWaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             CreateStreamTool ed = new CreateStreamTool(true);
             ed.Show();
         }
-        private void CreateStreamToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void CreateStreamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             CreateStreamTool ed = new CreateStreamTool(false);
             ed.Show();
         }
-        private void ExportSDKProjectToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void ExportSDKProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             SaveFileDialog s = new SaveFileDialog();
             s.Filter = "Sound Project|*.sprj";
-            if (FilePath != null && FilePath != "") { s.FileName = Path.GetFileNameWithoutExtension(FilePath) + ".sprj"; }
+            if (FilePath != null && FilePath != "")
+            {
+                s.FileName = Path.GetFileNameWithoutExtension(FilePath) + ".sprj";
+            }
             s.RestoreDirectory = true;
-            if (s.ShowDialog() == DialogResult.OK) {
-                (File as SoundArchive).ExportSDKProject(Path.GetDirectoryName(s.FileName), Path.GetFileNameWithoutExtension(s.FileName));
+            if (s.ShowDialog() == DialogResult.OK)
+            {
+                (File as SoundArchive).ExportSDKProject(
+                    Path.GetDirectoryName(s.FileName),
+                    Path.GetFileNameWithoutExtension(s.FileName)
+                );
             }
         }
-        private void GetHelpToolStripMenuItem_Click(object sender, EventArgs e) {
-            try {
+
+        private void GetHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
                 System.Diagnostics.Process.Start("https://gota7.github.io/NitroStudio2/#guide");
-            } catch { }
+            }
+            catch { }
         }
-        public void ColorRegion(Color color, byte start, byte end) {
-            for (byte b = start; b <= end; b++) {
+
+        public void ColorRegion(Color color, byte start, byte end)
+        {
+            for (byte b = start; b <= end; b++)
+            {
                 var n = GetKey((Notes)b);
-                if (n != null) {
-                    if (n.Shape == PianoKeyShape.RectShape && n != pkeyC8) {
+                if (n != null)
+                {
+                    if (n.Shape == PianoKeyShape.RectShape && n != pkeyC8)
+                    {
                         n.KeyOffColor = Color.FromArgb(255 - color.R, 255 - color.G, 255 - color.B);
-                    } else {
+                    }
+                    else
+                    {
                         n.KeyOffColor = color;
                     }
                 }
             }
         }
-        public PianoKey GetKey(Notes n) {
-            switch (n) {
+
+        public PianoKey GetKey(Notes n)
+        {
+            switch (n)
+            {
                 case Notes.an1:
                     return pkeyA1;
                 case Notes.an2:
@@ -6371,35 +8173,45 @@ namespace NitroStudio2 {
                     return null;
             }
         }
-        private void AboutNitroStudio2ToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void AboutNitroStudio2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             AboutWindow a = new AboutWindow();
             a.ShowDialog();
         }
-        private void sF2ToDLSToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void sF2ToDLSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             OpenFileDialog o = new OpenFileDialog();
             o.RestoreDirectory = true;
             o.Filter = "Sound Font|*.sf2";
-            if (o.ShowDialog() == DialogResult.OK) {
+            if (o.ShowDialog() == DialogResult.OK)
+            {
                 SaveFileDialog s = new SaveFileDialog();
                 s.Filter = "Downloadable Sounds|*.dls";
                 s.RestoreDirectory = true;
                 s.FileName = Path.GetFileNameWithoutExtension(o.FileName) + ".dls";
-                if (s.ShowDialog() == DialogResult.OK) {
+                if (s.ShowDialog() == DialogResult.OK)
+                {
                     var h = new SoundFont(o.FileName);
                     new DownloadableSounds(h).Write(s.FileName);
                 }
             }
         }
-        private void dLSToSF2ToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        private void dLSToSF2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             OpenFileDialog o = new OpenFileDialog();
             o.RestoreDirectory = true;
             o.Filter = "Downloadable Sounds|*.dls";
-            if (o.ShowDialog() == DialogResult.OK) {
+            if (o.ShowDialog() == DialogResult.OK)
+            {
                 SaveFileDialog s = new SaveFileDialog();
                 s.Filter = "Sound Font|*.sf2";
                 s.RestoreDirectory = true;
                 s.FileName = Path.GetFileNameWithoutExtension(o.FileName) + ".sf2";
-                if (s.ShowDialog() == DialogResult.OK) {
+                if (s.ShowDialog() == DialogResult.OK)
+                {
                     var h = new DownloadableSounds(o.FileName);
                     new SoundFont(h).Write(s.FileName);
                 }

@@ -1,66 +1,103 @@
-﻿using GotaSoundIO.Sound;
-using GotaSoundIO.IO.RIFF;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GotaSoundIO.IO;
 using GotaSoundBank.SF2;
-namespace GotaSoundBank.DLS {
-    public class DownloadableSounds : IOFile {
+using GotaSoundIO.IO;
+using GotaSoundIO.IO.RIFF;
+using GotaSoundIO.Sound;
+
+namespace GotaSoundBank.DLS
+{
+    public class DownloadableSounds : IOFile
+    {
         public List<Instrument> Instruments = new List<Instrument>();
         public List<RiffWave> Waves = new List<RiffWave>();
-        public DownloadableSounds() {}
-        public DownloadableSounds(string filePath) : base(filePath) {}
-        public DownloadableSounds(SoundFont sf2) {
+
+        public DownloadableSounds() { }
+
+        public DownloadableSounds(string filePath)
+            : base(filePath) { }
+
+        public DownloadableSounds(SoundFont sf2)
+        {
             List<string> waveMd5s = new List<string>();
             Dictionary<int, string> newWaveIds = new Dictionary<int, string>();
             Dictionary<int, sbyte> tunings = new Dictionary<int, sbyte>();
             Dictionary<int, byte> origPitches = new Dictionary<int, byte>();
             Dictionary<int, uint> channelFlags = new Dictionary<int, uint>();
             Waves = new List<RiffWave>();
-            foreach (var i in sf2.Instruments) {
-                foreach (var z in i.GetAllZones()) {
-                    foreach (var g in z.Generators.Where(x => x.Gen == SF2Generators.SampleID)) {
+            foreach (var i in sf2.Instruments)
+            {
+                foreach (var z in i.GetAllZones())
+                {
+                    foreach (var g in z.Generators.Where(x => x.Gen == SF2Generators.SampleID))
+                    {
                         var s = sf2.Samples[g.Amount.UAmount];
                         RiffWave wav = new RiffWave();
                         wav.Loops = s.Wave.Loops;
                         wav.LoopStart = s.Wave.LoopStart;
                         wav.LoopEnd = s.Wave.LoopEnd;
                         wav.SampleRate = s.Wave.SampleRate;
-                        wav.Audio.Channels = new List<List<GotaSoundIO.Sound.Encoding.IAudioEncoding>>();
-                        switch (s.LinkType) {
+                        wav.Audio.Channels =
+                            new List<List<GotaSoundIO.Sound.Encoding.IAudioEncoding>>();
+                        switch (s.LinkType)
+                        {
                             case SF2LinkTypes.Left:
                                 wav.Audio.Channels.Add(s.Wave.Audio.Channels[0]);
-                                try {
-                                    wav.Audio.Channels.Add(sf2.Samples.Where(x => x.Link == s.Link && x.LinkType == SF2LinkTypes.Right).FirstOrDefault().Wave.Audio.Channels[0]);
-                                } catch { }
-                                if (!channelFlags.ContainsKey(g.Amount.UAmount)) {
+                                try
+                                {
+                                    wav.Audio.Channels.Add(
+                                        sf2
+                                            .Samples.Where(x =>
+                                                x.Link == s.Link && x.LinkType == SF2LinkTypes.Right
+                                            )
+                                            .FirstOrDefault()
+                                            .Wave.Audio.Channels[0]
+                                    );
+                                }
+                                catch { }
+                                if (!channelFlags.ContainsKey(g.Amount.UAmount))
+                                {
                                     channelFlags.Add(g.Amount.UAmount, 0b11);
                                 }
                                 break;
                             case SF2LinkTypes.Right:
-                                try {
-                                    wav.Audio.Channels.Add(sf2.Samples.Where(x => x.Link == s.Link && x.LinkType == SF2LinkTypes.Left).FirstOrDefault().Wave.Audio.Channels[0]);
-                                } catch { }
+                                try
+                                {
+                                    wav.Audio.Channels.Add(
+                                        sf2
+                                            .Samples.Where(x =>
+                                                x.Link == s.Link && x.LinkType == SF2LinkTypes.Left
+                                            )
+                                            .FirstOrDefault()
+                                            .Wave.Audio.Channels[0]
+                                    );
+                                }
+                                catch { }
                                 wav.Audio.Channels.Add(s.Wave.Audio.Channels[0]);
-                                if (!channelFlags.ContainsKey(g.Amount.UAmount)) {
+                                if (!channelFlags.ContainsKey(g.Amount.UAmount))
+                                {
                                     channelFlags.Add(g.Amount.UAmount, 0b11);
                                 }
                                 break;
                             case SF2LinkTypes.Mono:
                                 wav.Audio.Channels.Add(s.Wave.Audio.Channels[0]);
-                                if (!channelFlags.ContainsKey(g.Amount.UAmount)) {
+                                if (!channelFlags.ContainsKey(g.Amount.UAmount))
+                                {
                                     channelFlags.Add(g.Amount.UAmount, 0b1);
                                 }
                                 break;
                             case SF2LinkTypes.Linked:
-                                foreach (var w in sf2.Samples) {
-                                    if (w.LinkType == SF2LinkTypes.Linked && w.Link == s.Link) {
+                                foreach (var w in sf2.Samples)
+                                {
+                                    if (w.LinkType == SF2LinkTypes.Linked && w.Link == s.Link)
+                                    {
                                         wav.Audio.Channels.Add(w.Wave.Audio.Channels[0]);
-                                        if (!channelFlags.ContainsKey(g.Amount.UAmount)) {
+                                        if (!channelFlags.ContainsKey(g.Amount.UAmount))
+                                        {
                                             channelFlags.Add(g.Amount.UAmount, 0);
                                         }
                                         channelFlags[g.Amount.UAmount] <<= 1;
@@ -70,12 +107,20 @@ namespace GotaSoundBank.DLS {
                                 break;
                         }
                         string md5 = wav.Md5Sum;
-                        if (!newWaveIds.ContainsKey(g.Amount.UAmount)) {
+                        if (!newWaveIds.ContainsKey(g.Amount.UAmount))
+                        {
                             newWaveIds.Add(g.Amount.UAmount, md5);
-                            tunings.Add(g.Amount.UAmount, sf2.Samples[g.Amount.UAmount].PitchCorrection);
-                            origPitches.Add(g.Amount.UAmount, sf2.Samples[g.Amount.UAmount].OriginalPitch);
+                            tunings.Add(
+                                g.Amount.UAmount,
+                                sf2.Samples[g.Amount.UAmount].PitchCorrection
+                            );
+                            origPitches.Add(
+                                g.Amount.UAmount,
+                                sf2.Samples[g.Amount.UAmount].OriginalPitch
+                            );
                         }
-                        if (!waveMd5s.Contains(md5)) {
+                        if (!waveMd5s.Contains(md5))
+                        {
                             waveMd5s.Add(md5);
                             Waves.Add(wav);
                         }
@@ -84,15 +129,20 @@ namespace GotaSoundBank.DLS {
             }
             Instruments = new List<Instrument>();
             int instId = 0;
-            foreach (var inst in sf2.Instruments) {
+            foreach (var inst in sf2.Instruments)
+            {
                 Instrument i = new Instrument();
                 i.Name = inst.Name;
                 i.Regions = new List<Region>();
                 i.BankId = 0;
-                foreach (var p in sf2.Presets) {
-                    foreach (var z in p.GetAllZones()) {
-                        foreach (var g in z.Generators) {
-                            if (g.Gen == SF2Generators.Instrument && g.Amount.Amount == instId) {
+                foreach (var p in sf2.Presets)
+                {
+                    foreach (var z in p.GetAllZones())
+                    {
+                        foreach (var g in z.Generators)
+                        {
+                            if (g.Gen == SF2Generators.Instrument && g.Amount.Amount == instId)
+                            {
                                 i.BankId = p.Bank;
                                 i.InstrumentId = p.PresetNumber;
                             }
@@ -100,22 +150,28 @@ namespace GotaSoundBank.DLS {
                     }
                 }
                 instId++;
-                foreach (var z in inst.Zones) {
+                foreach (var z in inst.Zones)
+                {
                     var reg = GetInstrumentRegion(z, inst.GlobalZone);
-                    if (reg != null) {
+                    if (reg != null)
+                    {
                         i.Regions.Add(reg);
                     }
                 }
-                if (i.Regions.Count < 1) {
+                if (i.Regions.Count < 1)
+                {
                     var reg = GetInstrumentRegion(inst.GlobalZone, null);
-                    if (reg != null) {
+                    if (reg != null)
+                    {
                         i.Regions.Add(reg);
                     }
                 }
                 Instruments.Add(i);
             }
-            Region GetInstrumentRegion(Zone z, Zone g) {
-                if (z == null) {
+            Region GetInstrumentRegion(Zone z, Zone g)
+            {
+                if (z == null)
+                {
                     return null;
                 }
                 Region r = new Region();
@@ -131,9 +187,11 @@ namespace GotaSoundBank.DLS {
                 Articulator art = new Articulator();
                 art.Connections = new List<Connection>();
                 var c = art.Connections;
-                foreach (var gen in z.Generators) {
+                foreach (var gen in z.Generators)
+                {
                     DestinationConnection d = DestinationConnection.Center;
-                    switch (gen.Gen) {
+                    switch (gen.Gen)
+                    {
                         case SF2Generators.OverridingRootKey:
                             r.RootNote = (byte)(gen.Amount.Amount + tunings[sampleNumRaw] / 12);
                             continue;
@@ -165,7 +223,13 @@ namespace GotaSoundBank.DLS {
                             break;
                         case SF2Generators.SustainVolEnv:
                             d = DestinationConnection.EG1SustainLevel;
-                            c.Add(new Connection() { DestinationConnection = d, Scale = (int)((1 - (gen.Amount.Amount / 1000d)) * 1000 * 65536) });
+                            c.Add(
+                                new Connection()
+                                {
+                                    DestinationConnection = d,
+                                    Scale = (int)((1 - (gen.Amount.Amount / 1000d)) * 1000 * 65536),
+                                }
+                            );
                             continue;
                         case SF2Generators.Keynum:
                             d = DestinationConnection.KeyNumber;
@@ -182,28 +246,46 @@ namespace GotaSoundBank.DLS {
                         default:
                             continue;
                     }
-                    c.Add(new Connection() { DestinationConnection = d, Scale = gen.Amount.Amount * 65536 });
+                    c.Add(
+                        new Connection()
+                        {
+                            DestinationConnection = d,
+                            Scale = gen.Amount.Amount * 65536,
+                        }
+                    );
                 }
-                SF2GeneratorAmount SF2Value(SF2Generators gen) {
+                SF2GeneratorAmount SF2Value(SF2Generators gen)
+                {
                     var ret = new SF2GeneratorAmount();
-                    if (g != null) {
+                    if (g != null)
+                    {
                         var a = g.Generators.Where(x => x.Gen == gen).FirstOrDefault();
-                        if (a != null) { ret.Amount += a.Amount.Amount; }
+                        if (a != null)
+                        {
+                            ret.Amount += a.Amount.Amount;
+                        }
                     }
                     var b = z.Generators.Where(x => x.Gen == gen).FirstOrDefault();
-                    if (b != null) { ret.Amount = b.Amount.Amount; }
+                    if (b != null)
+                    {
+                        ret.Amount = b.Amount.Amount;
+                    }
                     return ret;
                 }
                 r.Articulators = new List<Articulator>() { art };
                 return r;
             }
         }
-        public override void Read(FileReader r2) {
-            using (RiffReader r = new RiffReader(r2.BaseStream)) {
+
+        public override void Read(FileReader r2)
+        {
+            using (RiffReader r = new RiffReader(r2.BaseStream))
+            {
                 r.OpenChunk(r.GetChunk("colh"));
                 uint numInsts = r.ReadUInt32();
                 Waves = new List<RiffWave>();
-                foreach (var c in (r.GetChunk("wvpl") as ListChunk).Chunks) {
+                foreach (var c in (r.GetChunk("wvpl") as ListChunk).Chunks)
+                {
                     r.OpenChunk(c);
                     r.BaseStream.Position -= 8;
                     int len = r.ReadInt32() + 8;
@@ -212,14 +294,16 @@ namespace GotaSoundBank.DLS {
                     wav.Read(r.ReadBytes(len));
                     Waves.Add(wav);
                 }
-                foreach (ListChunk c in (r.GetChunk("lins") as ListChunk).Chunks) {
+                foreach (ListChunk c in (r.GetChunk("lins") as ListChunk).Chunks)
+                {
                     r.OpenChunk(c);
                     Instrument inst = new Instrument();
                     r.OpenChunk(c.GetChunk("insh"));
                     r.ReadUInt32();
                     inst.BankId = r.ReadUInt32();
                     inst.InstrumentId = r.ReadUInt32();
-                    foreach (ListChunk g in (c.GetChunk("lrgn") as ListChunk).Chunks) {
+                    foreach (ListChunk g in (c.GetChunk("lrgn") as ListChunk).Chunks)
+                    {
                         Region reg = new Region();
                         r.OpenChunk(g.GetChunk("rgnh"));
                         reg.NoteLow = r.ReadUInt16();
@@ -238,7 +322,8 @@ namespace GotaSoundBank.DLS {
                         reg.NoTruncation = (flags & 0b1) > 0;
                         reg.NoCompression = (flags & 0b10) > 0;
                         reg.Loops = r.ReadUInt32() > 0;
-                        if (reg.Loops) {
+                        if (reg.Loops)
+                        {
                             r.ReadUInt32();
                             reg.LoopAndRelease = r.ReadUInt32() > 0;
                             reg.LoopStart = r.ReadUInt32();
@@ -252,20 +337,27 @@ namespace GotaSoundBank.DLS {
                         reg.ChannelFlags = r.ReadUInt32();
                         reg.WaveId = r.ReadUInt32();
                         Waves[(int)reg.WaveId].Loops = reg.Loops;
-                        if (reg.Loops) {
+                        if (reg.Loops)
+                        {
                             Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
-                            Waves[(int)reg.WaveId].LoopEnd = reg.LoopLength == 0 ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples : reg.LoopStart + reg.LoopLength;
+                            Waves[(int)reg.WaveId].LoopEnd =
+                                reg.LoopLength == 0
+                                    ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples
+                                    : reg.LoopStart + reg.LoopLength;
                         }
                         var lar = g.GetChunk("lar2");
-                        if (lar == null) {
+                        if (lar == null)
+                        {
                             lar = g.GetChunk("lar1");
                         }
-                        foreach (Chunk art in (g.GetChunk("lar2") as ListChunk).Chunks) {
+                        foreach (Chunk art in (g.GetChunk("lar2") as ListChunk).Chunks)
+                        {
                             Articulator a = new Articulator();
                             r.OpenChunk(art);
                             r.ReadUInt32();
                             uint numCons = r.ReadUInt32();
-                            for (uint i = 0; i < numCons; i++) {
+                            for (uint i = 0; i < numCons; i++)
+                            {
                                 Connection con = new Connection();
                                 con.SourceConnection = (SourceConnection)r.ReadUInt16();
                                 con.ControlConnection = r.ReadUInt16();
@@ -279,27 +371,35 @@ namespace GotaSoundBank.DLS {
                         inst.Regions.Add(reg);
                     }
                     var info = c.GetChunk("INFO");
-                    if (info != null) {
+                    if (info != null)
+                    {
                         var inam = (info as ListChunk).GetChunk("INAM");
-                        if (inam != null) {
+                        if (inam != null)
+                        {
                             r.OpenChunk(inam);
                             r.BaseStream.Position -= 4;
                             uint siz = r.ReadUInt32();
-                            inst.Name = new string(r.ReadChars((int)siz).Where(x => x != 0).ToArray());
+                            inst.Name = new string(
+                                r.ReadChars((int)siz).Where(x => x != 0).ToArray()
+                            );
                         }
                     }
                     Instruments.Add(inst);
                 }
             }
         }
-        public override void Write(FileWriter w2) {
-            using (RiffWriter w = new RiffWriter(w2.BaseStream)) {
+
+        public override void Write(FileWriter w2)
+        {
+            using (RiffWriter w = new RiffWriter(w2.BaseStream))
+            {
                 w.InitFile("DLS ");
                 w.StartChunk("colh");
                 w.Write((uint)Instruments.Count);
                 w.EndChunk();
                 w.StartListChunk("lins");
-                foreach (var inst in Instruments) {
+                foreach (var inst in Instruments)
+                {
                     w.StartListChunk("ins ");
                     w.StartChunk("insh");
                     w.Write((uint)inst.Regions.Count);
@@ -307,7 +407,8 @@ namespace GotaSoundBank.DLS {
                     w.Write(inst.InstrumentId);
                     w.EndChunk();
                     w.StartListChunk("lrgn");
-                    foreach (Region r in inst.Regions) {
+                    foreach (Region r in inst.Regions)
+                    {
                         w.StartListChunk("rgn2");
                         w.StartChunk("rgnh");
                         w.Write(r.NoteLow);
@@ -324,11 +425,18 @@ namespace GotaSoundBank.DLS {
                         w.Write(r.Tuning);
                         w.Write(r.Gain);
                         uint flags = 0;
-                        if (r.NoTruncation) { flags |= 0b1; }
-                        if (r.NoCompression) { flags |= 0b10; }
+                        if (r.NoTruncation)
+                        {
+                            flags |= 0b1;
+                        }
+                        if (r.NoCompression)
+                        {
+                            flags |= 0b10;
+                        }
                         w.Write(flags);
                         w.Write((uint)(r.Loops ? 1 : 0));
-                        if (r.Loops) {
+                        if (r.Loops)
+                        {
                             w.Write((uint)0x10);
                             w.Write((uint)(r.LoopAndRelease ? 1 : 0));
                             w.Write(r.LoopStart);
@@ -337,19 +445,27 @@ namespace GotaSoundBank.DLS {
                         w.EndChunk();
                         w.StartChunk("wlnk");
                         ushort flg = 0;
-                        if (r.PhaseMaster) { flg |= 0b1; }
-                        if (r.MultiChannel) { flg |= 0b10; }
+                        if (r.PhaseMaster)
+                        {
+                            flg |= 0b1;
+                        }
+                        if (r.MultiChannel)
+                        {
+                            flg |= 0b10;
+                        }
                         w.Write(flg);
                         w.Write(r.PhaseGroup);
                         w.Write(r.ChannelFlags);
                         w.Write(r.WaveId);
                         w.EndChunk();
                         w.StartListChunk("lar2");
-                        foreach (var a in r.Articulators) {
+                        foreach (var a in r.Articulators)
+                        {
                             w.StartChunk("art2");
                             w.Write((uint)8);
                             w.Write((uint)a.Connections.Count);
-                            foreach (var c in a.Connections) {
+                            foreach (var c in a.Connections)
+                            {
                                 w.Write((ushort)c.SourceConnection);
                                 w.Write(c.ControlConnection);
                                 w.Write((ushort)c.DestinationConnection);
@@ -362,13 +478,15 @@ namespace GotaSoundBank.DLS {
                         w.EndChunk();
                     }
                     w.EndChunk();
-                    if (inst.Name != "") {
+                    if (inst.Name != "")
+                    {
                         w.StartListChunk("INFO");
                         w.StartChunk("INAM");
                         w.Write(inst.Name.ToCharArray());
                         w.Write("\0".ToCharArray());
                         int len = inst.Name.Length + 1;
-                        while (len % 4 != 0) {
+                        while (len % 4 != 0)
+                        {
                             w.Write((byte)0);
                             len++;
                         }
@@ -387,7 +505,8 @@ namespace GotaSoundBank.DLS {
                 w.StartListChunk("wvpl");
                 long waveTableStart = w.BaseStream.Position;
                 int waveNum = 0;
-                foreach (var wav in Waves) {
+                foreach (var wav in Waves)
+                {
                     long wBak = w.BaseStream.Position;
                     w.BaseStream.Position = ptblStart + waveNum++ * 4;
                     w.Write((uint)(wBak - waveTableStart));
@@ -403,13 +522,21 @@ namespace GotaSoundBank.DLS {
                 w.CloseFile();
             }
         }
-        public void AssignLoops() {
-            foreach (var i in Instruments) {
-                foreach (var reg in i.Regions) {
-                    if (reg.Loops) {
+
+        public void AssignLoops()
+        {
+            foreach (var i in Instruments)
+            {
+                foreach (var reg in i.Regions)
+                {
+                    if (reg.Loops)
+                    {
                         Waves[(int)reg.WaveId].Loops = reg.Loops;
                         Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
-                        Waves[(int)reg.WaveId].LoopEnd = reg.LoopLength == 0 ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples : reg.LoopStart + reg.LoopLength;
+                        Waves[(int)reg.WaveId].LoopEnd =
+                            reg.LoopLength == 0
+                                ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples
+                                : reg.LoopStart + reg.LoopLength;
                     }
                 }
             }

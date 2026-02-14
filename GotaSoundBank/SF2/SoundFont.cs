@@ -1,53 +1,112 @@
-﻿using GotaSoundBank.DLS;
-using GotaSoundIO.IO;
-using GotaSoundIO.IO.RIFF;
-using GotaSoundIO.Sound;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSoundBank.SF2 {
-    public class SoundFont : IOFile {
+using GotaSoundBank.DLS;
+using GotaSoundIO.IO;
+using GotaSoundIO.IO.RIFF;
+using GotaSoundIO.Sound;
+
+namespace GotaSoundBank.SF2
+{
+    public class SoundFont : IOFile
+    {
         public List<Preset> Presets = new List<Preset>();
         public List<Instrument> Instruments = new List<Instrument>();
         public List<SampleItem> Samples = new List<SampleItem>();
         public string SoundEngine = "EMU8000";
         public string BankName = "General MIDI";
         public string RomName = "";
-        public Tuple<ushort, ushort> RomVersion = null;   
+        public Tuple<ushort, ushort> RomVersion = null;
         public string CreationDate = "";
         public string SoundDesigner = "";
         public string Product = "";
         public string Copyright = "";
         public string Comment = "";
         public string Tools = "";
-        public SoundFont() {}
-        public SoundFont(string filePath) : base(filePath) {}
-        public SoundFont(DownloadableSounds dls) {
+
+        public SoundFont() { }
+
+        public SoundFont(string filePath)
+            : base(filePath) { }
+
+        public SoundFont(DownloadableSounds dls)
+        {
             Dictionary<int, int> waveLink;
             dls.AssignLoops();
             CreateSampleTable(dls.Waves, out waveLink);
-            foreach (var i in dls.Instruments) {
+            foreach (var i in dls.Instruments)
+            {
                 Instrument inst = new Instrument();
                 inst.Name = i.Name;
-                foreach (var r in i.Regions) {
+                foreach (var r in i.Regions)
+                {
                     Zone z = new Zone();
-                    if (r.NoteHigh != 127 || r.NoteLow != 0) {
-                        z.Generators.Add(new Generator() { Gen = SF2Generators.KeyRange, Amount = new SF2GeneratorAmount() { LowByte = (byte)r.NoteLow, HighByte = (byte)r.NoteHigh } });
+                    if (r.NoteHigh != 127 || r.NoteLow != 0)
+                    {
+                        z.Generators.Add(
+                            new Generator()
+                            {
+                                Gen = SF2Generators.KeyRange,
+                                Amount = new SF2GeneratorAmount()
+                                {
+                                    LowByte = (byte)r.NoteLow,
+                                    HighByte = (byte)r.NoteHigh,
+                                },
+                            }
+                        );
                     }
-                    if (r.VelocityHigh != 127 || r.VelocityLow != 0) {
-                        z.Generators.Add(new Generator() { Gen = SF2Generators.VelRange, Amount = new SF2GeneratorAmount() { LowByte = (byte)r.VelocityLow, HighByte = (byte)r.VelocityHigh } });
+                    if (r.VelocityHigh != 127 || r.VelocityLow != 0)
+                    {
+                        z.Generators.Add(
+                            new Generator()
+                            {
+                                Gen = SF2Generators.VelRange,
+                                Amount = new SF2GeneratorAmount()
+                                {
+                                    LowByte = (byte)r.VelocityLow,
+                                    HighByte = (byte)r.VelocityHigh,
+                                },
+                            }
+                        );
                     }
-                    z.Generators.Add(new Generator() { Gen = SF2Generators.OverridingRootKey, Amount = new SF2GeneratorAmount() { UAmount = r.RootNote } });
+                    z.Generators.Add(
+                        new Generator()
+                        {
+                            Gen = SF2Generators.OverridingRootKey,
+                            Amount = new SF2GeneratorAmount() { UAmount = r.RootNote },
+                        }
+                    );
                     Samples[waveLink[(int)r.WaveId]].PitchCorrection = (sbyte)(r.Tuning / 65536);
-                    z.Generators.Add(new Generator() { Gen = SF2Generators.SampleID, Amount = new SF2GeneratorAmount() { UAmount = (ushort)waveLink[(int)r.WaveId] } });
-                    if (dls.Waves[(int)r.WaveId].Loops) { z.Generators.Add(new Generator() { Gen = SF2Generators.SampleModes, Amount = new SF2GeneratorAmount() { Amount = 1 } }); }
-                    foreach (var a in r.Articulators) {
-                        foreach (var c in a.Connections) {
+                    z.Generators.Add(
+                        new Generator()
+                        {
+                            Gen = SF2Generators.SampleID,
+                            Amount = new SF2GeneratorAmount()
+                            {
+                                UAmount = (ushort)waveLink[(int)r.WaveId],
+                            },
+                        }
+                    );
+                    if (dls.Waves[(int)r.WaveId].Loops)
+                    {
+                        z.Generators.Add(
+                            new Generator()
+                            {
+                                Gen = SF2Generators.SampleModes,
+                                Amount = new SF2GeneratorAmount() { Amount = 1 },
+                            }
+                        );
+                    }
+                    foreach (var a in r.Articulators)
+                    {
+                        foreach (var c in a.Connections)
+                        {
                             SF2Generators gen = (SF2Generators)100;
                             SF2GeneratorAmount amount = new SF2GeneratorAmount();
-                            switch (c.DestinationConnection) {
+                            switch (c.DestinationConnection)
+                            {
                                 case DestinationConnection.Chorus:
                                     gen = SF2Generators.ChorusEffectsSend;
                                     amount.Amount = (short)(c.Scale / 65536);
@@ -93,11 +152,11 @@ namespace GotaSoundBank.SF2 {
                                     amount.Amount = (short)(c.Scale / 65536);
                                     break;
                             }
-                            if ((int)gen != 100) {
+                            if ((int)gen != 100)
+                            {
                                 z.Generators.Add(new Generator() { Gen = gen, Amount = amount });
                             }
-                            if (c.TransformConnection != TransformConnection.None) { 
-                            }
+                            if (c.TransformConnection != TransformConnection.None) { }
                         }
                     }
                     inst.Zones.Add(z);
@@ -105,46 +164,79 @@ namespace GotaSoundBank.SF2 {
                 Instruments.Add(inst);
             }
             ushort instNum = 0;
-            foreach (var i in dls.Instruments) {
-                Presets.Add(new Preset() { Bank = (ushort)i.BankId, Name = i.Name, PresetNumber = (ushort)i.InstrumentId, Zones = new List<Zone>() { new Zone() { Generators = new List<Generator>() { new Generator() { Gen = SF2Generators.Instrument, Amount = new SF2GeneratorAmount() { UAmount = instNum++ } } } } } });
+            foreach (var i in dls.Instruments)
+            {
+                Presets.Add(
+                    new Preset()
+                    {
+                        Bank = (ushort)i.BankId,
+                        Name = i.Name,
+                        PresetNumber = (ushort)i.InstrumentId,
+                        Zones = new List<Zone>()
+                        {
+                            new Zone()
+                            {
+                                Generators = new List<Generator>()
+                                {
+                                    new Generator()
+                                    {
+                                        Gen = SF2Generators.Instrument,
+                                        Amount = new SF2GeneratorAmount() { UAmount = instNum++ },
+                                    },
+                                },
+                            },
+                        },
+                    }
+                );
             }
         }
-        public override void Read(FileReader r2) {
-            using (RiffReader r = new RiffReader(r2.BaseStream)) {
+
+        public override void Read(FileReader r2)
+        {
+            using (RiffReader r = new RiffReader(r2.BaseStream))
+            {
                 var info = (ListChunk)r.GetChunk("INFO");
                 r.OpenChunk(info.GetChunk("isng"));
                 SoundEngine = r.ReadNullTerminated();
                 r.OpenChunk(info.GetChunk("INAM"));
                 BankName = r.ReadNullTerminated();
-                if (info.GetChunk("irom") != null) {
+                if (info.GetChunk("irom") != null)
+                {
                     r.OpenChunk(info.GetChunk("irom"));
                     RomName = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("iver") != null) {
+                if (info.GetChunk("iver") != null)
+                {
                     r.OpenChunk(info.GetChunk("iver"));
                     RomVersion = new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16());
                 }
-                if (info.GetChunk("ICRD") != null) {
+                if (info.GetChunk("ICRD") != null)
+                {
                     r.OpenChunk(info.GetChunk("ICRD"));
                     CreationDate = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("IENG") != null) {
+                if (info.GetChunk("IENG") != null)
+                {
                     r.OpenChunk(info.GetChunk("IENG"));
                     SoundDesigner = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("IPRD") != null) {
+                if (info.GetChunk("IPRD") != null)
+                {
                     r.OpenChunk(info.GetChunk("IPRD"));
                     Product = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("ICOP") != null) {
+                if (info.GetChunk("ICOP") != null)
+                {
                     r.OpenChunk(info.GetChunk("ICOP"));
                     Copyright = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("ICMT") != null) {
+                if (info.GetChunk("ICMT") != null)
+                {
                     r.OpenChunk(info.GetChunk("ICMT"));
                     Comment = r.ReadNullTerminated();
                 }
-                if (info.GetChunk("ISFT") != null) {
+                if (info.GetChunk("ISFT") != null)
+                {
                     r.OpenChunk(info.GetChunk("ISFT"));
                     Tools = r.ReadNullTerminated();
                 }
@@ -155,111 +247,154 @@ namespace GotaSoundBank.SF2 {
                 var hydra = (ListChunk)r.GetChunk("pdta");
                 r.OpenChunk(hydra.GetChunk("phdr"));
                 uint numPresets = hydra.GetChunk("phdr").Size / 38 - 1;
-                for (uint i = 0; i < numPresets; i++) {
+                for (uint i = 0; i < numPresets; i++)
+                {
                     Presets.Add(r.Read<Preset>());
                 }
                 List<Tuple<ushort, ushort>> presetGenModIndices = new List<Tuple<ushort, ushort>>();
                 List<Zone> presetZones = new List<Zone>();
                 r.OpenChunk(hydra.GetChunk("pbag"));
                 uint numPbags = hydra.GetChunk("pbag").Size / 4 - 1;
-                for (uint i = 0; i < numPbags; i++) {
-                    presetGenModIndices.Add(new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16()));
+                for (uint i = 0; i < numPbags; i++)
+                {
+                    presetGenModIndices.Add(
+                        new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
+                    );
                     presetZones.Add(new Zone());
                 }
                 List<Modulator> pMods = new List<Modulator>();
                 r.OpenChunk(hydra.GetChunk("pmod"));
                 uint numPmods = hydra.GetChunk("pmod").Size / 10 - 1;
-                for (uint i = 0; i < numPmods; i++) {
+                for (uint i = 0; i < numPmods; i++)
+                {
                     pMods.Add(r.Read<Modulator>());
                 }
                 List<Generator> pGens = new List<Generator>();
                 r.OpenChunk(hydra.GetChunk("pgen"));
                 uint numPgens = hydra.GetChunk("pgen").Size / 4 - 1;
-                for (uint i = 0; i < numPgens; i++) {
+                for (uint i = 0; i < numPgens; i++)
+                {
                     pGens.Add(r.Read<Generator>());
                 }
-                for (int i = 0; i < presetGenModIndices.Count; i++) {
+                for (int i = 0; i < presetGenModIndices.Count; i++)
+                {
                     int startGen = presetGenModIndices[i].Item1;
                     int startMod = presetGenModIndices[i].Item2;
                     int numGen = pGens.Count - startGen;
                     int numMod = pMods.Count - startMod;
-                    if (i + 1 <= presetGenModIndices.Count - 1) {
+                    if (i + 1 <= presetGenModIndices.Count - 1)
+                    {
                         numGen = presetGenModIndices[i + 1].Item1 - startGen;
                         numMod = presetGenModIndices[i + 1].Item2 - startMod;
                     }
-                    for (int j = startGen; j < startGen + numGen; j++) {
+                    for (int j = startGen; j < startGen + numGen; j++)
+                    {
                         presetZones[i].Generators.Add(pGens[j]);
                     }
-                    for (int j = startMod; j < startMod + numMod; j++) {
+                    for (int j = startMod; j < startMod + numMod; j++)
+                    {
                         presetZones[i].Modulators.Add(pMods[j]);
                     }
                 }
-                for (int i = 0; i < Presets.Count; i++) {
+                for (int i = 0; i < Presets.Count; i++)
+                {
                     int startZone = Presets[i].ReadingBagIndex;
                     int numZones = presetGenModIndices.Count - startZone;
-                    if (i + 1 <= Presets.Count - 1) {
+                    if (i + 1 <= Presets.Count - 1)
+                    {
                         numZones = Presets[i + 1].ReadingBagIndex - startZone;
                     }
-                    for (int j = startZone; j < startZone + numZones; j++) {
-                        if (Presets[i].Zones.Count == 0 && presetZones[j].Generators.Where(x => x.Gen == SF2Generators.Instrument).Where(x => x.Gen == SF2Generators.Instrument).Count() < 1) {
+                    for (int j = startZone; j < startZone + numZones; j++)
+                    {
+                        if (
+                            Presets[i].Zones.Count == 0
+                            && presetZones[j]
+                                .Generators.Where(x => x.Gen == SF2Generators.Instrument)
+                                .Where(x => x.Gen == SF2Generators.Instrument)
+                                .Count() < 1
+                        )
+                        {
                             Presets[i].GlobalZone = presetZones[j];
-                        } else {
+                        }
+                        else
+                        {
                             Presets[i].Zones.Add(presetZones[j]);
                         }
                     }
                 }
                 r.OpenChunk(hydra.GetChunk("inst"));
                 uint numInstruments = hydra.GetChunk("inst").Size / 22 - 1;
-                for (uint i = 0; i < numInstruments; i++) {
+                for (uint i = 0; i < numInstruments; i++)
+                {
                     Instruments.Add(r.Read<Instrument>());
                 }
-                List<Tuple<ushort, ushort>> instrumentGenModIndices = new List<Tuple<ushort, ushort>>();
+                List<Tuple<ushort, ushort>> instrumentGenModIndices =
+                    new List<Tuple<ushort, ushort>>();
                 List<Zone> instrumentZones = new List<Zone>();
                 r.OpenChunk(hydra.GetChunk("ibag"));
                 uint numIbags = hydra.GetChunk("ibag").Size / 4 - 1;
-                for (uint i = 0; i < numIbags; i++) {
-                    instrumentGenModIndices.Add(new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16()));
+                for (uint i = 0; i < numIbags; i++)
+                {
+                    instrumentGenModIndices.Add(
+                        new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
+                    );
                     instrumentZones.Add(new Zone());
                 }
                 List<Modulator> iMods = new List<Modulator>();
                 r.OpenChunk(hydra.GetChunk("imod"));
                 uint numImods = hydra.GetChunk("imod").Size / 10 - 1;
-                for (uint i = 0; i < numImods; i++) {
+                for (uint i = 0; i < numImods; i++)
+                {
                     iMods.Add(r.Read<Modulator>());
                 }
                 List<Generator> iGens = new List<Generator>();
                 r.OpenChunk(hydra.GetChunk("igen"));
                 uint numIgens = hydra.GetChunk("igen").Size / 4 - 1;
-                for (uint i = 0; i < numIgens; i++) {
+                for (uint i = 0; i < numIgens; i++)
+                {
                     iGens.Add(r.Read<Generator>());
                 }
-                for (int i = 0; i < instrumentGenModIndices.Count; i++) {
+                for (int i = 0; i < instrumentGenModIndices.Count; i++)
+                {
                     int startGen = instrumentGenModIndices[i].Item1;
                     int startMod = instrumentGenModIndices[i].Item2;
                     int numGen = iGens.Count - startGen;
                     int numMod = iMods.Count - startMod;
-                    if (i + 1 <= instrumentGenModIndices.Count - 1) {
+                    if (i + 1 <= instrumentGenModIndices.Count - 1)
+                    {
                         numGen = instrumentGenModIndices[i + 1].Item1 - startGen;
                         numMod = instrumentGenModIndices[i + 1].Item2 - startMod;
                     }
-                    for (int j = startGen; j < startGen + numGen; j++) {
+                    for (int j = startGen; j < startGen + numGen; j++)
+                    {
                         instrumentZones[i].Generators.Add(iGens[j]);
                     }
-                    for (int j = startMod; j < startMod + numMod; j++) {
+                    for (int j = startMod; j < startMod + numMod; j++)
+                    {
                         instrumentZones[i].Modulators.Add(iMods[j]);
                     }
                 }
-                for (int i = 0; i < Instruments.Count; i++) {
+                for (int i = 0; i < Instruments.Count; i++)
+                {
                     int startZone = Instruments[i].ReadingBagIndex;
                     int numZones = instrumentGenModIndices.Count - startZone;
-                    if (i + 1 <= Instruments.Count - 1) {
+                    if (i + 1 <= Instruments.Count - 1)
+                    {
                         numZones = Instruments[i + 1].ReadingBagIndex - startZone;
                     }
-                    for (int j = startZone; j < startZone + numZones; j++) {
-                        if (Instruments[i].Zones.Count == 0 && instrumentZones[j].Generators.Where(x => x.Gen == SF2Generators.SampleID).Count() < 1) {
+                    for (int j = startZone; j < startZone + numZones; j++)
+                    {
+                        if (
+                            Instruments[i].Zones.Count == 0
+                            && instrumentZones[j]
+                                .Generators.Where(x => x.Gen == SF2Generators.SampleID)
+                                .Count() < 1
+                        )
+                        {
                             Instruments[i].GlobalZone = instrumentZones[j];
                         }
-                        else {
+                        else
+                        {
                             Instruments[i].Zones.Add(instrumentZones[j]);
                         }
                     }
@@ -267,13 +402,17 @@ namespace GotaSoundBank.SF2 {
                 r.OpenChunk(hydra.GetChunk("shdr"));
                 uint numSamples = hydra.GetChunk("shdr").Size / 46 - 1;
                 r.CurrentOffset = waveTablePos;
-                for (uint i = 0; i < numSamples; i++) {
+                for (uint i = 0; i < numSamples; i++)
+                {
                     Samples.Add(r.Read<SampleItem>());
                 }
             }
         }
-        public override void Write(FileWriter w2) {
-            using (RiffWriter w = new RiffWriter(w2.BaseStream)) {
+
+        public override void Write(FileWriter w2)
+        {
+            using (RiffWriter w = new RiffWriter(w2.BaseStream))
+            {
                 w.InitFile("sfbk");
                 w.StartListChunk("INFO");
                 w.StartChunk("ifil");
@@ -288,49 +427,57 @@ namespace GotaSoundBank.SF2 {
                 w.WriteNullTerminated(BankName);
                 w.Align(2);
                 w.EndChunk();
-                if (!RomName.Equals("")) {
+                if (!RomName.Equals(""))
+                {
                     w.StartChunk("irom");
                     w.WriteNullTerminated(RomName);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (RomVersion != null) {
+                if (RomVersion != null)
+                {
                     w.StartChunk("iver");
                     w.Write(RomVersion.Item1);
                     w.Write(RomVersion.Item2);
                     w.EndChunk();
                 }
-                if (!CreationDate.Equals("")) {
+                if (!CreationDate.Equals(""))
+                {
                     w.StartChunk("ICRD");
                     w.WriteNullTerminated(CreationDate);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (!SoundDesigner.Equals("")) {
+                if (!SoundDesigner.Equals(""))
+                {
                     w.StartChunk("IENG");
                     w.WriteNullTerminated(SoundDesigner);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (!Product.Equals("")) {
+                if (!Product.Equals(""))
+                {
                     w.StartChunk("IPRD");
                     w.WriteNullTerminated(Product);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (!Copyright.Equals("")) {
+                if (!Copyright.Equals(""))
+                {
                     w.StartChunk("ICOP");
                     w.WriteNullTerminated(Copyright);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (!Comment.Equals("")) {
+                if (!Comment.Equals(""))
+                {
                     w.StartChunk("ICMT");
                     w.WriteNullTerminated(Comment);
                     w.Align(2);
                     w.EndChunk();
                 }
-                if (!Tools.Equals("")) {
+                if (!Tools.Equals(""))
+                {
                     w.StartChunk("ISFT");
                     w.WriteNullTerminated(Tools);
                     w.Align(2);
@@ -341,7 +488,8 @@ namespace GotaSoundBank.SF2 {
                 w.StartChunk("smpl");
                 long waveTableStart = w.Position;
                 Dictionary<SampleItem, long> samplePositions = new Dictionary<SampleItem, long>();
-                foreach (var s in Samples) {
+                foreach (var s in Samples)
+                {
                     samplePositions.Add(s, w.Position);
                     w.Write(new short[s.Wave.Audio.NumSamples]);
                     w.Write(new short[46]);
@@ -352,18 +500,28 @@ namespace GotaSoundBank.SF2 {
                 w.StartChunk("phdr");
                 ushort currBagIndex = 0;
                 List<Zone> zones = new List<Zone>();
-                foreach (var p in Presets) {
+                foreach (var p in Presets)
+                {
                     p.ReadingBagIndex = currBagIndex;
                     currBagIndex += (ushort)p.NumZones;
                     w.Write(p);
                     zones.AddRange(p.GetAllZones());
                 }
-                w.Write(new Preset() { Name = "EOP", Bank = 255, PresetNumber = 255, ReadingBagIndex = currBagIndex });
+                w.Write(
+                    new Preset()
+                    {
+                        Name = "EOP",
+                        Bank = 255,
+                        PresetNumber = 255,
+                        ReadingBagIndex = currBagIndex,
+                    }
+                );
                 w.EndChunk();
                 w.StartChunk("pbag");
                 ushort currGenIndex = 0;
                 ushort currModIndex = 0;
-                foreach (var z in zones) {
+                foreach (var z in zones)
+                {
                     w.Write(currGenIndex);
                     w.Write(currModIndex);
                     currGenIndex += (ushort)z.Generators.Count;
@@ -373,16 +531,20 @@ namespace GotaSoundBank.SF2 {
                 w.Write(currModIndex);
                 w.EndChunk();
                 w.StartChunk("pmod");
-                foreach (var z in zones) {
-                    foreach (var v in z.Modulators) {
+                foreach (var z in zones)
+                {
+                    foreach (var v in z.Modulators)
+                    {
                         w.Write(v);
                     }
                 }
                 w.Write(new Modulator());
                 w.EndChunk();
                 w.StartChunk("pgen");
-                foreach (var z in zones) {
-                    foreach (var v in z.Generators) {
+                foreach (var z in zones)
+                {
+                    foreach (var v in z.Generators)
+                    {
                         w.Write(v);
                     }
                 }
@@ -391,7 +553,8 @@ namespace GotaSoundBank.SF2 {
                 w.StartChunk("inst");
                 currBagIndex = 0;
                 zones = new List<Zone>();
-                foreach (var p in Instruments) {
+                foreach (var p in Instruments)
+                {
                     p.ReadingBagIndex = currBagIndex;
                     currBagIndex += (ushort)p.NumZones;
                     w.Write(p);
@@ -402,7 +565,8 @@ namespace GotaSoundBank.SF2 {
                 w.StartChunk("ibag");
                 currGenIndex = 0;
                 currModIndex = 0;
-                foreach (var z in zones) {
+                foreach (var z in zones)
+                {
                     w.Write(currGenIndex);
                     w.Write(currModIndex);
                     currGenIndex += (ushort)z.Generators.Count;
@@ -412,23 +576,28 @@ namespace GotaSoundBank.SF2 {
                 w.Write(currModIndex);
                 w.EndChunk();
                 w.StartChunk("imod");
-                foreach (var z in zones) {
-                    foreach (var v in z.Modulators) {
+                foreach (var z in zones)
+                {
+                    foreach (var v in z.Modulators)
+                    {
                         w.Write(v);
                     }
                 }
                 w.Write(new Modulator());
                 w.EndChunk();
                 w.StartChunk("igen");
-                foreach (var z in zones) {
-                    foreach (var v in z.Generators) {
+                foreach (var z in zones)
+                {
+                    foreach (var v in z.Generators)
+                    {
                         w.Write(v);
                     }
                 }
                 w.Write(new Generator());
                 w.EndChunk();
                 w.StartChunk("shdr");
-                foreach (var s in Samples) {
+                foreach (var s in Samples)
+                {
                     w.CurrentOffset = samplePositions[s];
                     w.StructureOffsets.Push(waveTableStart);
                     w.Write(s);
@@ -440,20 +609,33 @@ namespace GotaSoundBank.SF2 {
                 w.CloseFile();
             }
         }
-        public void CreateSampleTable(List<RiffWave> waves, out Dictionary<int, int> newIndices) {
+
+        public void CreateSampleTable(List<RiffWave> waves, out Dictionary<int, int> newIndices)
+        {
             newIndices = new Dictionary<int, int>();
             int currInd = 0;
             ushort link = 1;
-            foreach (var w in waves) {
-                if (w.LoopEnd != 0) {
+            foreach (var w in waves)
+            {
+                if (w.LoopEnd != 0)
+                {
                     w.Loops = true;
                 }
             }
             Samples = new List<SampleItem>();
-            for (int i = 0; i < waves.Count; i++) {
-                switch (waves[i].Audio.Channels.Count()) {
+            for (int i = 0; i < waves.Count; i++)
+            {
+                switch (waves[i].Audio.Channels.Count())
+                {
                     case 1:
-                        Samples.Add(new SampleItem() { LinkType = SF2LinkTypes.Mono, Name = "Sample " + i, Wave = waves[i] });
+                        Samples.Add(
+                            new SampleItem()
+                            {
+                                LinkType = SF2LinkTypes.Mono,
+                                Name = "Sample " + i,
+                                Wave = waves[i],
+                            }
+                        );
                         break;
                     case 2:
                         RiffWave left = new RiffWave();
@@ -462,16 +644,46 @@ namespace GotaSoundBank.SF2 {
                         right.FromOtherStreamFile(waves[i]);
                         left.Audio.Channels.RemoveAt(1);
                         right.Audio.Channels.RemoveAt(0);
-                        Samples.Add(new SampleItem() { LinkType = SF2LinkTypes.Left, Name = "Sample " + i + " L", Link = link, Wave = left });
-                        Samples.Add(new SampleItem() { LinkType = SF2LinkTypes.Right, Name = "Sample " + i + " R", Link = link++, Wave = right });
+                        Samples.Add(
+                            new SampleItem()
+                            {
+                                LinkType = SF2LinkTypes.Left,
+                                Name = "Sample " + i + " L",
+                                Link = link,
+                                Wave = left,
+                            }
+                        );
+                        Samples.Add(
+                            new SampleItem()
+                            {
+                                LinkType = SF2LinkTypes.Right,
+                                Name = "Sample " + i + " R",
+                                Link = link++,
+                                Wave = right,
+                            }
+                        );
                         break;
                     default:
                         int chanNum = 0;
-                        foreach (var w in waves) {
+                        foreach (var w in waves)
+                        {
                             RiffWave lnk = new RiffWave();
                             lnk.FromOtherStreamFile(w);
-                            lnk.Audio.Channels = new List<List<GotaSoundIO.Sound.Encoding.IAudioEncoding>>() { lnk.Audio.Channels[chanNum++] };
-                            Samples.Add(new SampleItem() { LinkType = SF2LinkTypes.Left, Name = "Sample " + i + " Link " + chanNum, Link = link, Wave = lnk });
+                            lnk.Audio.Channels = new List<
+                                List<GotaSoundIO.Sound.Encoding.IAudioEncoding>
+                            >()
+                            {
+                                lnk.Audio.Channels[chanNum++],
+                            };
+                            Samples.Add(
+                                new SampleItem()
+                                {
+                                    LinkType = SF2LinkTypes.Left,
+                                    Name = "Sample " + i + " Link " + chanNum,
+                                    Link = link,
+                                    Wave = lnk,
+                                }
+                            );
                         }
                         link++;
                         break;

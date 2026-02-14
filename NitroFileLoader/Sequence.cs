@@ -1,13 +1,17 @@
-﻿using GotaSequenceLib;
-using GotaSoundIO.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace NitroFileLoader {
-    public class Sequence : SequenceFile {
-        public override void Read(FileReader r) {
+using GotaSequenceLib;
+using GotaSoundIO.IO;
+
+namespace NitroFileLoader
+{
+    public class Sequence : SequenceFile
+    {
+        public override void Read(FileReader r)
+        {
             FileHeader header;
             r.OpenFile<NHeader>(out header);
             uint dataSize;
@@ -16,16 +20,22 @@ namespace NitroFileLoader {
             dataSize = (uint)(header.FileSize - off);
             r.Jump(off, true);
             var data = r.ReadBytes((int)dataSize).ToList();
-            for (int i = data.Count - 1; i >= 0; i--) {
-                if (data[i] == 0) {
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                if (data[i] == 0)
+                {
                     data.RemoveAt(i);
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
             RawData = data.ToArray();
         }
-        public override void Write(FileWriter w) {
+
+        public override void Write(FileWriter w)
+        {
             w.InitFile<NHeader>("SSEQ", ByteOrder.LittleEndian, null, 1);
             w.InitBlock("DATA");
             w.Write((uint)0x1C);
@@ -34,7 +44,9 @@ namespace NitroFileLoader {
             w.CloseBlock();
             w.CloseFile();
         }
-        public new string[] ToText() {
+
+        public new string[] ToText()
+        {
             List<string> l = new List<string>();
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add(";");
@@ -43,34 +55,53 @@ namespace NitroFileLoader {
             l.Add(";");
             l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
             l.Add("");
-            for (int i = 0; i < Commands.Count - 1; i++) {
+            for (int i = 0; i < Commands.Count - 1; i++)
+            {
                 bool labelAdded = false;
                 var labels = PublicLabels.Where(x => x.Value == i).Select(x => x.Key);
                 bool label0Added = false;
-                foreach (var label in labels) {
-                    if (i != 0 && !labelAdded && Commands[i - 1].CommandType == SequenceCommands.Fin) {
+                foreach (var label in labels)
+                {
+                    if (
+                        i != 0
+                        && !labelAdded
+                        && Commands[i - 1].CommandType == SequenceCommands.Fin
+                    )
+                    {
                         l.Add(" ");
                     }
-                    if (i == 0) {
+                    if (i == 0)
+                    {
                         label0Added = true;
                     }
                     l.Add(label + ":");
                     labelAdded = true;
                 }
-                if (OtherLabels.Contains(i)) {
-                    if (i != 0 && !labelAdded && Commands[i - 1].CommandType == SequenceCommands.Fin) {
+                if (OtherLabels.Contains(i))
+                {
+                    if (
+                        i != 0
+                        && !labelAdded
+                        && Commands[i - 1].CommandType == SequenceCommands.Fin
+                    )
+                    {
                         l.Add(" ");
                     }
-                    if (i != 0) { l.Add("_command_" + i + ":"); }
+                    if (i != 0)
+                    {
+                        l.Add("_command_" + i + ":");
+                    }
                     labelAdded = true;
                 }
-                if (i == 0 && !label0Added) {
+                if (i == 0 && !label0Added)
+                {
                     l.Add("Sequence_Start:");
                 }
                 l.Add("\t" + Commands[i].ToString());
             }
             return l.ToArray();
         }
+
         public override SequencePlatform Platform() => new Nitro();
     }
 }

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSoundIO.IO {
-    public interface IReadable {
+
+namespace GotaSoundIO.IO
+{
+    public interface IReadable
+    {
         void Read(FileReader r);
     }
 }

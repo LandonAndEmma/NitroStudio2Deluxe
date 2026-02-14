@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSoundBank.DLS {
-    public class Region {
+
+namespace GotaSoundBank.DLS
+{
+    public class Region
+    {
         public ushort NoteLow = 0;
         public ushort NoteHigh = 127;
         public ushort VelocityLow = 0;

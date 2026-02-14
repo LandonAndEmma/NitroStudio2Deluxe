@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSequenceLib.Playback {
-    public class Track {
+
+namespace GotaSequenceLib.Playback
+{
+    public class Track
+    {
         public readonly byte Index;
         private readonly Player _player;
         public bool Allocated;
@@ -13,7 +16,7 @@ namespace GotaSequenceLib.Playback {
         public bool Tie;
         public bool Mono;
         public bool Portamento;
-        public bool WaitingForNoteToFinishBeforeContinuingXD; 
+        public bool WaitingForNoteToFinishBeforeContinuingXD;
         public int Voice;
         public byte Priority;
         public byte Volume;
@@ -47,32 +50,59 @@ namespace GotaSequenceLib.Playback {
         public bool NoteDown;
         public short[] Vars = new short[0x10];
         public readonly List<Channel> Channels = new List<Channel>(0x10);
-        public int GetPitch() {
-            int lfo = LFOType == LFOType.Pitch ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
+
+        public int GetPitch()
+        {
+            int lfo =
+                LFOType == LFOType.Pitch ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
             lfo = (int)(((long)lfo * 60) >> 14);
             return (PitchBend * PitchBendRange / 2) + lfo;
         }
-        public int GetVolume() {
-            int lfo = LFOType == LFOType.Volume ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
-            lfo = (int)(((uint)(lfo & ~0xFC000000) >> 8) | ((uint)((lfo < 0 ? -1 : 0) << 6)) | (((uint)lfo >> 26) << 18));
-            return Utils.SustainTable[Math.Min((byte)127, _player.Volume)] + Utils.SustainTable[Math.Min((byte)127, Volume)] + Utils.SustainTable[Expression] + lfo;
+
+        public int GetVolume()
+        {
+            int lfo =
+                LFOType == LFOType.Volume ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
+            lfo = (int)(
+                ((uint)(lfo & ~0xFC000000) >> 8)
+                | ((uint)((lfo < 0 ? -1 : 0) << 6))
+                | (((uint)lfo >> 26) << 18)
+            );
+            return Utils.SustainTable[Math.Min((byte)127, _player.Volume)]
+                + Utils.SustainTable[Math.Min((byte)127, Volume)]
+                + Utils.SustainTable[Expression]
+                + lfo;
         }
-        public sbyte GetPan() {
-            int lfo = LFOType == LFOType.Panpot ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
-            lfo = (int)(((uint)(lfo & ~0xFC000000) >> 8) | ((uint)((lfo < 0 ? -1 : 0) << 6)) | (((uint)lfo >> 26) << 18));
+
+        public sbyte GetPan()
+        {
+            int lfo =
+                LFOType == LFOType.Panpot ? (LFORange * Utils.Sin(LFOPhase >> 8) * LFODepth) : 0;
+            lfo = (int)(
+                ((uint)(lfo & ~0xFC000000) >> 8)
+                | ((uint)((lfo < 0 ? -1 : 0) << 6))
+                | (((uint)lfo >> 26) << 18)
+            );
             int p = Panpot + lfo;
-            if (p < -0x40) {
+            if (p < -0x40)
+            {
                 p = -0x40;
-            } else if (p > 0x3F) {
+            }
+            else if (p > 0x3F)
+            {
                 p = 0x3F;
             }
             return (sbyte)p;
         }
-        public Track(byte i, Player player) {
+
+        public Track(byte i, Player player)
+        {
             Index = i;
             _player = player;
         }
-        public void Init() {
+
+        public void Init()
+        {
             Stopped = Tie = WaitingForNoteToFinishBeforeContinuingXD = Portamento = false;
             Allocated = Enabled = Index == 0;
             CurEvent = 0;
@@ -95,48 +125,66 @@ namespace GotaSequenceLib.Playback {
             Vars = new short[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
             StopAllChannels();
         }
-        public void Tick() {
-            if (Rest > 0) {
+
+        public void Tick()
+        {
+            if (Rest > 0)
+            {
                 Rest--;
             }
-            if (Channels.Count != 0) {
-                for (int i = 0; i < Channels.Count; i++) {
+            if (Channels.Count != 0)
+            {
+                for (int i = 0; i < Channels.Count; i++)
+                {
                     Channel c = Channels[i];
-                    if (c.NoteDuration > 0) {
+                    if (c.NoteDuration > 0)
+                    {
                         c.NoteDuration--;
                     }
-                    if (!c.AutoSweep && c.SweepCounter < c.SweepLength) {
+                    if (!c.AutoSweep && c.SweepCounter < c.SweepLength)
+                    {
                         c.SweepCounter++;
                     }
                 }
-                if (LFODelayCount > LFODelay) {
-                    int speed = LFOSpeed << 6; 
-                    int counter = (LFOPhase + speed) >> 8; 
-                    while (counter >= 0x80) {
+                if (LFODelayCount > LFODelay)
+                {
+                    int speed = LFOSpeed << 6;
+                    int counter = (LFOPhase + speed) >> 8;
+                    while (counter >= 0x80)
+                    {
                         counter -= 0x80;
                     }
                     LFOPhase += (ushort)speed;
                     LFOPhase &= 0xFF;
-                    LFOPhase |= (ushort)(counter << 8); 
-                } else {
+                    LFOPhase |= (ushort)(counter << 8);
+                }
+                else
+                {
                     LFODelayCount++;
                 }
-            } else {
+            }
+            else
+            {
                 WaitingForNoteToFinishBeforeContinuingXD = false;
                 LFOPhase = 0;
                 LFODelayCount = LFODelay;
             }
         }
-        public void StopAllChannels() {
+
+        public void StopAllChannels()
+        {
             Channel[] chans = Channels.ToArray();
-            for (int i = 0; i < chans.Length; i++) {
+            for (int i = 0; i < chans.Length; i++)
+            {
                 chans[i].Stop();
             }
         }
     }
-    public enum LFOType {
+
+    public enum LFOType
+    {
         Pitch,
         Volume,
-        Panpot
+        Panpot,
     }
 }

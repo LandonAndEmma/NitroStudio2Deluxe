@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace GotaSequenceLib {
-    public enum Notes : byte {
+
+namespace GotaSequenceLib
+{
+    public enum Notes : byte
+    {
         cnm1,
         csm1,
         dnm1,

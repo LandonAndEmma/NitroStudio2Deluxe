@@ -1,11 +1,14 @@
-﻿using GotaSoundIO.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace NitroFileLoader {
-    public class StreamInfo : IReadable, IWriteable {
+using GotaSoundIO.IO;
+
+namespace NitroFileLoader
+{
+    public class StreamInfo : IReadable, IWriteable
+    {
         public string Name;
         public int Index;
         public bool ForceIndividualFile;
@@ -16,7 +19,9 @@ namespace NitroFileLoader {
         public uint ReadingFileId;
         public byte ReadingPlayerId;
         public bool MonoToStereo;
-        public void Read(FileReader r) {
+
+        public void Read(FileReader r)
+        {
             ReadingFileId = r.ReadUInt32();
             MonoToStereo = (ReadingFileId & 0xFF000000) > 0;
             ReadingFileId &= 0xFFFFFF;
@@ -25,7 +30,9 @@ namespace NitroFileLoader {
             ReadingPlayerId = r.ReadByte();
             r.ReadBytes(5);
         }
-        public void Write(FileWriter w) {
+
+        public void Write(FileWriter w)
+        {
             w.Write((uint)((uint)ReadingFileId | (MonoToStereo ? 0x01000000U : 0)));
             w.Write(Volume);
             w.Write(Priority);

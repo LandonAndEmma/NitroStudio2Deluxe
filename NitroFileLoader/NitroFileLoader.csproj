@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>NitroFileLoader</RootNamespace>
     <AssemblyName>NitroFileLoader</AssemblyName>
     <Deterministic>true</Deterministic>
@@ -36,6 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GotaSequenceLib\GotaSequenceLib.csproj" />
     <ProjectReference Include="..\GotaSoundBank\GotaSoundBank.csproj" />
+    <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj" />
     <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj" />
   </ItemGroup>
 </Project>

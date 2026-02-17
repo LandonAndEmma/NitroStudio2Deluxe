@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace NitroFileLoader
 {
@@ -51,7 +46,7 @@ namespace NitroFileLoader
         {
             Type = (GroupEntryType)r.ReadByte();
             LoadFlags(r.ReadByte());
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             ReadingId = r.ReadUInt32();
         }
 

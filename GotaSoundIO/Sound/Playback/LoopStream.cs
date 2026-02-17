@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
 namespace GotaSoundIO.Sound.Playback
 {
     public class LoopStream : WaveStream
     {
-        WaveStream sourceStream;
+        private readonly WaveStream sourceStream;
         public uint LoopStart;
         public uint LoopEnd;
-        private StreamPlayer player;
+        private readonly StreamPlayer player;
 
         public LoopStream(
             StreamPlayer player,
@@ -30,38 +25,20 @@ namespace GotaSoundIO.Sound.Playback
         }
 
         public bool Loops { get; set; }
-        public override WaveFormat WaveFormat
-        {
-            get { return sourceStream.WaveFormat; }
-        }
-        public override long Length
-        {
-            get { return sourceStream.Length; }
-        }
+        public override WaveFormat WaveFormat => sourceStream.WaveFormat;
+        public override long Length => sourceStream.Length;
         public override long Position
         {
-            get { return sourceStream.Position; }
-            set { sourceStream.Position = value; }
+            get => sourceStream.Position; set => sourceStream.Position = value;
         }
         public uint CurrentSample
         {
-            get
-            {
-                return (uint)(
-                    sourceStream.Position / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8)
-                );
-            }
-            set
-            {
-                sourceStream.Position =
-                    value * WaveFormat.Channels * (WaveFormat.BitsPerSample / 8);
-            }
+            get => (uint)(
+                  sourceStream.Position / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8)
+              ); set => sourceStream.Position =
+                         value * WaveFormat.Channels * (WaveFormat.BitsPerSample / 8);
         }
-        public uint GetLengthInSamples
-        {
-            get =>
-                (uint)(sourceStream.Length / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8));
-        }
+        public uint GetLengthInSamples => (uint)(sourceStream.Length / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8));
 
         public override int Read(byte[] buffer, int offset, int count)
         {

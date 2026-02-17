@@ -1,32 +1,40 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 using VGAudio.Codecs.GcAdpcm;
 using VGAudio.Utilities;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Encoding
 {
     public class DspAdpcm : IAudioEncoding
     {
         private byte[] Data;
         public DspAdpcmContext Context;
 
-        public int SampleCount() => DspAdpcmMath.ByteCountToSampleCount(Data.Length);
+        public int SampleCount()
+        {
+            return DspAdpcmMath.ByteCountToSampleCount(Data.Length);
+        }
 
-        public int DataSize() => Data.Length;
+        public int DataSize()
+        {
+            return Data.Length;
+        }
 
-        public int SamplesFromBlockSize(int blockSize) =>
-            DspAdpcmMath.ByteCountToSampleCount(blockSize);
+        public int SamplesFromBlockSize(int blockSize)
+        {
+            return DspAdpcmMath.ByteCountToSampleCount(blockSize);
+        }
 
-        public object RawData() => Data;
+        public object RawData()
+        {
+            return Data;
+        }
 
         public void ReadRaw(FileReader r, uint numSamples, uint dataSize)
         {
-            Data = r.ReadBytes((int)(dataSize));
+            Data = r.ReadBytes((int)dataSize);
         }
 
         public void WriteRaw(FileWriter w)
@@ -41,7 +49,7 @@ namespace GotaSoundIO.Sound
             int loopEnd = -1
         )
         {
-            short[] s = pcm.Select(x => ConvertFloat(x)).ToArray();
+            short[] s = pcm.Select(ConvertFloat).ToArray();
             DspAdpcmContext context = null;
             if (encodingData != null)
             {
@@ -63,13 +71,10 @@ namespace GotaSoundIO.Sound
             {
                 context = decodingData as DspAdpcmContext;
             }
-            if (context == null)
-            {
-                context = Context;
-            }
+            context ??= Context;
             short[] pcm = new short[SampleCount()];
             DspAdpcmDecoder.Decode(Data, ref pcm, ref Context, (uint)pcm.Length);
-            var ret = pcm.Select(x => (float)x / short.MaxValue).ToArray();
+            float[] ret = pcm.Select(x => (float)x / short.MaxValue).ToArray();
             decodingData = Context = context;
             return ret;
         }
@@ -81,13 +86,14 @@ namespace GotaSoundIO.Sound
 
         public List<IAudioEncoding> ChangeBlockSize(List<IAudioEncoding> blocks, int newBlockSize)
         {
-            List<IAudioEncoding> newData = new List<IAudioEncoding>();
-            List<short> samples = new List<short>();
-            foreach (var b in blocks)
+            List<IAudioEncoding> newData = [];
+            List<short> samples = [];
+            foreach (IAudioEncoding b in blocks)
             {
                 samples.AddRange((short[])b.RawData());
             }
-            short[] s = samples.ToArray();
+
+            _ = samples.ToArray();
             if (newBlockSize == -1) { }
             else
             {
@@ -104,11 +110,7 @@ namespace GotaSoundIO.Sound
 
         public T GetProperty<T>(string propertyName)
         {
-            if (propertyName.ToLower().Equals("context"))
-            {
-                return (T)(object)Context;
-            }
-            return default;
+            return propertyName.ToLower().Equals("context") ? (T)(object)Context : default;
         }
 
         public void SetProperty<T>(T value, string propertyName)
@@ -121,7 +123,7 @@ namespace GotaSoundIO.Sound
 
         public IAudioEncoding Duplicate()
         {
-            DspAdpcm ret = new DspAdpcm() { Data = new byte[Data.Length] };
+            DspAdpcm ret = new() { Data = new byte[Data.Length] };
             Array.Copy(Data, ret.Data, Data.Length);
             ret.Context = new DspAdpcmContext()
             {
@@ -137,11 +139,14 @@ namespace GotaSoundIO.Sound
             return ret;
         }
 
-        private short ConvertFloat(float sample) => (short)(sample * short.MaxValue);
+        private short ConvertFloat(float sample)
+        {
+            return (short)(sample * short.MaxValue);
+        }
 
         public static DspAdpcmContext GetContext(List<IAudioEncoding> blocks, int loopStart = -1)
         {
-            DspAdpcmContext ret = new DspAdpcmContext();
+            DspAdpcmContext ret = new();
             if (blocks.Count == 0)
             {
                 return ret;
@@ -180,7 +185,7 @@ namespace GotaSoundIO.Sound
             int frames = nibbleCount / NibblesPerFrame;
             int extraNibbles = nibbleCount % NibblesPerFrame;
             int extraSamples = extraNibbles < 2 ? 0 : extraNibbles - 2;
-            return SamplesPerFrame * frames + extraSamples;
+            return (SamplesPerFrame * frames) + extraSamples;
         }
 
         public static int SampleCountToNibbleCount(int sampleCount)
@@ -188,7 +193,7 @@ namespace GotaSoundIO.Sound
             int frames = sampleCount / SamplesPerFrame;
             int extraSamples = sampleCount % SamplesPerFrame;
             int extraNibbles = extraSamples == 0 ? 0 : extraSamples + 2;
-            return NibblesPerFrame * frames + extraNibbles;
+            return (NibblesPerFrame * frames) + extraNibbles;
         }
 
         public static int NibbleToSample(int nibble)
@@ -203,53 +208,49 @@ namespace GotaSoundIO.Sound
         {
             int frames = sample / SamplesPerFrame;
             int extraSamples = sample % SamplesPerFrame;
-            return NibblesPerFrame * frames + extraSamples + 2;
+            return (NibblesPerFrame * frames) + extraSamples + 2;
         }
 
-        public static int SampleCountToByteCount(int sampleCount) =>
-            SampleCountToNibbleCount(sampleCount).DivideBy2RoundUp();
+        public static int SampleCountToByteCount(int sampleCount)
+        {
+            return SampleCountToNibbleCount(sampleCount).DivideBy2RoundUp();
+        }
 
-        public static int ByteCountToSampleCount(int byteCount) =>
-            NibbleCountToSampleCount(byteCount * 2);
+        public static int ByteCountToSampleCount(int byteCount)
+        {
+            return NibbleCountToSampleCount(byteCount * 2);
+        }
     }
 
     public static class DspAdpcmDecoder
     {
-        static sbyte[] NibbleToSbyte = { 0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1 };
+        private static readonly sbyte[] NibbleToSbyte = { 0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1 };
 
-        static uint DivideByRoundUp(uint dividend, uint divisor)
+        private static uint DivideByRoundUp(uint dividend, uint divisor)
         {
             return (dividend + divisor - 1) / divisor;
         }
 
-        static sbyte GetHighNibble(byte value)
+        private static sbyte GetHighNibble(byte value)
         {
             return NibbleToSbyte[(value >> 4) & 0xF];
         }
 
-        static sbyte GetLowNibble(byte value)
+        private static sbyte GetLowNibble(byte value)
         {
             return NibbleToSbyte[value & 0xF];
         }
 
-        static short Clamp16(int value)
+        private static short Clamp16(int value)
         {
-            if (value > 32767)
-            {
-                return 32767;
-            }
-            if (value < -32678)
-            {
-                return -32678;
-            }
-            return (short)value;
+            return value > 32767 ? (short)32767 : value < -32678 ? (short)-32678 : (short)value;
         }
 
         public static void Decode(
             byte[] src,
-            ref Int16[] dst,
+            ref short[] dst,
             ref DspAdpcmContext cxt,
-            UInt32 samples
+            uint samples
         )
         {
             short hist1 = cxt.yn1;
@@ -259,30 +260,34 @@ namespace GotaSoundIO.Sound
             while (dstIndex < samples)
             {
                 byte header = src[srcIndex++];
-                UInt16 scale = (UInt16)(1 << (header & 0xF));
+                ushort scale = (ushort)(1 << (header & 0xF));
                 byte coef_index = (byte)(header >> 4);
                 short coef1 = cxt.coefs[coef_index][0];
                 short coef2 = cxt.coefs[coef_index][1];
-                for (UInt32 b = 0; b < 7; b++)
+                for (uint b = 0; b < 7; b++)
                 {
                     byte byt = src[srcIndex++];
-                    for (UInt32 s = 0; s < 2; s++)
+                    for (uint s = 0; s < 2; s++)
                     {
-                        sbyte adpcm_nibble = ((s == 0) ? GetHighNibble(byt) : GetLowNibble(byt));
+                        sbyte adpcm_nibble = (s == 0) ? GetHighNibble(byt) : GetLowNibble(byt);
                         short sample = Clamp16(
-                            ((adpcm_nibble * scale) << 11)
+                            (((adpcm_nibble * scale) << 11)
                                 + 1024
-                                + ((coef1 * hist1) + (coef2 * hist2))
+                                + (coef1 * hist1) + (coef2 * hist2))
                                 >> 11
                         );
                         hist2 = hist1;
                         hist1 = sample;
                         dst[dstIndex++] = sample;
                         if (dstIndex >= samples)
+                        {
                             break;
+                        }
                     }
                     if (dstIndex >= samples)
+                    {
                         break;
+                    }
                 }
             }
             cxt.yn1 = hist1;
@@ -305,9 +310,15 @@ namespace GotaSoundIO.Sound
                 }
             );
             if (loopStart > 0)
+            {
                 info.loop_yn1 = samples[loopStart - 1];
+            }
+
             if (loopStart > 1)
+            {
                 info.loop_yn2 = samples[loopStart - 2];
+            }
+
             return dspAdpcm;
         }
     }
@@ -316,8 +327,8 @@ namespace GotaSoundIO.Sound
     {
         public short[] GetCoeffs()
         {
-            List<short> c = new List<short>();
-            foreach (var a in coefs)
+            List<short> c = [];
+            foreach (short[] a in coefs)
             {
                 c.AddRange(a);
             }
@@ -361,13 +372,13 @@ namespace GotaSoundIO.Sound
             w.Write(loop_yn2);
         }
 
-        public Int16[][] coefs;
-        public UInt16 gain;
-        public UInt16 pred_scale;
-        public Int16 yn1;
-        public Int16 yn2;
-        public UInt16 loop_pred_scale;
-        public Int16 loop_yn1;
-        public Int16 loop_yn2;
+        public short[][] coefs;
+        public ushort gain;
+        public ushort pred_scale;
+        public short yn1;
+        public short yn2;
+        public ushort loop_pred_scale;
+        public short loop_yn1;
+        public short loop_yn2;
     }
 }

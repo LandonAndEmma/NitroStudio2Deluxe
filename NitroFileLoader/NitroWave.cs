@@ -1,27 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Encoding;
+using System;
 
 namespace NitroFileLoader
 {
     public class Wave : SoundFile
     {
-        public override Type[] SupportedEncodings() =>
-            new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+        public override Type[] SupportedEncodings()
+        {
+            return new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+        }
 
-        public override string Name() => "SWAV";
+        public override string Name()
+        {
+            return "SWAV";
+        }
 
-        public override string[] Extensions() => new string[] { "SWAV" };
+        public override string[] Extensions()
+        {
+            return new string[] { "SWAV" };
+        }
 
-        public override string Description() => "A SWAV used in Nintendo DS games.";
+        public override string Description()
+        {
+            return "A SWAV used in Nintendo DS games.";
+        }
 
-        public override bool SupportsTracks() => false;
+        public override bool SupportsTracks()
+        {
+            return false;
+        }
 
-        public override Type PreferredEncoding() => typeof(ImaAdpcm);
+        public override Type PreferredEncoding()
+        {
+            return typeof(ImaAdpcm);
+        }
 
         private ushort BackupNTime;
 
@@ -29,9 +43,9 @@ namespace NitroFileLoader
         {
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _, false);
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
             uint dataSize = r.ReadUInt32() - 8;
-            var w = ReadShortened(r, dataSize);
+            Wave w = ReadShortened(r, dataSize);
             Loops = w.Loops;
             LoopStart = w.LoopStart;
             LoopEnd = w.LoopEnd;
@@ -41,14 +55,14 @@ namespace NitroFileLoader
 
         public static Wave ReadShortened(FileReader r, uint length)
         {
-            Wave w = new Wave();
+            Wave w = new();
             PcmFormat pcmFormat = (PcmFormat)r.ReadByte();
             w.Loops = r.ReadBoolean();
             int numChannels = 1;
             w.SampleRate = r.ReadUInt16();
             w.BackupNTime = r.ReadUInt16();
             w.LoopStart = r.ReadUInt16();
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
             uint dataSize = length - 12;
             w.LoopEnd = dataSize * 2;
             w.LoopStart = Offset2Samples(w.LoopStart * 4, pcmFormat);
@@ -72,7 +86,7 @@ namespace NitroFileLoader
 
         public void WriteShortened(FileWriter w)
         {
-            PcmFormat pcmFormat = PcmFormat.Encoded;
+            PcmFormat pcmFormat;
             if (Audio.EncodingType.Equals(typeof(PCM8Signed)))
             {
                 w.Write((byte)PcmFormat.SignedPCM8);
@@ -162,31 +176,25 @@ namespace NitroFileLoader
         public static uint Offset2Samples(uint offset, PcmFormat format)
         {
             uint samples = offset;
-            switch (format)
+            return format switch
             {
-                case PcmFormat.SignedPCM8:
-                    return samples;
-                case PcmFormat.PCM16:
-                    return samples / 2;
-                case PcmFormat.Encoded:
-                    return samples * 2 - 8;
-            }
-            return 0;
+                PcmFormat.SignedPCM8 => samples,
+                PcmFormat.PCM16 => samples / 2,
+                PcmFormat.Encoded => (samples * 2) - 8,
+                _ => 0,
+            };
         }
 
         public static uint Sample2Offset(uint sample, PcmFormat format)
         {
             uint offset = sample;
-            switch (format)
+            return format switch
             {
-                case PcmFormat.SignedPCM8:
-                    return offset;
-                case PcmFormat.PCM16:
-                    return offset * 2;
-                case PcmFormat.Encoded:
-                    return (offset + 8) / 2;
-            }
-            return 0;
+                PcmFormat.SignedPCM8 => offset,
+                PcmFormat.PCM16 => offset * 2,
+                PcmFormat.Encoded => (offset + 8) / 2,
+                _ => 0,
+            };
         }
     }
 

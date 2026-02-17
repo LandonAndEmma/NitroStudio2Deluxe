@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.Sound.Playback;
-using NAudio.CoreAudioApi;
+﻿using GotaSoundIO.Sound.Playback;
 using NAudio.Wave;
+using System;
 
 namespace GotaSequenceLib.Playback
 {
@@ -79,7 +74,7 @@ namespace GotaSequenceLib.Playback
                 default:
                     return null;
             }
-            int GetScore(Channel c)
+            static int GetScore(Channel c)
             {
                 return c.Owner == null ? -2
                     : c.State == EnvelopeState.Release ? -1

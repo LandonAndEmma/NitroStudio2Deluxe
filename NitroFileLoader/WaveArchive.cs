@@ -1,38 +1,28 @@
-﻿using System;
+﻿using GotaSoundIO;
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
 
 namespace NitroFileLoader
 {
     public class WaveArchive : IOFile
     {
-        public List<Wave> Waves = new List<Wave>();
+        public List<Wave> Waves = [];
 
         public override void Read(FileReader r)
         {
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _, false);
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
             uint size = r.ReadUInt32();
-            r.ReadUInt32s(8);
-            var offs = r.Read<Table<uint>>();
-            Waves = new List<Wave>();
+            _ = r.ReadUInt32s(8);
+            Table<uint> offs = r.Read<Table<uint>>();
+            Waves = [];
             for (int i = 0; i < offs.Count; i++)
             {
-                uint len;
-                if (i == offs.Count - 1)
-                {
-                    len = size - (offs[i] - 0x10);
-                }
-                else
-                {
-                    len = offs[i + 1] - offs[i];
-                }
+                uint len = i == offs.Count - 1 ? size - (offs[i] - 0x10) : offs[i + 1] - offs[i];
                 r.Jump(offs[i], true);
                 Waves.Add(Wave.ReadShortened(r, len));
             }
@@ -49,7 +39,7 @@ namespace NitroFileLoader
             for (int i = 0; i < Waves.Count(); i++)
             {
                 long bak2 = w.Position;
-                w.Position = bak + i * 4;
+                w.Position = bak + (i * 4);
                 w.Write((uint)(bak2 - w.FileOffset));
                 w.Position = bak2;
                 Waves[i].WriteShortened(w);

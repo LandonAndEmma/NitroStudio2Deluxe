@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
@@ -32,23 +28,19 @@ namespace GotaSoundIO.IO
 
         public void Read(string filePath)
         {
-            using (var f = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                Read(f);
-            }
+            using FileStream f = new(filePath, FileMode.Open, FileAccess.Read);
+            Read(f);
         }
 
         public void Read(byte[] file)
         {
-            using (var m = new MemoryStream(file))
-            {
-                Read(m);
-            }
+            using MemoryStream m = new(file);
+            Read(m);
         }
 
         public void Read(Stream s)
         {
-            FileReader r = new FileReader(s);
+            FileReader r = new(s);
             Read(r);
             r.Dispose();
         }
@@ -58,19 +50,15 @@ namespace GotaSoundIO.IO
 
         public void Write(Stream s)
         {
-            using (FileWriter w = new FileWriter(s))
-            {
-                Write(w);
-            }
+            using FileWriter w = new(s);
+            Write(w);
         }
 
         public byte[] Write()
         {
-            using (var f = new MemoryStream())
-            {
-                Write(f);
-                return f.ToArray();
-            }
+            using MemoryStream f = new();
+            Write(f);
+            return f.ToArray();
         }
 
         public void Write(string filePath)
@@ -79,12 +67,8 @@ namespace GotaSoundIO.IO
             {
                 File.Delete(filePath);
             }
-            using (
-                FileStream f = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite)
-            )
-            {
-                Write(f);
-            }
+            using FileStream f = new(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            Write(f);
         }
 
         public T Duplicate<T>()
@@ -99,11 +83,9 @@ namespace GotaSoundIO.IO
         {
             get
             {
-                using (var md5 = MD5.Create())
-                {
-                    var hash = md5.ComputeHash(Write());
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
+                using MD5 md5 = MD5.Create();
+                byte[] hash = md5.ComputeHash(Write());
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }
     }

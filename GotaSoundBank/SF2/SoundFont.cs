@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundBank.DLS;
+﻿using GotaSoundBank.DLS;
 using GotaSoundIO.IO;
 using GotaSoundIO.IO.RIFF;
-using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Formats;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GotaSoundBank.SF2
 {
     public class SoundFont : IOFile
     {
-        public List<Preset> Presets = new List<Preset>();
-        public List<Instrument> Instruments = new List<Instrument>();
-        public List<SampleItem> Samples = new List<SampleItem>();
+        public List<Preset> Presets = [];
+        public List<Instrument> Instruments = [];
+        public List<SampleItem> Samples = [];
         public string SoundEngine = "EMU8000";
         public string BankName = "General MIDI";
         public string RomName = "";
@@ -33,16 +31,17 @@ namespace GotaSoundBank.SF2
 
         public SoundFont(DownloadableSounds dls)
         {
-            Dictionary<int, int> waveLink;
             dls.AssignLoops();
-            CreateSampleTable(dls.Waves, out waveLink);
-            foreach (var i in dls.Instruments)
+            CreateSampleTable(dls.Waves, out Dictionary<int, int> waveLink);
+            foreach (DLS.Instrument i in dls.Instruments)
             {
-                Instrument inst = new Instrument();
-                inst.Name = i.Name;
-                foreach (var r in i.Regions)
+                Instrument inst = new()
                 {
-                    Zone z = new Zone();
+                    Name = i.Name
+                };
+                foreach (Region r in i.Regions)
+                {
+                    Zone z = new();
                     if (r.NoteHigh != 127 || r.NoteLow != 0)
                     {
                         z.Generators.Add(
@@ -99,12 +98,12 @@ namespace GotaSoundBank.SF2
                             }
                         );
                     }
-                    foreach (var a in r.Articulators)
+                    foreach (Articulator a in r.Articulators)
                     {
-                        foreach (var c in a.Connections)
+                        foreach (Connection c in a.Connections)
                         {
                             SF2Generators gen = (SF2Generators)100;
-                            SF2GeneratorAmount amount = new SF2GeneratorAmount();
+                            SF2GeneratorAmount amount = new();
                             switch (c.DestinationConnection)
                             {
                                 case DestinationConnection.Chorus:
@@ -133,7 +132,7 @@ namespace GotaSoundBank.SF2
                                     break;
                                 case DestinationConnection.EG1SustainLevel:
                                     gen = SF2Generators.SustainVolEnv;
-                                    amount.Amount = (short)((1 - c.Scale / 65536d / 1000) * 1000);
+                                    amount.Amount = (short)((1 - (c.Scale / 65536d / 1000)) * 1000);
                                     break;
                                 case DestinationConnection.KeyNumber:
                                     gen = SF2Generators.Keynum;
@@ -164,7 +163,7 @@ namespace GotaSoundBank.SF2
                 Instruments.Add(inst);
             }
             ushort instNum = 0;
-            foreach (var i in dls.Instruments)
+            foreach (DLS.Instrument i in dls.Instruments)
             {
                 Presets.Add(
                     new Preset()
@@ -172,20 +171,20 @@ namespace GotaSoundBank.SF2
                         Bank = (ushort)i.BankId,
                         Name = i.Name,
                         PresetNumber = (ushort)i.InstrumentId,
-                        Zones = new List<Zone>()
-                        {
+                        Zones =
+                        [
                             new Zone()
                             {
-                                Generators = new List<Generator>()
-                                {
+                                Generators =
+                                [
                                     new Generator()
                                     {
                                         Gen = SF2Generators.Instrument,
                                         Amount = new SF2GeneratorAmount() { UAmount = instNum++ },
                                     },
-                                },
+                                ],
                             },
-                        },
+                        ],
                     }
                 );
             }
@@ -193,436 +192,432 @@ namespace GotaSoundBank.SF2
 
         public override void Read(FileReader r2)
         {
-            using (RiffReader r = new RiffReader(r2.BaseStream))
+            using RiffReader r = new(r2.BaseStream);
+            ListChunk info = (ListChunk)r.GetChunk("INFO");
+            r.OpenChunk(info.GetChunk("isng"));
+            SoundEngine = r.ReadNullTerminated();
+            r.OpenChunk(info.GetChunk("INAM"));
+            BankName = r.ReadNullTerminated();
+            if (info.GetChunk("irom") != null)
             {
-                var info = (ListChunk)r.GetChunk("INFO");
-                r.OpenChunk(info.GetChunk("isng"));
-                SoundEngine = r.ReadNullTerminated();
-                r.OpenChunk(info.GetChunk("INAM"));
-                BankName = r.ReadNullTerminated();
-                if (info.GetChunk("irom") != null)
+                r.OpenChunk(info.GetChunk("irom"));
+                RomName = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("iver") != null)
+            {
+                r.OpenChunk(info.GetChunk("iver"));
+                RomVersion = new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16());
+            }
+            if (info.GetChunk("ICRD") != null)
+            {
+                r.OpenChunk(info.GetChunk("ICRD"));
+                CreationDate = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("IENG") != null)
+            {
+                r.OpenChunk(info.GetChunk("IENG"));
+                SoundDesigner = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("IPRD") != null)
+            {
+                r.OpenChunk(info.GetChunk("IPRD"));
+                Product = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("ICOP") != null)
+            {
+                r.OpenChunk(info.GetChunk("ICOP"));
+                Copyright = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("ICMT") != null)
+            {
+                r.OpenChunk(info.GetChunk("ICMT"));
+                Comment = r.ReadNullTerminated();
+            }
+            if (info.GetChunk("ISFT") != null)
+            {
+                r.OpenChunk(info.GetChunk("ISFT"));
+                Tools = r.ReadNullTerminated();
+            }
+            long waveTablePos = ((ListChunk)r.GetChunk("sdta")).GetChunk("smpl").Pos;
+            Presets = [];
+            Instruments = [];
+            Samples = [];
+            ListChunk hydra = (ListChunk)r.GetChunk("pdta");
+            r.OpenChunk(hydra.GetChunk("phdr"));
+            uint numPresets = (hydra.GetChunk("phdr").Size / 38) - 1;
+            for (uint i = 0; i < numPresets; i++)
+            {
+                Presets.Add(r.Read<Preset>());
+            }
+            List<Tuple<ushort, ushort>> presetGenModIndices = [];
+            List<Zone> presetZones = [];
+            r.OpenChunk(hydra.GetChunk("pbag"));
+            uint numPbags = (hydra.GetChunk("pbag").Size / 4) - 1;
+            for (uint i = 0; i < numPbags; i++)
+            {
+                presetGenModIndices.Add(
+                    new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
+                );
+                presetZones.Add(new Zone());
+            }
+            List<Modulator> pMods = [];
+            r.OpenChunk(hydra.GetChunk("pmod"));
+            uint numPmods = (hydra.GetChunk("pmod").Size / 10) - 1;
+            for (uint i = 0; i < numPmods; i++)
+            {
+                pMods.Add(r.Read<Modulator>());
+            }
+            List<Generator> pGens = [];
+            r.OpenChunk(hydra.GetChunk("pgen"));
+            uint numPgens = (hydra.GetChunk("pgen").Size / 4) - 1;
+            for (uint i = 0; i < numPgens; i++)
+            {
+                pGens.Add(r.Read<Generator>());
+            }
+            for (int i = 0; i < presetGenModIndices.Count; i++)
+            {
+                int startGen = presetGenModIndices[i].Item1;
+                int startMod = presetGenModIndices[i].Item2;
+                int numGen = pGens.Count - startGen;
+                int numMod = pMods.Count - startMod;
+                if (i + 1 <= presetGenModIndices.Count - 1)
                 {
-                    r.OpenChunk(info.GetChunk("irom"));
-                    RomName = r.ReadNullTerminated();
+                    numGen = presetGenModIndices[i + 1].Item1 - startGen;
+                    numMod = presetGenModIndices[i + 1].Item2 - startMod;
                 }
-                if (info.GetChunk("iver") != null)
+                for (int j = startGen; j < startGen + numGen; j++)
                 {
-                    r.OpenChunk(info.GetChunk("iver"));
-                    RomVersion = new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16());
+                    presetZones[i].Generators.Add(pGens[j]);
                 }
-                if (info.GetChunk("ICRD") != null)
+                for (int j = startMod; j < startMod + numMod; j++)
                 {
-                    r.OpenChunk(info.GetChunk("ICRD"));
-                    CreationDate = r.ReadNullTerminated();
+                    presetZones[i].Modulators.Add(pMods[j]);
                 }
-                if (info.GetChunk("IENG") != null)
+            }
+            for (int i = 0; i < Presets.Count; i++)
+            {
+                int startZone = Presets[i].ReadingBagIndex;
+                int numZones = presetGenModIndices.Count - startZone;
+                if (i + 1 <= Presets.Count - 1)
                 {
-                    r.OpenChunk(info.GetChunk("IENG"));
-                    SoundDesigner = r.ReadNullTerminated();
+                    numZones = Presets[i + 1].ReadingBagIndex - startZone;
                 }
-                if (info.GetChunk("IPRD") != null)
+                for (int j = startZone; j < startZone + numZones; j++)
                 {
-                    r.OpenChunk(info.GetChunk("IPRD"));
-                    Product = r.ReadNullTerminated();
-                }
-                if (info.GetChunk("ICOP") != null)
-                {
-                    r.OpenChunk(info.GetChunk("ICOP"));
-                    Copyright = r.ReadNullTerminated();
-                }
-                if (info.GetChunk("ICMT") != null)
-                {
-                    r.OpenChunk(info.GetChunk("ICMT"));
-                    Comment = r.ReadNullTerminated();
-                }
-                if (info.GetChunk("ISFT") != null)
-                {
-                    r.OpenChunk(info.GetChunk("ISFT"));
-                    Tools = r.ReadNullTerminated();
-                }
-                long waveTablePos = ((ListChunk)r.GetChunk("sdta")).GetChunk("smpl").Pos;
-                Presets = new List<Preset>();
-                Instruments = new List<Instrument>();
-                Samples = new List<SampleItem>();
-                var hydra = (ListChunk)r.GetChunk("pdta");
-                r.OpenChunk(hydra.GetChunk("phdr"));
-                uint numPresets = hydra.GetChunk("phdr").Size / 38 - 1;
-                for (uint i = 0; i < numPresets; i++)
-                {
-                    Presets.Add(r.Read<Preset>());
-                }
-                List<Tuple<ushort, ushort>> presetGenModIndices = new List<Tuple<ushort, ushort>>();
-                List<Zone> presetZones = new List<Zone>();
-                r.OpenChunk(hydra.GetChunk("pbag"));
-                uint numPbags = hydra.GetChunk("pbag").Size / 4 - 1;
-                for (uint i = 0; i < numPbags; i++)
-                {
-                    presetGenModIndices.Add(
-                        new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
-                    );
-                    presetZones.Add(new Zone());
-                }
-                List<Modulator> pMods = new List<Modulator>();
-                r.OpenChunk(hydra.GetChunk("pmod"));
-                uint numPmods = hydra.GetChunk("pmod").Size / 10 - 1;
-                for (uint i = 0; i < numPmods; i++)
-                {
-                    pMods.Add(r.Read<Modulator>());
-                }
-                List<Generator> pGens = new List<Generator>();
-                r.OpenChunk(hydra.GetChunk("pgen"));
-                uint numPgens = hydra.GetChunk("pgen").Size / 4 - 1;
-                for (uint i = 0; i < numPgens; i++)
-                {
-                    pGens.Add(r.Read<Generator>());
-                }
-                for (int i = 0; i < presetGenModIndices.Count; i++)
-                {
-                    int startGen = presetGenModIndices[i].Item1;
-                    int startMod = presetGenModIndices[i].Item2;
-                    int numGen = pGens.Count - startGen;
-                    int numMod = pMods.Count - startMod;
-                    if (i + 1 <= presetGenModIndices.Count - 1)
+                    if (
+                        Presets[i].Zones.Count == 0
+                        && presetZones[j]
+                            .Generators.Where(x => x.Gen == SF2Generators.Instrument)
+                            .Where(x => x.Gen == SF2Generators.Instrument)
+                            .Count() < 1
+                    )
                     {
-                        numGen = presetGenModIndices[i + 1].Item1 - startGen;
-                        numMod = presetGenModIndices[i + 1].Item2 - startMod;
+                        Presets[i].GlobalZone = presetZones[j];
                     }
-                    for (int j = startGen; j < startGen + numGen; j++)
+                    else
                     {
-                        presetZones[i].Generators.Add(pGens[j]);
-                    }
-                    for (int j = startMod; j < startMod + numMod; j++)
-                    {
-                        presetZones[i].Modulators.Add(pMods[j]);
-                    }
-                }
-                for (int i = 0; i < Presets.Count; i++)
-                {
-                    int startZone = Presets[i].ReadingBagIndex;
-                    int numZones = presetGenModIndices.Count - startZone;
-                    if (i + 1 <= Presets.Count - 1)
-                    {
-                        numZones = Presets[i + 1].ReadingBagIndex - startZone;
-                    }
-                    for (int j = startZone; j < startZone + numZones; j++)
-                    {
-                        if (
-                            Presets[i].Zones.Count == 0
-                            && presetZones[j]
-                                .Generators.Where(x => x.Gen == SF2Generators.Instrument)
-                                .Where(x => x.Gen == SF2Generators.Instrument)
-                                .Count() < 1
-                        )
-                        {
-                            Presets[i].GlobalZone = presetZones[j];
-                        }
-                        else
-                        {
-                            Presets[i].Zones.Add(presetZones[j]);
-                        }
+                        Presets[i].Zones.Add(presetZones[j]);
                     }
                 }
-                r.OpenChunk(hydra.GetChunk("inst"));
-                uint numInstruments = hydra.GetChunk("inst").Size / 22 - 1;
-                for (uint i = 0; i < numInstruments; i++)
+            }
+            r.OpenChunk(hydra.GetChunk("inst"));
+            uint numInstruments = (hydra.GetChunk("inst").Size / 22) - 1;
+            for (uint i = 0; i < numInstruments; i++)
+            {
+                Instruments.Add(r.Read<Instrument>());
+            }
+            List<Tuple<ushort, ushort>> instrumentGenModIndices =
+                [];
+            List<Zone> instrumentZones = [];
+            r.OpenChunk(hydra.GetChunk("ibag"));
+            uint numIbags = (hydra.GetChunk("ibag").Size / 4) - 1;
+            for (uint i = 0; i < numIbags; i++)
+            {
+                instrumentGenModIndices.Add(
+                    new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
+                );
+                instrumentZones.Add(new Zone());
+            }
+            List<Modulator> iMods = [];
+            r.OpenChunk(hydra.GetChunk("imod"));
+            uint numImods = (hydra.GetChunk("imod").Size / 10) - 1;
+            for (uint i = 0; i < numImods; i++)
+            {
+                iMods.Add(r.Read<Modulator>());
+            }
+            List<Generator> iGens = [];
+            r.OpenChunk(hydra.GetChunk("igen"));
+            uint numIgens = (hydra.GetChunk("igen").Size / 4) - 1;
+            for (uint i = 0; i < numIgens; i++)
+            {
+                iGens.Add(r.Read<Generator>());
+            }
+            for (int i = 0; i < instrumentGenModIndices.Count; i++)
+            {
+                int startGen = instrumentGenModIndices[i].Item1;
+                int startMod = instrumentGenModIndices[i].Item2;
+                int numGen = iGens.Count - startGen;
+                int numMod = iMods.Count - startMod;
+                if (i + 1 <= instrumentGenModIndices.Count - 1)
                 {
-                    Instruments.Add(r.Read<Instrument>());
+                    numGen = instrumentGenModIndices[i + 1].Item1 - startGen;
+                    numMod = instrumentGenModIndices[i + 1].Item2 - startMod;
                 }
-                List<Tuple<ushort, ushort>> instrumentGenModIndices =
-                    new List<Tuple<ushort, ushort>>();
-                List<Zone> instrumentZones = new List<Zone>();
-                r.OpenChunk(hydra.GetChunk("ibag"));
-                uint numIbags = hydra.GetChunk("ibag").Size / 4 - 1;
-                for (uint i = 0; i < numIbags; i++)
+                for (int j = startGen; j < startGen + numGen; j++)
                 {
-                    instrumentGenModIndices.Add(
-                        new Tuple<ushort, ushort>(r.ReadUInt16(), r.ReadUInt16())
-                    );
-                    instrumentZones.Add(new Zone());
+                    instrumentZones[i].Generators.Add(iGens[j]);
                 }
-                List<Modulator> iMods = new List<Modulator>();
-                r.OpenChunk(hydra.GetChunk("imod"));
-                uint numImods = hydra.GetChunk("imod").Size / 10 - 1;
-                for (uint i = 0; i < numImods; i++)
+                for (int j = startMod; j < startMod + numMod; j++)
                 {
-                    iMods.Add(r.Read<Modulator>());
+                    instrumentZones[i].Modulators.Add(iMods[j]);
                 }
-                List<Generator> iGens = new List<Generator>();
-                r.OpenChunk(hydra.GetChunk("igen"));
-                uint numIgens = hydra.GetChunk("igen").Size / 4 - 1;
-                for (uint i = 0; i < numIgens; i++)
+            }
+            for (int i = 0; i < Instruments.Count; i++)
+            {
+                int startZone = Instruments[i].ReadingBagIndex;
+                int numZones = instrumentGenModIndices.Count - startZone;
+                if (i + 1 <= Instruments.Count - 1)
                 {
-                    iGens.Add(r.Read<Generator>());
+                    numZones = Instruments[i + 1].ReadingBagIndex - startZone;
                 }
-                for (int i = 0; i < instrumentGenModIndices.Count; i++)
+                for (int j = startZone; j < startZone + numZones; j++)
                 {
-                    int startGen = instrumentGenModIndices[i].Item1;
-                    int startMod = instrumentGenModIndices[i].Item2;
-                    int numGen = iGens.Count - startGen;
-                    int numMod = iMods.Count - startMod;
-                    if (i + 1 <= instrumentGenModIndices.Count - 1)
+                    if (
+                        Instruments[i].Zones.Count == 0
+                        && instrumentZones[j]
+                            .Generators.Where(x => x.Gen == SF2Generators.SampleID)
+                            .Count() < 1
+                    )
                     {
-                        numGen = instrumentGenModIndices[i + 1].Item1 - startGen;
-                        numMod = instrumentGenModIndices[i + 1].Item2 - startMod;
+                        Instruments[i].GlobalZone = instrumentZones[j];
                     }
-                    for (int j = startGen; j < startGen + numGen; j++)
+                    else
                     {
-                        instrumentZones[i].Generators.Add(iGens[j]);
-                    }
-                    for (int j = startMod; j < startMod + numMod; j++)
-                    {
-                        instrumentZones[i].Modulators.Add(iMods[j]);
+                        Instruments[i].Zones.Add(instrumentZones[j]);
                     }
                 }
-                for (int i = 0; i < Instruments.Count; i++)
-                {
-                    int startZone = Instruments[i].ReadingBagIndex;
-                    int numZones = instrumentGenModIndices.Count - startZone;
-                    if (i + 1 <= Instruments.Count - 1)
-                    {
-                        numZones = Instruments[i + 1].ReadingBagIndex - startZone;
-                    }
-                    for (int j = startZone; j < startZone + numZones; j++)
-                    {
-                        if (
-                            Instruments[i].Zones.Count == 0
-                            && instrumentZones[j]
-                                .Generators.Where(x => x.Gen == SF2Generators.SampleID)
-                                .Count() < 1
-                        )
-                        {
-                            Instruments[i].GlobalZone = instrumentZones[j];
-                        }
-                        else
-                        {
-                            Instruments[i].Zones.Add(instrumentZones[j]);
-                        }
-                    }
-                }
-                r.OpenChunk(hydra.GetChunk("shdr"));
-                uint numSamples = hydra.GetChunk("shdr").Size / 46 - 1;
-                r.CurrentOffset = waveTablePos;
-                for (uint i = 0; i < numSamples; i++)
-                {
-                    Samples.Add(r.Read<SampleItem>());
-                }
+            }
+            r.OpenChunk(hydra.GetChunk("shdr"));
+            uint numSamples = (hydra.GetChunk("shdr").Size / 46) - 1;
+            r.CurrentOffset = waveTablePos;
+            for (uint i = 0; i < numSamples; i++)
+            {
+                Samples.Add(r.Read<SampleItem>());
             }
         }
 
         public override void Write(FileWriter w2)
         {
-            using (RiffWriter w = new RiffWriter(w2.BaseStream))
+            using RiffWriter w = new(w2.BaseStream);
+            w.InitFile("sfbk");
+            w.StartListChunk("INFO");
+            w.StartChunk("ifil");
+            w.Write((ushort)2);
+            w.Write((ushort)1);
+            w.EndChunk();
+            w.StartChunk("isng");
+            w.WriteNullTerminated(SoundEngine);
+            _ = w.Align(2);
+            w.EndChunk();
+            w.StartChunk("INAM");
+            w.WriteNullTerminated(BankName);
+            _ = w.Align(2);
+            w.EndChunk();
+            if (!RomName.Equals(""))
             {
-                w.InitFile("sfbk");
-                w.StartListChunk("INFO");
-                w.StartChunk("ifil");
-                w.Write((ushort)2);
-                w.Write((ushort)1);
+                w.StartChunk("irom");
+                w.WriteNullTerminated(RomName);
+                _ = w.Align(2);
                 w.EndChunk();
-                w.StartChunk("isng");
-                w.WriteNullTerminated(SoundEngine);
-                w.Align(2);
-                w.EndChunk();
-                w.StartChunk("INAM");
-                w.WriteNullTerminated(BankName);
-                w.Align(2);
-                w.EndChunk();
-                if (!RomName.Equals(""))
-                {
-                    w.StartChunk("irom");
-                    w.WriteNullTerminated(RomName);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (RomVersion != null)
-                {
-                    w.StartChunk("iver");
-                    w.Write(RomVersion.Item1);
-                    w.Write(RomVersion.Item2);
-                    w.EndChunk();
-                }
-                if (!CreationDate.Equals(""))
-                {
-                    w.StartChunk("ICRD");
-                    w.WriteNullTerminated(CreationDate);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (!SoundDesigner.Equals(""))
-                {
-                    w.StartChunk("IENG");
-                    w.WriteNullTerminated(SoundDesigner);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (!Product.Equals(""))
-                {
-                    w.StartChunk("IPRD");
-                    w.WriteNullTerminated(Product);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (!Copyright.Equals(""))
-                {
-                    w.StartChunk("ICOP");
-                    w.WriteNullTerminated(Copyright);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (!Comment.Equals(""))
-                {
-                    w.StartChunk("ICMT");
-                    w.WriteNullTerminated(Comment);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                if (!Tools.Equals(""))
-                {
-                    w.StartChunk("ISFT");
-                    w.WriteNullTerminated(Tools);
-                    w.Align(2);
-                    w.EndChunk();
-                }
-                w.EndChunk();
-                w.StartListChunk("sdta");
-                w.StartChunk("smpl");
-                long waveTableStart = w.Position;
-                Dictionary<SampleItem, long> samplePositions = new Dictionary<SampleItem, long>();
-                foreach (var s in Samples)
-                {
-                    samplePositions.Add(s, w.Position);
-                    w.Write(new short[s.Wave.Audio.NumSamples]);
-                    w.Write(new short[46]);
-                }
-                w.EndChunk();
-                w.EndChunk();
-                w.StartListChunk("pdta");
-                w.StartChunk("phdr");
-                ushort currBagIndex = 0;
-                List<Zone> zones = new List<Zone>();
-                foreach (var p in Presets)
-                {
-                    p.ReadingBagIndex = currBagIndex;
-                    currBagIndex += (ushort)p.NumZones;
-                    w.Write(p);
-                    zones.AddRange(p.GetAllZones());
-                }
-                w.Write(
-                    new Preset()
-                    {
-                        Name = "EOP",
-                        Bank = 255,
-                        PresetNumber = 255,
-                        ReadingBagIndex = currBagIndex,
-                    }
-                );
-                w.EndChunk();
-                w.StartChunk("pbag");
-                ushort currGenIndex = 0;
-                ushort currModIndex = 0;
-                foreach (var z in zones)
-                {
-                    w.Write(currGenIndex);
-                    w.Write(currModIndex);
-                    currGenIndex += (ushort)z.Generators.Count;
-                    currModIndex += (ushort)z.Modulators.Count;
-                }
-                w.Write(currGenIndex);
-                w.Write(currModIndex);
-                w.EndChunk();
-                w.StartChunk("pmod");
-                foreach (var z in zones)
-                {
-                    foreach (var v in z.Modulators)
-                    {
-                        w.Write(v);
-                    }
-                }
-                w.Write(new Modulator());
-                w.EndChunk();
-                w.StartChunk("pgen");
-                foreach (var z in zones)
-                {
-                    foreach (var v in z.Generators)
-                    {
-                        w.Write(v);
-                    }
-                }
-                w.Write(new Generator());
-                w.EndChunk();
-                w.StartChunk("inst");
-                currBagIndex = 0;
-                zones = new List<Zone>();
-                foreach (var p in Instruments)
-                {
-                    p.ReadingBagIndex = currBagIndex;
-                    currBagIndex += (ushort)p.NumZones;
-                    w.Write(p);
-                    zones.AddRange(p.GetAllZones());
-                }
-                w.Write(new Instrument() { Name = "EOI", ReadingBagIndex = currBagIndex });
-                w.EndChunk();
-                w.StartChunk("ibag");
-                currGenIndex = 0;
-                currModIndex = 0;
-                foreach (var z in zones)
-                {
-                    w.Write(currGenIndex);
-                    w.Write(currModIndex);
-                    currGenIndex += (ushort)z.Generators.Count;
-                    currModIndex += (ushort)z.Modulators.Count;
-                }
-                w.Write(currGenIndex);
-                w.Write(currModIndex);
-                w.EndChunk();
-                w.StartChunk("imod");
-                foreach (var z in zones)
-                {
-                    foreach (var v in z.Modulators)
-                    {
-                        w.Write(v);
-                    }
-                }
-                w.Write(new Modulator());
-                w.EndChunk();
-                w.StartChunk("igen");
-                foreach (var z in zones)
-                {
-                    foreach (var v in z.Generators)
-                    {
-                        w.Write(v);
-                    }
-                }
-                w.Write(new Generator());
-                w.EndChunk();
-                w.StartChunk("shdr");
-                foreach (var s in Samples)
-                {
-                    w.CurrentOffset = samplePositions[s];
-                    w.StructureOffsets.Push(waveTableStart);
-                    w.Write(s);
-                }
-                w.Write("EOS".ToCharArray());
-                w.Write(new byte[0x2B]);
-                w.EndChunk();
-                w.EndChunk();
-                w.CloseFile();
             }
+            if (RomVersion != null)
+            {
+                w.StartChunk("iver");
+                w.Write(RomVersion.Item1);
+                w.Write(RomVersion.Item2);
+                w.EndChunk();
+            }
+            if (!CreationDate.Equals(""))
+            {
+                w.StartChunk("ICRD");
+                w.WriteNullTerminated(CreationDate);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            if (!SoundDesigner.Equals(""))
+            {
+                w.StartChunk("IENG");
+                w.WriteNullTerminated(SoundDesigner);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            if (!Product.Equals(""))
+            {
+                w.StartChunk("IPRD");
+                w.WriteNullTerminated(Product);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            if (!Copyright.Equals(""))
+            {
+                w.StartChunk("ICOP");
+                w.WriteNullTerminated(Copyright);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            if (!Comment.Equals(""))
+            {
+                w.StartChunk("ICMT");
+                w.WriteNullTerminated(Comment);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            if (!Tools.Equals(""))
+            {
+                w.StartChunk("ISFT");
+                w.WriteNullTerminated(Tools);
+                _ = w.Align(2);
+                w.EndChunk();
+            }
+            w.EndChunk();
+            w.StartListChunk("sdta");
+            w.StartChunk("smpl");
+            long waveTableStart = w.Position;
+            Dictionary<SampleItem, long> samplePositions = [];
+            foreach (SampleItem s in Samples)
+            {
+                samplePositions.Add(s, w.Position);
+                w.Write(new short[s.Wave.Audio.NumSamples]);
+                w.Write(new short[46]);
+            }
+            w.EndChunk();
+            w.EndChunk();
+            w.StartListChunk("pdta");
+            w.StartChunk("phdr");
+            ushort currBagIndex = 0;
+            List<Zone> zones = [];
+            foreach (Preset p in Presets)
+            {
+                p.ReadingBagIndex = currBagIndex;
+                currBagIndex += (ushort)p.NumZones;
+                w.Write(p);
+                zones.AddRange(p.GetAllZones());
+            }
+            w.Write(
+                new Preset()
+                {
+                    Name = "EOP",
+                    Bank = 255,
+                    PresetNumber = 255,
+                    ReadingBagIndex = currBagIndex,
+                }
+            );
+            w.EndChunk();
+            w.StartChunk("pbag");
+            ushort currGenIndex = 0;
+            ushort currModIndex = 0;
+            foreach (Zone z in zones)
+            {
+                w.Write(currGenIndex);
+                w.Write(currModIndex);
+                currGenIndex += (ushort)z.Generators.Count;
+                currModIndex += (ushort)z.Modulators.Count;
+            }
+            w.Write(currGenIndex);
+            w.Write(currModIndex);
+            w.EndChunk();
+            w.StartChunk("pmod");
+            foreach (Zone z in zones)
+            {
+                foreach (Modulator v in z.Modulators)
+                {
+                    w.Write(v);
+                }
+            }
+            w.Write(new Modulator());
+            w.EndChunk();
+            w.StartChunk("pgen");
+            foreach (Zone z in zones)
+            {
+                foreach (Generator v in z.Generators)
+                {
+                    w.Write(v);
+                }
+            }
+            w.Write(new Generator());
+            w.EndChunk();
+            w.StartChunk("inst");
+            currBagIndex = 0;
+            zones = [];
+            foreach (Instrument p in Instruments)
+            {
+                p.ReadingBagIndex = currBagIndex;
+                currBagIndex += (ushort)p.NumZones;
+                w.Write(p);
+                zones.AddRange(p.GetAllZones());
+            }
+            w.Write(new Instrument() { Name = "EOI", ReadingBagIndex = currBagIndex });
+            w.EndChunk();
+            w.StartChunk("ibag");
+            currGenIndex = 0;
+            currModIndex = 0;
+            foreach (Zone z in zones)
+            {
+                w.Write(currGenIndex);
+                w.Write(currModIndex);
+                currGenIndex += (ushort)z.Generators.Count;
+                currModIndex += (ushort)z.Modulators.Count;
+            }
+            w.Write(currGenIndex);
+            w.Write(currModIndex);
+            w.EndChunk();
+            w.StartChunk("imod");
+            foreach (Zone z in zones)
+            {
+                foreach (Modulator v in z.Modulators)
+                {
+                    w.Write(v);
+                }
+            }
+            w.Write(new Modulator());
+            w.EndChunk();
+            w.StartChunk("igen");
+            foreach (Zone z in zones)
+            {
+                foreach (Generator v in z.Generators)
+                {
+                    w.Write(v);
+                }
+            }
+            w.Write(new Generator());
+            w.EndChunk();
+            w.StartChunk("shdr");
+            foreach (SampleItem s in Samples)
+            {
+                w.CurrentOffset = samplePositions[s];
+                w.StructureOffsets.Push(waveTableStart);
+                w.Write(s);
+            }
+            w.Write("EOS".ToCharArray());
+            w.Write(new byte[0x2B]);
+            w.EndChunk();
+            w.EndChunk();
+            w.CloseFile();
         }
 
         public void CreateSampleTable(List<RiffWave> waves, out Dictionary<int, int> newIndices)
         {
-            newIndices = new Dictionary<int, int>();
+            newIndices = [];
             int currInd = 0;
             ushort link = 1;
-            foreach (var w in waves)
+            foreach (RiffWave w in waves)
             {
                 if (w.LoopEnd != 0)
                 {
                     w.Loops = true;
                 }
             }
-            Samples = new List<SampleItem>();
+            Samples = [];
             for (int i = 0; i < waves.Count; i++)
             {
                 switch (waves[i].Audio.Channels.Count())
@@ -638,8 +633,8 @@ namespace GotaSoundBank.SF2
                         );
                         break;
                     case 2:
-                        RiffWave left = new RiffWave();
-                        RiffWave right = new RiffWave();
+                        RiffWave left = new();
+                        RiffWave right = new();
                         left.FromOtherStreamFile(waves[i]);
                         right.FromOtherStreamFile(waves[i]);
                         left.Audio.Channels.RemoveAt(1);
@@ -665,16 +660,14 @@ namespace GotaSoundBank.SF2
                         break;
                     default:
                         int chanNum = 0;
-                        foreach (var w in waves)
+                        foreach (RiffWave w in waves)
                         {
-                            RiffWave lnk = new RiffWave();
+                            RiffWave lnk = new();
                             lnk.FromOtherStreamFile(w);
-                            lnk.Audio.Channels = new List<
-                                List<GotaSoundIO.Sound.Encoding.IAudioEncoding>
-                            >()
-                            {
+                            lnk.Audio.Channels =
+                            [
                                 lnk.Audio.Channels[chanNum++],
-                            };
+                            ];
                             Samples.Add(
                                 new SampleItem()
                                 {

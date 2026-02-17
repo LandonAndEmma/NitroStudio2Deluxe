@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSoundIO.Sound;
+﻿using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Encoding;
+using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace NitroStudio2
 {
     public partial class CreateStreamTool : Form
     {
-        bool SwavMode;
+        private readonly bool SwavMode;
 
         public CreateStreamTool(bool swavMode)
         {
@@ -31,10 +26,12 @@ namespace NitroStudio2
 
         private void impFileButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog o = new OpenFileDialog();
-            o.RestoreDirectory = true;
-            o.Filter = "Supported Sound Files|*.wav;*.swav;*.strm";
-            o.ShowDialog();
+            OpenFileDialog o = new()
+            {
+                RestoreDirectory = true,
+                Filter = "Supported Sound Files|*.wav;*.swav;*.strm"
+            };
+            _ = o.ShowDialog();
             if (o.FileName != "")
             {
                 impFileBox.Text = o.FileName;
@@ -46,10 +43,12 @@ namespace NitroStudio2
 
         private void outFileButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog s = new SaveFileDialog();
-            s.RestoreDirectory = true;
-            s.Filter = SwavMode ? "Sound Wave|*.swav" : "Sound Stream|*.strm";
-            s.ShowDialog();
+            SaveFileDialog s = new()
+            {
+                RestoreDirectory = true,
+                Filter = SwavMode ? "Sound Wave|*.swav" : "Sound Stream|*.strm"
+            };
+            _ = s.ShowDialog();
             if (s.FileName != "")
             {
                 outFileBox.Text = s.FileName;
@@ -63,50 +62,28 @@ namespace NitroStudio2
         {
             if (impFileBox.Text.Equals(""))
             {
-                MessageBox.Show("No Input File Selected!");
+                _ = MessageBox.Show("No Input File Selected!");
                 return;
             }
             if (outFileBox.Text.Equals(""))
             {
-                MessageBox.Show("No Output File Selected!");
+                _ = MessageBox.Show("No Output File Selected!");
                 return;
             }
-            SoundFile s;
-            if (SwavMode)
+            SoundFile s = SwavMode ? new Wave() : new NitroFileLoader.Stream();
+            SoundFile i = Path.GetExtension(impFileBox.Text) switch
             {
-                s = new Wave();
-            }
-            else
-            {
-                s = new NitroFileLoader.Stream();
-            }
-            SoundFile i;
-            switch (Path.GetExtension(impFileBox.Text))
-            {
-                case ".swav":
-                    i = new Wave();
-                    break;
-                case ".strm":
-                    i = new NitroFileLoader.Stream();
-                    break;
-                default:
-                    i = new RiffWave();
-                    break;
-            }
+                ".swav" => new Wave(),
+                ".strm" => new NitroFileLoader.Stream(),
+                _ => new RiffWave(),
+            };
             i.Read(impFileBox.Text);
-            Type convType;
-            switch (outputFormat.SelectedIndex)
+            Type convType = outputFormat.SelectedIndex switch
             {
-                case 0:
-                    convType = typeof(PCM8Signed);
-                    break;
-                case 1:
-                    convType = typeof(PCM16);
-                    break;
-                default:
-                    convType = typeof(ImaAdpcm);
-                    break;
-            }
+                0 => typeof(PCM8Signed),
+                1 => typeof(PCM16),
+                _ => typeof(ImaAdpcm),
+            };
             s.FromOtherStreamFile(i, convType);
             s.Write(outFileBox.Text);
         }

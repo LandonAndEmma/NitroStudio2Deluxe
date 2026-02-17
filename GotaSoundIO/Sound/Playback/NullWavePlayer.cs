@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio.Wave;
+﻿using NAudio.Wave;
+using System;
 
 namespace GotaSoundIO.Sound.Playback
 {
     public class NullWavePlayer : IWavePlayer
     {
-        public float Volume
-        {
-            get => m_Volume;
-            set => m_Volume = value;
-        }
-        private float m_Volume = 1f;
+        public float Volume { get; set; } = 1f;
         public IWaveProvider OutputWaveProvider { get; set; }
         public WaveFormat OutputWaveFormat => OutputWaveProvider?.WaveFormat;
         public PlaybackState PlaybackState => throw new NotImplementedException();
@@ -34,14 +25,7 @@ namespace GotaSoundIO.Sound.Playback
 
         public void Pause()
         {
-            if (m_PlaybackState == PlaybackState.Paused)
-            {
-                m_PlaybackState = PlaybackState.Playing;
-            }
-            else
-            {
-                m_PlaybackState = PlaybackState.Paused;
-            }
+            m_PlaybackState = m_PlaybackState == PlaybackState.Paused ? PlaybackState.Playing : PlaybackState.Paused;
         }
 
         public void Init(IWaveProvider waveProvider)

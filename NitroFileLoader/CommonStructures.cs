@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace NitroFileLoader
 {
@@ -15,7 +10,7 @@ namespace NitroFileLoader
             r.ByteOrder = ByteOrder.BigEndian;
             r.ByteOrder = ByteOrder =
                 r.ReadUInt16() == 0xFEFF ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             FileSize = r.ReadUInt32();
             HeaderSize = r.ReadUInt16();
             ushort numBlocks = r.ReadUInt16();
@@ -23,14 +18,14 @@ namespace NitroFileLoader
             BlockSizes = new long[numBlocks];
             if (numBlocks == 3)
             {
-                r.ReadUInt64();
+                _ = r.ReadUInt64();
             }
             for (int i = 0; i < numBlocks; i++)
             {
                 BlockOffsets[i] = r.ReadUInt32();
                 BlockSizes[i] = r.ReadUInt32();
             }
-            r.Align(0x20);
+            _ = r.Align(0x20);
         }
 
         public override void Write(FileWriter w)
@@ -51,7 +46,7 @@ namespace NitroFileLoader
                 w.Write((uint)BlockOffsets[i]);
                 w.Write((uint)BlockSizes[i]);
             }
-            w.Align(0x20);
+            _ = w.Align(0x20);
         }
     }
 
@@ -63,10 +58,10 @@ namespace NitroFileLoader
             r.ByteOrder = ByteOrder.BigEndian;
             r.ByteOrder = ByteOrder =
                 r.ReadUInt16() == 0xFEFF ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             FileSize = r.ReadUInt32();
             HeaderSize = r.ReadUInt16();
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             BlockOffsets = new long[] { 0x10 };
         }
 

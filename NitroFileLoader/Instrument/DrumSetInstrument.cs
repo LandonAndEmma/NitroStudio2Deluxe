@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
+﻿using GotaSequenceLib;
 using GotaSoundIO.IO;
+using System;
+using System.Linq;
 
-namespace NitroFileLoader
+namespace NitroFileLoader.Instrument
 {
     public class DrumSetInstrument : Instrument
     {
@@ -22,7 +19,7 @@ namespace NitroFileLoader
             byte ind = min;
             for (int i = 0; i < numInsts; i++)
             {
-                InstrumentType t = (InstrumentType)r.ReadUInt16();
+                _ = (InstrumentType)r.ReadUInt16();
                 NoteInfo n = r.Read<NoteInfo>();
                 if (lastInst == null)
                 {
@@ -48,7 +45,7 @@ namespace NitroFileLoader
 
         public override void Write(FileWriter w)
         {
-            var indices = NoteInfo.Select(x => x.Key).ToArray();
+            Notes[] indices = NoteInfo.Select(x => x.Key).ToArray();
             w.Write(Min);
             w.Write((byte)indices.Last());
             for (int i = Min; i <= (byte)indices.Last(); i++)
@@ -69,8 +66,14 @@ namespace NitroFileLoader
             }
         }
 
-        public override InstrumentType Type() => InstrumentType.DrumSet;
+        public override InstrumentType Type()
+        {
+            return InstrumentType.DrumSet;
+        }
 
-        public override uint MaxInstruments() => 0x80;
+        public override uint MaxInstruments()
+        {
+            return 0x80;
+        }
     }
 }

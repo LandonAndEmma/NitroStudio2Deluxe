@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
+﻿using GotaSoundIO.Sound.Formats;
 using NAudio.Wave;
+
+using System;
+using System.IO;
 
 namespace GotaSoundIO.Sound.Playback
 {
@@ -57,10 +53,7 @@ namespace GotaSoundIO.Sound.Playback
 
         public void SetPosition(uint pos)
         {
-            if (LoopStream != null)
-            {
-                LoopStream.CurrentSample = pos;
-            }
+            _ = LoopStream?.CurrentSample = pos;
         }
 
         public uint GetLength()
@@ -78,10 +71,7 @@ namespace GotaSoundIO.Sound.Playback
         {
             if (SoundOut.PlaybackState == PlaybackState.Paused)
             {
-                if (SoundOut as WaveOut != null)
-                {
-                    (SoundOut as WaveOut).Resume();
-                }
+                (SoundOut as WaveOut)?.Resume();
             }
             else if (SoundOut.PlaybackState == PlaybackState.Playing)
             {

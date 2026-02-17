@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
@@ -10,9 +7,12 @@ namespace GotaSoundIO.IO
     {
         public T Data;
 
-        public static implicit operator T(Reference<T> r) => r.Data;
+        public static implicit operator T(Reference<T> r)
+        {
+            return r.Data;
+        }
 
-        public virtual List<Type> DataTypes => new List<Type>();
+        public virtual List<Type> DataTypes => [];
         public abstract bool SetCurrentOffsetOnJump();
         public abstract bool NullReferenceIs0();
         public bool Absolute;
@@ -32,7 +32,7 @@ namespace GotaSoundIO.IO
         public void ReadData(FileReader r)
         {
             long bak = r.Position;
-            if (Offset != 0 && Offset != -1)
+            if (Offset is not 0 and not -1)
             {
                 r.Position = (Absolute ? 0 : r.CurrentOffset) + Offset;
                 if (SetCurrentOffsetOnJump())
@@ -44,14 +44,7 @@ namespace GotaSoundIO.IO
                 if (DataTypes.Count > 0)
                 {
                     Type type = Identifier < DataTypes.Count ? DataTypes[Identifier] : null;
-                    if (type != null)
-                    {
-                        obj = (T)Activator.CreateInstance(type);
-                    }
-                    else
-                    {
-                        obj = default(T);
-                    }
+                    obj = type != null ? (T)Activator.CreateInstance(type) : default;
                 }
                 else
                 {
@@ -59,10 +52,12 @@ namespace GotaSoundIO.IO
                 }
                 if (obj != null)
                 {
-                    if (obj as IOFile != null)
+                    if ((obj as IOFile) != null)
                     {
-                        FileReader r2 = new FileReader(r.BaseStream);
-                        r2.Position = r.Position;
+                        FileReader r2 = new(r.BaseStream)
+                        {
+                            Position = r.Position
+                        };
                         ((IReadable)obj).Read(r2);
                         r.Position = r2.Position;
                     }
@@ -80,7 +75,7 @@ namespace GotaSoundIO.IO
             }
             else
             {
-                Data = default(T);
+                Data = default;
             }
         }
 
@@ -103,7 +98,7 @@ namespace GotaSoundIO.IO
                     w.StructureOffsets.Push(w.CurrentOffset);
                     w.CurrentOffset = w.Position;
                 }
-                if (Data as byte[] != null)
+                if ((Data as byte[]) != null)
                 {
                     w.Write(Data as byte[]);
                 }
@@ -122,7 +117,7 @@ namespace GotaSoundIO.IO
                     {
                         try
                         {
-                            var h = Convert.ChangeType(Data, DataTypes[i]);
+                            object h = Convert.ChangeType(Data, DataTypes[i]);
                             if (h != null)
                             {
                                 Identifier = i;

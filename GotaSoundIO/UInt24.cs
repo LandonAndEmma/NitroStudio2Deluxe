@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace GotaSoundIO
 {
@@ -15,10 +10,7 @@ namespace GotaSoundIO
 
         private void NullCheck()
         {
-            if (Data == null)
-            {
-                Data = new byte[3];
-            }
+            Data ??= new byte[3];
         }
 
         private int GetInt()
@@ -26,14 +18,14 @@ namespace GotaSoundIO
             NullCheck();
             int ret = 0;
             ret |= Data[2];
-            ret |= (Data[1] << 8);
-            ret |= (Data[0] << 16);
+            ret |= Data[1] << 8;
+            ret |= Data[0] << 16;
             return ret;
         }
 
         private static UInt24 FromInt(int val)
         {
-            UInt24 ret = new UInt24();
+            UInt24 ret = new();
             ret.NullCheck();
             ret.Data[2] = (byte)((val >> 0) & 0xFF);
             ret.Data[1] = (byte)((val >> 8) & 0xFF);
@@ -46,15 +38,30 @@ namespace GotaSoundIO
             return (uint)GetInt();
         }
 
-        public static implicit operator int(UInt24 val) => val.GetInt();
+        public static implicit operator int(UInt24 val)
+        {
+            return val.GetInt();
+        }
 
-        public static implicit operator uint(UInt24 val) => val.GetUInt();
+        public static implicit operator uint(UInt24 val)
+        {
+            return val.GetUInt();
+        }
 
-        public static explicit operator UInt24(int val) => UInt24.FromInt(val);
+        public static explicit operator UInt24(int val)
+        {
+            return UInt24.FromInt(val);
+        }
 
-        public static explicit operator UInt24(uint val) => UInt24.FromInt((int)val);
+        public static explicit operator UInt24(uint val)
+        {
+            return UInt24.FromInt((int)val);
+        }
 
-        public static explicit operator UInt24(float val) => UInt24.FromInt((int)val);
+        public static explicit operator UInt24(float val)
+        {
+            return UInt24.FromInt((int)val);
+        }
 
         public void Read(FileReader r)
         {

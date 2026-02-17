@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSequenceLib.Playback
 {
@@ -49,7 +46,7 @@ namespace GotaSequenceLib.Playback
         public int BankNum;
         public bool NoteDown;
         public short[] Vars = new short[0x10];
-        public readonly List<Channel> Channels = new List<Channel>(0x10);
+        public readonly List<Channel> Channels = new(0x10);
 
         public int GetPitch()
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
@@ -11,12 +10,12 @@ namespace GotaSoundIO.IO
     {
         public long FileOffset;
         public long CurrentOffset;
-        public Stack<long> StructureOffsets = new Stack<long>();
+        public Stack<long> StructureOffsets = new();
         public long[] BlockOffsets;
         public long[] BlockSizes;
-        public Dictionary<string, uint> Offsets = new Dictionary<string, uint>();
+        public Dictionary<string, uint> Offsets = [];
         public Dictionary<string, Reference<object>> References =
-            new Dictionary<string, Reference<object>>();
+            [];
 
         #region Constructors
         public FileReader(Stream input)
@@ -29,42 +28,34 @@ namespace GotaSoundIO.IO
         public ByteConverter ByteConverter { get; set; }
         public ByteOrder ByteOrder
         {
-            get { return this.ByteConverter.ByteOrder; }
-            set { this.ByteConverter = ByteConverter.GetConverter(value); }
+            get => ByteConverter.ByteOrder; set => ByteConverter = ByteConverter.GetConverter(value);
         }
         public Encoding Encoding { get; }
-        public bool EndOfStream
-        {
-            get { return this.BaseStream.IsEndOfStream(); }
-        }
-        public long Length
-        {
-            get { return this.BaseStream.Length; }
-        }
+        public bool EndOfStream => BaseStream.IsEndOfStream();
+        public long Length => BaseStream.Length;
         public long Position
         {
-            get { return this.BaseStream.Position; }
-            set { this.BaseStream.Position = value; }
+            get => BaseStream.Position; set => BaseStream.Position = value;
         }
 
         public long Align(int alignment)
         {
-            return this.BaseStream.Align(alignment, true);
+            return BaseStream.Align(alignment, true);
         }
 
         public bool ReadBoolean(BooleanDataFormat format)
         {
-            return this.BaseStream.ReadBoolean(format);
+            return BaseStream.ReadBoolean(format);
         }
 
         public bool[] ReadBooleans(int count, BooleanDataFormat format = BooleanDataFormat.Byte)
         {
-            return this.BaseStream.ReadBooleans(count, format);
+            return BaseStream.ReadBooleans(count, format);
         }
 
         public DateTime ReadDateTime(DateTimeDataFormat format = DateTimeDataFormat.NetTicks)
         {
-            return this.BaseStream.ReadDateTime(format, this.ByteConverter);
+            return BaseStream.ReadDateTime(format, ByteConverter);
         }
 
         public DateTime[] ReadDateTimes(
@@ -72,153 +63,153 @@ namespace GotaSoundIO.IO
             DateTimeDataFormat format = DateTimeDataFormat.NetTicks
         )
         {
-            return this.BaseStream.ReadDateTimes(count, format, this.ByteConverter);
+            return BaseStream.ReadDateTimes(count, format, ByteConverter);
         }
 
-        public override Decimal ReadDecimal()
+        public override decimal ReadDecimal()
         {
-            return this.BaseStream.ReadDecimal(this.ByteConverter);
+            return BaseStream.ReadDecimal(ByteConverter);
         }
 
-        public Decimal[] ReadDecimals(int count)
+        public decimal[] ReadDecimals(int count)
         {
-            return this.BaseStream.ReadDecimals(count, this.ByteConverter);
+            return BaseStream.ReadDecimals(count, ByteConverter);
         }
 
         public override double ReadDouble()
         {
-            return this.BaseStream.ReadDouble(this.ByteConverter);
+            return BaseStream.ReadDouble(ByteConverter);
         }
 
         public double[] ReadDoubles(int count)
         {
-            return this.BaseStream.ReadDoubles(count, this.ByteConverter);
+            return BaseStream.ReadDoubles(count, ByteConverter);
         }
 
         public T ReadEnum<T>(bool strict = false)
             where T : struct, IComparable, IFormattable
         {
-            return this.BaseStream.ReadEnum<T>(strict, this.ByteConverter);
+            return BaseStream.ReadEnum<T>(strict, ByteConverter);
         }
 
         public T[] ReadEnums<T>(int count, bool strict = false)
             where T : struct, IComparable, IFormattable
         {
-            return this.BaseStream.ReadEnums<T>(count, strict, this.ByteConverter);
+            return BaseStream.ReadEnums<T>(count, strict, ByteConverter);
         }
 
         public override short ReadInt16()
         {
-            return this.BaseStream.ReadInt16(this.ByteConverter);
+            return BaseStream.ReadInt16(ByteConverter);
         }
 
         public short[] ReadInt16s(int count)
         {
-            return this.BaseStream.ReadInt16s(count, this.ByteConverter);
+            return BaseStream.ReadInt16s(count, ByteConverter);
         }
 
         public override int ReadInt32()
         {
-            return this.BaseStream.ReadInt32(this.ByteConverter);
+            return BaseStream.ReadInt32(ByteConverter);
         }
 
         public int[] ReadInt32s(int count)
         {
-            return this.BaseStream.ReadInt32s(count, this.ByteConverter);
+            return BaseStream.ReadInt32s(count, ByteConverter);
         }
 
         public override long ReadInt64()
         {
-            return this.BaseStream.ReadInt64(this.ByteConverter);
+            return BaseStream.ReadInt64(ByteConverter);
         }
 
         public long[] ReadInt64s(int count)
         {
-            return this.BaseStream.ReadInt64s(count, this.ByteConverter);
+            return BaseStream.ReadInt64s(count, ByteConverter);
         }
 
         public sbyte[] ReadSBytes(int count)
         {
-            return this.BaseStream.ReadSBytes(count);
+            return BaseStream.ReadSBytes(count);
         }
 
         public override float ReadSingle()
         {
-            return this.BaseStream.ReadSingle(this.ByteConverter);
+            return BaseStream.ReadSingle(ByteConverter);
         }
 
         public float[] ReadSingles(int count)
         {
-            return this.BaseStream.ReadSingles(count, this.ByteConverter);
+            return BaseStream.ReadSingles(count, ByteConverter);
         }
 
         public string ReadString(StringDataFormat format, Encoding encoding = null)
         {
-            return this.BaseStream.ReadString(
+            return BaseStream.ReadString(
                 format,
-                encoding ?? this.Encoding,
-                this.ByteConverter
+                encoding ?? Encoding,
+                ByteConverter
             );
         }
 
         public string ReadString(int length, Encoding encoding = null)
         {
-            return this.BaseStream.ReadString(length, encoding ?? this.Encoding);
+            return BaseStream.ReadString(length, encoding ?? Encoding);
         }
 
         public string[] ReadStrings(int count)
         {
-            return this.BaseStream.ReadStrings(
+            return BaseStream.ReadStrings(
                 count,
                 StringDataFormat.DynamicByteCount,
-                (Encoding)null,
-                (ByteConverter)null
+                null,
+                null
             );
         }
 
         public string[] ReadStrings(int count, StringDataFormat format, Encoding encoding = null)
         {
-            return this.BaseStream.ReadStrings(
+            return BaseStream.ReadStrings(
                 count,
                 format,
-                encoding ?? this.Encoding,
-                this.ByteConverter
+                encoding ?? Encoding,
+                ByteConverter
             );
         }
 
         public string[] ReadStrings(int count, int length, Encoding encoding = null)
         {
-            return this.BaseStream.ReadStrings(count, length, encoding ?? this.Encoding);
+            return BaseStream.ReadStrings(count, length, encoding ?? Encoding);
         }
 
         public override ushort ReadUInt16()
         {
-            return this.BaseStream.ReadUInt16(this.ByteConverter);
+            return BaseStream.ReadUInt16(ByteConverter);
         }
 
         public ushort[] ReadUInt16s(int count)
         {
-            return this.BaseStream.ReadUInt16s(count, this.ByteConverter);
+            return BaseStream.ReadUInt16s(count, ByteConverter);
         }
 
         public override uint ReadUInt32()
         {
-            return this.BaseStream.ReadUInt32(this.ByteConverter);
+            return BaseStream.ReadUInt32(ByteConverter);
         }
 
         public uint[] ReadUInt32s(int count)
         {
-            return this.BaseStream.ReadUInt32s(count, this.ByteConverter);
+            return BaseStream.ReadUInt32s(count, ByteConverter);
         }
 
         public override ulong ReadUInt64()
         {
-            return this.BaseStream.ReadUInt64(this.ByteConverter);
+            return BaseStream.ReadUInt64(ByteConverter);
         }
 
         public ulong[] ReadUInt64s(int count)
         {
-            return this.BaseStream.ReadUInt64s(count, this.ByteConverter);
+            return BaseStream.ReadUInt64s(count, ByteConverter);
         }
         #endregion
         public T Read<T>()
@@ -251,7 +242,10 @@ namespace GotaSoundIO.IO
         {
             FileOffset = Position;
             if (setOffset)
+            {
                 CurrentOffset = Position;
+            }
+
             fileHeader = Read<T>();
             BlockOffsets = fileHeader.BlockOffsets;
             BlockSizes = fileHeader.BlockSizes;
@@ -261,7 +255,9 @@ namespace GotaSoundIO.IO
         {
             FileOffset = Position;
             if (setOffset)
+            {
                 CurrentOffset = Position;
+            }
         }
 
         public void OpenBlock(
@@ -290,8 +286,10 @@ namespace GotaSoundIO.IO
         public T ReadFile<T>()
             where T : IOFile
         {
-            FileReader r = new FileReader(BaseStream);
-            r.Position = Position;
+            FileReader r = new(BaseStream)
+            {
+                Position = Position
+            };
             r.CurrentOffset = r.Position;
             r.FileOffset = r.Position;
             T f = r.Read<T>();
@@ -312,14 +310,7 @@ namespace GotaSoundIO.IO
 
         public void Jump(long offset, bool absolute = false)
         {
-            if (absolute)
-            {
-                Position = FileOffset + offset;
-            }
-            else
-            {
-                Position = CurrentOffset + offset;
-            }
+            Position = absolute ? FileOffset + offset : CurrentOffset + offset;
         }
 
         public void OpenOffset(string name)
@@ -329,14 +320,7 @@ namespace GotaSoundIO.IO
 
         public void JumpToOffset(string name, bool remove = true, bool absolute = false)
         {
-            if (absolute)
-            {
-                Position = FileOffset + Offsets[name];
-            }
-            else
-            {
-                Position = CurrentOffset + Offsets[name];
-            }
+            Position = absolute ? FileOffset + Offsets[name] : CurrentOffset + Offsets[name];
             if (remove)
             {
                 CloseOffset(name);
@@ -349,13 +333,13 @@ namespace GotaSoundIO.IO
             {
                 return false;
             }
-            Offsets.Remove(name);
+            _ = Offsets.Remove(name);
             return true;
         }
 
         public void CloseOffset(string name)
         {
-            Offsets.Remove(name);
+            _ = Offsets.Remove(name);
         }
 
         public void OpenReference<T>(string name)
@@ -367,14 +351,7 @@ namespace GotaSoundIO.IO
 
         public void JumpToReference(string name, bool remove = true)
         {
-            if (References[name].Absolute)
-            {
-                Position = FileOffset + References[name].Offset;
-            }
-            else
-            {
-                Position = CurrentOffset + References[name].Offset;
-            }
+            Position = References[name].Absolute ? FileOffset + References[name].Offset : CurrentOffset + References[name].Offset;
             if (remove)
             {
                 CloseReference(name);
@@ -387,7 +364,7 @@ namespace GotaSoundIO.IO
             {
                 return false;
             }
-            References.Remove(name);
+            _ = References.Remove(name);
             return true;
         }
 
@@ -398,7 +375,7 @@ namespace GotaSoundIO.IO
 
         public void CloseReference(string name)
         {
-            References.Remove(name);
+            _ = References.Remove(name);
         }
 
         public bool[] ReadBitFlags(int numBytes, int maxArraySize = 0xFFFF)
@@ -419,7 +396,7 @@ namespace GotaSoundIO.IO
                     flags = ReadUInt64();
                     break;
             }
-            List<bool> b = new List<bool>();
+            List<bool> b = [];
             for (int i = 0; i < Math.Min(numBytes * 8, maxArraySize); i++)
             {
                 b.Add((flags & (ulong)(0b1 << i)) > 0);

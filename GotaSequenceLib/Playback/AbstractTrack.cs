@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GotaSequenceLib.Playback
+﻿namespace GotaSequenceLib.Playback
 {
     public abstract class AbstractTrack
     {
@@ -51,17 +49,7 @@ namespace GotaSequenceLib.Playback
             private readonly short[] _trackVars = new short[0x10];
             public short this[int i]
             {
-                get
-                {
-                    if (i < 0x20)
-                    {
-                        return _player.Vars[i];
-                    }
-                    else
-                    {
-                        return _trackVars[i - 0x20];
-                    }
-                }
+                get => i < 0x20 ? _player.Vars[i] : _trackVars[i - 0x20];
                 set
                 {
                     if (i < 0x20)

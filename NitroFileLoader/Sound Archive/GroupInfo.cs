@@ -1,9 +1,6 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace NitroFileLoader
 {
@@ -11,11 +8,11 @@ namespace NitroFileLoader
     {
         public string Name;
         public int Index;
-        public List<GroupEntry> Entries = new List<GroupEntry>();
+        public List<GroupEntry> Entries = [];
 
         public void Read(FileReader r)
         {
-            Entries = new List<GroupEntry>();
+            Entries = [];
             uint numEntries = r.ReadUInt32();
             for (uint i = 0; i < numEntries; i++)
             {
@@ -27,7 +24,7 @@ namespace NitroFileLoader
         {
             Entries = Entries.Where(x => x.Entry != null).ToList();
             w.Write((uint)Entries.Count);
-            foreach (var e in Entries)
+            foreach (GroupEntry e in Entries)
             {
                 w.Write(e);
             }

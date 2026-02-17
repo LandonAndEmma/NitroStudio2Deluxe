@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
@@ -12,13 +10,13 @@ namespace GotaSoundIO.IO
         private FileHeader Header;
         public long CurrentOffset;
         public long FileOffset;
-        public Stack<long> StructureOffsets = new Stack<long>();
-        public Dictionary<string, long> Offsets = new Dictionary<string, long>();
-        public List<long> BlockOffsets = new List<long>();
-        public List<long> BlockSizes = new List<long>();
-        public List<long> BlockTypes = new List<long>();
+        public Stack<long> StructureOffsets = new();
+        public Dictionary<string, long> Offsets = [];
+        public List<long> BlockOffsets = [];
+        public List<long> BlockSizes = [];
+        public List<long> BlockTypes = [];
         public Dictionary<string, Reference<object>> References =
-            new Dictionary<string, Reference<object>>();
+            [];
 
         #region
         public FileWriter(Stream output)
@@ -31,33 +29,27 @@ namespace GotaSoundIO.IO
         public ByteConverter ByteConverter { get; set; }
         public ByteOrder ByteOrder
         {
-            get { return this.ByteConverter.ByteOrder; }
-            set { this.ByteConverter = ByteConverter.GetConverter(value); }
+            get => ByteConverter.ByteOrder; set => ByteConverter = ByteConverter.GetConverter(value);
         }
         public Encoding Encoding { get; }
-        public bool EndOfStream
-        {
-            get { return this.BaseStream.IsEndOfStream(); }
-        }
+        public bool EndOfStream => BaseStream.IsEndOfStream();
         public long Length
         {
-            get { return this.BaseStream.Length; }
-            set { this.BaseStream.SetLength(value); }
+            get => BaseStream.Length; set => BaseStream.SetLength(value);
         }
         public long Position
         {
-            get { return this.BaseStream.Position; }
-            set { this.BaseStream.Position = value; }
+            get => BaseStream.Position; set => BaseStream.Position = value;
         }
 
         public long Align(int alignment, bool grow = true)
         {
-            return this.BaseStream.Align(alignment, grow);
+            return BaseStream.Align(alignment, grow);
         }
 
         public void Write(bool value, BooleanDataFormat format)
         {
-            this.BaseStream.Write(value, format, this.ByteConverter);
+            BaseStream.Write(value, format, ByteConverter);
         }
 
         public void Write(
@@ -65,12 +57,12 @@ namespace GotaSoundIO.IO
             BooleanDataFormat format = BooleanDataFormat.Byte
         )
         {
-            this.BaseStream.Write(values, format, this.ByteConverter);
+            BaseStream.Write(values, format, ByteConverter);
         }
 
         public void Write(DateTime value, DateTimeDataFormat format = DateTimeDataFormat.NetTicks)
         {
-            this.BaseStream.Write(value, format, this.ByteConverter);
+            BaseStream.Write(value, format, ByteConverter);
         }
 
         public void Write(
@@ -78,84 +70,84 @@ namespace GotaSoundIO.IO
             DateTimeDataFormat format = DateTimeDataFormat.NetTicks
         )
         {
-            this.BaseStream.Write(values, format, this.ByteConverter);
+            BaseStream.Write(values, format, ByteConverter);
         }
 
-        public override void Write(Decimal value)
+        public override void Write(decimal value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
-        public void Write(IEnumerable<Decimal> values)
+        public void Write(IEnumerable<decimal> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(double value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<double> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public void WriteEnum<T>(T value, bool strict = false)
             where T : struct, IComparable, IFormattable
         {
-            this.BaseStream.WriteEnum<T>(value, strict, this.ByteConverter);
+            BaseStream.WriteEnum<T>(value, strict, ByteConverter);
         }
 
         public void WriteEnums<T>(IEnumerable<T> values, bool strict = false)
             where T : struct, IComparable, IFormattable
         {
-            this.BaseStream.WriteEnums<T>(values, strict, this.ByteConverter);
+            BaseStream.WriteEnums<T>(values, strict, ByteConverter);
         }
 
         public override void Write(short value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<short> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(int value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<int> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(long value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<long> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(float value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<float> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public void Write(string value, StringDataFormat format, Encoding encoding = null)
         {
-            this.BaseStream.Write(value, format, encoding, this.ByteConverter);
+            BaseStream.Write(value, format, encoding, ByteConverter);
         }
 
         public void Write(
@@ -164,37 +156,37 @@ namespace GotaSoundIO.IO
             Encoding encoding = null
         )
         {
-            this.BaseStream.Write(values, format, encoding, (ByteConverter)null);
+            BaseStream.Write(values, format, encoding, null);
         }
 
         public override void Write(ushort value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<ushort> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(uint value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<uint> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
 
         public override void Write(ulong value)
         {
-            this.BaseStream.Write(value, this.ByteConverter);
+            BaseStream.Write(value, ByteConverter);
         }
 
         public void Write(IEnumerable<ulong> values)
         {
-            this.BaseStream.Write(values, this.ByteConverter);
+            BaseStream.Write(values, ByteConverter);
         }
         #endregion
         public void Write(IWriteable w)
@@ -256,11 +248,11 @@ namespace GotaSoundIO.IO
         public void CloseBlock(bool writeBlockSize = true)
         {
             long bak = Position;
-            BlockSizes.Add(Position - BlockOffsets[BlockOffsets.Count - 1]);
+            BlockSizes.Add(Position - BlockOffsets[^1]);
             if (writeBlockSize)
             {
-                Position = BlockOffsets[BlockOffsets.Count - 1] + 4;
-                Write((uint)BlockSizes[BlockSizes.Count - 1]);
+                Position = BlockOffsets[^1] + 4;
+                Write((uint)BlockSizes[^1]);
                 EndStructure();
             }
             Position = bak;
@@ -287,7 +279,7 @@ namespace GotaSoundIO.IO
         {
             long bak = Position;
             Position = Offsets[name];
-            Offsets.Remove(name);
+            _ = Offsets.Remove(name);
             if (offsetOverride != -2)
             {
                 Write((uint)offsetOverride);
@@ -332,21 +324,14 @@ namespace GotaSoundIO.IO
             {
                 References[name].Size = sizeOverride;
             }
-            if (absolute)
-            {
-                References[name].Offset = bak - FileOffset;
-            }
-            else
-            {
-                References[name].Offset = bak - CurrentOffset;
-            }
+            References[name].Offset = absolute ? bak - FileOffset : bak - CurrentOffset;
             if (offsetOverride != -2)
             {
                 References[name].Offset = offsetOverride;
             }
             References[name].WriteRef(this, true);
             Position = bak;
-            References.Remove(name);
+            _ = References.Remove(name);
         }
 
         public void WriteBitFlags(bool[] flags, int numBytes)
@@ -392,7 +377,7 @@ namespace GotaSoundIO.IO
 
         public void WriteFixedString(string s, int amount)
         {
-            string str = s.Substring(0, Math.Min(amount, s.Length));
+            string str = s[..Math.Min(amount, s.Length)];
             Write(str, StringDataFormat.Raw);
             Write(new byte[amount - str.Length]);
         }

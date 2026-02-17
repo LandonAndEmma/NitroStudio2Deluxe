@@ -1,18 +1,14 @@
-﻿using System;
+﻿using GotaSoundIO.Sound.Formats;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.Sound;
 
 namespace GotaSoundIO.IO.RIFF
 {
     public class RiffWriter : FileWriter
     {
-        Stack<long> BakOffs = new Stack<long>();
+        private Stack<long> BakOffs = new();
         public long CurrOffset;
-        private Stack<long> BlockOffs = new Stack<long>();
+        private readonly Stack<long> BlockOffs = new();
 
         #region Constructors
         public RiffWriter(Stream output)

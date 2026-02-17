@@ -1,11 +1,8 @@
-﻿using System;
+﻿using GotaSoundIO.Sound.Formats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using GotaSoundIO.Sound;
-using NAudio.Wave;
 
 namespace GotaSequenceLib.Playback
 {
@@ -18,13 +15,13 @@ namespace GotaSequenceLib.Playback
         public byte Volume = 127;
         private int Timebase
         {
-            get => _ticksPerWholeNote / 4;
+            get => field / 4;
             set
             {
-                _ticksPerWholeNote = value * 4;
-                _time = new TimeBarrier(_ticksPerWholeNote);
+                field = value * 4;
+                _time = new TimeBarrier(field);
             }
-        }
+        } = 192;
         private readonly Track[] _tracks = new Track[0x10];
         private readonly Mixer _mixer;
         private TimeBarrier _time;
@@ -34,7 +31,6 @@ namespace GotaSequenceLib.Playback
         private ushort _tempo;
         private int _tempoStack;
         private long _elapsedLoops;
-        private int _ticksPerWholeNote = 192;
         private int currEventOverride;
         public List<SequenceCommand> Events { get; private set; }
         public Dictionary<int, int> Ticks { get; private set; }
@@ -166,35 +162,35 @@ namespace GotaSequenceLib.Playback
                         switch (type)
                         {
                             case InstrumentType.PCM:
-                            {
-                                RiffWave wave = null;
-                                try
                                 {
-                                    wave = WaveArchives[param.WarId][param.WaveId];
+                                    RiffWave wave = null;
+                                    try
+                                    {
+                                        wave = WaveArchives[param.WarId][param.WaveId];
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Can't find wave specified by bank!");
+                                    }
+                                    if (wave != null)
+                                    {
+                                        channel.StartPCM(wave, duration, ClockSpeed);
+                                        started = true;
+                                    }
+                                    break;
                                 }
-                                catch
-                                {
-                                    Console.WriteLine("Can't find wave specified by bank!");
-                                }
-                                if (wave != null)
-                                {
-                                    channel.StartPCM(wave, duration, ClockSpeed);
-                                    started = true;
-                                }
-                                break;
-                            }
                             case InstrumentType.PSG:
-                            {
-                                channel.StartPSG((byte)param.WaveId, duration);
-                                started = true;
-                                break;
-                            }
+                                {
+                                    channel.StartPSG((byte)param.WaveId, duration);
+                                    started = true;
+                                    break;
+                                }
                             case InstrumentType.Noise:
-                            {
-                                channel.StartNoise(duration);
-                                started = true;
-                                break;
-                            }
+                                {
+                                    channel.StartNoise(duration);
+                                    started = true;
+                                    break;
+                                }
                         }
                         channel.Stop();
                         if (started)
@@ -265,14 +261,7 @@ namespace GotaSequenceLib.Playback
 
         public short GetVar(int varNum, int trackNum)
         {
-            if (varNum < 0x20)
-            {
-                return Vars[varNum];
-            }
-            else
-            {
-                return _tracks[trackNum].Vars[varNum - 0x20];
-            }
+            return varNum < 0x20 ? Vars[varNum] : _tracks[trackNum].Vars[varNum - 0x20];
         }
 
         public void SetVar(int varNum, int trackNum, short val)
@@ -383,7 +372,7 @@ namespace GotaSequenceLib.Playback
                     _time.Wait();
                 }
             }
-            stop:
+        stop:
             _time.Stop();
         }
 
@@ -397,99 +386,72 @@ namespace GotaSequenceLib.Playback
             switch (SequenceCommand.CommandParameters[c.CommandType])
             {
                 case SequenceCommandParameter.Bool:
-                    return ((bool)c.Parameter ? 1 : 0);
+                    return (bool)c.Parameter ? 1 : 0;
                 case SequenceCommandParameter.None:
                     return 0;
                 case SequenceCommandParameter.NoteParam:
-                    switch (argumentNum)
+                    return argumentNum switch
                     {
-                        case 0:
-                            return (int)(c.Parameter as NoteParameter).Note;
-                        case 1:
-                            return (c.Parameter as NoteParameter).Velocity;
-                        case 2:
-                            return (int)(c.Parameter as NoteParameter).Length;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        0 => (int)(c.Parameter as NoteParameter).Note,
+                        1 => (c.Parameter as NoteParameter).Velocity,
+                        2 => (int)(c.Parameter as NoteParameter).Length,
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
                 case SequenceCommandParameter.OpenTrack:
-                    switch (argumentNum)
+                    return argumentNum switch
                     {
-                        case 0:
-                            return (c.Parameter as OpenTrackParameter).TrackNumber;
-                        case 1:
-                            return (int)(c.Parameter as OpenTrackParameter).Index(events);
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        0 => (c.Parameter as OpenTrackParameter).TrackNumber,
+                        1 => (c.Parameter as OpenTrackParameter).Index(events),
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
                 case SequenceCommandParameter.Random:
                     int argsNumR = NumArguments(c);
-                    if (argsNumR == argumentNum + 1)
-                    {
-                        return _rand.Next(
+                    return argsNumR == argumentNum + 1
+                        ? _rand.Next(
                             (c.Parameter as RandomParameter).Min,
                             (c.Parameter as RandomParameter).Max
-                        );
-                    }
-                    else
-                    {
-                        return GetCommandParameter(
+                        )
+                        : GetCommandParameter(
                             (c.Parameter as RandomParameter).Command,
                             argumentNum,
                             _rand,
                             events
                         );
-                    }
                 case SequenceCommandParameter.S16:
                     return (short)c.Parameter;
                 case SequenceCommandParameter.Time:
                     int argsNumT = NumArguments(c);
-                    if (argsNumT == argumentNum + 1)
-                    {
-                        return (c.Parameter as TimeParameter).Value;
-                    }
-                    else
-                    {
-                        return GetCommandParameter(
+                    return argsNumT == argumentNum + 1
+                        ? (c.Parameter as TimeParameter).Value
+                        : GetCommandParameter(
                             (c.Parameter as TimeParameter).Command,
                             argumentNum,
                             _rand,
                             events
                         );
-                    }
                 case SequenceCommandParameter.TimeRandom:
                     int argsNumTR = NumArguments(c);
-                    if (argsNumTR == argumentNum + 1)
-                    {
-                        return _rand.Next(
+                    return argsNumTR == argumentNum + 1
+                        ? _rand.Next(
                             (c.Parameter as RandomParameter).Min,
                             (c.Parameter as RandomParameter).Max
-                        );
-                    }
-                    else
-                    {
-                        return GetCommandParameter(
+                        )
+                        : GetCommandParameter(
                             (c.Parameter as RandomParameter).Command,
                             argumentNum,
                             _rand,
                             events
                         );
-                    }
                 case SequenceCommandParameter.TimeVariable:
                     int argsNumTV = NumArguments(c);
-                    if (argsNumTV == argumentNum + 1)
-                    {
-                        return (c.Parameter as VariableParameter).Variable;
-                    }
-                    else
-                    {
-                        return GetCommandParameter(
+                    return argsNumTV == argumentNum + 1
+                        ? (c.Parameter as VariableParameter).Variable
+                        : GetCommandParameter(
                             (c.Parameter as VariableParameter).Command,
                             argumentNum,
                             _rand,
                             events
                         );
-                    }
                 case SequenceCommandParameter.U16:
                     return (ushort)c.Parameter;
                 case SequenceCommandParameter.U24:
@@ -499,35 +461,27 @@ namespace GotaSequenceLib.Playback
                 case SequenceCommandParameter.S8:
                     return (sbyte)c.Parameter;
                 case SequenceCommandParameter.U8S16:
-                    switch (argumentNum)
+                    return argumentNum switch
                     {
-                        case 0:
-                            return (c.Parameter as U8S16Parameter).U8;
-                        case 1:
-                            return (c.Parameter as U8S16Parameter).S16;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        0 => (c.Parameter as U8S16Parameter).U8,
+                        1 => (c.Parameter as U8S16Parameter).S16,
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
                 case SequenceCommandParameter.Variable:
                     int argsNumV = NumArguments(c);
-                    if (argsNumV == argumentNum + 1)
-                    {
-                        return (c.Parameter as VariableParameter).Variable;
-                    }
-                    else
-                    {
-                        return GetCommandParameter(
+                    return argsNumV == argumentNum + 1
+                        ? (c.Parameter as VariableParameter).Variable
+                        : GetCommandParameter(
                             (c.Parameter as VariableParameter).Command,
                             argumentNum,
                             _rand,
                             events
                         );
-                    }
                 case SequenceCommandParameter.VariableLength:
-                    return (int)((uint)c.Parameter);
+                    return (int)(uint)c.Parameter;
                 case SequenceCommandParameter.If:
                     return GetCommandParameter(
-                        (c.Parameter as SequenceCommand),
+                        c.Parameter as SequenceCommand,
                         argumentNum,
                         _rand,
                         events
@@ -538,44 +492,27 @@ namespace GotaSequenceLib.Playback
 
         public static int NumArguments(SequenceCommand c)
         {
-            switch (SequenceCommand.CommandParameters[c.CommandType])
+            return SequenceCommand.CommandParameters[c.CommandType] switch
             {
-                case SequenceCommandParameter.Bool:
-                    return 1;
-                case SequenceCommandParameter.None:
-                    return 0;
-                case SequenceCommandParameter.NoteParam:
-                    return 3;
-                case SequenceCommandParameter.OpenTrack:
-                    return 2;
-                case SequenceCommandParameter.Random:
-                    return NumArguments((c.Parameter as RandomParameter).Command);
-                case SequenceCommandParameter.S16:
-                    return 1;
-                case SequenceCommandParameter.Time:
-                    return NumArguments((c.Parameter as TimeParameter).Command) + 1;
-                case SequenceCommandParameter.TimeRandom:
-                    return NumArguments((c.Parameter as RandomParameter).Command) + 1;
-                case SequenceCommandParameter.TimeVariable:
-                    return NumArguments((c.Parameter as VariableParameter).Command) + 1;
-                case SequenceCommandParameter.U16:
-                    return 1;
-                case SequenceCommandParameter.U24:
-                    return 1;
-                case SequenceCommandParameter.U8:
-                    return 1;
-                case SequenceCommandParameter.S8:
-                    return 1;
-                case SequenceCommandParameter.U8S16:
-                    return 2;
-                case SequenceCommandParameter.Variable:
-                    return NumArguments((c.Parameter as VariableParameter).Command);
-                case SequenceCommandParameter.VariableLength:
-                    return 1;
-                case SequenceCommandParameter.If:
-                    return NumArguments(c.Parameter as SequenceCommand);
-            }
-            return 0;
+                SequenceCommandParameter.Bool => 1,
+                SequenceCommandParameter.None => 0,
+                SequenceCommandParameter.NoteParam => 3,
+                SequenceCommandParameter.OpenTrack => 2,
+                SequenceCommandParameter.Random => NumArguments((c.Parameter as RandomParameter).Command),
+                SequenceCommandParameter.S16 => 1,
+                SequenceCommandParameter.Time => NumArguments((c.Parameter as TimeParameter).Command) + 1,
+                SequenceCommandParameter.TimeRandom => NumArguments((c.Parameter as RandomParameter).Command) + 1,
+                SequenceCommandParameter.TimeVariable => NumArguments((c.Parameter as VariableParameter).Command) + 1,
+                SequenceCommandParameter.U16 => 1,
+                SequenceCommandParameter.U24 => 1,
+                SequenceCommandParameter.U8 => 1,
+                SequenceCommandParameter.S8 => 1,
+                SequenceCommandParameter.U8S16 => 2,
+                SequenceCommandParameter.Variable => NumArguments((c.Parameter as VariableParameter).Command),
+                SequenceCommandParameter.VariableLength => 1,
+                SequenceCommandParameter.If => NumArguments(c.Parameter as SequenceCommand),
+                _ => 0,
+            };
         }
 
         private void ExecuteNext(int i)
@@ -594,11 +531,11 @@ namespace GotaSequenceLib.Playback
                 args[i] = GetCommandParameter(c, i, _rand, Events);
             }
             if (
-                c.CommandType == SequenceCommands.Variable
-                || c.CommandType == SequenceCommands.TimeVariable
+                c.CommandType is SequenceCommands.Variable
+                or SequenceCommands.TimeVariable
             )
             {
-                args[args.Length - 1] = GetVar(args[args.Length - 1], trackIndex);
+                args[^1] = GetVar(args[^1], trackIndex);
             }
             SequenceCommands trueCommandType = GetTrueCommandType(c);
             if (c.CommandType == SequenceCommands.If && !track.VariableFlag)
@@ -608,30 +545,30 @@ namespace GotaSequenceLib.Playback
             switch (trueCommandType)
             {
                 case SequenceCommands.Note:
-                {
-                    int duration = args[2];
-                    int k = (int)args[0] + track.Transpose;
-                    if (k < 0)
                     {
-                        k = 0;
-                    }
-                    else if (k > 0x7F)
-                    {
-                        k = 0x7F;
-                    }
-                    byte key = (byte)k;
-                    PlayNote(track, key, (byte)args[1], duration);
-                    track.PortamentoKey = key;
-                    if (track.Mono)
-                    {
-                        track.Rest = duration;
-                        if (duration == 0)
+                        int duration = args[2];
+                        int k = args[0] + track.Transpose;
+                        if (k < 0)
                         {
-                            track.WaitingForNoteToFinishBeforeContinuingXD = true;
+                            k = 0;
                         }
+                        else if (k > 0x7F)
+                        {
+                            k = 0x7F;
+                        }
+                        byte key = (byte)k;
+                        PlayNote(track, key, (byte)args[1], duration);
+                        track.PortamentoKey = key;
+                        if (track.Mono)
+                        {
+                            track.Rest = duration;
+                            if (duration == 0)
+                            {
+                                track.WaitingForNoteToFinishBeforeContinuingXD = true;
+                            }
+                        }
+                        break;
                     }
-                    break;
-                }
                 case SequenceCommands.Wait:
                     track.Rest = args[0];
                     break;
@@ -704,20 +641,20 @@ namespace GotaSequenceLib.Playback
                     track.StopAllChannels();
                     break;
                 case SequenceCommands.Porta:
-                {
-                    int k = args[0] + track.Transpose;
-                    if (k < 0)
                     {
-                        k = 0;
+                        int k = args[0] + track.Transpose;
+                        if (k < 0)
+                        {
+                            k = 0;
+                        }
+                        else if (k > 0x7F)
+                        {
+                            k = 0x7F;
+                        }
+                        track.PortamentoKey = (byte)k;
+                        track.Portamento = true;
+                        break;
                     }
-                    else if (k > 0x7F)
-                    {
-                        k = 0x7F;
-                    }
-                    track.PortamentoKey = (byte)k;
-                    track.Portamento = true;
-                    break;
-                }
                 case SequenceCommands.ModDepth:
                     track.LFODepth = (byte)args[0];
                     break;
@@ -838,21 +775,21 @@ namespace GotaSequenceLib.Playback
                     );
                     break;
                 case SequenceCommands.RandVar:
-                {
-                    bool negate = false;
-                    if (args[1] < 0)
                     {
-                        negate = true;
-                        args[1] = (short)-args[1];
+                        bool negate = false;
+                        if (args[1] < 0)
+                        {
+                            negate = true;
+                            args[1] = (short)-args[1];
+                        }
+                        short val = (short)_rand.Next(args[1] + 1);
+                        if (negate)
+                        {
+                            val = (short)-val;
+                        }
+                        SetVar(args[0], trackIndex, val);
+                        break;
                     }
-                    short val = (short)_rand.Next(args[1] + 1);
-                    if (negate)
-                    {
-                        val = (short)-val;
-                    }
-                    SetVar(args[0], trackIndex, val);
-                    break;
-                }
                 case SequenceCommands.AndVar:
                     SetVar(args[0], trackIndex, (short)(GetVar(args[0], trackIndex) & args[1]));
                     break;
@@ -949,7 +886,7 @@ namespace GotaSequenceLib.Playback
                     Console.WriteLine("Command not implemented!");
                     break;
             }
-            skip_processing:
+        skip_processing:
             if (increment)
             {
                 track.CurEvent++;
@@ -959,9 +896,9 @@ namespace GotaSequenceLib.Playback
         public void Play()
         {
             if (
-                State == PlayerState.Playing
-                || State == PlayerState.Paused
-                || State == PlayerState.Stopped
+                State is PlayerState.Playing
+                or PlayerState.Paused
+                or PlayerState.Stopped
             )
             {
                 Stop();
@@ -979,7 +916,7 @@ namespace GotaSequenceLib.Playback
                 State = PlayerState.Paused;
                 WaitThread();
             }
-            else if (State == PlayerState.Paused || State == PlayerState.Stopped)
+            else if (State is PlayerState.Paused or PlayerState.Stopped)
             {
                 State = PlayerState.Playing;
                 CreateThread();
@@ -988,7 +925,7 @@ namespace GotaSequenceLib.Playback
 
         public void Stop()
         {
-            if (State == PlayerState.Playing || State == PlayerState.Paused)
+            if (State is PlayerState.Playing or PlayerState.Paused)
             {
                 State = PlayerState.Stopped;
                 WaitThread();
@@ -1009,9 +946,9 @@ namespace GotaSequenceLib.Playback
         public void Dispose()
         {
             if (
-                State == PlayerState.Playing
-                || State == PlayerState.Paused
-                || State == PlayerState.Stopped
+                State is PlayerState.Playing
+                or PlayerState.Paused
+                or PlayerState.Stopped
             )
             {
                 State = PlayerState.ShutDown;
@@ -1019,7 +956,7 @@ namespace GotaSequenceLib.Playback
             }
         }
 
-        void SetTicks()
+        private void SetTicks()
         {
             long[] totalTicks = new long[0x10];
             ReadTrackTicks(0, 0, currEventOverride, totalTicks);
@@ -1027,15 +964,15 @@ namespace GotaSequenceLib.Playback
             _longestTrack = totalTicks.ToList().IndexOf(MaxTicks);
         }
 
-        void ReadTrackTicks(int trackNum, long baseTicks, int currEvent, long[] totalTicks)
+        private void ReadTrackTicks(int trackNum, long baseTicks, int currEvent, long[] totalTicks)
         {
             bool noteWait = true;
             int[] callStack = new int[3];
             int callStackDepth = 0;
-            List<int> readCommands = new List<int>();
+            List<int> readCommands = [];
             while (currEvent < Events.Count)
             {
-                var c = Events[currEvent];
+                SequenceCommand c = Events[currEvent];
                 if (c.Ticks[trackNum] == 0)
                 {
                     c.Ticks[trackNum] = baseTicks;
@@ -1047,11 +984,11 @@ namespace GotaSequenceLib.Playback
                     args[i] = GetCommandParameter(c, i, _rand, Events);
                 }
                 if (
-                    c.CommandType == SequenceCommands.Variable
-                    || c.CommandType == SequenceCommands.TimeVariable
+                    c.CommandType is SequenceCommands.Variable
+                    or SequenceCommands.TimeVariable
                 )
                 {
-                    args[args.Length - 1] = GetVar(args[args.Length - 1], trackNum);
+                    args[^1] = GetVar(args[^1], trackNum);
                 }
                 SequenceCommands trueCommandType = GetTrueCommandType(c);
                 switch (trueCommandType)
@@ -1109,28 +1046,22 @@ namespace GotaSequenceLib.Playback
 
         public static SequenceCommands GetTrueCommandType(SequenceCommand s)
         {
-            switch (s.CommandType)
+            return s.CommandType switch
             {
-                case SequenceCommands.Random:
-                case SequenceCommands.TimeRandom:
-                    return GetTrueCommandType((s.Parameter as RandomParameter).Command);
-                case SequenceCommands.Variable:
-                case SequenceCommands.TimeVariable:
-                    return GetTrueCommandType((s.Parameter as VariableParameter).Command);
-                case SequenceCommands.If:
-                    return GetTrueCommandType(s.Parameter as SequenceCommand);
-                case SequenceCommands.Time:
-                    return GetTrueCommandType((s.Parameter as TimeParameter).Command);
-            }
-            return s.CommandType;
+                SequenceCommands.Random or SequenceCommands.TimeRandom => GetTrueCommandType((s.Parameter as RandomParameter).Command),
+                SequenceCommands.Variable or SequenceCommands.TimeVariable => GetTrueCommandType((s.Parameter as VariableParameter).Command),
+                SequenceCommands.If => GetTrueCommandType(s.Parameter as SequenceCommand),
+                SequenceCommands.Time => GetTrueCommandType((s.Parameter as TimeParameter).Command),
+                _ => s.CommandType,
+            };
         }
 
         public void SetCurrentPosition(long ticks)
         {
             if (
-                State == PlayerState.Playing
-                || State == PlayerState.Paused
-                || State == PlayerState.Stopped
+                State is PlayerState.Playing
+                or PlayerState.Paused
+                or PlayerState.Stopped
             )
             {
                 if (State == PlayerState.Playing)
@@ -1176,7 +1107,7 @@ namespace GotaSequenceLib.Playback
                         _mixer.EmulateProcess();
                     }
                 }
-                finish:
+            finish:
                 for (int i = 0; i < 0x10; i++)
                 {
                     _tracks[i].StopAllChannels();
@@ -1185,7 +1116,10 @@ namespace GotaSequenceLib.Playback
             }
         }
 
-        public long GetCurrentPosition() => ElapsedTicks;
+        public long GetCurrentPosition()
+        {
+            return ElapsedTicks;
+        }
     }
 
     public enum PlayerState : byte

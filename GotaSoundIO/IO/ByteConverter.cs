@@ -1,46 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
     public abstract class ByteConverter
     {
-        protected static readonly Exception BufferException = new Exception(
+        protected static readonly Exception BufferException = new(
             "Buffer null or too small."
         );
         public static ByteConverter LittleEndian { get; } =
-            (ByteConverter)new ByteConverterLittleEndian();
+            new ByteConverterLittleEndian();
         public static ByteConverter BigEndian { get; } =
-            (ByteConverter)new ByteConverterBigEndian();
+            new ByteConverterBigEndian();
         public static ByteConverter System { get; } =
             BitConverter.IsLittleEndian ? ByteConverter.LittleEndian : ByteConverter.BigEndian;
         public abstract ByteOrder ByteOrder { get; }
 
         public static ByteConverter GetConverter(ByteOrder byteOrder)
         {
-            if (byteOrder == ByteOrder.System)
-                return ByteConverter.System;
-            if (byteOrder == ByteOrder.BigEndian)
-                return ByteConverter.BigEndian;
-            if (byteOrder == ByteOrder.LittleEndian)
-                return ByteConverter.LittleEndian;
-            throw new ArgumentException(
-                string.Format("Invalid {0}.", (object)"ByteOrder"),
+            return byteOrder == ByteOrder.System
+                ? ByteConverter.System
+                : byteOrder == ByteOrder.BigEndian
+                ? ByteConverter.BigEndian
+                : byteOrder == ByteOrder.LittleEndian
+                ? ByteConverter.LittleEndian
+                : throw new ArgumentException(
+                string.Format("Invalid {0}.", "ByteOrder"),
                 nameof(byteOrder)
             );
         }
 
-        public void GetBytes(Decimal value, byte[] buffer, int startIndex = 0)
+        public void GetBytes(decimal value, byte[] buffer, int startIndex = 0)
         {
             if (buffer != null && buffer.Length - startIndex < 16)
+            {
                 throw ByteConverter.BufferException;
-            int[] bits = Decimal.GetBits(value);
+            }
+
+            int[] bits = decimal.GetBits(value);
             for (int index1 = 0; index1 < 4; ++index1)
             {
-                int index2 = startIndex + index1 * 4;
+                int index2 = startIndex + (index1 * 4);
                 int num = bits[index1];
                 buffer[index2] = (byte)num;
                 buffer[index2 + 1] = (byte)(num >> 8);
@@ -58,21 +57,24 @@ namespace GotaSoundIO.IO
         public abstract void GetBytes(uint value, byte[] buffer, int startIndex = 0);
         public abstract void GetBytes(ulong value, byte[] buffer, int startIndex = 0);
 
-        public Decimal ToDecimal(byte[] buffer, int startIndex = 0)
+        public decimal ToDecimal(byte[] buffer, int startIndex = 0)
         {
             if (buffer != null && buffer.Length - startIndex < 16)
+            {
                 throw ByteConverter.BufferException;
+            }
+
             int[] bits = new int[4];
             for (int index1 = 0; index1 < 4; ++index1)
             {
-                int index2 = startIndex + index1 * 4;
+                int index2 = startIndex + (index1 * 4);
                 bits[index1] =
-                    (int)buffer[index2]
-                    | (int)buffer[index2 + 1] << 8
-                    | (int)buffer[index2 + 2] << 16
-                    | (int)buffer[index2 + 3] << 24;
+                    buffer[index2]
+                    | (buffer[index2 + 1] << 8)
+                    | (buffer[index2 + 2] << 16)
+                    | (buffer[index2 + 3] << 24);
             }
-            return new Decimal(bits);
+            return new decimal(bits);
         }
 
         public abstract double ToDouble(byte[] buffer, int startIndex = 0);

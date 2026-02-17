@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GotaSoundBank.DLS
 {
@@ -29,6 +25,6 @@ namespace GotaSoundBank.DLS
         public ushort PhaseGroup;
         public uint ChannelFlags;
         public uint WaveId;
-        public List<Articulator> Articulators = new List<Articulator>();
+        public List<Articulator> Articulators = [];
     }
 }

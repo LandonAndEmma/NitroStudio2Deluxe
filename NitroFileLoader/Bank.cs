@@ -1,47 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
+﻿using GotaSequenceLib;
 using GotaSequenceLib.Playback;
-using GotaSoundBank;
 using GotaSoundBank.DLS;
 using GotaSoundBank.SF2;
 using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Formats;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DirectInstrument = NitroFileLoader.Instrument.DirectInstrument;
+using DrumSetInstrument = NitroFileLoader.Instrument.DrumSetInstrument;
+using InstrumentClass = NitroFileLoader.Instrument.Instrument;
+using KeySplitInstrument = NitroFileLoader.Instrument.KeySplitInstrument;
+using NitroInstrumentType = NitroFileLoader.Instrument.InstrumentType;
+using NoteInfo = NitroFileLoader.Instrument.NoteInfo;
 
 namespace NitroFileLoader
 {
     public class Bank : IOFile, PlayableBank
     {
-        public List<Instrument> Instruments = new List<Instrument>();
+        public List<InstrumentClass> Instruments = [];
         public long MaxOrder => Instruments.Select(x => x.GetOrder).Max();
 
-        public static Instrument DuplicateInstrument(Instrument i)
+        public static InstrumentClass DuplicateInstrument(InstrumentClass i)
         {
-            Instrument n = null;
+            InstrumentClass n;
             switch (i.Type())
             {
-                case InstrumentType.DrumSet:
+                case NitroInstrumentType.DrumSet:
                     n = new DrumSetInstrument()
                     {
                         Index = i.Index,
-                        NoteInfo = new List<NoteInfo>(),
+                        NoteInfo = [],
                         Min = ((DrumSetInstrument)i).Min,
                     };
-                    foreach (var r in i.NoteInfo)
+                    foreach (NoteInfo r in i.NoteInfo)
                     {
                         n.NoteInfo.Add(r.Duplicate());
                     }
                     break;
-                case InstrumentType.KeySplit:
+                case NitroInstrumentType.KeySplit:
                     n = new KeySplitInstrument()
                     {
                         Index = i.Index,
-                        NoteInfo = new List<NoteInfo>(),
+                        NoteInfo = [],
                     };
-                    foreach (var r in i.NoteInfo)
+                    foreach (NoteInfo r in i.NoteInfo)
                     {
                         n.NoteInfo.Add(r.Duplicate());
                     }
@@ -50,7 +53,7 @@ namespace NitroFileLoader
                     n = new DirectInstrument()
                     {
                         Index = i.Index,
-                        NoteInfo = new List<NoteInfo>() { i.NoteInfo[0].Duplicate() },
+                        NoteInfo = [i.NoteInfo[0].Duplicate()],
                     };
                     break;
             }
@@ -61,44 +64,44 @@ namespace NitroFileLoader
         {
             r.OpenFile<NHeader>(out _);
             r.OpenBlock(0, out _, out _);
-            r.ReadUInt32s(8);
+            _ = r.ReadUInt32s(8);
             uint numInsts = r.ReadUInt32();
-            List<InstrumentType> records = new List<InstrumentType>();
-            List<uint> offs = new List<uint>();
+            List<NitroInstrumentType> records = [];
+            List<uint> offs = [];
             for (uint i = 0; i < numInsts; i++)
             {
-                records.Add((InstrumentType)r.ReadByte());
+                records.Add((NitroInstrumentType)r.ReadByte());
                 offs.Add(r.ReadUInt16());
-                r.ReadByte();
+                _ = r.ReadByte();
             }
             for (int i = 0; i < records.Count; i++)
             {
                 switch (records[i])
                 {
-                    case InstrumentType.Blank:
+                    case NitroInstrumentType.Blank:
                         break;
-                    case InstrumentType.PCM:
-                    case InstrumentType.PSG:
-                    case InstrumentType.Noise:
-                    case InstrumentType.DirectPCM:
-                    case InstrumentType.Null:
+                    case NitroInstrumentType.PCM:
+                    case NitroInstrumentType.PSG:
+                    case NitroInstrumentType.Noise:
+                    case NitroInstrumentType.DirectPCM:
+                    case NitroInstrumentType.Null:
                         r.Jump(offs[i], true);
                         Instruments.Add(r.Read<DirectInstrument>());
-                        Instruments[Instruments.Count - 1].Index = i;
-                        Instruments[Instruments.Count - 1].NoteInfo[0].InstrumentType = records[i];
-                        Instruments[Instruments.Count - 1].Order = offs[i];
+                        Instruments[^1].Index = i;
+                        Instruments[^1].NoteInfo[0].InstrumentType = records[i];
+                        Instruments[^1].Order = offs[i];
                         break;
-                    case InstrumentType.DrumSet:
+                    case NitroInstrumentType.DrumSet:
                         r.Jump(offs[i], true);
                         Instruments.Add(r.Read<DrumSetInstrument>());
-                        Instruments[Instruments.Count - 1].Index = i;
-                        Instruments[Instruments.Count - 1].Order = offs[i];
+                        Instruments[^1].Index = i;
+                        Instruments[^1].Order = offs[i];
                         break;
-                    case InstrumentType.KeySplit:
+                    case NitroInstrumentType.KeySplit:
                         r.Jump(offs[i], true);
                         Instruments.Add(r.Read<KeySplitInstrument>());
-                        Instruments[Instruments.Count - 1].Index = i;
-                        Instruments[Instruments.Count - 1].Order = offs[i];
+                        Instruments[^1].Index = i;
+                        Instruments[^1].Order = offs[i];
                         break;
                 }
             }
@@ -113,12 +116,12 @@ namespace NitroFileLoader
             {
                 Instruments = Instruments.OrderBy(x => x.Index).ToList();
                 w.Write((uint)(Instruments.Last().Index + 1));
-                Dictionary<int, long> bakPos = new Dictionary<int, long>();
+                Dictionary<int, long> bakPos = [];
                 for (int i = 0; i <= Instruments.Last().Index; i++)
                 {
                     if (Instruments.Where(x => x.Index == i).Count() > 0)
                     {
-                        var inst = Instruments.Where(x => x.Index == i).FirstOrDefault();
+                        InstrumentClass inst = Instruments.Where(x => x.Index == i).FirstOrDefault();
                         w.Write((byte)inst.Type());
                         bakPos.Add(i, w.Position);
                         w.Write((ushort)0);
@@ -129,7 +132,7 @@ namespace NitroFileLoader
                         w.Write((uint)0);
                     }
                 }
-                var sortedInsts = Instruments.OrderBy(x => x.GetOrder).ToList();
+                List<InstrumentClass> sortedInsts = Instruments.OrderBy(x => x.GetOrder).ToList();
                 for (int i = 0; i < sortedInsts.Count; i++)
                 {
                     long bak = w.Position;
@@ -150,18 +153,11 @@ namespace NitroFileLoader
 
         public NotePlayBackInfo GetNotePlayBackInfo(int program, Notes note, byte velocity)
         {
-            var q = Instruments.Where(x => x.Index == program).FirstOrDefault();
+            InstrumentClass q = Instruments.Where(x => x.Index == program).FirstOrDefault();
             if (q != null)
             {
-                var e = q.GetNoteInfo(note);
-                if (e != null)
-                {
-                    return e.ToNotePlayBackInfo();
-                }
-                else
-                {
-                    return null;
-                }
+                NoteInfo e = q.GetNoteInfo(note);
+                return e?.ToNotePlayBackInfo();
             }
             else
             {
@@ -176,40 +172,44 @@ namespace NitroFileLoader
 
         public DownloadableSounds ToDLS(SoundArchive a, BankInfo b)
         {
-            DownloadableSounds d = new DownloadableSounds();
-            Dictionary<uint, RiffWave> waveMap = new Dictionary<uint, RiffWave>();
-            Dictionary<ushort, RiffWave> psgMap = new Dictionary<ushort, RiffWave>();
-            Dictionary<ushort, RiffWave> noiseMap = new Dictionary<ushort, RiffWave>();
+            DownloadableSounds d = new();
+            Dictionary<uint, RiffWave> waveMap = [];
+            Dictionary<ushort, RiffWave> psgMap = [];
+            Dictionary<ushort, RiffWave> noiseMap = [];
             d.Waves.Add(new RiffWave("Hardware/Null.wav"));
-            foreach (var inst in Instruments)
+            foreach (InstrumentClass inst in Instruments)
             {
-                GotaSoundBank.DLS.Instrument im = new GotaSoundBank.DLS.Instrument();
-                im.BankId = (uint)(inst.Index / 128);
-                im.InstrumentId = (uint)(inst.Index % 128);
+                GotaSoundBank.DLS.Instrument im = new()
+                {
+                    BankId = (uint)(inst.Index / 128),
+                    InstrumentId = (uint)(inst.Index % 128)
+                };
                 im.Name = "Instrument " + im.InstrumentId;
                 byte lastNote =
-                    inst as DrumSetInstrument != null ? (inst as DrumSetInstrument).Min : (byte)0;
-                foreach (var n in inst.NoteInfo)
+                    (inst as DrumSetInstrument) != null ? (inst as DrumSetInstrument).Min : (byte)0;
+                foreach (NoteInfo n in inst.NoteInfo)
                 {
-                    Region r = new Region();
-                    r.VelocityLow = 0;
-                    r.VelocityHigh = 127;
-                    r.NoteLow = lastNote;
-                    r.NoteHigh = (inst as DirectInstrument != null) ? (byte)127 : (byte)n.Key;
+                    Region r = new()
+                    {
+                        VelocityLow = 0,
+                        VelocityHigh = 127,
+                        NoteLow = lastNote,
+                        NoteHigh = ((inst as DirectInstrument) != null) ? (byte)127 : (byte)n.Key
+                    };
                     lastNote = (byte)(n.Key + 1);
                     r.ChannelFlags = 1;
                     r.DoublePlayback = true;
                     r.Layer = 1;
                     r.NoTruncation = true;
-                    r.RootNote = (byte)n.BaseNote;
+                    r.RootNote = n.BaseNote;
                     int wavInd = 0;
                     switch (n.InstrumentType)
                     {
-                        case InstrumentType.PCM:
+                        case NitroInstrumentType.PCM:
                             uint key = 0xFFFFFFFF;
                             try
                             {
-                                var p = b.WaveArchives[n.WarId].File.Waves[n.WaveId];
+                                Wave p = b.WaveArchives[n.WarId].File.Waves[n.WaveId];
                                 key = (uint)(b.WaveArchives[n.WarId].Index << 16) | n.WaveId;
                             }
                             catch { }
@@ -217,7 +217,7 @@ namespace NitroFileLoader
                             {
                                 if (!waveMap.ContainsKey(key))
                                 {
-                                    RiffWave pcm = new RiffWave();
+                                    RiffWave pcm = new();
                                     pcm.FromOtherStreamFile(
                                         b.WaveArchives[n.WarId].File.Waves[n.WaveId]
                                     );
@@ -227,10 +227,10 @@ namespace NitroFileLoader
                                 wavInd = d.Waves.IndexOf(waveMap[key]);
                             }
                             break;
-                        case InstrumentType.PSG:
+                        case NitroInstrumentType.PSG:
                             if (!psgMap.ContainsKey(n.WaveId))
                             {
-                                RiffWave psg = new RiffWave(
+                                RiffWave psg = new(
                                     "Hardware/DutyCycle" + (n.WaveId + 1) + ".wav"
                                 );
                                 psgMap.Add(n.WaveId, psg);
@@ -238,10 +238,10 @@ namespace NitroFileLoader
                             }
                             wavInd = d.Waves.IndexOf(psgMap[n.WaveId]);
                             break;
-                        case InstrumentType.Noise:
+                        case NitroInstrumentType.Noise:
                             if (!noiseMap.ContainsKey(0))
                             {
-                                RiffWave noise = new RiffWave("Hardware/WhiteNoise.wav");
+                                RiffWave noise = new("Hardware/WhiteNoise.wav");
                                 noiseMap.Add(0, noise);
                                 d.Waves.Add(noise);
                                 wavInd = d.Waves.IndexOf(noise);
@@ -263,7 +263,7 @@ namespace NitroFileLoader
                             r.LoopLength = 0;
                         }
                     }
-                    Articulator ar = new Articulator();
+                    Articulator ar = new();
                     ar.Connections.Add(
                         new Connection()
                         {
@@ -332,7 +332,7 @@ namespace NitroFileLoader
             {
                 ret = pan / 127d;
             }
-            return (int)(ret * 1000 - 500);
+            return (int)((ret * 1000) - 500);
         }
 
         public static byte SetPan(int value)

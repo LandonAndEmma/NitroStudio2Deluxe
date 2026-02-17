@@ -1,13 +1,8 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Encoding
 {
     public class ImaAdpcm : IAudioEncoding
     {
@@ -15,13 +10,25 @@ namespace GotaSoundIO.Sound
         private int Sample;
         private int Index;
 
-        public int SampleCount() => Data.Length * 2;
+        public int SampleCount()
+        {
+            return Data.Length * 2;
+        }
 
-        public int DataSize() => Data.Length + 4;
+        public int DataSize()
+        {
+            return Data.Length + 4;
+        }
 
-        public int SamplesFromBlockSize(int blockSize) => (blockSize - 4) * 2;
+        public int SamplesFromBlockSize(int blockSize)
+        {
+            return (blockSize - 4) * 2;
+        }
 
-        public object RawData() => Data;
+        public object RawData()
+        {
+            return Data;
+        }
 
         public void ReadRaw(FileReader r, uint numSamples, uint dataSize)
         {
@@ -44,26 +51,26 @@ namespace GotaSoundIO.Sound
             int loopEnd = -1
         )
         {
-            ImaAdpcmEncoder e = new ImaAdpcmEncoder(pcm, out Sample, out Index);
+            ImaAdpcmEncoder e = new(pcm, out Sample, out Index);
             Data = e.Encode();
         }
 
         public float[] ToFloatPCM(object decodingData = null)
         {
-            ImaAdpcmDecoder d = new ImaAdpcmDecoder(Sample, Index, Data, 0);
+            ImaAdpcmDecoder d = new(Sample, Index, Data, 0);
             return d.Decode();
         }
 
         public void Trim(int totalSamples)
         {
-            Data = Data.SubArray(0, totalSamples / 2 + (totalSamples % 2 == 1 ? 1 : 0));
+            Data = Data.SubArray(0, (totalSamples / 2) + (totalSamples % 2 == 1 ? 1 : 0));
         }
 
         public List<IAudioEncoding> ChangeBlockSize(List<IAudioEncoding> blocks, int newBlockSize)
         {
-            AudioData a = new AudioData()
+            AudioData a = new()
             {
-                Channels = new List<List<IAudioEncoding>>() { blocks },
+                Channels = [blocks],
             };
             a.Convert(typeof(ImaAdpcm), newBlockSize);
             return a.Channels[0];
@@ -96,7 +103,7 @@ namespace GotaSoundIO.Sound
 
         public IAudioEncoding Duplicate()
         {
-            ImaAdpcm ret = new ImaAdpcm() { Data = new byte[Data.Length] };
+            ImaAdpcm ret = new() { Data = new byte[Data.Length] };
             Array.Copy(Data, ret.Data, Data.Length);
             ret.Sample = Sample;
             ret.Index = Index;
@@ -221,18 +228,30 @@ namespace GotaSoundIO.Sound
         public static short ClampSample(int value)
         {
             if (value < -32767)
+            {
                 value = -32767;
-            if (value > (int)short.MaxValue)
-                value = (int)short.MaxValue;
+            }
+
+            if (value > short.MaxValue)
+            {
+                value = short.MaxValue;
+            }
+
             return (short)value;
         }
 
         public static int ClampIndex(int value)
         {
             if (value < 0)
+            {
                 value = 0;
+            }
+
             if (value > 88)
+            {
                 value = 88;
+            }
+
             return value;
         }
     }
@@ -243,7 +262,7 @@ namespace GotaSoundIO.Sound
         public int Index;
         public int Offset;
         public bool SecondNibble;
-        private byte[] Data;
+        private readonly byte[] Data;
 
         public ImaAdpcmDecoder(
             int sample,
@@ -262,7 +281,7 @@ namespace GotaSoundIO.Sound
 
         public float[] Decode()
         {
-            List<float> ret = new List<float>();
+            List<float> ret = [];
             while (Offset < Data.Length)
             {
                 ret.Add((float)GetSample() / short.MaxValue);
@@ -272,9 +291,12 @@ namespace GotaSoundIO.Sound
 
         private short GetSample()
         {
-            short sample = this.GetSample((byte)((int)Data[Offset] >> (SecondNibble ? 4 : 0) & 15));
-            if (this.SecondNibble)
-                ++this.Offset;
+            short sample = GetSample((byte)((Data[Offset] >> (SecondNibble ? 4 : 0)) & 15));
+            if (SecondNibble)
+            {
+                ++Offset;
+            }
+
             SecondNibble = !SecondNibble;
             return sample;
         }
@@ -283,14 +305,14 @@ namespace GotaSoundIO.Sound
         {
             Sample = ImaAdpcmMath.ClampSample(
                 Sample
-                    + (
-                        ImaAdpcmMath.StepTable[Index] / 8
-                        + ImaAdpcmMath.StepTable[Index] / 4 * ((int)nibble & 1)
-                        + ImaAdpcmMath.StepTable[Index] / 2 * ((int)nibble >> 1 & 1)
-                        + ImaAdpcmMath.StepTable[Index] * ((int)nibble >> 2 & 1)
-                    ) * (((int)nibble >> 3 & 1) == 1 ? -1 : 1)
+                    + ((
+                        (ImaAdpcmMath.StepTable[Index] / 8)
+                        + (ImaAdpcmMath.StepTable[Index] / 4 * (nibble & 1))
+                        + (ImaAdpcmMath.StepTable[Index] / 2 * ((nibble >> 1) & 1))
+                        + (ImaAdpcmMath.StepTable[Index] * ((nibble >> 2) & 1))
+                    ) * (((nibble >> 3) & 1) == 1 ? -1 : 1))
             );
-            Index = ImaAdpcmMath.ClampIndex(Index + ImaAdpcmMath.IndexTable[(int)nibble & 7]);
+            Index = ImaAdpcmMath.ClampIndex(Index + ImaAdpcmMath.IndexTable[nibble & 7]);
             return (short)Sample;
         }
     }
@@ -299,7 +321,7 @@ namespace GotaSoundIO.Sound
     {
         private int Sample;
         private int Index;
-        private float[] Data;
+        private readonly float[] Data;
 
         public ImaAdpcmEncoder(float[] data, out int sample, out int index)
         {
@@ -310,7 +332,7 @@ namespace GotaSoundIO.Sound
 
         public byte[] Encode()
         {
-            byte[] data = new byte[Data.Length / 2 + (Data.Length % 2 != 0 ? 1 : 0)];
+            byte[] data = new byte[(Data.Length / 2) + (Data.Length % 2 != 0 ? 1 : 0)];
             bool secondNibble = false;
             int dataPtr = 0;
             for (int i = 0; i < Data.Length; i++)
@@ -318,14 +340,14 @@ namespace GotaSoundIO.Sound
                 int config = GetBestConfig(Index, ConvertFloat(Data[i]) - Sample);
                 Sample = ImaAdpcmMath.ClampSample(
                     Sample
-                        + (
-                            ImaAdpcmMath.StepTable[Index] / 8
-                            + ImaAdpcmMath.StepTable[Index] / 4 * (config & 1)
-                            + ImaAdpcmMath.StepTable[Index] / 2 * (config >> 1 & 1)
-                            + ImaAdpcmMath.StepTable[Index] * (config >> 2 & 1)
-                        ) * ((config >> 3 & 1) == 1 ? -1 : 1)
+                        + ((
+                            (ImaAdpcmMath.StepTable[Index] / 8)
+                            + (ImaAdpcmMath.StepTable[Index] / 4 * (config & 1))
+                            + (ImaAdpcmMath.StepTable[Index] / 2 * ((config >> 1) & 1))
+                            + (ImaAdpcmMath.StepTable[Index] * ((config >> 2) & 1))
+                        ) * (((config >> 3) & 1) == 1 ? -1 : 1))
                 );
-                Index = ImaAdpcmMath.ClampIndex(this.Index + ImaAdpcmMath.IndexTable[config & 7]);
+                Index = ImaAdpcmMath.ClampIndex(Index + ImaAdpcmMath.IndexTable[config & 7]);
                 if (!secondNibble)
                 {
                     data[dataPtr] |= (byte)((config & 0xF) << 0);
@@ -340,7 +362,10 @@ namespace GotaSoundIO.Sound
             return data;
         }
 
-        private short ConvertFloat(float sample) => (short)(sample * short.MaxValue);
+        private short ConvertFloat(float sample)
+        {
+            return (short)(sample * short.MaxValue);
+        }
 
         private int GetBestTableIndex(int diff)
         {
@@ -362,7 +387,10 @@ namespace GotaSoundIO.Sound
         {
             int num1 = 0;
             if (diff < 0)
+            {
                 num1 |= 8;
+            }
+
             diff = Math.Abs(diff);
             int num2 = ImaAdpcmMath.StepTable[index] / 8;
             if (Math.Abs(num2 - diff) >= ImaAdpcmMath.StepTable[index])
@@ -378,7 +406,7 @@ namespace GotaSoundIO.Sound
             if (Math.Abs(num2 - diff) >= ImaAdpcmMath.StepTable[index] / 4)
             {
                 num1 |= 1;
-                int num3 = num2 + ImaAdpcmMath.StepTable[index] / 4;
+                _ = num2 + (ImaAdpcmMath.StepTable[index] / 4);
             }
             return num1;
         }

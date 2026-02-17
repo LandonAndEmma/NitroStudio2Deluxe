@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.Sound;
+﻿using GotaSoundIO.Sound.Encoding;
+using GotaSoundIO.Sound.Formats;
+using System;
 
 namespace GotaSequenceLib.Playback
 {
@@ -83,10 +80,7 @@ namespace GotaSequenceLib.Playback
 
         public void Stop()
         {
-            if (Owner != null)
-            {
-                Owner.Channels.Remove(this);
-            }
+            _ = Owner?.Channels.Remove(this);
             Owner = null;
             Volume = 0;
         }
@@ -140,33 +134,33 @@ namespace GotaSequenceLib.Playback
             switch (State)
             {
                 case EnvelopeState.Attack:
-                {
-                    Velocity = _attack * Velocity / 0xFF;
-                    if (Velocity == 0)
                     {
-                        State = EnvelopeState.Decay;
+                        Velocity = _attack * Velocity / 0xFF;
+                        if (Velocity == 0)
+                        {
+                            State = EnvelopeState.Decay;
+                        }
+                        break;
                     }
-                    break;
-                }
                 case EnvelopeState.Decay:
-                {
-                    Velocity -= _decay;
-                    if (Velocity <= _sustain)
                     {
-                        State = EnvelopeState.Sustain;
-                        Velocity = _sustain;
+                        Velocity -= _decay;
+                        if (Velocity <= _sustain)
+                        {
+                            State = EnvelopeState.Sustain;
+                            Velocity = _sustain;
+                        }
+                        break;
                     }
-                    break;
-                }
                 case EnvelopeState.Release:
-                {
-                    Velocity -= _release;
-                    if (Velocity < -92544)
                     {
-                        Velocity = -92544;
+                        Velocity -= _release;
+                        if (Velocity < -92544)
+                        {
+                            Velocity = -92544;
+                        }
+                        break;
                     }
-                    break;
-                }
             }
         }
 
@@ -207,112 +201,112 @@ namespace GotaSequenceLib.Playback
                     switch (Type)
                     {
                         case InstrumentType.PCM:
-                        {
-                            if (_wave != null)
                             {
-                                samp = 1;
-                                if (_waveSample >= _wave.Audio.NumSamples)
+                                if (_wave != null)
                                 {
-                                    if (_wave.Loops)
+                                    samp = 1;
+                                    if (_waveSample >= _wave.Audio.NumSamples)
                                     {
-                                        _waveSample = (int)_wave.LoopStart;
+                                        if (_wave.Loops)
+                                        {
+                                            _waveSample = (int)_wave.LoopStart;
+                                        }
+                                        else
+                                        {
+                                            left = right = _prevLeft = _prevRight = 0;
+                                            Stop();
+                                            return;
+                                        }
+                                    }
+                                    _wave.Audio.ChangeBlockSize(-1);
+                                    if ((_wave.Audio.Channels[0][0] as PCM16) != null)
+                                    {
+                                        if (_wave.Audio.Channels.Count > 1)
+                                        {
+                                            lSample = (
+                                                (short[])(_wave.Audio.Channels[0][0] as PCM16).RawData()
+                                            )[_waveSample];
+                                            rSample = (
+                                                (short[])(_wave.Audio.Channels[1][0] as PCM16).RawData()
+                                            )[_waveSample++];
+                                        }
+                                        else
+                                        {
+                                            samp = (
+                                                (short[])(_wave.Audio.Channels[0][0] as PCM16).RawData()
+                                            )[_waveSample++];
+                                        }
+                                    }
+                                    else if ((_wave.Audio.Channels[0][0] as PCM8) != null)
+                                    {
+                                        if (_wave.Audio.Channels.Count > 1)
+                                        {
+                                            lSample = (short)(
+                                                (
+                                                    (
+                                                        (byte[])
+                                                            (
+                                                                _wave.Audio.Channels[0][0] as PCM8
+                                                            ).RawData()
+                                                    )[_waveSample] - 128
+                                                ) << 8
+                                            );
+                                            rSample = (short)(
+                                                (
+                                                    (
+                                                        (byte[])
+                                                            (
+                                                                _wave.Audio.Channels[1][0] as PCM8
+                                                            ).RawData()
+                                                    )[_waveSample++] - 128
+                                                ) << 8
+                                            );
+                                        }
+                                        else
+                                        {
+                                            samp = (short)(
+                                                (
+                                                    (
+                                                        (byte[])
+                                                            (
+                                                                _wave.Audio.Channels[0][0] as PCM8
+                                                            ).RawData()
+                                                    )[_waveSample++] - 128
+                                                ) << 8
+                                            );
+                                        }
                                     }
                                     else
                                     {
-                                        left = right = _prevLeft = _prevRight = 0;
-                                        Stop();
-                                        return;
+                                        samp = 0;
                                     }
                                 }
-                                _wave.Audio.ChangeBlockSize(-1);
-                                if (_wave.Audio.Channels[0][0] as PCM16 != null)
+                                break;
+                            }
+                        case InstrumentType.PSG:
+                            {
+                                samp = _psgCounter <= _psgDuty ? short.MinValue : short.MaxValue;
+                                _psgCounter++;
+                                if (_psgCounter >= 8)
                                 {
-                                    if (_wave.Audio.Channels.Count > 1)
-                                    {
-                                        lSample = (
-                                            (short[])(_wave.Audio.Channels[0][0] as PCM16).RawData()
-                                        )[_waveSample];
-                                        rSample = (
-                                            (short[])(_wave.Audio.Channels[1][0] as PCM16).RawData()
-                                        )[_waveSample++];
-                                    }
-                                    else
-                                    {
-                                        samp = (
-                                            (short[])(_wave.Audio.Channels[0][0] as PCM16).RawData()
-                                        )[_waveSample++];
-                                    }
+                                    _psgCounter = 0;
                                 }
-                                else if (_wave.Audio.Channels[0][0] as PCM8 != null)
+                                break;
+                            }
+                        case InstrumentType.Noise:
+                            {
+                                if ((_noiseCounter & 1) != 0)
                                 {
-                                    if (_wave.Audio.Channels.Count > 1)
-                                    {
-                                        lSample = (short)(
-                                            (
-                                                (
-                                                    (byte[])
-                                                        (
-                                                            _wave.Audio.Channels[0][0] as PCM8
-                                                        ).RawData()
-                                                )[_waveSample] - 128
-                                            ) << 8
-                                        );
-                                        rSample = (short)(
-                                            (
-                                                (
-                                                    (byte[])
-                                                        (
-                                                            _wave.Audio.Channels[1][0] as PCM8
-                                                        ).RawData()
-                                                )[_waveSample++] - 128
-                                            ) << 8
-                                        );
-                                    }
-                                    else
-                                    {
-                                        samp = (short)(
-                                            (
-                                                (
-                                                    (byte[])
-                                                        (
-                                                            _wave.Audio.Channels[0][0] as PCM8
-                                                        ).RawData()
-                                                )[_waveSample++] - 128
-                                            ) << 8
-                                        );
-                                    }
+                                    _noiseCounter = (ushort)((_noiseCounter >> 1) ^ 0x6000);
+                                    samp = -0x7FFF;
                                 }
                                 else
                                 {
-                                    samp = 0;
+                                    _noiseCounter = (ushort)(_noiseCounter >> 1);
+                                    samp = 0x7FFF;
                                 }
+                                break;
                             }
-                            break;
-                        }
-                        case InstrumentType.PSG:
-                        {
-                            samp = _psgCounter <= _psgDuty ? short.MinValue : short.MaxValue;
-                            _psgCounter++;
-                            if (_psgCounter >= 8)
-                            {
-                                _psgCounter = 0;
-                            }
-                            break;
-                        }
-                        case InstrumentType.Noise:
-                        {
-                            if ((_noiseCounter & 1) != 0)
-                            {
-                                _noiseCounter = (ushort)((_noiseCounter >> 1) ^ 0x6000);
-                                samp = -0x7FFF;
-                            }
-                            else
-                            {
-                                _noiseCounter = (ushort)(_noiseCounter >> 1);
-                                samp = 0x7FFF;
-                            }
-                            break;
-                        }
                         default:
                             samp = 0;
                             break;

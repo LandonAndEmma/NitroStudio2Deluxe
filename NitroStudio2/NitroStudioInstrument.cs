@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GotaSoundIO.IO;
+using NitroFileLoader.Instrument;
 using System.Windows.Forms;
-using GotaSoundIO.IO;
-using NitroFileLoader;
 
 namespace NitroStudio2
 {
@@ -15,7 +10,7 @@ namespace NitroStudio2
 
         public override void Read(FileReader r)
         {
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
             byte type = r.ReadByte();
             switch ((InstrumentType)type)
             {
@@ -33,11 +28,11 @@ namespace NitroStudio2
             }
             if (r.ReadBoolean())
             {
-                MessageBox.Show("An empty instrument cannot be used!");
+                _ = MessageBox.Show("An empty instrument cannot be used!");
                 return;
             }
             Inst.Read(r);
-            if (Inst as DirectInstrument != null)
+            if ((Inst as DirectInstrument) != null)
             {
                 Inst.NoteInfo[0].InstrumentType = (InstrumentType)type;
             }

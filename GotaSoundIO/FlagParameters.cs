@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace GotaSoundIO
 {
     public class FlagParameters : IReadable, IWriteable
     {
-        private uint?[] Parameters = new uint?[32];
+        private readonly uint?[] Parameters = new uint?[32];
         public uint? this[int bit]
         {
-            get { return Parameters[bit]; }
-            set { Parameters[bit] = value; }
+            get => Parameters[bit]; set => Parameters[bit] = value;
         }
 
         public void Read(FileReader r)
@@ -21,14 +15,7 @@ namespace GotaSoundIO
             uint mask = r.ReadUInt32();
             for (int i = 0; i < 32; i++)
             {
-                if ((mask & (0b1 << i)) > 0)
-                {
-                    Parameters[i] = r.ReadUInt32();
-                }
-                else
-                {
-                    Parameters[i] = null;
-                }
+                Parameters[i] = (mask & (0b1 << i)) > 0 ? r.ReadUInt32() : null;
             }
         }
 
@@ -43,7 +30,7 @@ namespace GotaSoundIO
                 }
             }
             w.Write(mask);
-            foreach (var p in Parameters)
+            foreach (uint? p in Parameters)
             {
                 if (p != null)
                 {

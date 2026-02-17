@@ -1,17 +1,14 @@
-﻿using System;
+﻿using GotaSequenceLib;
+using GotaSequenceLib.Playback;
+using GotaSoundIO.IO;
+using NitroFileLoader;
+using ScintillaNET;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GotaSequenceLib;
-using GotaSequenceLib.Playback;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
-using NitroFileLoader;
-using ScintillaNET;
 using static GotaSequenceLib.Playback.Player;
 
 namespace NitroStudio2
@@ -19,14 +16,14 @@ namespace NitroStudio2
     public class SequenceEditor : EditorBase
     {
         public Player Player;
-        public Mixer Mixer = new Mixer();
+        public Mixer Mixer = new();
         private const int BACK_COLOR = 0x2F2F2F;
         private const int FORE_COLOR = 0xB7B7B7;
         public Sequence SEQ => File as Sequence;
-        int prevLine = -1;
-        bool prevLineBlank = true;
+        private int prevLine = -1;
+        private bool prevLineBlank = true;
         public bool PositionBarFree = true;
-        public Timer Timer = new Timer();
+        public Timer Timer = new();
 
         public SequenceEditor(MainWindow mainWindow)
             : base(typeof(Sequence), "Sequence", "seq", "Sequence Editor", mainWindow)
@@ -113,7 +110,7 @@ namespace NitroStudio2
             kermalisPosition.MouseUp += new MouseEventHandler(PositionMouseUp);
             kermalisPosition.MouseDown += new MouseEventHandler(PositionMouseDown);
             FormClosing += new FormClosingEventHandler(SEClosing);
-            Load += new System.EventHandler(this.SequenceEditor_Load);
+            Load += new System.EventHandler(SequenceEditor_Load);
             seqEditorBankBox.ValueChanged += new EventHandler(BankBoxChanged);
             seqEditorBankComboBox.SelectedIndexChanged += new EventHandler(BankComboChanged);
             status.Text = "Editing A Sequence.";
@@ -195,9 +192,9 @@ namespace NitroStudio2
             sequenceEditor.Styles[Style.IndentGuide].BackColor = IntToColor(BACK_COLOR);
             sequenceEditor.LexerName = "";
             sequenceEditor.StyleNeeded += new EventHandler<StyleNeededEventArgs>(
-                this.SEQ_StyleNeeded
+                SEQ_StyleNeeded
             );
-            sequenceEditor.TextChanged += new EventHandler(this.SEQ_ChangedText);
+            sequenceEditor.TextChanged += new EventHandler(SEQ_ChangedText);
             StyleSeq(0, sequenceEditor.Text.Length);
             UpdateLineNumbers(0, sequenceEditor.Text.Length);
         }
@@ -207,9 +204,9 @@ namespace NitroStudio2
             string s = sequenceEditor.Lines[sequenceEditor.CurrentLine].Text;
             if (s.Contains(";"))
             {
-                s = s.Split(';')[0];
+                _ = s.Split(';')[0];
             }
-            var ss = sequenceEditor
+            string ss = sequenceEditor
                 .Lines[sequenceEditor.CurrentLine]
                 .Text.Replace(" ", "")
                 .Replace("\t", "")
@@ -222,7 +219,7 @@ namespace NitroStudio2
             {
                 UpdateLineNumbers(sequenceEditor.CurrentLine, sequenceEditor.Lines.Count);
                 prevLine = sequenceEditor.CurrentLine;
-                prevLineBlank = (ss.EndsWith(":") || ss == "");
+                prevLineBlank = ss.EndsWith(":") || ss == "";
             }
         }
 
@@ -230,20 +227,20 @@ namespace NitroStudio2
         {
             try
             {
-                List<SequenceCommand> commands = new List<SequenceCommand>();
+                List<SequenceCommand> commands = [];
                 SEQ.FromText(sequenceEditor.Text.Replace('\r', '\n').Split('\n').ToList());
                 UpdateNodes();
             }
             catch (Exception exe)
             {
-                MessageBox.Show(exe.Message);
+                _ = MessageBox.Show(exe.Message);
             }
         }
 
         private void SEQ_StyleNeeded(object sender, StyleNeededEventArgs e)
         {
-            var startPos = sequenceEditor.GetEndStyled();
-            var endPos = e.Position;
+            int startPos = sequenceEditor.GetEndStyled();
+            int endPos = e.Position;
             if (startPos >= 500)
             {
                 startPos -= 500;
@@ -280,11 +277,11 @@ namespace NitroStudio2
             {
                 endPos = sequenceEditor.Text.Length;
             }
-            CommandStyleType style = CommandStyleType.Regular;
-            string[] lines = sequenceEditor.Text.Substring(startPos, endPos - startPos).Split('\n');
+
+            string[] lines = sequenceEditor.Text[startPos..endPos].Split('\n');
             foreach (string s in lines)
             {
-                style = CommandStyleType.Regular;
+                CommandStyleType style = CommandStyleType.Regular;
                 bool initialSpaceCut = false;
                 string withoutInitialSpace = s.Replace("\t", " ");
                 int numWhiteSpace = 0;
@@ -312,7 +309,7 @@ namespace NitroStudio2
                         }
                         else
                         {
-                            withoutInitialSpace = l.Substring(j, l.Length - j);
+                            withoutInitialSpace = l[j..];
                             numWhiteSpace = j;
                         }
                     }
@@ -331,7 +328,7 @@ namespace NitroStudio2
                     }
                     if (c == '_')
                     {
-                        string p = l.Substring(j, l.Length - j).Split(' ')[0];
+                        string p = l[j..].Split(' ')[0];
                         bool afterSpace = false;
                         if (withoutInitialSpace.Contains(" "))
                         {
@@ -411,7 +408,7 @@ namespace NitroStudio2
                 sequenceEditor.ReadOnly = false;
                 SEQ.ReadCommandData();
                 SEQ.Name = name;
-                sequenceEditor.Text = String.Join("\n", SEQ.ToText());
+                sequenceEditor.Text = string.Join("\n", SEQ.ToText());
             }
             else
             {
@@ -426,7 +423,7 @@ namespace NitroStudio2
             if (startingAtLine != 0)
             {
                 pastNum = int.Parse(sequenceEditor.Lines[startingAtLine - 1].MarginText);
-                var ss = sequenceEditor
+                string ss = sequenceEditor
                     .Lines[startingAtLine - 1]
                     .Text.Replace(" ", "")
                     .Replace("\t", "")
@@ -462,13 +459,17 @@ namespace NitroStudio2
         private void scintilla_Insert(object sender, ModificationEventArgs e)
         {
             if (e.LinesAdded != 0)
+            {
                 UpdateLineNumbers(0, sequenceEditor.Lines.Count);
+            }
         }
 
         private void scintilla_Delete(object sender, ModificationEventArgs e)
         {
             if (e.LinesAdded != 0)
+            {
                 UpdateLineNumbers(0, sequenceEditor.Lines.Count);
+            }
         }
 
         public override void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -523,10 +524,12 @@ namespace NitroStudio2
             {
                 return;
             }
-            OpenFileDialog o = new OpenFileDialog();
-            o.RestoreDirectory = true;
-            o.Filter =
-                "Supported Sound Files|*.sseq;*.smft|Sound Sequence|*.sseq|SMF Text Format|*.smft";
+            OpenFileDialog o = new()
+            {
+                RestoreDirectory = true,
+                Filter =
+                    "Supported Sound Files|*.sseq;*.smft|Sound Sequence|*.sseq|SMF Text Format|*.smft"
+            };
             if (o.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -554,11 +557,13 @@ namespace NitroStudio2
                 return;
             }
             SEQ.WriteCommandData();
-            SaveFileDialog s = new SaveFileDialog();
-            s.RestoreDirectory = true;
-            s.Filter =
-                "Supported Sound Files|*.sseq;*.smft|Sound Sequence|*.sseq|SMF Text Format|*.smft";
-            s.OverwritePrompt = false;
+            SaveFileDialog s = new()
+            {
+                RestoreDirectory = true,
+                Filter =
+                    "Supported Sound Files|*.sseq;*.smft|Sound Sequence|*.sseq|SMF Text Format|*.smft",
+                OverwritePrompt = false
+            };
             if (s.ShowDialog() == DialogResult.OK)
             {
                 if (s.FileName.EndsWith(".smft"))
@@ -593,15 +598,15 @@ namespace NitroStudio2
             }
             if (MainWindow == null)
             {
-                MessageBox.Show("There must be an SDAT connected to this file to play it.");
+                _ = MessageBox.Show("There must be an SDAT connected to this file to play it.");
                 return;
             }
-            var b = MainWindow
+            BankInfo b = MainWindow
                 .SA.Banks.Where(x => x.Index == (int)seqEditorBankBox.Value)
                 .FirstOrDefault();
             if (b == null)
             {
-                MessageBox.Show("Bank is not valid or doesn't exist.");
+                _ = MessageBox.Show("Bank is not valid or doesn't exist.");
                 return;
             }
             Player.PrepareForSong(new PlayableBank[] { b.File }, b.GetAssociatedWaves());
@@ -910,224 +915,112 @@ namespace NitroStudio2
         private void Track0CheckChanged(object sender, EventArgs e)
         {
             bool check = track0Box.Checked;
-            if (check)
-            {
-                track0Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track0Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track0Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[0] = !check;
         }
 
         private void Track1CheckChanged(object sender, EventArgs e)
         {
             bool check = track1Box.Checked;
-            if (check)
-            {
-                track1Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track1Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track1Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[1] = !check;
         }
 
         private void Track2CheckChanged(object sender, EventArgs e)
         {
             bool check = track2Box.Checked;
-            if (check)
-            {
-                track2Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track2Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track2Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[2] = !check;
         }
 
         private void Track3CheckChanged(object sender, EventArgs e)
         {
             bool check = track3Box.Checked;
-            if (check)
-            {
-                track3Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track3Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track3Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[3] = !check;
         }
 
         private void Track4CheckChanged(object sender, EventArgs e)
         {
             bool check = track4Box.Checked;
-            if (check)
-            {
-                track4Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track4Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track4Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[4] = !check;
         }
 
         private void Track5CheckChanged(object sender, EventArgs e)
         {
             bool check = track5Box.Checked;
-            if (check)
-            {
-                track5Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track5Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track5Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[5] = !check;
         }
 
         private void Track6CheckChanged(object sender, EventArgs e)
         {
             bool check = track6Box.Checked;
-            if (check)
-            {
-                track6Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track6Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track6Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[6] = !check;
         }
 
         private void Track7CheckChanged(object sender, EventArgs e)
         {
             bool check = track7Box.Checked;
-            if (check)
-            {
-                track7Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track7Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track7Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[7] = !check;
         }
 
         private void Track8CheckChanged(object sender, EventArgs e)
         {
             bool check = track8Box.Checked;
-            if (check)
-            {
-                track8Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track8Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track8Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[8] = !check;
         }
 
         private void Track9CheckChanged(object sender, EventArgs e)
         {
             bool check = track9Box.Checked;
-            if (check)
-            {
-                track9Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track9Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track9Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[9] = !check;
         }
 
         private void Track10CheckChanged(object sender, EventArgs e)
         {
             bool check = track10Box.Checked;
-            if (check)
-            {
-                track10Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track10Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track10Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[10] = !check;
         }
 
         private void Track11CheckChanged(object sender, EventArgs e)
         {
             bool check = track11Box.Checked;
-            if (check)
-            {
-                track11Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track11Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track11Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[11] = !check;
         }
 
         private void Track12CheckChanged(object sender, EventArgs e)
         {
             bool check = track12Box.Checked;
-            if (check)
-            {
-                track12Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track12Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track12Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[12] = !check;
         }
 
         private void Track13CheckChanged(object sender, EventArgs e)
         {
             bool check = track13Box.Checked;
-            if (check)
-            {
-                track13Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track13Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track13Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[13] = !check;
         }
 
         private void Track14CheckChanged(object sender, EventArgs e)
         {
             bool check = track14Box.Checked;
-            if (check)
-            {
-                track14Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track14Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track14Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[14] = !check;
         }
 
         private void Track15CheckChanged(object sender, EventArgs e)
         {
             bool check = track15Box.Checked;
-            if (check)
-            {
-                track15Picture.BackgroundImage = Properties.Resources.Idle;
-            }
-            else
-            {
-                track15Picture.BackgroundImage = Properties.Resources.Mute;
-            }
+            track15Picture.BackgroundImage = check ? Properties.Resources.Idle : Properties.Resources.Mute;
             Mixer.Mutes[15] = !check;
         }
 
@@ -2150,10 +2043,12 @@ namespace NitroStudio2
                     mask |= (ushort)(0b1 << i);
                 }
             }
-            SaveFileDialog s = new SaveFileDialog();
-            s.RestoreDirectory = true;
-            s.FileName = Path.GetFileNameWithoutExtension(SEQ.Name) + ".mid";
-            s.Filter = "MIDI|*.mid";
+            SaveFileDialog s = new()
+            {
+                RestoreDirectory = true,
+                FileName = Path.GetFileNameWithoutExtension(SEQ.Name) + ".mid",
+                Filter = "MIDI|*.mid"
+            };
             if (s.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -2170,26 +2065,28 @@ namespace NitroStudio2
             }
             if (MainWindow == null)
             {
-                MessageBox.Show("There must be an SDAT connected to this file to record it.");
+                _ = MessageBox.Show("There must be an SDAT connected to this file to record it.");
                 return;
             }
-            var b = MainWindow
+            BankInfo b = MainWindow
                 .SA.Banks.Where(x => x.Index == (int)seqEditorBankBox.Value)
                 .FirstOrDefault();
             if (b == null)
             {
-                MessageBox.Show("Bank is not valid or doesn't exist.");
+                _ = MessageBox.Show("Bank is not valid or doesn't exist.");
                 return;
             }
-            SaveFileDialog s = new SaveFileDialog();
-            s.RestoreDirectory = true;
-            s.FileName = Path.GetFileNameWithoutExtension(SEQ.Name) + ".wav";
-            s.Filter = "Wave File|*.wav";
+            SaveFileDialog s = new()
+            {
+                RestoreDirectory = true,
+                FileName = Path.GetFileNameWithoutExtension(SEQ.Name) + ".wav",
+                Filter = "Wave File|*.wav"
+            };
             if (s.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
-            SequenceRecorder r = new SequenceRecorder(
+            SequenceRecorder r = new(
                 new PlayableBank[] { b.File },
                 b.GetAssociatedWaves(),
                 SEQ.Commands,
@@ -2197,7 +2094,7 @@ namespace NitroStudio2
                 s.FileName
             );
             r.Mixer.Mutes = Mixer.Mutes;
-            r.ShowDialog();
+            _ = r.ShowDialog();
         }
     }
 }

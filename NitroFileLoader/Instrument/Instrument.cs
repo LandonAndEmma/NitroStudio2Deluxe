@@ -1,18 +1,16 @@
-﻿using System;
+﻿using GotaSequenceLib;
+using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
-using GotaSoundIO.IO;
 
-namespace NitroFileLoader
+namespace NitroFileLoader.Instrument
 {
     public abstract class Instrument : IReadable, IWriteable
     {
-        public List<NoteInfo> NoteInfo = new List<NoteInfo>();
+        public List<NoteInfo> NoteInfo = [];
         public int Index;
-        public long GetOrder => Order + Math.Max((int)Type() - 5, 0) * 100000000;
+        public long GetOrder => Order + (Math.Max((int)Type() - 5, 0) * 100000000);
         public long Order;
         public abstract void Read(FileReader r);
         public abstract void Write(FileWriter w);

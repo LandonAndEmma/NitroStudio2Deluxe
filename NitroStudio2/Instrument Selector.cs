@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSequenceLib.Playback;
-using GotaSoundIO.Sound;
+﻿using GotaSequenceLib.Playback;
+using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
+using NitroFileLoader.Instrument;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace NitroStudio2
 {
     public partial class InstrumentSelector : Form
     {
         public List<int> SelectedInstruments = null;
-        private List<RiffWave> wavs = new List<RiffWave>();
+        private readonly List<RiffWave> wavs = [];
         public Player Player;
-        public Mixer Mixer = new Mixer();
+        public Mixer Mixer = new();
 
         public InstrumentSelector(List<RiffWave> waves, List<int> insts, List<string> names)
         {
@@ -29,26 +24,25 @@ namespace NitroStudio2
             Player.PrepareForSong(
                 new Bank[]
                 {
-                    new Bank()
+                    new()
                     {
-                        Instruments = new List<Instrument>()
-                        {
+                        Instruments =
+                        [
                             new DirectInstrument()
                             {
                                 Index = 0,
-                                NoteInfo = new List<NoteInfo>()
-                                {
+                                NoteInfo =
+                                [
                                     new NoteInfo() { Key = GotaSequenceLib.Notes.gn9 },
-                                },
+                                ],
                             },
-                        },
+                        ],
                     },
                 },
                 new RiffWave[][] { new RiffWave[1] }
             );
             Player.LoadSong(
-                new List<GotaSequenceLib.SequenceCommand>()
-                {
+                [
                     new GotaSequenceLib.SequenceCommand()
                     {
                         CommandType = GotaSequenceLib.SequenceCommands.ProgramChange,
@@ -68,14 +62,14 @@ namespace NitroStudio2
                     {
                         CommandType = GotaSequenceLib.SequenceCommands.Fin,
                     },
-                }
+                ]
             );
             FormClosing += new FormClosingEventHandler(OnClosing);
             int ind = 0;
-            foreach (var inst in insts)
+            foreach (int inst in insts)
             {
-                instGrid.Rows.Add(new DataGridViewRow());
-                var v = instGrid.Rows[instGrid.Rows.Count - 1];
+                _ = instGrid.Rows.Add(new DataGridViewRow());
+                DataGridViewRow v = instGrid.Rows[^1];
                 ((DataGridViewTextBoxCell)v.Cells[1]).Value = inst;
                 string name = "Instrument " + inst;
                 try
@@ -91,7 +85,7 @@ namespace NitroStudio2
 
         private void finishedButton_Click(object sender, EventArgs e)
         {
-            SelectedInstruments = new List<int>();
+            SelectedInstruments = [];
             foreach (DataGridViewRow r in instGrid.Rows)
             {
                 if ((bool)((DataGridViewCheckBoxCell)r.Cells[3]).Value)

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Encoding;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 
 namespace GotaSoundIO.Sound
 {
@@ -13,24 +11,10 @@ namespace GotaSoundIO.Sound
     {
         public Type EncodingType
         {
-            get
-            {
-                if (m_EncodingType != null)
-                {
-                    return m_EncodingType;
-                }
-                else if (Channels.Count() > 0)
-                {
-                    return Channels[0][0].GetType();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set { m_EncodingType = value; }
+            get => (field) ?? (Channels.Count() > 0 ? Channels[0][0].GetType() : null);
+            set;
         }
-        private Type m_EncodingType;
+
         public int BlockSize { get; private set; } = -1;
         public int BlockSamples { get; private set; } = -1;
         public int LastBlockPaddingSize;
@@ -41,25 +25,27 @@ namespace GotaSoundIO.Sound
                 ? 0
                 : (
                     Channels[0].Select(x => x.DataSize()).Sum()
-                    + LastBlockPaddingSize * (Channels.Count - 1)
+                    + (LastBlockPaddingSize * (Channels.Count - 1))
                 );
         public int NumBlocks => Channels.Count == 0 ? 0 : Channels[0].Count;
         public int LastBlockSize => Channels.Count == 0 ? 0 : Channels[0].Last().DataSize();
         public int LastBlockSamples => Channels.Count == 0 ? 0 : Channels[0].Last().SampleCount();
         public int LastBlockWithPaddingSize => LastBlockSize + LastBlockPaddingSize;
-        public List<List<IAudioEncoding>> Channels = new List<List<IAudioEncoding>>();
+        public List<List<IAudioEncoding>> Channels = [];
 
         public AudioData Duplicate()
         {
-            AudioData a = new AudioData();
-            a.EncodingType = EncodingType;
-            a.BlockSize = BlockSize;
-            a.BlockSamples = BlockSamples;
-            a.LastBlockPaddingSize = LastBlockPaddingSize;
-            a.Channels = new List<List<IAudioEncoding>>();
+            AudioData a = new()
+            {
+                EncodingType = EncodingType,
+                BlockSize = BlockSize,
+                BlockSamples = BlockSamples,
+                LastBlockPaddingSize = LastBlockPaddingSize,
+                Channels = []
+            };
             for (int i = 0; i < Channels.Count; i++)
             {
-                List<IAudioEncoding> chan = new List<IAudioEncoding>();
+                List<IAudioEncoding> chan = [];
                 for (int j = 0; j < Channels[i].Count; j++)
                 {
                     chan.Add(Channels[i][j].Duplicate());
@@ -80,12 +66,12 @@ namespace GotaSoundIO.Sound
             for (int i = 0; i < Channels.Count; i++)
             {
                 object decodingData = null;
-                List<float> samples = new List<float>();
-                foreach (var b in Channels[i])
+                List<float> samples = [];
+                foreach (IAudioEncoding b in Channels[i])
                 {
                     samples.AddRange(b.ToFloatPCM(decodingData));
                 }
-                var s = samples.ToArray();
+                float[] s = samples.ToArray();
                 Channels[i].Clear();
                 IAudioEncoding tmp = (IAudioEncoding)Activator.CreateInstance(targetEncoding);
                 if (targetBlockSize == -1)
@@ -118,20 +104,20 @@ namespace GotaSoundIO.Sound
                     {
                         if (
                             loopStart >= samplesPerBlock * j
-                            && loopStart < samplesPerBlock * j + numSamples
+                            && loopStart < (samplesPerBlock * j) + numSamples
                         )
                         {
-                            lS = loopStart - samplesPerBlock * j;
+                            lS = loopStart - (samplesPerBlock * j);
                         }
                     }
                     if (loopEnd != -1)
                     {
                         if (
                             loopEnd >= samplesPerBlock * j
-                            && loopEnd < samplesPerBlock * j + numSamples
+                            && loopEnd < (samplesPerBlock * j) + numSamples
                         )
                         {
-                            lE = loopEnd - samplesPerBlock * j;
+                            lE = loopEnd - (samplesPerBlock * j);
                         }
                     }
                     IAudioEncoding block = (IAudioEncoding)Activator.CreateInstance(targetEncoding);
@@ -152,20 +138,13 @@ namespace GotaSoundIO.Sound
             {
                 return;
             }
-            var tmp = (IAudioEncoding)Activator.CreateInstance(EncodingType);
+            IAudioEncoding tmp = (IAudioEncoding)Activator.CreateInstance(EncodingType);
             BlockSize = targetBlockSize;
             for (int i = 0; i < Channels.Count; i++)
             {
                 Channels[i] = tmp.ChangeBlockSize(Channels[i], targetBlockSize);
             }
-            if (targetBlockSize == -1)
-            {
-                BlockSamples = -1;
-            }
-            else
-            {
-                BlockSamples = Channels.Count == 0 ? 0 : Channels[0][0].SampleCount();
-            }
+            BlockSamples = targetBlockSize == -1 ? -1 : Channels.Count == 0 ? 0 : Channels[0][0].SampleCount();
         }
 
         public void Read(
@@ -184,11 +163,11 @@ namespace GotaSoundIO.Sound
             Channels.Clear();
             for (int i = 0; i < numChannels; i++)
             {
-                Channels.Add(new List<IAudioEncoding>());
+                Channels.Add([]);
                 IAudioEncoding data = (IAudioEncoding)Activator.CreateInstance(EncodingType);
                 data.ReadRaw(r, (uint)numSamples, (uint)dataSize);
                 Channels.Last().Add(data);
-                r.ReadBytes(dataPadding);
+                _ = r.ReadBytes(dataPadding);
             }
         }
 
@@ -211,7 +190,7 @@ namespace GotaSoundIO.Sound
             Channels.Clear();
             for (int i = 0; i < numChannels; i++)
             {
-                Channels.Add(new List<IAudioEncoding>());
+                Channels.Add([]);
             }
             for (uint i = 0; i < numBlocks - 1; i++)
             {
@@ -227,7 +206,7 @@ namespace GotaSoundIO.Sound
                 IAudioEncoding data = (IAudioEncoding)Activator.CreateInstance(EncodingType);
                 data.ReadRaw(r, lastBlockSamples, lastBlockSize);
                 Channels[i].Add(data);
-                r.ReadBytes(LastBlockPaddingSize);
+                _ = r.ReadBytes(LastBlockPaddingSize);
             }
         }
 
@@ -253,21 +232,17 @@ namespace GotaSoundIO.Sound
             {
                 return null;
             }
-            using (MemoryStream o = new MemoryStream())
+            using MemoryStream o = new();
+            using FileWriter w = new(o);
+            for (int i = 0; i < NumBlocks; i++)
             {
-                using (FileWriter w = new FileWriter(o))
+                for (int j = 0; j < Channels.Count; j++)
                 {
-                    for (int i = 0; i < NumBlocks; i++)
-                    {
-                        for (int j = 0; j < Channels.Count; j++)
-                        {
-                            w.Write((Channels[j][i] as DspAdpcm).Context.yn1);
-                            w.Write((Channels[j][i] as DspAdpcm).Context.yn2);
-                        }
-                    }
-                    return o.ToArray();
+                    w.Write((Channels[j][i] as DspAdpcm).Context.yn1);
+                    w.Write((Channels[j][i] as DspAdpcm).Context.yn2);
                 }
             }
+            return o.ToArray();
         }
 
         public void SetSeek(byte[] seekInfo)
@@ -276,18 +251,14 @@ namespace GotaSoundIO.Sound
             {
                 return;
             }
-            using (MemoryStream src = new MemoryStream(seekInfo))
+            using MemoryStream src = new(seekInfo);
+            using FileReader r = new(src);
+            for (int i = 0; i < NumBlocks; i++)
             {
-                using (FileReader r = new FileReader(src))
+                for (int j = 0; j < Channels.Count; j++)
                 {
-                    for (int i = 0; i < NumBlocks; i++)
-                    {
-                        for (int j = 0; j < Channels.Count; j++)
-                        {
-                            (Channels[j][i] as DspAdpcm).Context.yn1 = r.ReadInt16();
-                            (Channels[j][i] as DspAdpcm).Context.yn2 = r.ReadInt16();
-                        }
-                    }
+                    (Channels[j][i] as DspAdpcm).Context.yn1 = r.ReadInt16();
+                    (Channels[j][i] as DspAdpcm).Context.yn2 = r.ReadInt16();
                 }
             }
         }
@@ -305,7 +276,7 @@ namespace GotaSoundIO.Sound
                     toTrim -= cutSamples;
                     if (Channels[i].Last().SampleCount() == 0)
                     {
-                        Channels[i].Remove(Channels[i].Last());
+                        _ = Channels[i].Remove(Channels[i].Last());
                     }
                 }
             }
@@ -317,20 +288,17 @@ namespace GotaSoundIO.Sound
             {
                 return;
             }
-            if (mutes == null)
-            {
-                mutes = new bool[Channels.Count];
-            }
+            mutes ??= new bool[Channels.Count];
             if (Channels.Count == 0 || mutes.Where(x => x == false).Count() == 0)
             {
                 return;
             }
             double divisor = 1 / Math.Sqrt(mutes.Where(x => x == false).Count());
             Convert(typeof(PCM32Float), BlockSamples);
-            List<IAudioEncoding> newData = new List<IAudioEncoding>();
+            List<IAudioEncoding> newData = [];
             for (int i = 0; i < NumBlocks; i++)
             {
-                List<float> samples = new List<float>();
+                List<float> samples = [];
                 IAudioEncoding block = new PCM32Float();
                 for (int j = 0; j < Channels[0][i].SampleCount(); j++)
                 {
@@ -370,10 +338,7 @@ namespace GotaSoundIO.Sound
             {
                 return;
             }
-            if (mutes == null)
-            {
-                mutes = new bool[Channels.Count];
-            }
+            mutes ??= new bool[Channels.Count];
             if (isRightChannel == null)
             {
                 isRightChannel = new bool[Channels.Count];
@@ -397,8 +362,8 @@ namespace GotaSoundIO.Sound
             {
                 return;
             }
-            List<int> lefts = new List<int>();
-            List<int> rights = new List<int>();
+            List<int> lefts = [];
+            List<int> rights = [];
             for (int i = 0; i < mutes.Length; i++)
             {
                 if (!mutes[i])
@@ -421,12 +386,12 @@ namespace GotaSoundIO.Sound
             Convert(typeof(PCM32Float), BlockSamples);
             double divL = 1 / Math.Sqrt(lefts.Count);
             double divR = 1 / Math.Sqrt(rights.Count);
-            List<IAudioEncoding> left = new List<IAudioEncoding>();
-            List<IAudioEncoding> right = new List<IAudioEncoding>();
+            List<IAudioEncoding> left = [];
+            List<IAudioEncoding> right = [];
             for (int i = 0; i < NumBlocks; i++)
             {
-                List<float> samplesL = new List<float>();
-                List<float> samplesR = new List<float>();
+                List<float> samplesL = [];
+                List<float> samplesR = [];
                 IAudioEncoding blockL = new PCM32Float();
                 IAudioEncoding blockR = new PCM32Float();
                 for (int j = 0; j < Channels[0][i].SampleCount(); j++)

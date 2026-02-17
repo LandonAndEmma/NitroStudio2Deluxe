@@ -1,24 +1,23 @@
-﻿using System;
+﻿using GotaSequenceLib;
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
+using NitroFileLoader;
+using NitroFileLoader.Instrument;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GotaSequenceLib;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
-using NitroFileLoader;
 
 namespace NitroStudio2
 {
     public class BankEditor : EditorBase
     {
         public Bank BK => File as Bank;
-        public GotaSequenceLib.Playback.Mixer Mixer = new GotaSequenceLib.Playback.Mixer();
+        public GotaSequenceLib.Playback.Mixer Mixer = new();
         public GotaSequenceLib.Playback.Player Player;
-        public Random Random = new Random();
+        public Random Random = new();
 
         public BankEditor(MainWindow mainWindow)
             : base(typeof(Bank), "Bank", "bnk", "Bank Editor", mainWindow)
@@ -42,7 +41,7 @@ namespace NitroStudio2
         {
             Icon = Properties.Resources.Bnk;
             tree.Nodes.RemoveAt(0);
-            tree.Nodes.Add("root", "Bank", 11, 11);
+            _ = tree.Nodes.Add("root", "Bank", 11, 11);
             Player = new GotaSequenceLib.Playback.Player(Mixer);
             bankRegions.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(
                 bankRegions_EditingControlShowing
@@ -68,7 +67,7 @@ namespace NitroStudio2
             war3Box.ValueChanged += new EventHandler(war3BoxChanged);
             itemIndexBox.Maximum = 32767;
             bankRegions.Columns[0].Visible = false;
-            this.FormClosing += new FormClosingEventHandler(EditorClosing);
+            FormClosing += new FormClosingEventHandler(EditorClosing);
             if (MainWindow != null)
             {
                 if (MainWindow.SA != null)
@@ -112,12 +111,12 @@ namespace NitroStudio2
                 indexPanel.Show();
                 bankEditorPanel.Show();
                 PopulateRegionGrid();
-                var e = BK
+                Instrument e = BK
                     .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                     .FirstOrDefault();
                 itemIndexBox.Value = e.Index;
                 ColorNotes(
-                    e as DrumSetInstrument == null ? (byte)0 : (e as DrumSetInstrument).Min,
+                    (e as DrumSetInstrument) == null ? (byte)0 : (e as DrumSetInstrument).Min,
                     e.NoteInfo
                 );
                 switch (e.Type())
@@ -149,14 +148,7 @@ namespace NitroStudio2
                 }
                 if (e.NoteInfo.Count > 1)
                 {
-                    if (e.NoteInfo.Count > 8)
-                    {
-                        keySplitBox.Enabled = false;
-                    }
-                    else
-                    {
-                        keySplitBox.Enabled = true;
-                    }
+                    keySplitBox.Enabled = e.NoteInfo.Count <= 8;
                     directBox.Enabled = false;
                 }
                 else
@@ -182,12 +174,12 @@ namespace NitroStudio2
             if (FileOpen && File != null)
             {
                 tree.Nodes[0].ContextMenuStrip = rootMenu;
-                foreach (var e in BK.Instruments)
+                foreach (Instrument e in BK.Instruments)
                 {
                     switch (e.Type())
                     {
                         case InstrumentType.PCM:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add(
                                     "inst" + e.Index,
                                     "[" + e.Index + "] PCM Instrument",
@@ -196,7 +188,7 @@ namespace NitroStudio2
                                 );
                             break;
                         case InstrumentType.PSG:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add(
                                     "inst" + e.Index,
                                     "[" + e.Index + "] PSG Instrument",
@@ -205,7 +197,7 @@ namespace NitroStudio2
                                 );
                             break;
                         case InstrumentType.Noise:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add(
                                     "inst" + e.Index,
                                     "[" + e.Index + "] Noise Instrument",
@@ -214,7 +206,7 @@ namespace NitroStudio2
                                 );
                             break;
                         case InstrumentType.DirectPCM:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add(
                                     "inst" + e.Index,
                                     "[" + e.Index + "] Direct PCM Instrument",
@@ -223,7 +215,7 @@ namespace NitroStudio2
                                 );
                             break;
                         case InstrumentType.Null:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add(
                                     "inst" + e.Index,
                                     "[" + e.Index + "] Null Instrument",
@@ -232,25 +224,25 @@ namespace NitroStudio2
                                 );
                             break;
                         case InstrumentType.DrumSet:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add("inst" + e.Index, "[" + e.Index + "] Drum Set", 15, 15);
                             break;
                         case InstrumentType.KeySplit:
-                            tree.Nodes[0]
+                            _ = tree.Nodes[0]
                                 .Nodes.Add("inst" + e.Index, "[" + e.Index + "] Key-Split", 16, 16);
                             break;
                     }
-                    tree.Nodes[0].Nodes[tree.Nodes[0].Nodes.Count - 1].ContextMenuStrip =
+                    tree.Nodes[0].Nodes[^1].ContextMenuStrip =
                         CreateMenuStrip(
                             nodeMenu,
                             new int[] { 0, 1, 4, 5, 6 },
                             new EventHandler[]
                             {
-                                new EventHandler(addAboveToolStripMenuItem1_Click),
-                                new EventHandler(addBelowToolStripMenuItem1_Click),
-                                new EventHandler(replaceFileToolStripMenuItem_Click),
-                                new EventHandler(exportToolStripMenuItem1_Click),
-                                new EventHandler(deleteToolStripMenuItem1_Click),
+                                new(addAboveToolStripMenuItem1_Click),
+                                new(addBelowToolStripMenuItem1_Click),
+                                new(replaceFileToolStripMenuItem_Click),
+                                new(exportToolStripMenuItem1_Click),
+                                new(deleteToolStripMenuItem1_Click),
                             }
                         );
                 }
@@ -270,14 +262,14 @@ namespace NitroStudio2
         {
             bankRegions.Rows.Clear();
             foreach (
-                var e in BK
+                NoteInfo e in BK
                     .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                     .FirstOrDefault()
                     .NoteInfo
             )
             {
-                bankRegions.Rows.Add(new DataGridViewRow());
-                var v = bankRegions.Rows[bankRegions.Rows.Count - 2];
+                _ = bankRegions.Rows.Add(new DataGridViewRow());
+                DataGridViewRow v = bankRegions.Rows[^2];
                 ((DataGridViewButtonCell)v.Cells[0]).UseColumnTextForButtonValue = true;
                 ((DataGridViewComboBoxCell)v.Cells[1]).Value = (
                     (DataGridViewComboBoxCell)v.Cells[1]
@@ -302,7 +294,7 @@ namespace NitroStudio2
                 }
                 ((DataGridViewTextBoxCell)v.Cells[3]).Value = e.WaveId;
                 ((DataGridViewTextBoxCell)v.Cells[4]).Value = e.WarId;
-                var baseNoteCombo = (DataGridViewComboBoxCell)v.Cells[5];
+                DataGridViewComboBoxCell baseNoteCombo = (DataGridViewComboBoxCell)v.Cells[5];
                 byte baseNoteIndex = Math.Min(e.BaseNote, (byte)(baseNoteCombo.Items.Count - 1));
                 baseNoteCombo.Value = baseNoteCombo.Items[baseNoteIndex];
                 ((DataGridViewTextBoxCell)v.Cells[6]).Value = e.Attack;
@@ -319,29 +311,29 @@ namespace NitroStudio2
             {
                 return;
             }
-            var riffs = new RiffWave[4][];
-            var w0 = MainWindow
+            RiffWave[][] riffs = new RiffWave[4][];
+            WaveArchiveInfo w0 = MainWindow
                 .SA.WaveArchives.Where(x => x.Index == (int)war0Box.Value)
                 .FirstOrDefault();
             if (w0 != null)
             {
                 riffs[0] = w0.File.GetWaves();
             }
-            var w1 = MainWindow
+            WaveArchiveInfo w1 = MainWindow
                 .SA.WaveArchives.Where(x => x.Index == (int)war1Box.Value)
                 .FirstOrDefault();
             if (w1 != null)
             {
                 riffs[1] = w1.File.GetWaves();
             }
-            var w2 = MainWindow
+            WaveArchiveInfo w2 = MainWindow
                 .SA.WaveArchives.Where(x => x.Index == (int)war2Box.Value)
                 .FirstOrDefault();
             if (w2 != null)
             {
                 riffs[2] = w2.File.GetWaves();
             }
-            var w3 = MainWindow
+            WaveArchiveInfo w3 = MainWindow
                 .SA.WaveArchives.Where(x => x.Index == (int)war3Box.Value)
                 .FirstOrDefault();
             if (w3 != null)
@@ -358,12 +350,11 @@ namespace NitroStudio2
                 return;
             }
             currentNote.Text =
-                "Playing Note " + NoteDown.ToString() + " (" + (int)(NoteDown) + ").";
+                "Playing Note " + NoteDown.ToString() + " (" + (int)NoteDown + ").";
             Player.Stop();
             Player.Banks[0] = BK;
             Player.LoadSong(
-                new List<GotaSequenceLib.SequenceCommand>()
-                {
+                [
                     new GotaSequenceLib.SequenceCommand()
                     {
                         CommandType = GotaSequenceLib.SequenceCommands.ProgramChange,
@@ -380,7 +371,7 @@ namespace NitroStudio2
                         },
                     },
                     new SequenceCommand() { CommandType = SequenceCommands.Fin },
-                }
+                ]
             );
             Player.Play();
         }
@@ -398,20 +389,17 @@ namespace NitroStudio2
         {
             e.Control.KeyPress -= new KeyPressEventHandler(Column_KeyPress);
             if (
-                bankRegions.CurrentCell.ColumnIndex == 2
-                || bankRegions.CurrentCell.ColumnIndex == 3
-                || bankRegions.CurrentCell.ColumnIndex == 5
-                || bankRegions.CurrentCell.ColumnIndex == 6
-                || bankRegions.CurrentCell.ColumnIndex == 7
-                || bankRegions.CurrentCell.ColumnIndex == 8
-                || bankRegions.CurrentCell.ColumnIndex == 9
+                bankRegions.CurrentCell.ColumnIndex is 2
+                or 3
+                or 5
+                or 6
+                or 7
+                or 8
+                or 9
             )
             {
                 TextBox tb = e.Control as TextBox;
-                if (tb != null)
-                {
-                    tb.KeyPress += new KeyPressEventHandler(Column_KeyPress);
-                }
+                tb?.KeyPress += new KeyPressEventHandler(Column_KeyPress);
             }
         }
 
@@ -430,22 +418,22 @@ namespace NitroStudio2
                 return;
             }
             WritingInfo = true;
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
-            List<NoteInfo> regions = new List<NoteInfo>();
+            List<NoteInfo> regions = [];
             for (int i = 1; i < bankRegions.Rows.Count; i++)
             {
-                var endNoteCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[1];
-                var instrumentTypeCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[2];
-                var waveCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[3];
-                var warCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[4];
-                var baseNote = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[5];
-                var attackCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[6];
-                var decayCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[7];
-                var sustainCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[8];
-                var releaseCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[9];
-                var panCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[10];
+                DataGridViewComboBoxCell endNoteCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[1];
+                DataGridViewComboBoxCell instrumentTypeCell = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[2];
+                DataGridViewTextBoxCell waveCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[3];
+                DataGridViewTextBoxCell warCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[4];
+                DataGridViewComboBoxCell baseNote = (DataGridViewComboBoxCell)bankRegions.Rows[i - 1].Cells[5];
+                DataGridViewTextBoxCell attackCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[6];
+                DataGridViewTextBoxCell decayCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[7];
+                DataGridViewTextBoxCell sustainCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[8];
+                DataGridViewTextBoxCell releaseCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[9];
+                DataGridViewTextBoxCell panCell = (DataGridViewTextBoxCell)bankRegions.Rows[i - 1].Cells[10];
                 if (endNoteCell.Value == null || endNoteCell.Value.ToString() == "")
                 {
                     WritingInfo = false;
@@ -506,8 +494,10 @@ namespace NitroStudio2
                     panCell.Value = 64;
                     return;
                 }
-                NoteInfo n = new NoteInfo();
-                n.Key = (Notes)Enum.Parse(typeof(Notes), ((string)endNoteCell.Value).Split(' ')[0]);
+                NoteInfo n = new()
+                {
+                    Key = (Notes)Enum.Parse(typeof(Notes), ((string)endNoteCell.Value).Split(' ')[0])
+                };
                 switch ((string)instrumentTypeCell.Value)
                 {
                     case "PCM":
@@ -594,22 +584,8 @@ namespace NitroStudio2
                 UpdateNodes();
                 DoInfoStuff();
             }
-            if (regions.Count > 1)
-            {
-                directBox.Enabled = false;
-            }
-            else
-            {
-                directBox.Enabled = true;
-            }
-            if (regions.Count > 8)
-            {
-                keySplitBox.Enabled = false;
-            }
-            else
-            {
-                keySplitBox.Enabled = true;
-            }
+            directBox.Enabled = regions.Count <= 1;
+            keySplitBox.Enabled = regions.Count <= 8;
             if (regions.Count > 8 && inst.Type() != InstrumentType.DrumSet)
             {
                 BK.Instruments[BK.Instruments.IndexOf(inst)] = new DrumSetInstrument()
@@ -628,7 +604,7 @@ namespace NitroStudio2
                 UpdateNodes();
                 return;
             }
-            if (regions.Count > 1 && inst as DirectInstrument != null)
+            if (regions.Count > 1 && (inst as DirectInstrument) != null)
             {
                 BK.Instruments[BK.Instruments.IndexOf(inst)] = new KeySplitInstrument()
                 {
@@ -640,7 +616,7 @@ namespace NitroStudio2
                 UpdateNodes();
             }
             ColorNotes(
-                inst as DrumSetInstrument == null ? (byte)0 : (inst as DrumSetInstrument).Min,
+                (inst as DrumSetInstrument) == null ? (byte)0 : (inst as DrumSetInstrument).Min,
                 inst.NoteInfo
             );
             WritingInfo = false;
@@ -654,7 +630,7 @@ namespace NitroStudio2
                 return;
             }
             WritingInfo = true;
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
             if (directBox.Checked)
@@ -709,8 +685,7 @@ namespace NitroStudio2
                 Player.Stop();
                 Player.Banks[0] = BK;
                 Player.LoadSong(
-                    new List<GotaSequenceLib.SequenceCommand>()
-                    {
+                    [
                         new GotaSequenceLib.SequenceCommand()
                         {
                             CommandType = GotaSequenceLib.SequenceCommands.ProgramChange,
@@ -727,7 +702,7 @@ namespace NitroStudio2
                             },
                         },
                         new SequenceCommand() { CommandType = SequenceCommands.Fin },
-                    }
+                    ]
                 );
                 Player.Play();
             }
@@ -751,13 +726,13 @@ namespace NitroStudio2
                         break;
                     }
                 }
-                MessageBox.Show("No available slots left!");
+                _ = MessageBox.Show("No available slots left!");
             }
             BK.Instruments.Add(
                 new DirectInstrument()
                 {
                     Index = index,
-                    NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } },
+                    NoteInfo = [new NoteInfo() { Key = Notes.gn9 }],
                     Order = index,
                 }
             );
@@ -768,12 +743,12 @@ namespace NitroStudio2
 
         public override void NodeAddAbove()
         {
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
             if (BK.Instruments.Where(x => x.Index == inst.Index - 1).Count() > 0 || inst.Index == 0)
             {
-                foreach (var i in BK.Instruments)
+                foreach (Instrument i in BK.Instruments)
                 {
                     if (i.Index >= inst.Index && i != inst)
                     {
@@ -785,7 +760,7 @@ namespace NitroStudio2
                 new DirectInstrument()
                 {
                     Index = inst.Index - 1,
-                    NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } },
+                    NoteInfo = [new NoteInfo() { Key = Notes.gn9 }],
                     Order = inst.Order - 1,
                 }
             );
@@ -796,12 +771,12 @@ namespace NitroStudio2
 
         public override void NodeAddBelow()
         {
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
             if (BK.Instruments.Where(x => x.Index == inst.Index + 1).Count() > 0 || inst.Index == 0)
             {
-                foreach (var i in BK.Instruments)
+                foreach (Instrument i in BK.Instruments)
                 {
                     if (i.Index >= inst.Index && i != inst)
                     {
@@ -813,7 +788,7 @@ namespace NitroStudio2
                 new DirectInstrument()
                 {
                     Index = inst.Index + 1,
-                    NoteInfo = new List<NoteInfo>() { new NoteInfo() { Key = Notes.gn9 } },
+                    NoteInfo = [new NoteInfo() { Key = Notes.gn9 }],
                     Order = inst.Order - 1,
                 }
             );
@@ -824,21 +799,23 @@ namespace NitroStudio2
 
         public override void NodeReplace()
         {
-            OpenFileDialog o = new OpenFileDialog();
-            o.Filter = "Nitro Studio Instrument|*.ns2i;*.nist";
-            o.RestoreDirectory = true;
-            o.ShowDialog();
+            OpenFileDialog o = new()
+            {
+                Filter = "Nitro Studio Instrument|*.ns2i;*.nist",
+                RestoreDirectory = true
+            };
+            _ = o.ShowDialog();
             if (o.FileName != "")
             {
                 switch (Path.GetExtension(o.FileName))
                 {
                     case ".ns2i":
-                        NitroStudio2Instrument i = new NitroStudio2Instrument();
+                        NitroStudio2Instrument i = new();
                         i.Read(o.FileName);
                         i.WriteInstrument(
                             BK,
                             MainWindow.GetIdFromNode(tree.SelectedNode),
-                            MainWindow != null ? MainWindow.SA : null,
+                            MainWindow?.SA,
                             war0Box.Value == -1 ? (ushort)0xFFFF : (ushort)war0Box.Value,
                             war1Box.Value == -1 ? (ushort)0xFFFF : (ushort)war1Box.Value,
                             war2Box.Value == -1 ? (ushort)0xFFFF : (ushort)war2Box.Value,
@@ -847,7 +824,7 @@ namespace NitroStudio2
                         LoadWaveArchives();
                         break;
                     case ".nist":
-                        NitroStudioInstrument s = new NitroStudioInstrument();
+                        NitroStudioInstrument s = new();
                         s.Read(o.FileName);
                         if (s.Inst == null)
                         {
@@ -871,22 +848,24 @@ namespace NitroStudio2
 
         public override void NodeExport()
         {
-            SaveFileDialog s = new SaveFileDialog();
-            s.Filter = "Nitro Studio Instrument|*.ns2i;*.nist";
-            s.RestoreDirectory = true;
-            s.FileName = "Instrument " + MainWindow.GetIdFromNode(tree.SelectedNode) + ".ns2i";
-            s.ShowDialog();
+            SaveFileDialog s = new()
+            {
+                Filter = "Nitro Studio Instrument|*.ns2i;*.nist",
+                RestoreDirectory = true,
+                FileName = "Instrument " + MainWindow.GetIdFromNode(tree.SelectedNode) + ".ns2i"
+            };
+            _ = s.ShowDialog();
             if (s.FileName != "")
             {
                 switch (Path.GetExtension(s.FileName))
                 {
                     case ".ns2i":
-                        NitroStudio2Instrument i = new NitroStudio2Instrument(
+                        NitroStudio2Instrument i = new(
                             BK.Instruments.Where(x =>
                                     x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)
                                 )
                                 .FirstOrDefault(),
-                            MainWindow != null ? MainWindow.SA : null,
+                            MainWindow?.SA,
                             war0Box.Value == -1 ? (ushort)0xFFFF : (ushort)war0Box.Value,
                             war1Box.Value == -1 ? (ushort)0xFFFF : (ushort)war1Box.Value,
                             war2Box.Value == -1 ? (ushort)0xFFFF : (ushort)war2Box.Value,
@@ -895,7 +874,7 @@ namespace NitroStudio2
                         i.Write(s.FileName);
                         break;
                     case ".nist":
-                        NitroStudioInstrument n = new NitroStudioInstrument()
+                        NitroStudioInstrument n = new()
                         {
                             Inst = BK
                                 .Instruments.Where(x =>
@@ -911,7 +890,7 @@ namespace NitroStudio2
 
         public override void NodeDelete()
         {
-            BK.Instruments.Remove(
+            _ = BK.Instruments.Remove(
                 BK.Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                     .FirstOrDefault()
             );
@@ -922,12 +901,12 @@ namespace NitroStudio2
         public void SwapIndexButton(object sender, EventArgs e)
         {
             bool instExists = BK.Instruments.Where(x => x.Index == itemIndexBox.Value).Count() > 0;
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
             if (instExists)
             {
-                var inst2 = BK
+                Instrument inst2 = BK
                     .Instruments.Where(x => x.Index == itemIndexBox.Value)
                     .FirstOrDefault();
                 inst2.Index = inst.Index;
@@ -941,10 +920,10 @@ namespace NitroStudio2
 
         public void InsertAtIndexButton(object sender, EventArgs e)
         {
-            var inst = BK
+            Instrument inst = BK
                 .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                 .FirstOrDefault();
-            foreach (var i in BK.Instruments)
+            foreach (Instrument i in BK.Instruments)
             {
                 if (i.Index >= (int)itemIndexBox.Value)
                 {
@@ -994,7 +973,7 @@ namespace NitroStudio2
         {
             if (!WritingInfo)
             {
-                var inst = BK
+                Instrument inst = BK
                     .Instruments.Where(x => x.Index == MainWindow.GetIdFromNode(tree.SelectedNode))
                     .FirstOrDefault();
                 if (directBox.Checked)
@@ -1065,10 +1044,10 @@ namespace NitroStudio2
                 }
                 byte prevNote = 0;
                 if (
-                    BK.Instruments.Where(x =>
+                    (BK.Instruments.Where(x =>
                             x.Index == MainWindow.GetIdFromNode(tree.SelectedNode)
                         )
-                        .FirstOrDefault() as DrumSetInstrument
+                        .FirstOrDefault() as DrumSetInstrument)
                     != null
                 )
                 {
@@ -1098,12 +1077,11 @@ namespace NitroStudio2
                             .NoteInfo[regionInd - 1]
                             .Key;
                 }
-                Notes note = (Notes)((byte)((prevNote + nextNote) / 2));
+                Notes note = (Notes)(byte)((prevNote + nextNote) / 2);
                 Player.Stop();
                 Player.Banks[0] = BK;
                 Player.LoadSong(
-                    new List<GotaSequenceLib.SequenceCommand>()
-                    {
+                    [
                         new GotaSequenceLib.SequenceCommand()
                         {
                             CommandType = GotaSequenceLib.SequenceCommands.ProgramChange,
@@ -1120,7 +1098,7 @@ namespace NitroStudio2
                             },
                         },
                         new SequenceCommand() { CommandType = SequenceCommands.Fin },
-                    }
+                    ]
                 );
                 Player.Play();
             }
@@ -1129,7 +1107,7 @@ namespace NitroStudio2
         public void ColorNotes(byte start, List<NoteInfo> n)
         {
             int num = 0;
-            foreach (var e in n)
+            foreach (NoteInfo e in n)
             {
                 if (num == 0)
                 {
@@ -1163,7 +1141,7 @@ namespace NitroStudio2
                     (ushort)(war0Box.Value == -1 ? 0xFFFF : war0Box.Value)
                 );
                 WritingInfo = false;
-                var w0 = MainWindow
+                WaveArchiveInfo w0 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war0Box.Value)
                     .FirstOrDefault();
                 if (w0 != null)
@@ -1184,7 +1162,7 @@ namespace NitroStudio2
                     (ushort)(war1Box.Value == -1 ? 0xFFFF : war1Box.Value)
                 );
                 WritingInfo = false;
-                var w1 = MainWindow
+                WaveArchiveInfo w1 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war1Box.Value)
                     .FirstOrDefault();
                 if (w1 != null)
@@ -1205,7 +1183,7 @@ namespace NitroStudio2
                     (ushort)(war2Box.Value == -1 ? 0xFFFF : war2Box.Value)
                 );
                 WritingInfo = false;
-                var w2 = MainWindow
+                WaveArchiveInfo w2 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war2Box.Value)
                     .FirstOrDefault();
                 if (w2 != null)
@@ -1226,7 +1204,7 @@ namespace NitroStudio2
                     (ushort)(war3Box.Value == -1 ? 0xFFFF : war3Box.Value)
                 );
                 WritingInfo = false;
-                var w3 = MainWindow
+                WaveArchiveInfo w3 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war3Box.Value)
                     .FirstOrDefault();
                 if (w3 != null)
@@ -1258,7 +1236,7 @@ namespace NitroStudio2
                 WritingInfo = true;
                 MainWindow.SetWaveArchiveIndex(MainWindow.SA, war0Box, val);
                 WritingInfo = false;
-                var w0 = MainWindow
+                WaveArchiveInfo w0 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war0Box.Value)
                     .FirstOrDefault();
                 if (w0 != null)
@@ -1290,7 +1268,7 @@ namespace NitroStudio2
                 WritingInfo = true;
                 MainWindow.SetWaveArchiveIndex(MainWindow.SA, war1Box, val);
                 WritingInfo = false;
-                var w1 = MainWindow
+                WaveArchiveInfo w1 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war1Box.Value)
                     .FirstOrDefault();
                 if (w1 != null)
@@ -1322,7 +1300,7 @@ namespace NitroStudio2
                 WritingInfo = true;
                 MainWindow.SetWaveArchiveIndex(MainWindow.SA, war2Box, val);
                 WritingInfo = false;
-                var w2 = MainWindow
+                WaveArchiveInfo w2 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war2Box.Value)
                     .FirstOrDefault();
                 if (w2 != null)
@@ -1354,7 +1332,7 @@ namespace NitroStudio2
                 WritingInfo = true;
                 MainWindow.SetWaveArchiveIndex(MainWindow.SA, war3Box, val);
                 WritingInfo = false;
-                var w3 = MainWindow
+                WaveArchiveInfo w3 = MainWindow
                     .SA.WaveArchives.Where(x => x.Index == (int)war3Box.Value)
                     .FirstOrDefault();
                 if (w3 != null)

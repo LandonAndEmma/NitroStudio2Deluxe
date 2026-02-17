@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GotaSoundBank.DLS
 {
     public class Articulator
     {
-        public List<Connection> Connections = new List<Connection>();
+        public List<Connection> Connections = [];
     }
 
     public class Connection

@@ -1,28 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Encoding;
+using System;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Formats
 {
     public class DSP : SoundFile
     {
         public bool Extended;
         public uint BlockSize = 0x2000;
 
-        public override Type[] SupportedEncodings() => new Type[] { typeof(DspAdpcm) };
+        public override Type[] SupportedEncodings()
+        {
+            return new Type[] { typeof(DspAdpcm) };
+        }
 
-        public override string Name() => "DSP";
+        public override string Name()
+        {
+            return "DSP";
+        }
 
-        public override string[] Extensions() => new string[] { "DSP", "MDSP" };
+        public override string[] Extensions()
+        {
+            return new string[] { "DSP", "MDSP" };
+        }
 
-        public override string Description() => "DSP-ADPCM mono file.";
+        public override string Description()
+        {
+            return "DSP-ADPCM mono file.";
+        }
 
-        public override bool SupportsTracks() => false;
+        public override bool SupportsTracks()
+        {
+            return false;
+        }
 
-        public override Type PreferredEncoding() => typeof(DspAdpcm);
+        public override Type PreferredEncoding()
+        {
+            return typeof(DspAdpcm);
+        }
 
         public DSP() { }
 
@@ -32,23 +47,23 @@ namespace GotaSoundIO.Sound
         public override void Read(FileReader r)
         {
             r.ByteOrder = ByteOrder.BigEndian;
-            uint numSamples = r.ReadUInt32();
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
+            _ = r.ReadUInt32();
             SampleRate = r.ReadUInt32();
             Loops = r.ReadUInt16() > 0;
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             LoopStart = r.ReadUInt32();
             LoopEnd = r.ReadUInt32();
-            r.ReadUInt32();
-            DspAdpcmContext context = r.Read<DspAdpcmContext>();
+            _ = r.ReadUInt32();
+            _ = r.Read<DspAdpcmContext>();
             ushort numChannels = r.ReadUInt16();
             BlockSize = (uint)(r.ReadUInt16() * 8);
             Extended = numChannels > 0;
-            r.Align(0x60);
+            _ = r.Align(0x60);
             for (int i = 1; i < numChannels; i++)
             {
-                r.ReadBytes(0x1C);
-                r.Align(0x60);
+                _ = r.ReadBytes(0x1C);
+                _ = r.Align(0x60);
             }
             if (numChannels == 0)
             {
@@ -64,13 +79,13 @@ namespace GotaSoundIO.Sound
             bool blockCarry = false;
             if (lastBlockSize == 0)
             {
-                lastBlockSize = BlockSize;
             }
             else
             {
                 blockCarry = true;
             }
-            uint numBlocks = (uint)(channelLen / BlockSize + (blockCarry ? 1 : 0));
+
+            _ = (uint)((channelLen / BlockSize) + (blockCarry ? 1 : 0));
         }
 
         public override void Write(FileWriter w)
@@ -98,7 +113,7 @@ namespace GotaSoundIO.Sound
                     w.Write((ushort)Audio.Channels.Count);
                     w.Write((ushort)(BlockSize / 8));
                 }
-                w.Align(0x60);
+                _ = w.Align(0x60);
             }
             Audio.ChangeBlockSize((int)BlockSize);
             Audio.Write(w);

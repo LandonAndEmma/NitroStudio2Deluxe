@@ -1,25 +1,33 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Encoding
 {
     public class PCM24 : IAudioEncoding
     {
         private Int24[] Data;
 
-        public int SampleCount() => Data.Length;
+        public int SampleCount()
+        {
+            return Data.Length;
+        }
 
-        public int DataSize() => SampleCount() * 3;
+        public int DataSize()
+        {
+            return SampleCount() * 3;
+        }
 
-        public int SamplesFromBlockSize(int blockSize) => blockSize / 3;
+        public int SamplesFromBlockSize(int blockSize)
+        {
+            return blockSize / 3;
+        }
 
-        public object RawData() => Data;
+        public object RawData()
+        {
+            return Data;
+        }
 
         public void ReadRaw(FileReader r, uint numSamples, uint dataSize)
         {
@@ -32,7 +40,7 @@ namespace GotaSoundIO.Sound
 
         public void WriteRaw(FileWriter w)
         {
-            foreach (var d in Data)
+            foreach (Int24 d in Data)
             {
                 w.Write(d);
             }
@@ -48,8 +56,10 @@ namespace GotaSoundIO.Sound
             Data = pcm.Select(x => (Int24)(x * Int24.MaxValue)).ToArray();
         }
 
-        public float[] ToFloatPCM(object decodingData = null) =>
-            Data.Select(x => x / (float)Int24.MaxValue).ToArray();
+        public float[] ToFloatPCM(object decodingData = null)
+        {
+            return Data.Select(x => x / (float)Int24.MaxValue).ToArray();
+        }
 
         public void Trim(int totalSamples)
         {
@@ -58,9 +68,9 @@ namespace GotaSoundIO.Sound
 
         public List<IAudioEncoding> ChangeBlockSize(List<IAudioEncoding> blocks, int newBlockSize)
         {
-            List<IAudioEncoding> newData = new List<IAudioEncoding>();
-            List<Int24> samples = new List<Int24>();
-            foreach (var b in blocks)
+            List<IAudioEncoding> newData = [];
+            List<Int24> samples = [];
+            foreach (IAudioEncoding b in blocks)
             {
                 samples.AddRange((Int24[])b.RawData());
             }
@@ -92,7 +102,7 @@ namespace GotaSoundIO.Sound
 
         public IAudioEncoding Duplicate()
         {
-            PCM24 ret = new PCM24() { Data = new Int24[Data.Length] };
+            PCM24 ret = new() { Data = new Int24[Data.Length] };
             Array.Copy(Data, ret.Data, Data.Length);
             return ret;
         }

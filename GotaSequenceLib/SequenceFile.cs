@@ -1,26 +1,24 @@
-﻿using System;
+﻿using GotaSoundIO;
+using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO;
-using GotaSoundIO.IO;
 
 namespace GotaSequenceLib
 {
     public abstract class SequenceFile : IOFile
     {
-        public List<SequenceCommand> Commands = new List<SequenceCommand>();
-        public Dictionary<string, uint> Labels = new Dictionary<string, uint>();
+        public List<SequenceCommand> Commands = [];
+        public Dictionary<string, uint> Labels = [];
         private Dictionary<uint, int> CommandIndices;
         public string Name;
         public byte[] RawData = new byte[0];
         public bool WritingCommandSuccess { get; protected set; } = true;
         public abstract SequencePlatform Platform();
         public Dictionary<string, int> PublicLabels { get; protected set; } =
-            new Dictionary<string, int>();
-        public List<int> OtherLabels { get; protected set; } = new List<int>();
+            [];
+        public List<int> OtherLabels { get; protected set; } = [];
 
         public SequenceFile() { }
 
@@ -29,165 +27,157 @@ namespace GotaSequenceLib
 
         public void ReadCommandData(bool globalMode = false)
         {
-            using (MemoryStream src = new MemoryStream(RawData))
+            using MemoryStream src = new(RawData);
+            using FileReader r = new(src);
+            int commandInd = 0;
+            SequencePlatform p = Platform();
+            Dictionary<uint, int> offsetMap = [];
+            Commands = [];
+            PublicLabels = [];
+            OtherLabels = [];
+            while (r.Position < RawData.Length)
             {
-                using (FileReader r = new FileReader(src))
+                offsetMap.Add((uint)r.Position, commandInd);
+                if (
+                    r.Position < RawData.Length - 1
+                    && Commands.Count > 0
+                    && Commands.Last().CommandType == SequenceCommands.Jump
+                )
                 {
-                    int commandInd = 0;
-                    var p = Platform();
-                    Dictionary<uint, int> offsetMap = new Dictionary<uint, int>();
-                    Commands = new List<SequenceCommand>();
-                    PublicLabels = new Dictionary<string, int>();
-                    OtherLabels = new List<int>();
-                    while (r.Position < RawData.Length)
+                    long bak = r.Position;
+                    if (r.ReadByte() == 0)
                     {
-                        offsetMap.Add((uint)r.Position, commandInd);
-                        if (
-                            r.Position < RawData.Length - 1
-                            && Commands.Count > 0
-                            && Commands.Last().CommandType == SequenceCommands.Jump
-                        )
-                        {
-                            long bak = r.Position;
-                            if (r.ReadByte() == 0)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                r.Position = bak;
-                            }
-                        }
-                        SequenceCommand c = new SequenceCommand();
-                        c.Read(r, p);
-                        Commands.Add(c);
-                        commandInd++;
+                        continue;
                     }
-                    for (int i = 0; i < Labels.Count; i++)
+                    else
                     {
-                        PublicLabels.Add(
-                            Labels.Keys.ElementAt(i),
-                            offsetMap[Labels.Values.ElementAt(i)]
-                        );
+                        r.Position = bak;
                     }
-                    for (int i = 0; i < Commands.Count; i++)
+                }
+                SequenceCommand c = new();
+                c.Read(r, p);
+                Commands.Add(c);
+                commandInd++;
+            }
+            for (int i = 0; i < Labels.Count; i++)
+            {
+                PublicLabels.Add(
+                    Labels.Keys.ElementAt(i),
+                    offsetMap[Labels.Values.ElementAt(i)]
+                );
+            }
+            for (int i = 0; i < Commands.Count; i++)
+            {
+                int commandIndex = 0;
+                SequenceCommands trueType = Playback.Player.GetTrueCommandType(Commands[i]);
+                switch (trueType)
+                {
+                    case SequenceCommands.Call:
+                    case SequenceCommands.Jump:
+                    case SequenceCommands.OpenTrack:
+                        commandIndex = SetOffsetIndex(Commands[i], offsetMap);
+                        break;
+                }
+                string label = "";
+                if (
+                    trueType is SequenceCommands.Call
+                    or SequenceCommands.Jump
+                    or SequenceCommands.OpenTrack
+                )
+                {
+                    uint offset = offsetMap
+                        .FirstOrDefault(x => x.Value == commandIndex)
+                        .Key;
+                    if (Labels.ContainsValue(offset))
                     {
-                        int commandIndex = 0;
-                        SequenceCommands trueType = Playback.Player.GetTrueCommandType(Commands[i]);
-                        switch (trueType)
-                        {
-                            case SequenceCommands.Call:
-                            case SequenceCommands.Jump:
-                            case SequenceCommands.OpenTrack:
-                                commandIndex = SetOffsetIndex(Commands[i], offsetMap);
-                                break;
-                        }
-                        string label = "";
-                        if (
-                            trueType == SequenceCommands.Call
-                            || trueType == SequenceCommands.Jump
-                            || trueType == SequenceCommands.OpenTrack
-                        )
-                        {
-                            uint offset = offsetMap
-                                .FirstOrDefault(x => x.Value == commandIndex)
-                                .Key;
-                            if (Labels.ContainsValue(offset))
-                            {
-                                label = Labels.FirstOrDefault(x => x.Value == offset).Key;
-                            }
-                            else
-                            {
-                                label = (globalMode ? "C" : "_c") + "ommand_" + commandIndex;
-                                OtherLabels.Add(commandIndex);
-                            }
-                        }
-                        switch (trueType)
-                        {
-                            case SequenceCommands.Call:
-                            case SequenceCommands.Jump:
-                            case SequenceCommands.OpenTrack:
-                                SetCommandLabel(Commands[i], label);
-                                break;
-                        }
+                        label = Labels.FirstOrDefault(x => x.Value == offset).Key;
                     }
-                    for (int i = 0; i < Commands.Count; i++)
+                    else
                     {
-                        SequenceCommands trueType = Playback.Player.GetTrueCommandType(Commands[i]);
-                        switch (trueType)
-                        {
-                            case SequenceCommands.Call:
-                            case SequenceCommands.Jump:
-                            case SequenceCommands.OpenTrack:
-                                SetReferenceCommand(Commands[i]);
-                                break;
-                        }
+                        label = (globalMode ? "C" : "_c") + "ommand_" + commandIndex;
+                        OtherLabels.Add(commandIndex);
                     }
-                    CommandIndices = offsetMap;
+                }
+                switch (trueType)
+                {
+                    case SequenceCommands.Call:
+                    case SequenceCommands.Jump:
+                    case SequenceCommands.OpenTrack:
+                        _ = SetCommandLabel(Commands[i], label);
+                        break;
                 }
             }
+            for (int i = 0; i < Commands.Count; i++)
+            {
+                SequenceCommands trueType = Playback.Player.GetTrueCommandType(Commands[i]);
+                switch (trueType)
+                {
+                    case SequenceCommands.Call:
+                    case SequenceCommands.Jump:
+                    case SequenceCommands.OpenTrack:
+                        SetReferenceCommand(Commands[i]);
+                        break;
+                }
+            }
+            CommandIndices = offsetMap;
         }
 
         public void WriteCommandData()
         {
-            using (MemoryStream o = new MemoryStream())
+            using MemoryStream o = new();
+            using FileWriter w = new(o);
+            SequencePlatform p = Platform();
+            Dictionary<int, uint> indexMap = [];
+            int commandInd = 0;
+            foreach (SequenceCommand c in Commands)
             {
-                using (FileWriter w = new FileWriter(o))
+                indexMap.Add(commandInd, (uint)w.Position);
+                if (
+                    c.CommandType == SequenceCommands.Note
+                    || p.CommandMap().ContainsKey(c.CommandType)
+                    || p.ExtendedCommands().ContainsKey(c.CommandType)
+                )
                 {
-                    var p = Platform();
-                    Dictionary<int, uint> indexMap = new Dictionary<int, uint>();
-                    int commandInd = 0;
-                    foreach (var c in Commands)
-                    {
-                        indexMap.Add(commandInd, (uint)w.Position);
-                        if (
-                            c.CommandType == SequenceCommands.Note
-                            || p.CommandMap().ContainsKey(c.CommandType)
-                            || p.ExtendedCommands().ContainsKey(c.CommandType)
-                        )
-                        {
-                            c.Write(w, p);
-                        }
-                        commandInd++;
-                    }
-                    w.Position = 0;
-                    Labels = new Dictionary<string, uint>();
-                    for (int i = 0; i < PublicLabels.Count; i++)
-                    {
-                        Labels.Add(
-                            PublicLabels.Keys.ElementAt(i),
-                            indexMap[PublicLabels.Values.ElementAt(i)]
-                        );
-                    }
-                    for (int i = 0; i < Commands.Count; i++)
-                    {
-                        SequenceCommands trueCommandType = Playback.Player.GetTrueCommandType(
-                            Commands[i]
-                        );
-                        switch (trueCommandType)
-                        {
-                            case SequenceCommands.Call:
-                            case SequenceCommands.Jump:
-                            case SequenceCommands.OpenTrack:
-                                SetIndexOffset(Commands[i], indexMap);
-                                break;
-                        }
-                    }
-                    foreach (var c in Commands)
-                    {
-                        if (
-                            c.CommandType == SequenceCommands.Note
-                            || p.CommandMap().ContainsKey(c.CommandType)
-                            || p.ExtendedCommands().ContainsKey(c.CommandType)
-                        )
-                        {
-                            c.Write(w, p);
-                        }
-                    }
-                    RawData = o.ToArray();
-                    CommandIndices = indexMap.ToDictionary(x => x.Value, x => x.Key);
+                    c.Write(w, p);
+                }
+                commandInd++;
+            }
+            w.Position = 0;
+            Labels = [];
+            for (int i = 0; i < PublicLabels.Count; i++)
+            {
+                Labels.Add(
+                    PublicLabels.Keys.ElementAt(i),
+                    indexMap[PublicLabels.Values.ElementAt(i)]
+                );
+            }
+            for (int i = 0; i < Commands.Count; i++)
+            {
+                SequenceCommands trueCommandType = Playback.Player.GetTrueCommandType(
+                    Commands[i]
+                );
+                switch (trueCommandType)
+                {
+                    case SequenceCommands.Call:
+                    case SequenceCommands.Jump:
+                    case SequenceCommands.OpenTrack:
+                        _ = SetIndexOffset(Commands[i], indexMap);
+                        break;
                 }
             }
+            foreach (SequenceCommand c in Commands)
+            {
+                if (
+                    c.CommandType == SequenceCommands.Note
+                    || p.CommandMap().ContainsKey(c.CommandType)
+                    || p.ExtendedCommands().ContainsKey(c.CommandType)
+                )
+                {
+                    c.Write(w, p);
+                }
+            }
+            RawData = o.ToArray();
+            CommandIndices = indexMap.ToDictionary(x => x.Value, x => x.Key);
         }
 
         public int SetOffsetIndex(SequenceCommand c, Dictionary<uint, int> offsetMap)
@@ -225,17 +215,17 @@ namespace GotaSequenceLib
             {
                 case SequenceCommands.Random:
                 case SequenceCommands.TimeRandom:
-                    SetCommandLabel((c.Parameter as RandomParameter).Command, label);
+                    _ = SetCommandLabel((c.Parameter as RandomParameter).Command, label);
                     break;
                 case SequenceCommands.If:
-                    SetCommandLabel(c.Parameter as SequenceCommand, label);
+                    _ = SetCommandLabel(c.Parameter as SequenceCommand, label);
                     break;
                 case SequenceCommands.Variable:
                 case SequenceCommands.TimeVariable:
-                    SetCommandLabel((c.Parameter as VariableParameter).Command, label);
+                    _ = SetCommandLabel((c.Parameter as VariableParameter).Command, label);
                     break;
                 case SequenceCommands.Time:
-                    SetCommandLabel((c.Parameter as TimeParameter).Command, label);
+                    _ = SetCommandLabel((c.Parameter as TimeParameter).Command, label);
                     break;
                 case SequenceCommands.Jump:
                 case SequenceCommands.Call:
@@ -312,19 +302,21 @@ namespace GotaSequenceLib
         public string[] ToText()
         {
             ReadCommandData();
-            List<string> l = new List<string>();
-            l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-            l.Add(";");
-            l.Add("; " + Name);
-            l.Add(";     Generated By Gota's Sound Tools");
-            l.Add(";");
-            l.Add(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-            l.Add("");
+            List<string> l =
+            [
+                ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+                ";",
+                "; " + Name,
+                ";     Generated By Gota's Sound Tools",
+                ";",
+                ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+                "",
+            ];
             for (int i = 0; i < Commands.Count; i++)
             {
                 bool labelAdded = false;
-                var labels = PublicLabels.Where(x => x.Value == i).Select(x => x.Key);
-                foreach (var label in labels)
+                IEnumerable<string> labels = PublicLabels.Where(x => x.Value == i).Select(x => x.Key);
+                foreach (string label in labels)
                 {
                     if (
                         i != 0
@@ -361,10 +353,10 @@ namespace GotaSequenceLib
         public void FromText(List<string> text)
         {
             WritingCommandSuccess = true;
-            PublicLabels = new Dictionary<string, int>();
-            OtherLabels = new List<int>();
-            Dictionary<string, int> privateLabels = new Dictionary<string, int>();
-            List<int> labelLines = new List<int>();
+            PublicLabels = [];
+            OtherLabels = [];
+            Dictionary<string, int> privateLabels = [];
+            List<int> labelLines = [];
             List<string> t = text.ToList();
             int comNum = 0;
             for (int i = t.Count - 1; i >= 0; i--)
@@ -391,7 +383,7 @@ namespace GotaSequenceLib
                 {
                     if (t[i][j].Equals(' '))
                     {
-                        t[i] = t[i].Substring(j + 1);
+                        t[i] = t[i][(j + 1)..];
                         j--;
                     }
                     else
@@ -423,14 +415,14 @@ namespace GotaSequenceLib
             PublicLabels = PublicLabels
                 .OrderBy(obj => new NullTerminatedString(obj.Key))
                 .ToDictionary(obj => obj.Key, obj => obj.Value);
-            Commands = new List<SequenceCommand>();
+            Commands = [];
             for (int i = 0; i < t.Count; i++)
             {
                 if (labelLines.Contains(i))
                 {
                     continue;
                 }
-                SequenceCommand seq = new SequenceCommand();
+                SequenceCommand seq = new();
                 try
                 {
                     seq.FromString(t[i], PublicLabels, privateLabels);
@@ -476,13 +468,11 @@ namespace GotaSequenceLib
 
         public void FromMIDI(string filePath, int timeBase = 48, bool privateLabelsForCalls = false)
         {
-            Sanford.Multimedia.Midi.Sequence s = new Sanford.Multimedia.Midi.Sequence(filePath);
-            Dictionary<string, int> pub;
-            List<int> priv;
+            Sanford.Multimedia.Midi.Sequence s = new(filePath);
             Commands = SMF.ToSequenceCommands(
                 s,
-                out pub,
-                out priv,
+                out Dictionary<string, int> pub,
+                out List<int> priv,
                 Path.GetFileNameWithoutExtension(filePath),
                 timeBase
             );

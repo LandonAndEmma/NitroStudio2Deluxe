@@ -5,7 +5,7 @@ namespace NitroStudio2
 {
     public partial class SaveQuitDialog : Form
     {
-        EditorBase parentTwo;
+        private readonly EditorBase parentTwo;
 
         public SaveQuitDialog(EditorBase parent2)
         {
@@ -17,7 +17,7 @@ namespace NitroStudio2
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void NoButton_Click(object sender, EventArgs e)

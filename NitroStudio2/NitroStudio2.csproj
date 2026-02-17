@@ -13,9 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="6.0.0" PrivateAssets="All" />
     <PackageReference Include="EndianBinaryIO" Version="2.1.1" />
-    <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="All" />
     <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Asio" Version="2.2.1" />

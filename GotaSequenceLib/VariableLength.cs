@@ -1,9 +1,5 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSequenceLib
 {
@@ -11,8 +7,8 @@ namespace GotaSequenceLib
     {
         public static uint ReadVariableLength(FileReader r, int limit = -1)
         {
-            uint temp = (uint)r.ReadByte();
-            uint val = (uint)temp & 0x7F;
+            uint temp = r.ReadByte();
+            uint val = temp & 0x7F;
             int bytesRead = 1;
             while ((temp & 0x80) > 0 && (limit == -1 || bytesRead < limit))
             {
@@ -26,7 +22,7 @@ namespace GotaSequenceLib
 
         public static void WriteVariableLength(FileWriter w, uint val)
         {
-            List<byte> nums = new List<byte>();
+            List<byte> nums = [];
             while (val > 0)
             {
                 nums.Insert(0, (byte)(val & 0x7F));
@@ -45,7 +41,7 @@ namespace GotaSequenceLib
 
         public static int CalcVariableLengthSize(uint val)
         {
-            List<byte> nums = new List<byte>();
+            List<byte> nums = [];
             while (val > 0)
             {
                 nums.Insert(0, (byte)(val & 0x7F));

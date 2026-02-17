@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NitroStudio2
@@ -17,7 +10,7 @@ namespace NitroStudio2
             InitializeComponent();
         }
 
-        int returnValue = 0;
+        private int returnValue = 0;
 
         private void SaveCloseDialog_Load(object sender, EventArgs e) { }
 
@@ -26,24 +19,24 @@ namespace NitroStudio2
         private void YesButton_Click(object sender, EventArgs e)
         {
             returnValue = 0;
-            this.Close();
+            Close();
         }
 
         private void NoButton_Click(object sender, EventArgs e)
         {
             returnValue = 1;
-            this.Close();
+            Close();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
             returnValue = 2;
-            this.Close();
+            Close();
         }
 
         public int getValue()
         {
-            this.ShowDialog();
+            _ = ShowDialog();
             return returnValue;
         }
     }

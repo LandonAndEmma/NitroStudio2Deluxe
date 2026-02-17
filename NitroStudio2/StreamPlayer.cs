@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using NAudio.Wave;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using NAudio.Wave;
 
 namespace NitroStudio2
 {
@@ -35,13 +28,13 @@ namespace NitroStudio2
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error initializing audio playback: " + ex.Message);
+                _ = MessageBox.Show("Error initializing audio playback: " + ex.Message);
             }
         }
 
         private void onClose(object sender, EventArgs e)
         {
-            Thread t = new Thread(delete);
+            Thread t = new(delete);
             t.Start();
         }
 
@@ -55,11 +48,9 @@ namespace NitroStudio2
                     wavePlayer.Dispose();
                     wavePlayer = null;
                 }
-                if (audioFileReader != null)
-                {
-                    audioFileReader.Dispose();
-                    audioFileReader = null;
-                }
+
+                audioFileReader?.Dispose();
+                audioFileReader = null;
             }
             catch { }
             try
@@ -84,11 +75,9 @@ namespace NitroStudio2
                     wavePlayer.Dispose();
                     wavePlayer = null;
                 }
-                if (audioFileReader != null)
-                {
-                    audioFileReader.Dispose();
-                    audioFileReader = null;
-                }
+
+                audioFileReader?.Dispose();
+                audioFileReader = null;
             }
             base.Dispose(disposing);
         }

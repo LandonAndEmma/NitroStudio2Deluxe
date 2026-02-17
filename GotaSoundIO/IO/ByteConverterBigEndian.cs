@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security;
 
 namespace GotaSoundIO.IO
 {
     [SecuritySafeCritical]
     public sealed class ByteConverterBigEndian : ByteConverter
     {
-        public override ByteOrder ByteOrder
-        {
-            get { return ByteOrder.BigEndian; }
-        }
+        public override ByteOrder ByteOrder => ByteOrder.BigEndian;
 
         [SecuritySafeCritical]
         public override unsafe void GetBytes(double value, byte[] buffer, int startIndex = 0)
@@ -94,81 +86,81 @@ namespace GotaSoundIO.IO
         [SecuritySafeCritical]
         public override unsafe double ToDouble(byte[] buffer, int startIndex = 0)
         {
-            long i = (
-                (long)buffer[startIndex] << 56
-                | (long)buffer[startIndex + 1] << 48
-                | (long)buffer[startIndex + 2] << 40
-                | (long)buffer[startIndex + 3] << 32
-                | (long)buffer[startIndex + 4] << 24
-                | (long)buffer[startIndex + 5] << 16
-                | (long)buffer[startIndex + 6] << 8
-                | (long)buffer[startIndex + 7]
-            );
+            long i =
+                ((long)buffer[startIndex] << 56)
+                | ((long)buffer[startIndex + 1] << 48)
+                | ((long)buffer[startIndex + 2] << 40)
+                | ((long)buffer[startIndex + 3] << 32)
+                | ((long)buffer[startIndex + 4] << 24)
+                | ((long)buffer[startIndex + 5] << 16)
+                | ((long)buffer[startIndex + 6] << 8)
+                | buffer[startIndex + 7]
+            ;
             return *(double*)&i;
         }
 
         public override short ToInt16(byte[] buffer, int startIndex = 0)
         {
-            return (short)((int)buffer[startIndex] << 8 | (int)buffer[startIndex + 1]);
+            return (short)((buffer[startIndex] << 8) | buffer[startIndex + 1]);
         }
 
         public override int ToInt32(byte[] buffer, int startIndex = 0)
         {
-            return (int)buffer[startIndex] << 24
-                | (int)buffer[startIndex + 1] << 16
-                | (int)buffer[startIndex + 2] << 8
-                | (int)buffer[startIndex + 3];
+            return (buffer[startIndex] << 24)
+                | (buffer[startIndex + 1] << 16)
+                | (buffer[startIndex + 2] << 8)
+                | buffer[startIndex + 3];
         }
 
         public override long ToInt64(byte[] buffer, int startIndex = 0)
         {
-            return (long)buffer[startIndex] << 56
-                | (long)buffer[startIndex + 1] << 48
-                | (long)buffer[startIndex + 2] << 40
-                | (long)buffer[startIndex + 3] << 32
-                | (long)buffer[startIndex + 4] << 24
-                | (long)buffer[startIndex + 5] << 16
-                | (long)buffer[startIndex + 6] << 8
-                | (long)buffer[startIndex + 7];
+            return ((long)buffer[startIndex] << 56)
+                | ((long)buffer[startIndex + 1] << 48)
+                | ((long)buffer[startIndex + 2] << 40)
+                | ((long)buffer[startIndex + 3] << 32)
+                | ((long)buffer[startIndex + 4] << 24)
+                | ((long)buffer[startIndex + 5] << 16)
+                | ((long)buffer[startIndex + 6] << 8)
+                | buffer[startIndex + 7];
         }
 
         [SecuritySafeCritical]
         public override unsafe float ToSingle(byte[] buffer, int startIndex = 0)
         {
-            int i = (
-                (int)buffer[startIndex] << 24
-                | (int)buffer[startIndex + 1] << 16
-                | (int)buffer[startIndex + 2] << 8
-                | (int)buffer[startIndex + 3]
-            );
+            int i =
+                (buffer[startIndex] << 24)
+                | (buffer[startIndex + 1] << 16)
+                | (buffer[startIndex + 2] << 8)
+                | buffer[startIndex + 3]
+            ;
             return *(float*)&i;
         }
 
         public override ushort ToUInt16(byte[] buffer, int startIndex = 0)
         {
-            return (ushort)((uint)buffer[startIndex] << 8 | (uint)buffer[startIndex + 1]);
+            return (ushort)(((uint)buffer[startIndex] << 8) | buffer[startIndex + 1]);
         }
 
         public override uint ToUInt32(byte[] buffer, int startIndex = 0)
         {
             return (uint)(
-                    (int)buffer[startIndex] << 24
-                    | (int)buffer[startIndex + 1] << 16
-                    | (int)buffer[startIndex + 2] << 8
-                ) | (uint)buffer[startIndex + 3];
+                    (buffer[startIndex] << 24)
+                    | (buffer[startIndex + 1] << 16)
+                    | (buffer[startIndex + 2] << 8)
+                ) | buffer[startIndex + 3];
         }
 
         public override ulong ToUInt64(byte[] buffer, int startIndex = 0)
         {
             return (ulong)(
-                    (long)buffer[startIndex] << 56
-                    | (long)buffer[startIndex + 1] << 48
-                    | (long)buffer[startIndex + 2] << 40
-                    | (long)buffer[startIndex + 3] << 32
-                    | (long)buffer[startIndex + 4] << 24
-                    | (long)buffer[startIndex + 5] << 16
-                    | (long)buffer[startIndex + 6] << 8
-                ) | (ulong)buffer[startIndex + 7];
+                    ((long)buffer[startIndex] << 56)
+                    | ((long)buffer[startIndex + 1] << 48)
+                    | ((long)buffer[startIndex + 2] << 40)
+                    | ((long)buffer[startIndex + 3] << 32)
+                    | ((long)buffer[startIndex + 4] << 24)
+                    | ((long)buffer[startIndex + 5] << 16)
+                    | ((long)buffer[startIndex + 6] << 8)
+                ) | buffer[startIndex + 7];
         }
     }
 }

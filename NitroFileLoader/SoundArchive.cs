@@ -1,13 +1,11 @@
-﻿using System;
+﻿using GotaSoundIO;
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GotaSoundIO;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
 
 namespace NitroFileLoader
 {
@@ -21,14 +19,14 @@ namespace NitroFileLoader
         public const uint MaxGroupId = 0xFFFFFFFF;
         public const uint MaxStreamPlayerId = 3;
         public const uint MaxStreamId = 0xFFFFFFFF;
-        public List<SequenceInfo> Sequences = new List<SequenceInfo>();
-        public List<SequenceArchiveInfo> SequenceArchives = new List<SequenceArchiveInfo>();
-        public List<BankInfo> Banks = new List<BankInfo>();
-        public List<WaveArchiveInfo> WaveArchives = new List<WaveArchiveInfo>();
-        public List<PlayerInfo> Players = new List<PlayerInfo>();
-        public List<GroupInfo> Groups = new List<GroupInfo>();
-        public List<StreamPlayerInfo> StreamPlayers = new List<StreamPlayerInfo>();
-        public List<StreamInfo> Streams = new List<StreamInfo>();
+        public List<SequenceInfo> Sequences = [];
+        public List<SequenceArchiveInfo> SequenceArchives = [];
+        public List<BankInfo> Banks = [];
+        public List<WaveArchiveInfo> WaveArchives = [];
+        public List<PlayerInfo> Players = [];
+        public List<GroupInfo> Groups = [];
+        public List<StreamPlayerInfo> StreamPlayers = [];
+        public List<StreamInfo> Streams = [];
         public bool SaveSymbols = true;
 
         public SoundArchive() { }
@@ -38,22 +36,21 @@ namespace NitroFileLoader
 
         public override void Read(FileReader r)
         {
-            FileHeader header;
-            r.OpenFile<SDATHeader>(out header);
-            List<string> seqNames = new List<string>();
-            List<string> seqArcNames = new List<string>();
-            List<List<string>> seqArcSequenceNames = new List<List<string>>();
-            List<string> bankNames = new List<string>();
-            List<string> warNames = new List<string>();
-            List<string> playerNames = new List<string>();
-            List<string> groupNames = new List<string>();
-            List<string> streamPlayerNames = new List<string>();
-            List<string> streamNames = new List<string>();
+            r.OpenFile<SDATHeader>(out FileHeader header);
+            List<string> seqNames = [];
+            List<string> seqArcNames = [];
+            List<List<string>> seqArcSequenceNames = [];
+            List<string> bankNames = [];
+            List<string> warNames = [];
+            List<string> playerNames = [];
+            List<string> groupNames = [];
+            List<string> streamPlayerNames = [];
+            List<string> streamNames = [];
             if (header.BlockOffsets.Length > 3)
             {
                 SaveSymbols = true;
                 r.OpenBlock(0, out _, out _, false);
-                r.ReadUInt64();
+                _ = r.ReadUInt64();
                 r.OpenOffset("seqNames");
                 r.OpenOffset("seqArcNames");
                 r.OpenOffset("bankNames");
@@ -64,10 +61,10 @@ namespace NitroFileLoader
                 r.OpenOffset("streamNames");
                 List<string> ReadNameData(string name)
                 {
-                    List<string> s = new List<string>();
+                    List<string> s = [];
                     r.JumpToOffset(name);
-                    var nameOffs = r.Read<Table<uint>>();
-                    foreach (var u in nameOffs)
+                    Table<uint> nameOffs = r.Read<Table<uint>>();
+                    foreach (uint u in nameOffs)
                     {
                         if (u == 0)
                         {
@@ -122,22 +119,22 @@ namespace NitroFileLoader
             }
             r.OpenBlock(header.BlockOffsets.Length > 3 ? 2 : 1, out _, out _);
             uint numFiles = r.ReadUInt32();
-            List<Tuple<uint, uint>> fileOffs = new List<Tuple<uint, uint>>();
+            List<Tuple<uint, uint>> fileOffs = [];
             for (uint i = 0; i < numFiles; i++)
             {
                 fileOffs.Add(new Tuple<uint, uint>(r.ReadUInt32(), r.ReadUInt32()));
-                r.ReadUInt64();
+                _ = r.ReadUInt64();
             }
             r.OpenBlock(header.BlockOffsets.Length > 3 ? 1 : 0, out _, out _, false);
-            r.ReadUInt64();
-            Sequences = new List<SequenceInfo>();
-            SequenceArchives = new List<SequenceArchiveInfo>();
-            Banks = new List<BankInfo>();
-            WaveArchives = new List<WaveArchiveInfo>();
-            Players = new List<PlayerInfo>();
-            Groups = new List<GroupInfo>();
-            StreamPlayers = new List<StreamPlayerInfo>();
-            Streams = new List<StreamInfo>();
+            _ = r.ReadUInt64();
+            Sequences = [];
+            SequenceArchives = [];
+            Banks = [];
+            WaveArchives = [];
+            Players = [];
+            Groups = [];
+            StreamPlayers = [];
+            Streams = [];
             r.OpenOffset("seqInfo");
             r.OpenOffset("seqArcInfo");
             r.OpenOffset("bankInfo");
@@ -146,11 +143,11 @@ namespace NitroFileLoader
             r.OpenOffset("groupInfo");
             r.OpenOffset("streamPlayerInfo");
             r.OpenOffset("streamInfo");
-            Dictionary<string, List<uint>> md5Ids = new Dictionary<string, List<uint>>();
+            Dictionary<string, List<uint>> md5Ids = [];
             r.JumpToOffset("playerInfo");
-            var offs = r.Read<Table<uint>>();
+            Table<uint> offs = r.Read<Table<uint>>();
             int ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -165,7 +162,7 @@ namespace NitroFileLoader
             r.JumpToOffset("streamPlayerInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -179,11 +176,11 @@ namespace NitroFileLoader
                 }
                 ind++;
             }
-            List<string> invalidWaveErrors = new List<string>();
+            List<string> invalidWaveErrors = [];
             r.JumpToOffset("warInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -193,13 +190,13 @@ namespace NitroFileLoader
                     WaveArchives.Last().Name =
                         ind > (warNames.Count - 1) ? "WAVE_ARCHIVE_" + ind : warNames[ind];
                     r.Jump(fileOffs[(int)WaveArchives.Last().ReadingFileId].Item1, true);
-                    WaveArchives.Last().File = r.ReadFile<WaveArchive>() as WaveArchive;
+                    WaveArchives.Last().File = r.ReadFile<WaveArchive>();
                     try
                     {
                         string md5 = WaveArchives.Last().File.Md5Sum;
                         if (!md5Ids.ContainsKey(md5))
                         {
-                            md5Ids.Add(md5, new List<uint>() { WaveArchives.Last().ReadingFileId });
+                            md5Ids.Add(md5, [WaveArchives.Last().ReadingFileId]);
                         }
                         else
                         {
@@ -244,7 +241,7 @@ namespace NitroFileLoader
             r.JumpToOffset("bankInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -254,7 +251,7 @@ namespace NitroFileLoader
                     Banks.Last().Name =
                         ind > (bankNames.Count - 1) ? "BANK_" + ind : bankNames[ind];
                     r.Jump(fileOffs[(int)Banks.Last().ReadingFileId].Item1, true);
-                    Banks.Last().File = r.ReadFile<Bank>() as Bank;
+                    Banks.Last().File = r.ReadFile<Bank>();
                     Banks.Last().WaveArchives[0] =
                         Banks.Last().ReadingWave0Id == 0xFFFF
                             ? null
@@ -282,7 +279,7 @@ namespace NitroFileLoader
                     string md5 = Banks.Last().File.Md5Sum;
                     if (!md5Ids.ContainsKey(md5))
                     {
-                        md5Ids.Add(md5, new List<uint>() { Banks.Last().ReadingFileId });
+                        md5Ids.Add(md5, [Banks.Last().ReadingFileId]);
                     }
                     else
                     {
@@ -297,7 +294,7 @@ namespace NitroFileLoader
             r.JumpToOffset("seqInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -307,7 +304,7 @@ namespace NitroFileLoader
                     Sequences.Last().Name =
                         ind > (seqNames.Count - 1) ? "SEQ_" + ind : seqNames[ind];
                     r.Jump(fileOffs[(int)Sequences.Last().ReadingFileId].Item1, true);
-                    Sequences.Last().File = r.ReadFile<Sequence>() as Sequence;
+                    Sequences.Last().File = r.ReadFile<Sequence>();
                     Sequences.Last().Bank = Banks
                         .Where(x => x.Index == Sequences.Last().ReadingBankId)
                         .FirstOrDefault();
@@ -317,7 +314,7 @@ namespace NitroFileLoader
                     string md5 = Sequences.Last().File.Md5Sum;
                     if (!md5Ids.ContainsKey(md5))
                     {
-                        md5Ids.Add(md5, new List<uint>() { Sequences.Last().ReadingFileId });
+                        md5Ids.Add(md5, [Sequences.Last().ReadingFileId]);
                     }
                     else
                     {
@@ -332,7 +329,7 @@ namespace NitroFileLoader
             r.JumpToOffset("streamInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -342,14 +339,14 @@ namespace NitroFileLoader
                     Streams.Last().Name =
                         ind > (streamNames.Count - 1) ? "STRM_" + ind : streamNames[ind];
                     r.Jump(fileOffs[(int)Streams.Last().ReadingFileId].Item1, true);
-                    Streams.Last().File = r.ReadFile<Stream>() as Stream;
+                    Streams.Last().File = r.ReadFile<Stream>();
                     Streams.Last().Player = StreamPlayers
                         .Where(x => x.Index == Streams.Last().ReadingPlayerId)
                         .FirstOrDefault();
                     string md5 = Streams.Last().File.Md5Sum;
                     if (!md5Ids.ContainsKey(md5))
                     {
-                        md5Ids.Add(md5, new List<uint>() { Streams.Last().ReadingFileId });
+                        md5Ids.Add(md5, [Streams.Last().ReadingFileId]);
                     }
                     else
                     {
@@ -364,7 +361,7 @@ namespace NitroFileLoader
             r.JumpToOffset("seqArcInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -374,9 +371,9 @@ namespace NitroFileLoader
                     SequenceArchives.Last().Name =
                         ind > (seqArcNames.Count - 1) ? "SEQARC_" + ind : seqArcNames[ind];
                     r.Jump(fileOffs[(int)SequenceArchives.Last().ReadingFileId].Item1, true);
-                    SequenceArchives.Last().File = r.ReadFile<SequenceArchive>() as SequenceArchive;
-                    var labels = SequenceArchives.Last().File.Labels;
-                    SequenceArchives.Last().File.Labels = new Dictionary<string, uint>();
+                    SequenceArchives.Last().File = r.ReadFile<SequenceArchive>();
+                    Dictionary<string, uint> labels = SequenceArchives.Last().File.Labels;
+                    SequenceArchives.Last().File.Labels = [];
                     if (SequenceArchives.Last().File.Sequences.Count > 0)
                     {
                         int seqNum = 0;
@@ -392,7 +389,7 @@ namespace NitroFileLoader
                                 defName = seqArcSequenceNames[ind][i];
                             }
                             catch { }
-                            var e = SequenceArchives
+                            SequenceArchiveSequence e = SequenceArchives
                                 .Last()
                                 .File.Sequences.Where(x => x.Index == i)
                                 .FirstOrDefault();
@@ -418,7 +415,7 @@ namespace NitroFileLoader
                     string md5 = SequenceArchives.Last().File.Md5Sum;
                     if (!md5Ids.ContainsKey(md5))
                     {
-                        md5Ids.Add(md5, new List<uint>() { SequenceArchives.Last().ReadingFileId });
+                        md5Ids.Add(md5, [SequenceArchives.Last().ReadingFileId]);
                     }
                     else
                     {
@@ -433,7 +430,7 @@ namespace NitroFileLoader
             r.JumpToOffset("groupInfo");
             offs = r.Read<Table<uint>>();
             ind = 0;
-            foreach (var o in offs)
+            foreach (uint o in offs)
             {
                 if (o != 0)
                 {
@@ -478,7 +475,7 @@ namespace NitroFileLoader
                 message += string.Join("\n", invalidWaveErrors);
                 message +=
                     "\n\nThe file will continue loading with these unverified waves. Click OK to proceed.";
-                MessageBox.Show(
+                _ = MessageBox.Show(
                     message,
                     "Invalid Wave Data Detected",
                     MessageBoxButtons.OK,
@@ -547,7 +544,7 @@ namespace NitroFileLoader
                 {
                     w.Write((uint)0);
                 }
-                List<long> seqArcSeqSBak = new List<long>();
+                List<long> seqArcSeqSBak = [];
                 if (SequenceArchives.Count > 1)
                 {
                     for (int i = 0; i <= SequenceArchives.Last().Index; i++)
@@ -557,7 +554,7 @@ namespace NitroFileLoader
                             seqArcSeqSBak.Add(0);
                             continue;
                         }
-                        var e = SequenceArchives.Where(x => x.Index == i).FirstOrDefault();
+                        SequenceArchiveInfo e = SequenceArchives.Where(x => x.Index == i).FirstOrDefault();
                         w.CloseOffset("seqArcSubS" + i);
                         seqArcSeqSBak.Add(w.Position);
                         if (e.File.Sequences.Count > 0)
@@ -633,19 +630,12 @@ namespace NitroFileLoader
                 }
                 void writeStringData(object entryList, long tablePos)
                 {
-                    List<string> strgs = new List<string>();
-                    var seqList = entryList as List<SequenceInfo>;
-                    var bnkList = entryList as List<BankInfo>;
-                    var warList = entryList as List<WaveArchiveInfo>;
-                    var plyList = entryList as List<PlayerInfo>;
-                    var grpList = entryList as List<GroupInfo>;
-                    var stmPlyList = entryList as List<StreamPlayerInfo>;
-                    var stmList = entryList as List<StreamInfo>;
-                    if (seqList != null)
+                    List<string> strgs = [];
+                    if (entryList is List<SequenceInfo> seqList)
                     {
                         for (int i = 0; i <= seqList.Last().Index; i++)
                         {
-                            var y = seqList.Where(x => x.Index == i);
+                            IEnumerable<SequenceInfo> y = seqList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -656,11 +646,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (bnkList != null)
+                    if (entryList is List<BankInfo> bnkList)
                     {
                         for (int i = 0; i <= bnkList.Last().Index; i++)
                         {
-                            var y = bnkList.Where(x => x.Index == i);
+                            IEnumerable<BankInfo> y = bnkList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -671,11 +661,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (warList != null)
+                    if (entryList is List<WaveArchiveInfo> warList)
                     {
                         for (int i = 0; i <= warList.Last().Index; i++)
                         {
-                            var y = warList.Where(x => x.Index == i);
+                            IEnumerable<WaveArchiveInfo> y = warList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -686,11 +676,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (plyList != null)
+                    if (entryList is List<PlayerInfo> plyList)
                     {
                         for (int i = 0; i <= plyList.Last().Index; i++)
                         {
-                            var y = plyList.Where(x => x.Index == i);
+                            IEnumerable<PlayerInfo> y = plyList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -701,11 +691,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (grpList != null)
+                    if (entryList is List<GroupInfo> grpList)
                     {
                         for (int i = 0; i <= grpList.Last().Index; i++)
                         {
-                            var y = grpList.Where(x => x.Index == i);
+                            IEnumerable<GroupInfo> y = grpList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -716,11 +706,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (stmPlyList != null)
+                    if (entryList is List<StreamPlayerInfo> stmPlyList)
                     {
                         for (int i = 0; i <= stmPlyList.Last().Index; i++)
                         {
-                            var y = stmPlyList.Where(x => x.Index == i);
+                            IEnumerable<StreamPlayerInfo> y = stmPlyList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -731,11 +721,11 @@ namespace NitroFileLoader
                             }
                         }
                     }
-                    if (stmList != null)
+                    if (entryList is List<StreamInfo> stmList)
                     {
                         for (int i = 0; i <= stmList.Last().Index; i++)
                         {
-                            var y = stmList.Where(x => x.Index == i);
+                            IEnumerable<StreamInfo> y = stmList.Where(x => x.Index == i);
                             if (y.Count() > 0)
                             {
                                 strgs.Add(y.FirstOrDefault().Name);
@@ -753,7 +743,7 @@ namespace NitroFileLoader
                             continue;
                         }
                         long bak = w.Position;
-                        w.Position = tablePos + 4 + 4 * i;
+                        w.Position = tablePos + 4 + (4 * i);
                         w.Write((uint)(bak - w.CurrentOffset));
                         w.Position = bak;
                         w.WriteNullTerminated(strgs[i]);
@@ -768,7 +758,7 @@ namespace NitroFileLoader
                 {
                     for (int i = 0; i <= SequenceArchives.Last().Index; i++)
                     {
-                        var e = SequenceArchives.Where(x => x.Index == i).FirstOrDefault();
+                        SequenceArchiveInfo e = SequenceArchives.Where(x => x.Index == i).FirstOrDefault();
                         if (e != null)
                         {
                             w.CloseOffset("seqArcS" + i);
@@ -777,7 +767,7 @@ namespace NitroFileLoader
                             {
                                 for (int j = 0; j <= e.File.Sequences.Last().Index; j++)
                                 {
-                                    var f = e
+                                    SequenceArchiveSequence f = e
                                         .File.Sequences.Where(x => x.Index == j)
                                         .FirstOrDefault();
                                     if (f == null)
@@ -785,7 +775,7 @@ namespace NitroFileLoader
                                         continue;
                                     }
                                     long currPos = w.Position;
-                                    w.Position = seqArcSeqSBak[i] + 4 + 4 * f.Index;
+                                    w.Position = seqArcSeqSBak[i] + 4 + (4 * f.Index);
                                     w.Write((uint)(currPos - w.CurrentOffset));
                                     w.Position = currPos;
                                     w.WriteNullTerminated(f.Name);
@@ -828,12 +818,12 @@ namespace NitroFileLoader
                 w.Pad(4);
                 long afterPadPosS = w.Position;
                 w.CloseBlock();
-                w.BlockSizes[w.BlockSizes.Count - 1] -= afterPadPosS - beforePadPosS;
+                w.BlockSizes[^1] -= afterPadPosS - beforePadPosS;
             }
             Dictionary<string, Tuple<IOFile, uint>> files =
-                new Dictionary<string, Tuple<IOFile, uint>>();
+                [];
             uint fileId = 0;
-            foreach (var e in Sequences)
+            foreach (SequenceInfo e in Sequences)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -851,7 +841,7 @@ namespace NitroFileLoader
                     e.ReadingFileId = files[md5].Item2;
                 }
             }
-            foreach (var e in SequenceArchives)
+            foreach (SequenceArchiveInfo e in SequenceArchives)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -869,7 +859,7 @@ namespace NitroFileLoader
                     e.ReadingFileId = files[md5].Item2;
                 }
             }
-            foreach (var e in Banks)
+            foreach (BankInfo e in Banks)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -887,7 +877,7 @@ namespace NitroFileLoader
                     e.ReadingFileId = files[md5].Item2;
                 }
             }
-            foreach (var e in WaveArchives)
+            foreach (WaveArchiveInfo e in WaveArchives)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -905,7 +895,7 @@ namespace NitroFileLoader
                     e.ReadingFileId = files[md5].Item2;
                 }
             }
-            foreach (var e in Streams)
+            foreach (StreamInfo e in Streams)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -954,10 +944,10 @@ namespace NitroFileLoader
             }
             if (Sequences.Count() > 0)
             {
-                foreach (var e in Sequences)
+                foreach (SequenceInfo e in Sequences)
                 {
                     long bak = w.Position;
-                    w.Position = seqIBak + 4 + 4 * e.Index;
+                    w.Position = seqIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -975,10 +965,10 @@ namespace NitroFileLoader
             }
             if (SequenceArchives.Count() > 0)
             {
-                foreach (var e in SequenceArchives)
+                foreach (SequenceArchiveInfo e in SequenceArchives)
                 {
                     long bak = w.Position;
-                    w.Position = seqArcIBak + 4 + 4 * e.Index;
+                    w.Position = seqArcIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -996,10 +986,10 @@ namespace NitroFileLoader
             }
             if (Banks.Count() > 0)
             {
-                foreach (var e in Banks)
+                foreach (BankInfo e in Banks)
                 {
                     long bak = w.Position;
-                    w.Position = bankIBak + 4 + 4 * e.Index;
+                    w.Position = bankIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1017,10 +1007,10 @@ namespace NitroFileLoader
             }
             if (WaveArchives.Count() > 0)
             {
-                foreach (var e in WaveArchives)
+                foreach (WaveArchiveInfo e in WaveArchives)
                 {
                     long bak = w.Position;
-                    w.Position = warIBak + 4 + 4 * e.Index;
+                    w.Position = warIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1038,10 +1028,10 @@ namespace NitroFileLoader
             }
             if (Players.Count() > 0)
             {
-                foreach (var e in Players)
+                foreach (PlayerInfo e in Players)
                 {
                     long bak = w.Position;
-                    w.Position = plyIBak + 4 + 4 * e.Index;
+                    w.Position = plyIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1059,10 +1049,10 @@ namespace NitroFileLoader
             }
             if (Groups.Count() > 0)
             {
-                foreach (var e in Groups)
+                foreach (GroupInfo e in Groups)
                 {
                     long bak = w.Position;
-                    w.Position = grpIBak + 4 + 4 * e.Index;
+                    w.Position = grpIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1080,10 +1070,10 @@ namespace NitroFileLoader
             }
             if (StreamPlayers.Count() > 0)
             {
-                foreach (var e in StreamPlayers)
+                foreach (StreamPlayerInfo e in StreamPlayers)
                 {
                     long bak = w.Position;
-                    w.Position = stmPlyIBak + 4 + 4 * e.Index;
+                    w.Position = stmPlyIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1101,10 +1091,10 @@ namespace NitroFileLoader
             }
             if (Streams.Count() > 0)
             {
-                foreach (var e in Streams)
+                foreach (StreamInfo e in Streams)
                 {
                     long bak = w.Position;
-                    w.Position = stmIBak + 4 + 4 * e.Index;
+                    w.Position = stmIBak + 4 + (4 * e.Index);
                     w.Write((uint)(bak - infoOff));
                     w.Position = bak;
                     w.Write(e);
@@ -1114,10 +1104,10 @@ namespace NitroFileLoader
             w.Pad(4);
             long afterPadPosI = w.Position;
             w.CloseBlock();
-            w.BlockSizes[w.BlockSizes.Count - 1] -= afterPadPosI - beforePadPosI;
+            w.BlockSizes[^1] -= afterPadPosI - beforePadPosI;
             w.InitBlock("FAT ");
-            List<byte[]> filesRaw = new List<byte[]>();
-            foreach (var f in files)
+            List<byte[]> filesRaw = [];
+            foreach (KeyValuePair<string, Tuple<IOFile, uint>> f in files)
             {
                 filesRaw.Add(f.Value.Item1.Write());
             }
@@ -1132,7 +1122,7 @@ namespace NitroFileLoader
             w.Pad(4);
             long afterPadPosFAT = w.Position;
             w.CloseBlock();
-            w.BlockSizes[w.BlockSizes.Count - 1] -= afterPadPosFAT - beforePadPosFAT;
+            w.BlockSizes[^1] -= afterPadPosFAT - beforePadPosFAT;
             w.InitBlock("FILE");
             w.Write((uint)filesRaw.Count);
             w.Pad(0x20);
@@ -1148,62 +1138,62 @@ namespace NitroFileLoader
 
         public void ExportSDKProject(string directory, string projectName)
         {
-            List<string> sbdl = new List<string>();
-            foreach (var e in Players)
+            List<string> sbdl = [];
+            foreach (PlayerInfo e in Players)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in WaveArchives)
+            foreach (WaveArchiveInfo e in WaveArchives)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in StreamPlayers)
+            foreach (StreamPlayerInfo e in StreamPlayers)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in Streams)
+            foreach (StreamInfo e in Streams)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in Banks)
+            foreach (BankInfo e in Banks)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in Sequences)
+            foreach (SequenceInfo e in Sequences)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in SequenceArchives)
+            foreach (SequenceArchiveInfo e in SequenceArchives)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
-            foreach (var e in Groups)
+            foreach (GroupInfo e in Groups)
             {
                 sbdl.Add("#define " + e.Name + "\t" + e.Index);
             }
             File.WriteAllLines(directory + "/" + projectName + ".sbdl", sbdl);
-            List<string> sprj = new List<string>();
-            sprj.Add("<?xml version=\"1.0\"?>");
-            sprj.Add("<NitroSoundMakerProject version=\"1.0.0\">");
-            sprj.Add("  <head>");
-            sprj.Add(
+            List<string> sprj =
+            [
+                "<?xml version=\"1.0\"?>",
+                "<NitroSoundMakerProject version=\"1.0.0\">",
+                "  <head>",
                 "    <create user=\"NitroStudio2User\" host=\"NitroStudio\" date=\"2020 - 3 - 18T12: 37:41\" />"
-            );
-            sprj.Add("    <title>Nitro Studio 2 Export</title>");
-            sprj.Add("    <generator name=\"cc\" version=\"1.2.0.0\" />");
-            sprj.Add("  </head>");
-            sprj.Add("  <body>");
-            sprj.Add("    <SoundArchiveFiles>");
-            sprj.Add(
+,
+                "    <title>Nitro Studio 2 Export</title>",
+                "    <generator name=\"cc\" version=\"1.2.0.0\" />",
+                "  </head>",
+                "  <body>",
+                "    <SoundArchiveFiles>",
                 "      <File name=\"" + projectName + "\" path=\"" + projectName + ".sarc\" />"
-            );
-            sprj.Add("    </SoundArchiveFiles>");
-            sprj.Add("  </body>");
-            sprj.Add("</NitroSoundMakerProject>");
+,
+                "    </SoundArchiveFiles>",
+                "  </body>",
+                "</NitroSoundMakerProject>",
+            ];
             File.WriteAllLines(directory + "/" + projectName + ".sprj", sprj);
-            Dictionary<int, string> waveFiles = new Dictionary<int, string>();
-            Dictionary<string, string> waveMd5sums = new Dictionary<string, string>();
-            foreach (var e in WaveArchives)
+            Dictionary<int, string> waveFiles = [];
+            Dictionary<string, string> waveMd5sums = [];
+            foreach (WaveArchiveInfo e in WaveArchives)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -1227,9 +1217,9 @@ namespace NitroFileLoader
                     }
                 }
             }
-            Dictionary<int, string> strmFiles = new Dictionary<int, string>();
-            Dictionary<string, string> strmMd5sums = new Dictionary<string, string>();
-            foreach (var e in Streams)
+            Dictionary<int, string> strmFiles = [];
+            Dictionary<string, string> strmMd5sums = [];
+            foreach (StreamInfo e in Streams)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -1253,9 +1243,9 @@ namespace NitroFileLoader
                     }
                 }
             }
-            Dictionary<int, string> bnkFiles = new Dictionary<int, string>();
-            Dictionary<string, string> bnkMd5sums = new Dictionary<string, string>();
-            foreach (var e in Banks)
+            Dictionary<int, string> bnkFiles = [];
+            Dictionary<string, string> bnkMd5sums = [];
+            foreach (BankInfo e in Banks)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -1279,9 +1269,9 @@ namespace NitroFileLoader
                     }
                 }
             }
-            Dictionary<int, string> seqFiles = new Dictionary<int, string>();
-            Dictionary<string, string> seqMd5sums = new Dictionary<string, string>();
-            foreach (var e in Sequences)
+            Dictionary<int, string> seqFiles = [];
+            Dictionary<string, string> seqMd5sums = [];
+            foreach (SequenceInfo e in Sequences)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -1305,9 +1295,9 @@ namespace NitroFileLoader
                     }
                 }
             }
-            Dictionary<int, string> seqArcFiles = new Dictionary<int, string>();
-            Dictionary<string, string> seqArcMd5sums = new Dictionary<string, string>();
-            foreach (var e in SequenceArchives)
+            Dictionary<int, string> seqArcFiles = [];
+            Dictionary<string, string> seqArcMd5sums = [];
+            foreach (SequenceArchiveInfo e in SequenceArchives)
             {
                 string md5 = e.File.Md5Sum;
                 if (e.ForceIndividualFile)
@@ -1331,10 +1321,10 @@ namespace NitroFileLoader
                     }
                 }
             }
-            List<string> sarc = new List<string>();
+            List<string> sarc = [];
             int id = 0;
             sarc.Add("@PLAYER");
-            foreach (var e in Players)
+            foreach (PlayerInfo e in Players)
             {
                 ushort bitFlags = e.BitFlags();
                 if (bitFlags == 0xFFFF)
@@ -1361,7 +1351,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@WAVEARC\n\n @PATH \"WaveArchives\"");
-            foreach (var e in WaveArchives)
+            foreach (WaveArchiveInfo e in WaveArchives)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1381,7 +1371,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@BANK\n\n @PATH \"Banks\"");
-            foreach (var e in Banks)
+            foreach (BankInfo e in Banks)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1393,7 +1383,7 @@ namespace NitroFileLoader
                 bool text = true;
                 try
                 {
-                    Directory.CreateDirectory("TEMP");
+                    _ = Directory.CreateDirectory("TEMP");
                     e.WriteTextFormat("TEMP", "Test");
                     Directory.Delete("TEMP", true);
                 }
@@ -1482,7 +1472,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@SEQ\n\n @PATH \"Sequences\"");
-            foreach (var e in Sequences)
+            foreach (SequenceInfo e in Sequences)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1510,7 +1500,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@SEQARC\n\n @PATH \"SequenceArchives\"");
-            foreach (var e in SequenceArchives)
+            foreach (SequenceArchiveInfo e in SequenceArchives)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1523,7 +1513,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@STRM_PLAYER");
-            foreach (var e in StreamPlayers)
+            foreach (StreamPlayerInfo e in StreamPlayers)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1544,7 +1534,7 @@ namespace NitroFileLoader
             }
             id = 0;
             sarc.Add("\n@STRM\n\n @PATH \"Streams\"");
-            foreach (var e in Streams)
+            foreach (StreamInfo e in Streams)
             {
                 string index = "";
                 if (id != e.Index)
@@ -1569,10 +1559,10 @@ namespace NitroFileLoader
                 );
             }
             sarc.Add("\n@GROUP");
-            foreach (var e in Groups)
+            foreach (GroupInfo e in Groups)
             {
                 sarc.Add(e.Name + "\t:");
-                foreach (var t in e.Entries)
+                foreach (GroupEntry t in e.Entries)
                 {
                     string stuff = "  ";
                     switch (t.Type)
@@ -1638,33 +1628,33 @@ namespace NitroFileLoader
                 sarc.Add("");
             }
             File.WriteAllLines(directory + "/" + projectName + ".sarc", sarc);
-            List<string> wWavs = new List<string>();
-            foreach (var e in WaveArchives)
+            List<string> wWavs = [];
+            foreach (WaveArchiveInfo e in WaveArchives)
             {
-                Directory.CreateDirectory(directory + "/" + "WaveArchives");
+                _ = Directory.CreateDirectory(directory + "/" + "WaveArchives");
                 if (!wWavs.Contains(waveFiles[e.Index]))
                 {
                     e.WriteTextFormat(directory + "/WaveArchives", waveFiles[e.Index]);
                     wWavs.Add(waveFiles[e.Index]);
                 }
             }
-            List<string> wStrms = new List<string>();
-            foreach (var e in Streams)
+            List<string> wStrms = [];
+            foreach (StreamInfo e in Streams)
             {
-                Directory.CreateDirectory(directory + "/" + "Streams");
+                _ = Directory.CreateDirectory(directory + "/" + "Streams");
                 if (!wStrms.Contains(strmFiles[e.Index]))
                 {
                     e.File.Write(directory + "/" + "Streams" + "/" + strmFiles[e.Index] + ".strm");
-                    RiffWave r = new RiffWave();
+                    RiffWave r = new();
                     r.FromOtherStreamFile(e.File);
                     r.Write(directory + "/" + "Streams" + "/" + strmFiles[e.Index] + ".wav");
                     wStrms.Add(strmFiles[e.Index]);
                 }
             }
-            List<string> wSeqs = new List<string>();
-            foreach (var e in Sequences)
+            List<string> wSeqs = [];
+            foreach (SequenceInfo e in Sequences)
             {
-                Directory.CreateDirectory(directory + "/" + "Sequences");
+                _ = Directory.CreateDirectory(directory + "/" + "Sequences");
                 if (!wSeqs.Contains(seqFiles[e.Index]))
                 {
                     e.File.Name = seqFiles[e.Index];
@@ -1676,15 +1666,15 @@ namespace NitroFileLoader
                     wSeqs.Add(seqFiles[e.Index]);
                 }
             }
-            List<string> wSeqArcs = new List<string>();
-            foreach (var e in SequenceArchives)
+            List<string> wSeqArcs = [];
+            foreach (SequenceArchiveInfo e in SequenceArchives)
             {
-                Directory.CreateDirectory(directory + "/" + "SequenceArchives");
+                _ = Directory.CreateDirectory(directory + "/" + "SequenceArchives");
                 if (!wSeqArcs.Contains(seqArcFiles[e.Index]))
                 {
                     e.File.Name = seqArcFiles[e.Index];
                     e.File.ReadCommandData(true);
-                    var l = e.File.ToText().ToList();
+                    List<string> l = e.File.ToText().ToList();
                     l.Insert(0, "#include \"../" + projectName + ".sbdl\"\n");
                     File.WriteAllLines(
                         directory + "/" + "SequenceArchives" + "/" + seqArcFiles[e.Index] + ".mus",
@@ -1693,10 +1683,10 @@ namespace NitroFileLoader
                     wSeqArcs.Add(seqArcFiles[e.Index]);
                 }
             }
-            List<string> wBnks = new List<string>();
-            foreach (var e in Banks)
+            List<string> wBnks = [];
+            foreach (BankInfo e in Banks)
             {
-                Directory.CreateDirectory(directory + "/" + "Banks");
+                _ = Directory.CreateDirectory(directory + "/" + "Banks");
                 if (!wBnks.Contains(bnkFiles[e.Index]))
                 {
                     try

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSoundIO
 {
@@ -35,22 +31,22 @@ namespace GotaSoundIO
             bool[] bits = new bool[byteData.Length * 8];
             for (int i = 0; i < byteData.Length; i++)
             {
-                bits[i * 8 + 7] = (byteData[i] & 0b1) > 0;
-                bits[i * 8 + 6] = (byteData[i] & 0b10) > 0;
-                bits[i * 8 + 5] = (byteData[i] & 0b100) > 0;
-                bits[i * 8 + 4] = (byteData[i] & 0b1000) > 0;
-                bits[i * 8 + 3] = (byteData[i] & 0b10000) > 0;
-                bits[i * 8 + 2] = (byteData[i] & 0b100000) > 0;
-                bits[i * 8 + 1] = (byteData[i] & 0b1000000) > 0;
-                bits[i * 8 + 0] = (byteData[i] & 0b10000000) > 0;
+                bits[(i * 8) + 7] = (byteData[i] & 0b1) > 0;
+                bits[(i * 8) + 6] = (byteData[i] & 0b10) > 0;
+                bits[(i * 8) + 5] = (byteData[i] & 0b100) > 0;
+                bits[(i * 8) + 4] = (byteData[i] & 0b1000) > 0;
+                bits[(i * 8) + 3] = (byteData[i] & 0b10000) > 0;
+                bits[(i * 8) + 2] = (byteData[i] & 0b100000) > 0;
+                bits[(i * 8) + 1] = (byteData[i] & 0b1000000) > 0;
+                bits[(i * 8) + 0] = (byteData[i] & 0b10000000) > 0;
             }
             return bits;
         }
 
         public int CompareTo(NullTerminatedString other)
         {
-            var bits = GetBits(ByteData);
-            var bitsOther = GetBits(other.ByteData);
+            bool[] bits = GetBits(ByteData);
+            bool[] bitsOther = GetBits(other.ByteData);
             for (int i = 0; i < bits.Length; i++)
             {
                 if (i >= bitsOther.Length)
@@ -66,11 +62,7 @@ namespace GotaSoundIO
                     return -1;
                 }
             }
-            if (bits.Length == bitsOther.Length)
-            {
-                return 0;
-            }
-            return -1;
+            return bits.Length == bitsOther.Length ? 0 : -1;
         }
     }
 }

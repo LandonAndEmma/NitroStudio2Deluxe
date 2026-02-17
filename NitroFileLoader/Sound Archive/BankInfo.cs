@@ -1,11 +1,13 @@
-﻿using System;
+﻿using GotaSequenceLib;
+using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
+using DrumSetInstrument = NitroFileLoader.Instrument.DrumSetInstrument;
+using InstrumentClass = NitroFileLoader.Instrument.Instrument;
+using NitroInstrumentType = NitroFileLoader.Instrument.InstrumentType;
+using NoteInfo = NitroFileLoader.Instrument.NoteInfo;
 
 namespace NitroFileLoader
 {
@@ -55,21 +57,19 @@ namespace NitroFileLoader
 
         public void WriteTextFormat(string path, string name)
         {
-            List<string> ret = new List<string>();
-            ret.Add("@PATH \"../WaveArchives\"\n");
-            ret.Add("@INSTLIST");
+            List<string> ret = ["@PATH \"../WaveArchives\"\n", "@INSTLIST"];
             int lastGroup = -1;
             int keyNum = 0;
             int drumNum = 0;
-            foreach (var e in File.Instruments.OrderBy(x => x.GetOrder))
+            foreach (InstrumentClass e in File.Instruments.OrderBy(x => x.GetOrder))
             {
                 switch (e.Type())
                 {
-                    case InstrumentType.DrumSet:
+                    case NitroInstrumentType.DrumSet:
                         ret.Add("\t" + e.Index + " : DRUM_SET, _DRUM" + drumNum.ToString("D3"));
                         drumNum++;
                         break;
-                    case InstrumentType.KeySplit:
+                    case NitroInstrumentType.KeySplit:
                         ret.Add("\t" + e.Index + " : KEY_SPLIT, _KEY" + keyNum.ToString("D3"));
                         keyNum++;
                         break;
@@ -79,25 +79,25 @@ namespace NitroFileLoader
                 }
             }
             drumNum = 0;
-            if (File.Instruments.Where(x => x.Type() == InstrumentType.DrumSet).Count() > 0)
+            if (File.Instruments.Where(x => x.Type() == NitroInstrumentType.DrumSet).Count() > 0)
             {
                 ret.Add("\n@DRUM_SET");
             }
             foreach (
-                var e in File
+                InstrumentClass e in File
                     .Instruments.OrderBy(x => x.GetOrder)
-                    .Where(x => x.Type() == InstrumentType.DrumSet)
+                    .Where(x => x.Type() == NitroInstrumentType.DrumSet)
             )
             {
                 int regNum = 0;
                 ret.Add("\n_DRUM" + drumNum.ToString("D3") + " =");
                 Notes lastNote = 0;
-                foreach (var n in e.NoteInfo)
+                foreach (NoteInfo n in e.NoteInfo)
                 {
                     Notes note = (Notes)(e as DrumSetInstrument).Min;
                     if (regNum != 0)
                     {
-                        note = (Notes)(e.NoteInfo[regNum - 1].Key + 1);
+                        note = e.NoteInfo[regNum - 1].Key + 1;
                     }
                     lastNote = note;
                     ret.Add(WriteNoteInfo(n, note.ToString()));
@@ -110,18 +110,18 @@ namespace NitroFileLoader
                 drumNum++;
             }
             keyNum = 0;
-            if (File.Instruments.Where(x => x.Type() == InstrumentType.KeySplit).Count() > 0)
+            if (File.Instruments.Where(x => x.Type() == NitroInstrumentType.KeySplit).Count() > 0)
             {
                 ret.Add("\n@KEY_SPLIT");
             }
             foreach (
-                var e in File
+                InstrumentClass e in File
                     .Instruments.OrderBy(x => x.GetOrder)
-                    .Where(x => x.Type() == InstrumentType.KeySplit)
+                    .Where(x => x.Type() == NitroInstrumentType.KeySplit)
             )
             {
                 ret.Add("\n_KEY" + keyNum.ToString("D3") + " =");
-                foreach (var n in e.NoteInfo)
+                foreach (NoteInfo n in e.NoteInfo)
                 {
                     ret.Add(WriteNoteInfo(n, n.Key.ToString()));
                 }
@@ -131,7 +131,7 @@ namespace NitroFileLoader
             {
                 switch (n.InstrumentType)
                 {
-                    case InstrumentType.PSG:
+                    case NitroInstrumentType.PSG:
                         return "\t"
                             + ind
                             + " : PSG, DUTY_"
@@ -148,7 +148,7 @@ namespace NitroFileLoader
                             + n.Release
                             + ", "
                             + n.Pan;
-                    case InstrumentType.Noise:
+                    case NitroInstrumentType.Noise:
                         return "\t"
                             + ind
                             + " : NOISE, "
@@ -163,7 +163,7 @@ namespace NitroFileLoader
                             + n.Release
                             + ", "
                             + n.Pan;
-                    case InstrumentType.Null:
+                    case NitroInstrumentType.Null:
                         return "\t" + ind + " : NULL";
                     default:
                         if (WaveArchives[n.WarId] != null)

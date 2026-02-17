@@ -1,51 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO
 {
     public static class StreamExtensions
     {
-        private static readonly DateTime _cTimeBase = new DateTime(1970, 1, 1);
+        private static readonly DateTime _cTimeBase = new(1970, 1, 1);
 
-        [ThreadStatic]
-        private static byte[] _buffer;
-
-        [ThreadStatic]
-        private static char[] _charBuffer;
+        [field: ThreadStatic]
         private static byte[] Buffer
         {
             get
             {
-                if (StreamExtensions._buffer == null)
-                    StreamExtensions._buffer = new byte[16];
-                return StreamExtensions._buffer;
+                field ??= new byte[16];
+                return field;
             }
         }
+
+        [field: ThreadStatic]
         private static char[] CharBuffer
         {
             get
             {
-                if (StreamExtensions._charBuffer == null)
-                    StreamExtensions._charBuffer = new char[16];
-                return StreamExtensions._charBuffer;
+                field ??= new char[16];
+                return field;
             }
         }
 
         public static long Align(this Stream stream, int alignment, bool grow = false)
         {
             if (alignment <= 0)
+            {
                 throw new ArgumentOutOfRangeException("Alignment must be bigger than 0.");
+            }
+
             long num = stream.Seek(
-                (-stream.Position % (long)alignment + (long)alignment) % (long)alignment,
+                ((-stream.Position % alignment) + alignment) % alignment,
                 SeekOrigin.Current
             );
             if (grow && num > stream.Length)
+            {
                 stream.SetLength(num);
+            }
+
             return num;
         }
 
@@ -57,13 +57,15 @@ namespace GotaSoundIO.IO
         private static void ValidateEnumValue(Type enumType, object value)
         {
             if (!EnumExtensions.IsValid(enumType, value))
+            {
                 throw new InvalidDataException(
                     string.Format(
                         "Read value {0} is not defined in the enum type {1}.",
                         value,
-                        (object)enumType
+                        enumType
                     )
                 );
+            }
         }
 
         public static bool ReadBoolean(
@@ -71,20 +73,16 @@ namespace GotaSoundIO.IO
             BooleanDataFormat format = BooleanDataFormat.Byte
         )
         {
-            switch (format)
+            return format switch
             {
-                case BooleanDataFormat.Byte:
-                    return (uint)stream.ReadByte() > 0U;
-                case BooleanDataFormat.Word:
-                    return (uint)stream.ReadInt16((ByteConverter)null) > 0U;
-                case BooleanDataFormat.Dword:
-                    return (uint)stream.ReadInt32((ByteConverter)null) > 0U;
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid {0}.", (object)"BooleanDataFormat"),
-                        nameof(format)
-                    );
-            }
+                BooleanDataFormat.Byte => (uint)stream.ReadByte() > 0U,
+                BooleanDataFormat.Word => (uint)stream.ReadInt16(null) > 0U,
+                BooleanDataFormat.Dword => (uint)stream.ReadInt32(null) > 0U,
+                _ => throw new ArgumentException(
+                                        string.Format("Invalid {0}.", "BooleanDataFormat"),
+                                        nameof(format)
+                                    ),
+            };
         }
 
         public static bool[] ReadBooleans(
@@ -100,19 +98,28 @@ namespace GotaSoundIO.IO
                 {
                     case BooleanDataFormat.Byte:
                         for (int index = 0; index < count; ++index)
+                        {
                             flagArray[index] = (uint)stream.ReadByte() > 0U;
+                        }
+
                         break;
                     case BooleanDataFormat.Word:
                         for (int index = 0; index < count; ++index)
-                            flagArray[index] = (uint)stream.ReadInt16((ByteConverter)null) > 0U;
+                        {
+                            flagArray[index] = (uint)stream.ReadInt16(null) > 0U;
+                        }
+
                         break;
                     case BooleanDataFormat.Dword:
                         for (int index = 0; index < count; ++index)
-                            flagArray[index] = (uint)stream.ReadInt32((ByteConverter)null) > 0U;
+                        {
+                            flagArray[index] = (uint)stream.ReadInt32(null) > 0U;
+                        }
+
                         break;
                     default:
                         throw new ArgumentException(
-                            string.Format("Invalid {0}.", (object)"BooleanDataFormat"),
+                            string.Format("Invalid {0}.", "BooleanDataFormat"),
                             nameof(format)
                         );
                 }
@@ -138,24 +145,20 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            switch (format)
+            return format switch
             {
-                case DateTimeDataFormat.NetTicks:
-                    return new DateTime(stream.ReadInt64(converter));
-                case DateTimeDataFormat.CTime:
-                    return StreamExtensions._cTimeBase.AddSeconds(
-                        (double)stream.ReadUInt32(converter)
-                    );
-                case DateTimeDataFormat.CTime64:
-                    return StreamExtensions._cTimeBase.AddSeconds(
-                        (double)stream.ReadInt64(converter)
-                    );
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid {0}.", (object)"DateTimeDataFormat"),
-                        nameof(format)
-                    );
-            }
+                DateTimeDataFormat.NetTicks => new DateTime(stream.ReadInt64(converter)),
+                DateTimeDataFormat.CTime => StreamExtensions._cTimeBase.AddSeconds(
+                                        stream.ReadUInt32(converter)
+                                    ),
+                DateTimeDataFormat.CTime64 => StreamExtensions._cTimeBase.AddSeconds(
+                                        stream.ReadInt64(converter)
+                                    ),
+                _ => throw new ArgumentException(
+                                        string.Format("Invalid {0}.", "DateTimeDataFormat"),
+                                        nameof(format)
+                                    ),
+            };
         }
 
         public static DateTime[] ReadDateTimes(
@@ -172,23 +175,32 @@ namespace GotaSoundIO.IO
                 {
                     case DateTimeDataFormat.NetTicks:
                         for (int index = 0; index < count; ++index)
+                        {
                             dateTimeArray[index] = new DateTime(stream.ReadInt64(converter));
+                        }
+
                         break;
                     case DateTimeDataFormat.CTime:
                         for (int index = 0; index < count; ++index)
+                        {
                             dateTimeArray[index] = StreamExtensions._cTimeBase.AddSeconds(
-                                (double)stream.ReadUInt32(converter)
+                                stream.ReadUInt32(converter)
                             );
+                        }
+
                         break;
                     case DateTimeDataFormat.CTime64:
                         for (int index = 0; index < count; ++index)
+                        {
                             dateTimeArray[index] = StreamExtensions._cTimeBase.AddSeconds(
-                                (double)stream.ReadInt64(converter)
+                                stream.ReadInt64(converter)
                             );
+                        }
+
                         break;
                     default:
                         throw new ArgumentException(
-                            string.Format("Invalid {0}.", (object)"BooleanDataFormat"),
+                            string.Format("Invalid {0}.", "BooleanDataFormat"),
                             nameof(format)
                         );
                 }
@@ -196,20 +208,20 @@ namespace GotaSoundIO.IO
             return dateTimeArray;
         }
 
-        public static Decimal ReadDecimal(this Stream stream, ByteConverter converter = null)
+        public static decimal ReadDecimal(this Stream stream, ByteConverter converter = null)
         {
             StreamExtensions.FillBuffer(stream, 16);
             return (converter ?? ByteConverter.System).ToDecimal(StreamExtensions.Buffer, 0);
         }
 
-        public static Decimal[] ReadDecimals(
+        public static decimal[] ReadDecimals(
             this Stream stream,
             int count,
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
-            Decimal[] numArray = new Decimal[count];
+            converter ??= ByteConverter.System;
+            decimal[] numArray = new decimal[count];
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -234,7 +246,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             double[] numArray = new double[count];
             lock (stream)
             {
@@ -266,14 +278,16 @@ namespace GotaSoundIO.IO
         )
             where T : struct, IComparable, IFormattable
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             T[] objArray = new T[count];
             Type enumType = typeof(T);
             lock (stream)
             {
                 for (int index = 0; index < count; ++index)
+                {
                     objArray[index] = (T)
                         StreamExtensions.ReadEnum(stream, enumType, strict, converter);
+                }
             }
             return objArray;
         }
@@ -290,7 +304,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             short[] numArray = new short[count];
             lock (stream)
             {
@@ -316,7 +330,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             int[] numArray = new int[count];
             lock (stream)
             {
@@ -342,7 +356,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             long[] numArray = new long[count];
             lock (stream)
             {
@@ -388,7 +402,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             float[] numArray = new float[count];
             lock (stream)
             {
@@ -409,46 +423,40 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            encoding = encoding ?? Encoding.UTF8;
-            converter = converter ?? ByteConverter.System;
-            switch (format)
+            encoding ??= Encoding.UTF8;
+            converter ??= ByteConverter.System;
+            return format switch
             {
-                case StringDataFormat.DynamicByteCount:
-                    return StreamExtensions.ReadStringWithLength(
-                        stream,
-                        StreamExtensions.Read7BitEncodedInt32(stream),
-                        false,
-                        encoding
-                    );
-                case StringDataFormat.ByteCharCount:
-                    return StreamExtensions.ReadStringWithLength(
-                        stream,
-                        stream.ReadByte(),
-                        true,
-                        encoding
-                    );
-                case StringDataFormat.Int16CharCount:
-                    return StreamExtensions.ReadStringWithLength(
-                        stream,
-                        (int)stream.ReadInt16(converter),
-                        true,
-                        encoding
-                    );
-                case StringDataFormat.Int32CharCount:
-                    return StreamExtensions.ReadStringWithLength(
-                        stream,
-                        stream.ReadInt32(converter),
-                        true,
-                        encoding
-                    );
-                case StringDataFormat.ZeroTerminated:
-                    return StreamExtensions.ReadStringZeroPostfix(stream, encoding);
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid {0}.", (object)"StringDataFormat"),
-                        nameof(format)
-                    );
-            }
+                StringDataFormat.DynamicByteCount => StreamExtensions.ReadStringWithLength(
+                                        stream,
+                                        StreamExtensions.Read7BitEncodedInt32(stream),
+                                        false,
+                                        encoding
+                                    ),
+                StringDataFormat.ByteCharCount => StreamExtensions.ReadStringWithLength(
+                                        stream,
+                                        stream.ReadByte(),
+                                        true,
+                                        encoding
+                                    ),
+                StringDataFormat.Int16CharCount => StreamExtensions.ReadStringWithLength(
+                                        stream,
+                                        stream.ReadInt16(converter),
+                                        true,
+                                        encoding
+                                    ),
+                StringDataFormat.Int32CharCount => StreamExtensions.ReadStringWithLength(
+                                        stream,
+                                        stream.ReadInt32(converter),
+                                        true,
+                                        encoding
+                                    ),
+                StringDataFormat.ZeroTerminated => StreamExtensions.ReadStringZeroPostfix(stream, encoding),
+                _ => throw new ArgumentException(
+                                        string.Format("Invalid {0}.", "StringDataFormat"),
+                                        nameof(format)
+                                    ),
+            };
         }
 
         public static string[] ReadStrings(
@@ -459,8 +467,8 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            encoding = encoding ?? Encoding.UTF8;
-            converter = converter ?? ByteConverter.System;
+            encoding ??= Encoding.UTF8;
+            converter ??= ByteConverter.System;
             string[] strArray = new string[count];
             lock (stream)
             {
@@ -468,50 +476,65 @@ namespace GotaSoundIO.IO
                 {
                     case StringDataFormat.DynamicByteCount:
                         for (int index = 0; index < count; ++index)
+                        {
                             strArray[index] = StreamExtensions.ReadStringWithLength(
                                 stream,
                                 StreamExtensions.Read7BitEncodedInt32(stream),
                                 false,
                                 encoding
                             );
+                        }
+
                         break;
                     case StringDataFormat.ByteCharCount:
                         for (int index = 0; index < count; ++index)
+                        {
                             strArray[index] = StreamExtensions.ReadStringWithLength(
                                 stream,
                                 stream.ReadByte(),
                                 true,
                                 encoding
                             );
+                        }
+
                         break;
                     case StringDataFormat.Int16CharCount:
                         for (int index = 0; index < count; ++index)
+                        {
                             strArray[index] = StreamExtensions.ReadStringWithLength(
                                 stream,
-                                (int)stream.ReadInt16(converter),
+                                stream.ReadInt16(converter),
                                 true,
                                 encoding
                             );
+                        }
+
                         break;
                     case StringDataFormat.Int32CharCount:
                         for (int index = 0; index < count; ++index)
+                        {
                             strArray[index] = StreamExtensions.ReadStringWithLength(
                                 stream,
                                 stream.ReadInt32(converter),
                                 true,
                                 encoding
                             );
+                        }
+
                         break;
                     case StringDataFormat.ZeroTerminated:
                         for (int index = 0; index < count; ++index)
+                        {
                             strArray[index] = StreamExtensions.ReadStringZeroPostfix(
                                 stream,
                                 encoding
                             );
+                        }
+
                         break;
                     default:
                         throw new ArgumentException(
-                            string.Format("Invalid {0}.", (object)"StringDataFormat"),
+                            string.Format("Invalid {0}.", "StringDataFormat"),
                             nameof(format)
                         );
                 }
@@ -536,17 +559,19 @@ namespace GotaSoundIO.IO
             Encoding encoding = null
         )
         {
-            encoding = encoding ?? Encoding.UTF8;
+            encoding ??= Encoding.UTF8;
             string[] strArray = new string[count];
             lock (stream)
             {
                 for (int index = 0; index < count; ++index)
+                {
                     strArray[index] = StreamExtensions.ReadStringWithLength(
                         stream,
                         length,
                         true,
                         encoding
                     );
+                }
             }
             return strArray;
         }
@@ -563,7 +588,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             ushort[] numArray = new ushort[count];
             lock (stream)
             {
@@ -589,7 +614,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             uint[] numArray = new uint[count];
             lock (stream)
             {
@@ -615,7 +640,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             ulong[] numArray = new ulong[count];
             lock (stream)
             {
@@ -632,9 +657,11 @@ namespace GotaSoundIO.IO
         private static void FillBuffer(Stream stream, int length)
         {
             if (stream.Read(StreamExtensions.Buffer, 0, length) < length)
+            {
                 throw new EndOfStreamException(
-                    string.Format("Could not read {0} bytes.", (object)length)
+                    string.Format("Could not read {0} bytes.", length)
                 );
+            }
         }
 
         private static int Read7BitEncodedInt32(Stream stream)
@@ -644,10 +671,15 @@ namespace GotaSoundIO.IO
             {
                 int num2 = stream.ReadByte();
                 if (num2 == -1)
+                {
                     throw new EndOfStreamException("Incomplete 7-bit encoded integer.");
-                num1 |= (num2 & (int)sbyte.MaxValue) << index * 7;
+                }
+
+                num1 |= (num2 & sbyte.MaxValue) << (index * 7);
                 if ((num2 & 128) == 0)
+                {
                     return num1;
+                }
             }
             throw new InvalidDataException("Invalid 7-bit encoded integer.");
         }
@@ -659,37 +691,55 @@ namespace GotaSoundIO.IO
             ByteConverter converter
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             Type underlyingType = Enum.GetUnderlyingType(enumType);
             int length = Marshal.SizeOf(underlyingType);
             StreamExtensions.FillBuffer(stream, length);
             object obj;
             if (underlyingType == typeof(byte))
-                obj = (object)StreamExtensions.Buffer[0];
+            {
+                obj = StreamExtensions.Buffer[0];
+            }
             else if (underlyingType == typeof(sbyte))
-                obj = (object)(sbyte)StreamExtensions.Buffer[0];
+            {
+                obj = (sbyte)StreamExtensions.Buffer[0];
+            }
             else if (underlyingType == typeof(short))
-                obj = (object)converter.ToInt16(StreamExtensions.Buffer, 0);
+            {
+                obj = converter.ToInt16(StreamExtensions.Buffer, 0);
+            }
             else if (underlyingType == typeof(int))
-                obj = (object)converter.ToInt32(StreamExtensions.Buffer, 0);
+            {
+                obj = converter.ToInt32(StreamExtensions.Buffer, 0);
+            }
             else if (underlyingType == typeof(long))
-                obj = (object)converter.ToInt64(StreamExtensions.Buffer, 0);
+            {
+                obj = converter.ToInt64(StreamExtensions.Buffer, 0);
+            }
             else if (underlyingType == typeof(ushort))
-                obj = (object)converter.ToUInt16(StreamExtensions.Buffer, 0);
+            {
+                obj = converter.ToUInt16(StreamExtensions.Buffer, 0);
+            }
             else if (underlyingType == typeof(uint))
             {
-                obj = (object)converter.ToUInt32(StreamExtensions.Buffer, 0);
+                obj = converter.ToUInt32(StreamExtensions.Buffer, 0);
             }
             else
             {
                 if (!(underlyingType == typeof(ulong)))
+                {
                     throw new NotImplementedException(
-                        string.Format("Unsupported enum type {0}.", (object)underlyingType)
+                        string.Format("Unsupported enum type {0}.", underlyingType)
                     );
-                obj = (object)converter.ToUInt64(StreamExtensions.Buffer, 0);
+                }
+
+                obj = converter.ToUInt64(StreamExtensions.Buffer, 0);
             }
             if (strict)
+            {
                 StreamExtensions.ValidateEnumValue(enumType, obj);
+            }
+
             return obj;
         }
 
@@ -701,9 +751,12 @@ namespace GotaSoundIO.IO
         )
         {
             if (length == 0)
+            {
                 return string.Empty;
+            }
+
             Decoder decoder = encoding.GetDecoder();
-            StringBuilder stringBuilder = new StringBuilder(length);
+            StringBuilder stringBuilder = new(length);
             int num1 = 0;
             lock (stream)
             {
@@ -719,20 +772,25 @@ namespace GotaSoundIO.IO
                         {
                             int num3 = stream.Read(buffer, num2++, 1);
                             if (num3 == 0)
+                            {
                                 throw new EndOfStreamException(
                                     "Incomplete string data, missing requested length."
                                 );
+                            }
+
                             num1 += num3;
                             charCount = decoder.GetCharCount(buffer, 0, num2);
                             if (charCount > 0)
                             {
-                                decoder.GetChars(buffer, 0, num2, charBuffer, 0);
-                                stringBuilder.Append(charBuffer, 0, charCount);
+                                _ = decoder.GetChars(buffer, 0, num2, charBuffer, 0);
+                                _ = stringBuilder.Append(charBuffer, 0, charCount);
                             }
                         }
                     } while (lengthInChars && stringBuilder.Length < length);
                     if (lengthInChars)
+                    {
                         break;
+                    }
                 } while (num1 < length);
             }
             return stringBuilder.ToString();
@@ -740,7 +798,7 @@ namespace GotaSoundIO.IO
 
         private static string ReadStringZeroPostfix(Stream stream, Encoding encoding)
         {
-            List<byte> byteList = new List<byte>();
+            List<byte> byteList = [];
             bool flag = true;
             byte[] buffer = StreamExtensions.Buffer;
             lock (stream)
@@ -751,15 +809,17 @@ namespace GotaSoundIO.IO
                         while (flag)
                         {
                             StreamExtensions.FillBuffer(stream, 1);
-                            if (flag = buffer[0] > (byte)0)
+                            if (flag = buffer[0] > 0)
+                            {
                                 byteList.Add(buffer[0]);
+                            }
                         }
                         break;
                     case 2:
                         while (flag)
                         {
                             StreamExtensions.FillBuffer(stream, 2);
-                            if (flag = buffer[0] != (byte)0 || buffer[1] > (byte)0)
+                            if (flag = buffer[0] != 0 || buffer[1] > 0)
                             {
                                 byteList.Add(buffer[0]);
                                 byteList.Add(buffer[1]);
@@ -782,7 +842,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             switch (format)
             {
                 case BooleanDataFormat.Byte:
@@ -800,7 +860,7 @@ namespace GotaSoundIO.IO
                     break;
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid {0}.", (object)"BooleanDataFormat"),
+                        string.Format("Invalid {0}.", "BooleanDataFormat"),
                         nameof(format)
                     );
             }
@@ -813,7 +873,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 switch (format)
@@ -854,7 +914,7 @@ namespace GotaSoundIO.IO
                         }
                     default:
                         throw new ArgumentException(
-                            string.Format("Invalid {0}.", (object)"BooleanDataFormat"),
+                            string.Format("Invalid {0}.", "BooleanDataFormat"),
                             nameof(format)
                         );
                 }
@@ -871,7 +931,9 @@ namespace GotaSoundIO.IO
             lock (stream)
             {
                 foreach (byte num in values)
+                {
                     stream.WriteByte(num);
+                }
             }
         }
 
@@ -882,7 +944,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             switch (format)
             {
                 case DateTimeDataFormat.NetTicks:
@@ -896,7 +958,7 @@ namespace GotaSoundIO.IO
                     break;
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid {0}.", (object)"DateTimeDataFormat"),
+                        string.Format("Invalid {0}.", "DateTimeDataFormat"),
                         nameof(format)
                     );
             }
@@ -909,10 +971,10 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            _ = converter ?? ByteConverter.System;
         }
 
-        public static void Write(this Stream stream, Decimal value, ByteConverter converter = null)
+        public static void Write(this Stream stream, decimal value, ByteConverter converter = null)
         {
             byte[] buffer = StreamExtensions.Buffer;
             (converter ?? ByteConverter.System).GetBytes(value, buffer, 0);
@@ -921,15 +983,15 @@ namespace GotaSoundIO.IO
 
         public static void Write(
             this Stream stream,
-            IEnumerable<Decimal> values,
+            IEnumerable<decimal> values,
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
-                foreach (Decimal num in values)
+                foreach (decimal num in values)
                 {
                     converter.GetBytes(num, buffer, 0);
                     stream.Write(buffer, 0, 16);
@@ -950,7 +1012,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -970,7 +1032,7 @@ namespace GotaSoundIO.IO
         )
             where T : struct, IComparable, IFormattable
         {
-            StreamExtensions.WriteEnum(stream, typeof(T), (object)value, strict, converter);
+            StreamExtensions.WriteEnum(stream, typeof(T), value, strict, converter);
         }
 
         public static void WriteEnums<T>(
@@ -980,12 +1042,14 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             Type enumType = typeof(T);
             lock (stream)
             {
                 foreach (T obj in values)
-                    StreamExtensions.WriteEnum(stream, enumType, (object)obj, strict, converter);
+                {
+                    StreamExtensions.WriteEnum(stream, enumType, obj, strict, converter);
+                }
             }
         }
 
@@ -1002,7 +1066,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1027,7 +1091,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1052,7 +1116,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1097,7 +1161,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1117,8 +1181,8 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            encoding = encoding ?? Encoding.UTF8;
-            converter = converter ?? ByteConverter.System;
+            encoding ??= Encoding.UTF8;
+            converter ??= ByteConverter.System;
             byte[] bytes = encoding.GetBytes(value);
             lock (stream)
             {
@@ -1147,11 +1211,11 @@ namespace GotaSoundIO.IO
                         switch (encoding.GetByteCount("A"))
                         {
                             case 1:
-                                stream.WriteByte((byte)0);
+                                stream.WriteByte(0);
                                 return;
                             case 2:
-                                stream.WriteByte((byte)0);
-                                stream.WriteByte((byte)0);
+                                stream.WriteByte(0);
+                                stream.WriteByte(0);
                                 return;
                             default:
                                 return;
@@ -1161,7 +1225,7 @@ namespace GotaSoundIO.IO
                         break;
                     default:
                         throw new ArgumentException(
-                            string.Format("Invalid {0}.", (object)"StringDataFormat"),
+                            string.Format("Invalid {0}.", "StringDataFormat"),
                             nameof(format)
                         );
                 }
@@ -1176,12 +1240,14 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            encoding = encoding ?? Encoding.UTF8;
-            converter = converter ?? ByteConverter.System;
+            encoding ??= Encoding.UTF8;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 foreach (string str in values)
+                {
                     stream.Write(str, format, encoding, converter);
+                }
             }
         }
 
@@ -1198,7 +1264,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1223,7 +1289,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1248,7 +1314,7 @@ namespace GotaSoundIO.IO
             ByteConverter converter = null
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             lock (stream)
             {
                 byte[] buffer = StreamExtensions.Buffer;
@@ -1263,7 +1329,10 @@ namespace GotaSoundIO.IO
         private static void Write7BitEncodedInt(Stream stream, int value)
         {
             for (; value >= 128; value >>= 7)
+            {
                 stream.WriteByte((byte)(value | 128));
+            }
+
             stream.WriteByte((byte)value);
         }
 
@@ -1275,21 +1344,33 @@ namespace GotaSoundIO.IO
             ByteConverter converter
         )
         {
-            converter = converter ?? ByteConverter.System;
+            converter ??= ByteConverter.System;
             Type underlyingType = Enum.GetUnderlyingType(enumType);
             byte[] buffer = StreamExtensions.Buffer;
             if (underlyingType == typeof(byte))
+            {
                 StreamExtensions.Buffer[0] = (byte)value;
+            }
             else if (underlyingType == typeof(sbyte))
+            {
                 StreamExtensions.Buffer[0] = (byte)(sbyte)value;
+            }
             else if (underlyingType == typeof(short))
+            {
                 converter.GetBytes((short)value, buffer, 0);
+            }
             else if (underlyingType == typeof(int))
+            {
                 converter.GetBytes((int)value, buffer, 0);
+            }
             else if (underlyingType == typeof(long))
+            {
                 converter.GetBytes((long)value, buffer, 0);
+            }
             else if (underlyingType == typeof(ushort))
+            {
                 converter.GetBytes((ushort)value, buffer, 0);
+            }
             else if (underlyingType == typeof(uint))
             {
                 converter.GetBytes((uint)value, buffer, 0);
@@ -1297,13 +1378,19 @@ namespace GotaSoundIO.IO
             else
             {
                 if (!(underlyingType == typeof(ulong)))
+                {
                     throw new NotImplementedException(
-                        string.Format("Unsupported enum type {0}.", (object)underlyingType)
+                        string.Format("Unsupported enum type {0}.", underlyingType)
                     );
+                }
+
                 converter.GetBytes((ulong)value, buffer, 0);
             }
             if (strict)
+            {
                 StreamExtensions.ValidateEnumValue(enumType, value);
+            }
+
             stream.Write(buffer, 0, Marshal.SizeOf(underlyingType));
         }
     }

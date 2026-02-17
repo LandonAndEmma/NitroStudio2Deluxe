@@ -434,22 +434,9 @@
 
         public static int Sin(int index)
         {
-            if (index < 0x20)
-            {
-                return _sinTable[index];
-            }
-            else if (index < 0x40)
-            {
-                return _sinTable[0x20 - (index - 0x20)];
-            }
-            else if (index < 0x60)
-            {
-                return -_sinTable[index - 0x40];
-            }
-            else
-            {
-                return -_sinTable[0x20 - (index - 0x60)];
-            }
+            return index < 0x20
+                ? _sinTable[index]
+                : index < 0x40 ? _sinTable[0x20 - (index - 0x20)] : index < 0x60 ? -_sinTable[index - 0x40] : -_sinTable[0x20 - (index - 0x60)];
         }
 
         private static readonly ushort[] _pitchTable = new ushort[768]

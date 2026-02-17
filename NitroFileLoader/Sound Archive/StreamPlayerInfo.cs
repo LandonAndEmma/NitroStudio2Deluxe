@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace NitroFileLoader
 {
@@ -20,7 +15,7 @@ namespace NitroFileLoader
             IsStereo = r.ReadByte() > 1;
             LeftChannel = r.ReadByte();
             RightChannel = r.ReadByte();
-            r.ReadBytes(21);
+            _ = r.ReadBytes(21);
         }
 
         public void Write(FileWriter w)

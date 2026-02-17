@@ -1,18 +1,19 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSoundIO
 {
     public class Table<T> : IList<T>, IReadable, IWriteable
     {
-        private List<T> items = new List<T>();
+        private List<T> items = [];
 
-        public static implicit operator List<T>(Table<T> t) => t.items;
+        public static implicit operator List<T>(Table<T> t)
+        {
+            return t.items;
+        }
 
         public static explicit operator Table<T>(List<T> l)
         {
@@ -132,7 +133,7 @@ namespace GotaSoundIO
             }
             else
             {
-                foreach (var i in items)
+                foreach (T i in items)
                 {
                     w.Write(i as IWriteable);
                 }

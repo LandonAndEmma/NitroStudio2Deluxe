@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSequenceLib;
+﻿using GotaSequenceLib;
 using GotaSequenceLib.Playback;
-using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Formats;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace NitroStudio2
 {
     public partial class SequenceRecorder : Form
     {
-        public Mixer Mixer = new Mixer();
-        Player Player;
-        private List<SequenceCommand> commands;
-        private int seqStart;
-        private string filePath;
+        public Mixer Mixer = new();
+        private readonly Player Player;
+        private readonly List<SequenceCommand> commands;
+        private readonly int seqStart;
+        private readonly string filePath;
 
         public SequenceRecorder(
             PlayableBank[] banks,
@@ -33,7 +27,7 @@ namespace NitroStudio2
             Player = new Player(Mixer);
             Player.PrepareForSong(banks, wars);
             this.commands = commands;
-            this.seqStart = startIndex;
+            seqStart = startIndex;
             this.filePath = filePath;
         }
 

@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace Multimedia.UI
+namespace NitroStudio2
 {
     public enum PianoKeyOrientation
     {
@@ -36,9 +34,9 @@ namespace Multimedia.UI
         private PianoKeyOrientation orientation;
         private PianoKeyShape shape;
         private bool keyOn = false;
-        private SolidBrush keyOnBrush = new SolidBrush(Color.Blue);
-        private SolidBrush keyOffBrush = new SolidBrush(Color.White);
-        private Pen borderPen = new Pen(Color.Black, 2.0f);
+        private readonly SolidBrush keyOnBrush = new(Color.Blue);
+        private readonly SolidBrush keyOffBrush = new(Color.White);
+        private readonly Pen borderPen = new(Color.Black, 2.0f);
         private Point[] points;
         private System.ComponentModel.Container components = null;
         #endregion
@@ -49,8 +47,8 @@ namespace Multimedia.UI
         public PianoKey()
         {
             InitializeComponent();
-            this.orientation = PianoKeyOrientation.Vertical;
-            this.shape = PianoKeyShape.LShape;
+            orientation = PianoKeyOrientation.Vertical;
+            shape = PianoKeyShape.LShape;
             Size = new Size(19, 51);
         }
         #endregion
@@ -60,10 +58,7 @@ namespace Multimedia.UI
             if (!IsKeyOn())
             {
                 keyOn = true;
-                if (StateChanged != null)
-                {
-                    StateChanged(this, new EventArgs());
-                }
+                StateChanged?.Invoke(this, new EventArgs());
                 Invalidate(Region);
             }
         }
@@ -73,10 +68,7 @@ namespace Multimedia.UI
             if (IsKeyOn())
             {
                 keyOn = false;
-                if (StateChanged != null)
-                {
-                    StateChanged(this, new EventArgs());
-                }
+                StateChanged?.Invoke(this, new EventArgs());
                 Invalidate(Region);
             }
         }
@@ -90,8 +82,7 @@ namespace Multimedia.UI
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -169,8 +160,8 @@ namespace Multimedia.UI
         private void InitPoints()
         {
             if (
-                Orientation == PianoKeyOrientation.HorizontalLeft
-                || Orientation == PianoKeyOrientation.HorizontalRight
+                Orientation is PianoKeyOrientation.HorizontalLeft
+                or PianoKeyOrientation.HorizontalRight
             )
             {
                 InitPointsHorz();
@@ -359,7 +350,7 @@ namespace Multimedia.UI
             {
                 types[i] = (byte)PathPointType.Line;
             }
-            GraphicsPath path = new GraphicsPath(points, types);
+            GraphicsPath path = new(points, types);
             Region = new Region(path);
             Invalidate(Region);
         }
@@ -368,14 +359,14 @@ namespace Multimedia.UI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyOrientation Orientation
         {
-            get { return orientation; }
+            get => orientation;
             set
             {
                 if (orientation == PianoKeyOrientation.Vertical)
                 {
                     if (
-                        value == PianoKeyOrientation.HorizontalLeft
-                        || value == PianoKeyOrientation.HorizontalRight
+                        value is PianoKeyOrientation.HorizontalLeft
+                        or PianoKeyOrientation.HorizontalRight
                     )
                     {
                         orientation = value;
@@ -402,7 +393,7 @@ namespace Multimedia.UI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public PianoKeyShape Shape
         {
-            get { return shape; }
+            get => shape;
             set
             {
                 shape = value;
@@ -414,7 +405,7 @@ namespace Multimedia.UI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOnColor
         {
-            get { return keyOnBrush.Color; }
+            get => keyOnBrush.Color;
             set
             {
                 keyOnBrush.Color = value;
@@ -428,7 +419,7 @@ namespace Multimedia.UI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color KeyOffColor
         {
-            get { return keyOffBrush.Color; }
+            get => keyOffBrush.Color;
             set
             {
                 keyOffBrush.Color = value;

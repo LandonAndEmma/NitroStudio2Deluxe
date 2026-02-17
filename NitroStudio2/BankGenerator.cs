@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSequenceLib.Playback;
+﻿using GotaSequenceLib.Playback;
 using NitroFileLoader;
-using InstrumentType = NitroFileLoader.InstrumentType;
+using NitroFileLoader.Instrument;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace NitroStudio2
 {
@@ -19,7 +15,7 @@ namespace NitroStudio2
         public MainWindow MainWindow;
         private bool WritingInfo;
         public Player Player;
-        public Mixer Mixer = new Mixer();
+        public Mixer Mixer = new();
 
         public BankGenerator(MainWindow m)
         {
@@ -27,7 +23,7 @@ namespace NitroStudio2
             MainWindow = m;
             if (SA.Banks.Where(x => x.File.Instruments.Count > 0).Count() < 1)
             {
-                MessageBox.Show("There must be at least one bank that has an instrument.");
+                _ = MessageBox.Show("There must be at least one bank that has an instrument.");
                 Close();
                 return;
             }
@@ -42,9 +38,9 @@ namespace NitroStudio2
         public static void PopulateBankBox(SoundArchive a, DataGridViewComboBoxColumn c)
         {
             c.Items.Clear();
-            foreach (var w in a.Banks.Where(x => x.File.Instruments.Count > 0))
+            foreach (BankInfo w in a.Banks.Where(x => x.File.Instruments.Count > 0))
             {
-                c.Items.Add("[" + w.Index + "] - " + w.Name);
+                _ = c.Items.Add("[" + w.Index + "] - " + w.Name);
             }
         }
 
@@ -57,9 +53,9 @@ namespace NitroStudio2
             if (!setFirst)
             {
                 c.Items.Clear();
-                foreach (var i in b.Instruments)
+                foreach (Instrument i in b.Instruments)
                 {
-                    c.Items.Add("[" + i.Index + "] - " + i.Type().ToString());
+                    _ = c.Items.Add("[" + i.Index + "] - " + i.Type().ToString());
                 }
             }
             else
@@ -68,7 +64,7 @@ namespace NitroStudio2
                     "[" + b.Instruments[0].Index + "] - " + b.Instruments[0].Type().ToString();
                 for (int i = 1; i < b.Instruments.Count; i++)
                 {
-                    c.Items.Add(
+                    _ = c.Items.Add(
                         "[" + b.Instruments[i].Index + "] - " + b.Instruments[i].Type().ToString()
                     );
                 }
@@ -82,22 +78,18 @@ namespace NitroStudio2
                 return;
             }
             WritingInfo = true;
-            List<int> ids = new List<int>();
-            ids.Add(-1);
+            List<int> ids = [-1];
             for (int i = 1; i < instruments.Rows.Count; i++)
             {
-                var bankCell = (DataGridViewComboBoxCell)instruments.Rows[i - 1].Cells["bank"];
-                var instCell = (DataGridViewComboBoxCell)
+                DataGridViewComboBoxCell bankCell = (DataGridViewComboBoxCell)instruments.Rows[i - 1].Cells["bank"];
+                DataGridViewComboBoxCell instCell = (DataGridViewComboBoxCell)
                     instruments.Rows[i - 1].Cells["instrument"];
-                var idCell = (DataGridViewTextBoxCell)instruments.Rows[i - 1].Cells["newId"];
-                var warModeCell = (DataGridViewComboBoxCell)
+                DataGridViewTextBoxCell idCell = (DataGridViewTextBoxCell)instruments.Rows[i - 1].Cells["newId"];
+                DataGridViewComboBoxCell warModeCell = (DataGridViewComboBoxCell)
                     instruments.Rows[i - 1].Cells["waveArchiveMode"];
-                if (bankCell.Value == null)
-                {
-                    bankCell.Value = (
+                bankCell.Value ??= (
                         instruments.Columns["bank"] as DataGridViewComboBoxColumn
                     ).Items[0];
-                }
                 if (instCell.Items.Count < 1)
                 {
                     PopulateInstrumentBox(
@@ -122,10 +114,7 @@ namespace NitroStudio2
                 {
                     instCell.Items.RemoveAt(instCell.Items.Count - 1);
                 }
-                if (instBak == null)
-                {
-                    instBak = "";
-                }
+                instBak ??= "";
                 PopulateInstrumentBox(
                     SA.Banks.Where(x =>
                             x.Index
@@ -136,14 +125,7 @@ namespace NitroStudio2
                     instCell,
                     true
                 );
-                if (instCell.Items.Contains(instBak))
-                {
-                    instCell.Value = instBak;
-                }
-                else
-                {
-                    instCell.Value = instCell.Items[0];
-                }
+                instCell.Value = instCell.Items.Contains(instBak) ? instBak : instCell.Items[0];
                 if (idCell.Value == null || idCell.Value.ToString() == "")
                 {
                     int newId = ids.Last() + 1;
@@ -168,12 +150,9 @@ namespace NitroStudio2
                     }
                     ids.Add(int.Parse(idCell.Value.ToString()));
                 }
-                if (warModeCell.Value == null)
-                {
-                    warModeCell.Value = (
+                warModeCell.Value ??= (
                         instruments.Columns["waveArchiveMode"] as DataGridViewComboBoxColumn
                     ).Items[0];
-                }
                 bool warModeSecond = warModeCell.Value != warModeCell.Items[0];
                 BankInfo b = SA
                     .Banks.Where(x =>
@@ -185,10 +164,10 @@ namespace NitroStudio2
                         x.Index == int.Parse(((string)instCell.Value).Split('[')[1].Split(']')[0])
                     )
                     .FirstOrDefault();
-                List<string> wars = new List<string>();
-                foreach (var n in inst.NoteInfo)
+                List<string> wars = [];
+                foreach (NoteInfo n in inst.NoteInfo)
                 {
-                    if (n.InstrumentType == InstrumentType.PCM)
+                    if (n.InstrumentType == NitroFileLoader.Instrument.InstrumentType.PCM)
                     {
                         string name = "Null";
                         try
@@ -227,17 +206,17 @@ namespace NitroStudio2
 
         private void CreateBnk_Click(object sender, EventArgs e)
         {
-            BankInfo bnk = new BankInfo() { File = new Bank() };
-            WaveArchiveInfo war = new WaveArchiveInfo() { File = new WaveArchive() };
+            BankInfo bnk = new() { File = new Bank() };
+            WaveArchiveInfo war = new() { File = new WaveArchive() };
             bool usesGen;
-            List<InstrumentInfo> insts = new List<InstrumentInfo>();
-            List<string> wars = new List<string>();
+            List<InstrumentInfo> insts = [];
+            List<string> wars = [];
             for (int i = 0; i < instruments.Rows.Count - 1; i++)
             {
-                var bankCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["bank"];
-                var instCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["instrument"];
-                var idCell = (DataGridViewTextBoxCell)instruments.Rows[i].Cells["newId"];
-                var warModeCell = (DataGridViewComboBoxCell)
+                DataGridViewComboBoxCell bankCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["bank"];
+                DataGridViewComboBoxCell instCell = (DataGridViewComboBoxCell)instruments.Rows[i].Cells["instrument"];
+                DataGridViewTextBoxCell idCell = (DataGridViewTextBoxCell)instruments.Rows[i].Cells["newId"];
+                DataGridViewComboBoxCell warModeCell = (DataGridViewComboBoxCell)
                     instruments.Rows[i].Cells["waveArchiveMode"];
                 if (
                     bankCell.Value == null
@@ -247,7 +226,7 @@ namespace NitroStudio2
                     || warModeCell.Value == null
                 )
                 {
-                    MessageBox.Show("Grid contains invalid data.");
+                    _ = MessageBox.Show("Grid contains invalid data.");
                     return;
                 }
                 BankInfo b = SA
@@ -275,11 +254,11 @@ namespace NitroStudio2
                         UseExistingWar = useExistingWar,
                     }
                 );
-                foreach (var n in inst.NoteInfo)
+                foreach (NoteInfo n in inst.NoteInfo)
                 {
                     if (
                         warModeCell.Value != warModeCell.Items[0]
-                        && n.InstrumentType == InstrumentType.PCM
+                        && n.InstrumentType == NitroFileLoader.Instrument.InstrumentType.PCM
                     )
                     {
                         string name = "Null";
@@ -297,7 +276,7 @@ namespace NitroStudio2
             }
             if (wars.Count > 4)
             {
-                MessageBox.Show(
+                _ = MessageBox.Show(
                     "You can't generate a new bank that uses more than 4 wave archives."
                 );
                 return;
@@ -305,7 +284,7 @@ namespace NitroStudio2
             usesGen = insts.Where(x => x.UseExistingWar == false).Count() > 0;
             if (wars.Count > 3)
             {
-                MessageBox.Show(
+                _ = MessageBox.Show(
                     "You can't generate a new bank that uses more than 3 wave archives when creating a generated wave archive."
                 );
                 return;
@@ -330,18 +309,18 @@ namespace NitroStudio2
             }
             bnk.Name = "GENERATED_BANK_" + bnk.Index;
             war.Name = "GENERATED_WAR_" + war.Index;
-            Dictionary<ushort, ushort> warLinks = new Dictionary<ushort, ushort>();
+            Dictionary<ushort, ushort> warLinks = [];
             if (usesGen)
             {
                 warLinks.Add((ushort)war.Index, (ushort)warLinks.Count);
             }
-            Dictionary<uint, ushort> swavLinks = new Dictionary<uint, ushort>();
+            Dictionary<uint, ushort> swavLinks = [];
             ushort swarNum = usesGen ? (ushort)1 : (ushort)0;
             ushort swavNum = 0;
-            foreach (var i in insts)
+            foreach (InstrumentInfo i in insts)
             {
                 foreach (
-                    var n in i.Inst.NoteInfo.Where(x => x.InstrumentType == InstrumentType.PCM)
+                    NoteInfo n in i.Inst.NoteInfo.Where(x => x.InstrumentType == NitroFileLoader.Instrument.InstrumentType.PCM)
                 )
                 {
                     uint hash;
@@ -383,13 +362,13 @@ namespace NitroStudio2
             }
             if (warLinks.Count() > 4)
             {
-                MessageBox.Show(
+                _ = MessageBox.Show(
                     "Something went wrong, and the max number of wave archives (4) has been exceeded."
                 );
                 return;
             }
             int bnkWarId = 0;
-            foreach (var w in warLinks)
+            foreach (KeyValuePair<ushort, ushort> w in warLinks)
             {
                 switch (bnkWarId)
                 {
@@ -439,10 +418,10 @@ namespace NitroStudio2
             try
             {
                 Player.Stop();
-                var bnkCell = (DataGridViewComboBoxCell)instruments.Rows[e.RowIndex].Cells["bank"];
-                var instCell = (DataGridViewComboBoxCell)
+                DataGridViewComboBoxCell bnkCell = (DataGridViewComboBoxCell)instruments.Rows[e.RowIndex].Cells["bank"];
+                DataGridViewComboBoxCell instCell = (DataGridViewComboBoxCell)
                     instruments.Rows[e.RowIndex].Cells["instrument"];
-                var bnk = SA
+                BankInfo bnk = SA
                     .Banks.Where(x =>
                         x.Index == int.Parse(((string)bnkCell.Value).Split('[')[1].Split(']')[0])
                     )
@@ -454,8 +433,7 @@ namespace NitroStudio2
                     .FirstOrDefault();
                 Player.PrepareForSong(new PlayableBank[] { bnk.File }, bnk.GetAssociatedWaves());
                 Player.LoadSong(
-                    new List<GotaSequenceLib.SequenceCommand>()
-                    {
+                    [
                         new GotaSequenceLib.SequenceCommand()
                         {
                             CommandType = GotaSequenceLib.SequenceCommands.ProgramChange,
@@ -475,7 +453,7 @@ namespace NitroStudio2
                         {
                             CommandType = GotaSequenceLib.SequenceCommands.Fin,
                         },
-                    }
+                    ]
                 );
                 Player.Play();
             }

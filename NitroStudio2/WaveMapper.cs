@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSoundIO.Sound;
+﻿using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace NitroStudio2
 {
     public partial class WaveMapper : Form
     {
         public List<ushort> WarMap = null;
-        private List<RiffWave> wavs = new List<RiffWave>();
+        private readonly List<RiffWave> wavs = [];
         public GotaSoundIO.Sound.Playback.StreamPlayer Player =
-            new GotaSoundIO.Sound.Playback.StreamPlayer();
+            new();
 
         public WaveMapper(List<RiffWave> waves, List<WaveArchiveInfo> wars, bool hideId = false)
         {
             if (wars.Count < 1)
             {
-                MessageBox.Show("The target bank must be hooked up to at least one wave archive.");
+                _ = MessageBox.Show("The target bank must be hooked up to at least one wave archive.");
                 Close();
                 return;
             }
@@ -34,16 +28,16 @@ namespace NitroStudio2
                 mapGrid.Columns[1].Visible = false;
             }
             FormClosing += new FormClosingEventHandler(OnClosing);
-            foreach (var w in wars)
+            foreach (WaveArchiveInfo w in wars)
             {
-                waveArchive.Items.Add("[" + w.Index + "] " + w.Name);
+                _ = waveArchive.Items.Add("[" + w.Index + "] " + w.Name);
             }
             int num = 0;
             wavs = waves;
-            foreach (var wav in waves)
+            foreach (RiffWave wav in waves)
             {
-                mapGrid.Rows.Add(new DataGridViewRow());
-                var v = mapGrid.Rows[mapGrid.Rows.Count - 1];
+                _ = mapGrid.Rows.Add(new DataGridViewRow());
+                DataGridViewRow v = mapGrid.Rows[^1];
                 ((DataGridViewTextBoxCell)v.Cells[1]).Value = num++;
                 ((DataGridViewComboBoxCell)v.Cells[2]).Value = waveArchive.Items[0];
             }
@@ -51,7 +45,7 @@ namespace NitroStudio2
 
         private void finishedButton_Click(object sender, EventArgs e)
         {
-            WarMap = new List<ushort>();
+            WarMap = [];
             foreach (DataGridViewRow r in mapGrid.Rows)
             {
                 string s = (string)((DataGridViewComboBoxCell)r.Cells[2]).Value;

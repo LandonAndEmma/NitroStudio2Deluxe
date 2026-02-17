@@ -1,9 +1,5 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSoundBank.SF2
 {
@@ -13,16 +9,16 @@ namespace GotaSoundBank.SF2
         public ushort ReadingBagIndex;
         public int NumZones => Zones.Count + (GlobalZone != null ? 1 : 0);
         public Zone GlobalZone = null;
-        public List<Zone> Zones = new List<Zone>();
+        public List<Zone> Zones = [];
 
         public List<Zone> GetAllZones()
         {
-            List<Zone> ret = new List<Zone>();
+            List<Zone> ret = [];
             if (GlobalZone != null)
             {
                 ret.Add(GlobalZone);
             }
-            foreach (var z in Zones)
+            foreach (Zone z in Zones)
             {
                 ret.Add(z);
             }

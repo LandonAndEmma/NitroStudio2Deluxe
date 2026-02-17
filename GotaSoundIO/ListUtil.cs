@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace GotaSoundIO
 {
@@ -21,8 +20,8 @@ namespace GotaSoundIO
 
         public static IList ConvertToList(this IEnumerable items, Type targetType)
         {
-            var method = typeof(ListUtil).GetMethod("ConvertToList", new[] { typeof(IEnumerable) });
-            var generic = method.MakeGenericMethod(targetType);
+            MethodInfo method = typeof(ListUtil).GetMethod("ConvertToList", new[] { typeof(IEnumerable) });
+            MethodInfo generic = method.MakeGenericMethod(targetType);
             return (IList)generic.Invoke(null, new[] { items });
         }
 

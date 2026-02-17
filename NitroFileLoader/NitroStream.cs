@@ -1,27 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Encoding;
+using System;
+using System.Linq;
 
 namespace NitroFileLoader
 {
     public class Stream : SoundFile
     {
-        public override Type[] SupportedEncodings() =>
-            new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+        public override Type[] SupportedEncodings()
+        {
+            return new Type[] { typeof(ImaAdpcm), typeof(PCM16), typeof(PCM8Signed) };
+        }
 
-        public override string Name() => "STRM";
+        public override string Name()
+        {
+            return "STRM";
+        }
 
-        public override string[] Extensions() => new string[] { "STRM" };
+        public override string[] Extensions()
+        {
+            return new string[] { "STRM" };
+        }
 
-        public override string Description() => "An STRM stream used in Nintendo DS games.";
+        public override string Description()
+        {
+            return "An STRM stream used in Nintendo DS games.";
+        }
 
-        public override bool SupportsTracks() => false;
+        public override bool SupportsTracks()
+        {
+            return false;
+        }
 
-        public override Type PreferredEncoding() => typeof(ImaAdpcm);
+        public override Type PreferredEncoding()
+        {
+            return typeof(ImaAdpcm);
+        }
 
         public override void Read(FileReader r)
         {
@@ -30,9 +45,9 @@ namespace NitroFileLoader
             PcmFormat pcmFormat = (PcmFormat)r.ReadByte();
             Loops = r.ReadBoolean();
             int numChannels = r.ReadByte();
-            r.ReadByte();
+            _ = r.ReadByte();
             SampleRate = r.ReadUInt16();
-            r.ReadUInt16();
+            _ = r.ReadUInt16();
             LoopStart = r.ReadUInt32();
             uint numSamples = r.ReadUInt32();
             if (Loops)
@@ -45,7 +60,7 @@ namespace NitroFileLoader
             uint blockSamples = r.ReadUInt32();
             uint lastBlockSize = r.ReadUInt32();
             uint lastBlockSamples = r.ReadUInt32();
-            r.ReadBytes(32);
+            _ = r.ReadBytes(32);
             Type encodingType = null;
             switch (pcmFormat)
             {
@@ -103,7 +118,7 @@ namespace NitroFileLoader
             w.Write((byte)Audio.Channels.Count());
             w.Write((byte)0);
             w.Write((ushort)SampleRate);
-            w.Write((ushort)Math.Floor((decimal)523655.96875 * ((decimal)1 / (decimal)SampleRate)));
+            w.Write((ushort)Math.Floor((decimal)523655.96875 * (1 / (decimal)SampleRate)));
             w.Write(LoopStart);
             w.Write(Audio.NumSamples);
             w.Write((uint)0x68);

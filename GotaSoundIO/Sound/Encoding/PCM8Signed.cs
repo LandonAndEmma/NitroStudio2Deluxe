@@ -1,25 +1,33 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Encoding
 {
     public class PCM8Signed : IAudioEncoding
     {
         private sbyte[] Data;
 
-        public int SampleCount() => Data.Length;
+        public int SampleCount()
+        {
+            return Data.Length;
+        }
 
-        public int DataSize() => SampleCount();
+        public int DataSize()
+        {
+            return SampleCount();
+        }
 
-        public int SamplesFromBlockSize(int blockSize) => blockSize;
+        public int SamplesFromBlockSize(int blockSize)
+        {
+            return blockSize;
+        }
 
-        public object RawData() => Data;
+        public object RawData()
+        {
+            return Data;
+        }
 
         public void ReadRaw(FileReader r, uint numSamples, uint dataSize)
         {
@@ -28,7 +36,7 @@ namespace GotaSoundIO.Sound
 
         public void WriteRaw(FileWriter w)
         {
-            foreach (var s in Data)
+            foreach (sbyte s in Data)
             {
                 w.Write(s);
             }
@@ -44,8 +52,10 @@ namespace GotaSoundIO.Sound
             Data = pcm.Select(x => (sbyte)(x * sbyte.MaxValue)).ToArray();
         }
 
-        public float[] ToFloatPCM(object decodingData = null) =>
-            Data.Select(x => (float)x / sbyte.MaxValue).ToArray();
+        public float[] ToFloatPCM(object decodingData = null)
+        {
+            return Data.Select(x => (float)x / sbyte.MaxValue).ToArray();
+        }
 
         public void Trim(int totalSamples)
         {
@@ -54,9 +64,9 @@ namespace GotaSoundIO.Sound
 
         public List<IAudioEncoding> ChangeBlockSize(List<IAudioEncoding> blocks, int newBlockSize)
         {
-            List<IAudioEncoding> newData = new List<IAudioEncoding>();
-            List<sbyte> samples = new List<sbyte>();
-            foreach (var b in blocks)
+            List<IAudioEncoding> newData = [];
+            List<sbyte> samples = [];
+            foreach (IAudioEncoding b in blocks)
             {
                 samples.AddRange((sbyte[])b.RawData());
             }
@@ -88,7 +98,7 @@ namespace GotaSoundIO.Sound
 
         public IAudioEncoding Duplicate()
         {
-            PCM8Signed ret = new PCM8Signed() { Data = new sbyte[Data.Length] };
+            PCM8Signed ret = new() { Data = new sbyte[Data.Length] };
             Array.Copy(Data, ret.Data, Data.Length);
             return ret;
         }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Encoding;
+using GotaSoundIO.Sound.Formats;
 
 namespace GotaSoundBank.SF2
 {
@@ -30,17 +27,17 @@ namespace GotaSoundBank.SF2
             {
                 Audio = new AudioData()
                 {
-                    Channels = new List<List<GotaSoundIO.Sound.Encoding.IAudioEncoding>>()
-                    {
-                        new List<GotaSoundIO.Sound.Encoding.IAudioEncoding>() { new PCM16() },
-                    },
+                    Channels =
+                    [
+                        [new PCM16()],
+                    ],
                 },
             };
             Wave.Audio.Channels[0][0]
                 .ReadRaw(
                     r,
-                    (uint)((endSample * 2 + r.CurrentOffset - r.Position) / 2),
-                    (uint)(endSample * 2 + r.CurrentOffset - r.Position)
+                    (uint)(((endSample * 2) + r.CurrentOffset - r.Position) / 2),
+                    (uint)((endSample * 2) + r.CurrentOffset - r.Position)
                 );
             r.Position = bak;
             Wave.LoopStart = r.ReadUInt32();
@@ -71,8 +68,8 @@ namespace GotaSoundBank.SF2
             w.Position = w.CurrentOffset;
             Wave.Audio.Write(w);
             w.Position = bak;
-            w.Write((uint)(Wave.Loops ? Wave.LoopStart + startSample : 0));
-            w.Write((uint)(Wave.Loops ? Wave.LoopEnd + startSample : 0));
+            w.Write(Wave.Loops ? Wave.LoopStart + startSample : 0);
+            w.Write(Wave.Loops ? Wave.LoopEnd + startSample : 0);
             w.Write(Wave.SampleRate);
             w.Write(OriginalPitch);
             w.Write(PitchCorrection);

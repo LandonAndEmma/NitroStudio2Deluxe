@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace NitroFileLoader
 {
@@ -28,12 +23,12 @@ namespace NitroFileLoader
             Volume = r.ReadByte();
             Priority = r.ReadByte();
             ReadingPlayerId = r.ReadByte();
-            r.ReadBytes(5);
+            _ = r.ReadBytes(5);
         }
 
         public void Write(FileWriter w)
         {
-            w.Write((uint)((uint)ReadingFileId | (MonoToStereo ? 0x01000000U : 0)));
+            w.Write(ReadingFileId | (MonoToStereo ? 0x01000000U : 0));
             w.Write(Volume);
             w.Write(Priority);
             w.Write((byte)(Player != null ? Player.Index : ReadingPlayerId));

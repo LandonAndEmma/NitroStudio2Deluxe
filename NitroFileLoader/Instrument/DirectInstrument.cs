@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GotaSoundIO.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
-namespace NitroFileLoader
+namespace NitroFileLoader.Instrument
 {
     public class DirectInstrument : Instrument
     {
-        public override InstrumentType Type() => NoteInfo[0].InstrumentType;
+        public override InstrumentType Type()
+        {
+            return NoteInfo[0].InstrumentType;
+        }
 
-        public override uint MaxInstruments() => 1;
+        public override uint MaxInstruments()
+        {
+            return 1;
+        }
 
         public override void Read(FileReader r)
         {

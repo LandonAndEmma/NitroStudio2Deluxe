@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GotaSoundIO.IO.RIFF
 {
     public class RiffReader : FileReader
     {
         public string Magic { get; private set; }
-        public List<Chunk> Chunks = new List<Chunk>();
+        public List<Chunk> Chunks = [];
 
         #region Constructors
         public RiffReader(Stream input)
@@ -22,7 +19,7 @@ namespace GotaSoundIO.IO.RIFF
         private void ReadData()
         {
             if (!new string(ReadChars(4)).Equals("RIFF")) { }
-            ReadUInt32();
+            _ = ReadUInt32();
             Magic = new string(ReadChars(4));
             while (BaseStream.Position < BaseStream.Length)
             {
@@ -32,7 +29,7 @@ namespace GotaSoundIO.IO.RIFF
 
         private Chunk ReadChunk()
         {
-            string magic = new string(ReadChars(4));
+            string magic = new(ReadChars(4));
             uint size = ReadUInt32();
             long bak = BaseStream.Position;
             if (size == 0)
@@ -41,10 +38,12 @@ namespace GotaSoundIO.IO.RIFF
             }
             if (magic.Equals("LIST"))
             {
-                ListChunk l = new ListChunk();
-                l.Magic = new string(ReadChars(4));
-                l.Pos = BaseStream.Position;
-                l.Size = size - 4;
+                ListChunk l = new()
+                {
+                    Magic = new string(ReadChars(4)),
+                    Pos = BaseStream.Position,
+                    Size = size - 4
+                };
                 while (BaseStream.Position < bak + size)
                 {
                     l.Chunks.Add(ReadChunk());
@@ -53,13 +52,13 @@ namespace GotaSoundIO.IO.RIFF
             }
             else
             {
-                var c = new Chunk()
+                Chunk c = new()
                 {
                     Magic = magic,
                     Pos = BaseStream.Position,
                     Size = size,
                 };
-                ReadBytes((int)size);
+                _ = ReadBytes((int)size);
                 return c;
             }
         }

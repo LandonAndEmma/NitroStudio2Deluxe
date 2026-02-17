@@ -1,9 +1,6 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSoundIO.Sound
 {
@@ -21,29 +18,29 @@ namespace GotaSoundIO.Sound
         public SoundFile(string filePath)
             : base(filePath) { }
 
-        public AudioData Audio = new AudioData();
+        public AudioData Audio = new();
         public bool Loops { get; set; }
         public uint LoopStart { get; set; }
         public uint OriginalLoopStart { get; set; }
         public uint LoopEnd { get; set; }
         public uint OriginalLoopEnd { get; set; }
         public uint SampleRate { get; set; }
-        public List<TrackData> Tracks = new List<TrackData>();
+        public List<TrackData> Tracks = [];
 
         public class TrackData
         {
-            public List<int> Channels = new List<int>();
+            public List<int> Channels = [];
             public Dictionary<string, TrackProperty> Properties =
-                new Dictionary<string, TrackProperty>();
+                [];
 
             public TrackData Duplicate()
             {
-                TrackData t = new TrackData();
-                foreach (var c in Channels)
+                TrackData t = new();
+                foreach (int c in Channels)
                 {
                     t.Channels.Add(c);
                 }
-                foreach (var p in Properties)
+                foreach (KeyValuePair<string, TrackProperty> p in Properties)
                 {
                     t.Properties.Add(p.Key, new TrackProperty(p.Value.Type, p.Value.Data));
                 }
@@ -62,7 +59,10 @@ namespace GotaSoundIO.Sound
                 Data = data;
             }
 
-            public T GetData<T>() => (T)Data;
+            public T GetData<T>()
+            {
+                return (T)Data;
+            }
 
             public void SetData<T>(T data)
             {
@@ -84,8 +84,8 @@ namespace GotaSoundIO.Sound
             OriginalLoopEnd = other.OriginalLoopEnd;
             SampleRate = other.SampleRate;
             Audio = other.Audio.Duplicate();
-            Tracks = new List<TrackData>();
-            foreach (var t in other.Tracks)
+            Tracks = [];
+            foreach (TrackData t in other.Tracks)
             {
                 Tracks.Add(t.Duplicate());
             }
@@ -101,8 +101,8 @@ namespace GotaSoundIO.Sound
                 AfterConversion();
                 return;
             }
-            var e = SupportedEncodings();
-            foreach (var t in e)
+            Type[] e = SupportedEncodings();
+            foreach (Type t in e)
             {
                 if (t.Equals(other.Audio.EncodingType))
                 {
@@ -132,8 +132,8 @@ namespace GotaSoundIO.Sound
             OriginalLoopEnd = other.OriginalLoopEnd;
             SampleRate = other.SampleRate;
             Audio = other.Audio.Duplicate();
-            Tracks = new List<TrackData>();
-            foreach (var t in other.Tracks)
+            Tracks = [];
+            foreach (TrackData t in other.Tracks)
             {
                 Tracks.Add(t.Duplicate());
             }
@@ -168,7 +168,7 @@ namespace GotaSoundIO.Sound
             if (LoopStart % blockSamples != 0)
             {
                 uint dist1 = LoopStart / blockSamples * blockSamples;
-                uint dist2 = (LoopStart / blockSamples + 1) * blockSamples;
+                uint dist2 = ((LoopStart / blockSamples) + 1) * blockSamples;
                 bool backward = Math.Abs(dist1 - LoopStart) < Math.Abs(dist2 - LoopStart);
                 if (backward || (LoopEnd + dist2) >= Audio.NumSamples)
                 {

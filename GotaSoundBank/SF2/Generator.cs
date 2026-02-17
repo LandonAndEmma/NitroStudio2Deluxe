@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace GotaSoundBank.SF2
 {
@@ -15,8 +10,10 @@ namespace GotaSoundBank.SF2
         public void Read(FileReader r)
         {
             Gen = (SF2Generators)r.ReadUInt16();
-            Amount = new SF2GeneratorAmount();
-            Amount.Amount = r.ReadInt16();
+            Amount = new SF2GeneratorAmount
+            {
+                Amount = r.ReadInt16()
+            };
         }
 
         public void Write(FileWriter w)

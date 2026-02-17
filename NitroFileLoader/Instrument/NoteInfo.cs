@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
+﻿using GotaSequenceLib;
 using GotaSequenceLib.Playback;
 using GotaSoundIO.IO;
 
-namespace NitroFileLoader
+namespace NitroFileLoader.Instrument
 {
     public class NoteInfo : IReadable, IWriteable
     {
@@ -46,8 +41,9 @@ namespace NitroFileLoader
             w.Write(Pan);
         }
 
-        public NotePlayBackInfo ToNotePlayBackInfo() =>
-            new NotePlayBackInfo()
+        public NotePlayBackInfo ToNotePlayBackInfo()
+        {
+            return new NotePlayBackInfo()
             {
                 Attack = Attack,
                 Decay = Decay,
@@ -59,28 +55,21 @@ namespace NitroFileLoader
                 WarId = WarId,
                 WaveId = WaveId,
             };
+        }
 
         public GotaSequenceLib.Playback.InstrumentType TrueType()
         {
-            switch (InstrumentType)
+            return InstrumentType switch
             {
-                case InstrumentType.PSG:
-                    return GotaSequenceLib.Playback.InstrumentType.PSG;
-                case InstrumentType.Noise:
-                    return GotaSequenceLib.Playback.InstrumentType.Noise;
-                default:
-                    return GotaSequenceLib.Playback.InstrumentType.PCM;
-            }
+                InstrumentType.PSG => GotaSequenceLib.Playback.InstrumentType.PSG,
+                InstrumentType.Noise => GotaSequenceLib.Playback.InstrumentType.Noise,
+                _ => GotaSequenceLib.Playback.InstrumentType.PCM,
+            };
         }
 
         public override bool Equals(object obj)
         {
-            var n = obj as NoteInfo;
-            if (n == null)
-            {
-                return false;
-            }
-            return n.Attack == Attack
+            return obj is NoteInfo n && n.Attack == Attack
                 && n.BaseNote == BaseNote
                 && n.Decay == Decay
                 && n.InstrumentType == InstrumentType
@@ -96,15 +85,15 @@ namespace NitroFileLoader
             unchecked
             {
                 int hash = 17;
-                hash = hash * 31 + Attack.GetHashCode();
-                hash = hash * 31 + BaseNote.GetHashCode();
-                hash = hash * 31 + Decay.GetHashCode();
-                hash = hash * 31 + InstrumentType.GetHashCode();
-                hash = hash * 31 + Pan.GetHashCode();
-                hash = hash * 31 + Release.GetHashCode();
-                hash = hash * 31 + Sustain.GetHashCode();
-                hash = hash * 31 + WarId.GetHashCode();
-                hash = hash * 31 + WaveId.GetHashCode();
+                hash = (hash * 31) + Attack.GetHashCode();
+                hash = (hash * 31) + BaseNote.GetHashCode();
+                hash = (hash * 31) + Decay.GetHashCode();
+                hash = (hash * 31) + InstrumentType.GetHashCode();
+                hash = (hash * 31) + Pan.GetHashCode();
+                hash = (hash * 31) + Release.GetHashCode();
+                hash = (hash * 31) + Sustain.GetHashCode();
+                hash = (hash * 31) + WarId.GetHashCode();
+                hash = (hash * 31) + WaveId.GetHashCode();
                 return hash;
             }
         }

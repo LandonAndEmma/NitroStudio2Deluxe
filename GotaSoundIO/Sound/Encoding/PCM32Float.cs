@@ -1,24 +1,32 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound.Encoding;
 
-namespace GotaSoundIO.Sound
+namespace GotaSoundIO.Sound.Encoding
 {
     public class PCM32Float : IAudioEncoding
     {
         private float[] Data;
 
-        public int SampleCount() => Data.Length;
+        public int SampleCount()
+        {
+            return Data.Length;
+        }
 
-        public int DataSize() => SampleCount() * 4;
+        public int DataSize()
+        {
+            return SampleCount() * 4;
+        }
 
-        public int SamplesFromBlockSize(int blockSize) => blockSize / 4;
+        public int SamplesFromBlockSize(int blockSize)
+        {
+            return blockSize / 4;
+        }
 
-        public object RawData() => Data;
+        public object RawData()
+        {
+            return Data;
+        }
 
         public void ReadRaw(FileReader r, uint numSamples, uint dataSize)
         {
@@ -41,7 +49,10 @@ namespace GotaSoundIO.Sound
             Array.Copy(pcm, Data, pcm.Length);
         }
 
-        public float[] ToFloatPCM(object decodingData = null) => Data;
+        public float[] ToFloatPCM(object decodingData = null)
+        {
+            return Data;
+        }
 
         public void Trim(int totalSamples)
         {
@@ -50,9 +61,9 @@ namespace GotaSoundIO.Sound
 
         public List<IAudioEncoding> ChangeBlockSize(List<IAudioEncoding> blocks, int newBlockSize)
         {
-            List<IAudioEncoding> newData = new List<IAudioEncoding>();
-            List<float> samples = new List<float>();
-            foreach (var b in blocks)
+            List<IAudioEncoding> newData = [];
+            List<float> samples = [];
+            foreach (IAudioEncoding b in blocks)
             {
                 samples.AddRange(b.ToFloatPCM());
             }
@@ -84,7 +95,7 @@ namespace GotaSoundIO.Sound
 
         public IAudioEncoding Duplicate()
         {
-            PCM32Float ret = new PCM32Float() { Data = new float[Data.Length] };
+            PCM32Float ret = new() { Data = new float[Data.Length] };
             Array.Copy(Data, ret.Data, Data.Length);
             return ret;
         }

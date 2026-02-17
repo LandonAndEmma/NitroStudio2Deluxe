@@ -1,11 +1,10 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
+using NitroFileLoader;
+using NitroFileLoader.Instrument;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
-using NitroFileLoader;
 
 namespace NitroStudio2
 {
@@ -30,11 +29,13 @@ namespace NitroStudio2
             {
                 return;
             }
-            Waves = new List<WaveEntry>();
-            foreach (var n in inst.NoteInfo)
+            Waves = [];
+            foreach (NoteInfo n in inst.NoteInfo)
             {
-                WaveEntry w = new WaveEntry();
-                w.WaveId = n.WaveId;
+                WaveEntry w = new()
+                {
+                    WaveId = n.WaveId
+                };
                 if (n.InstrumentType != InstrumentType.PCM)
                 {
                     continue;
@@ -56,7 +57,7 @@ namespace NitroStudio2
                 }
                 if (n.WarId != 0xFFFF)
                 {
-                    var war = s.WaveArchives.Where(x => x.Index == (int)n.WarId).FirstOrDefault();
+                    WaveArchiveInfo war = s.WaveArchives.Where(x => x.Index == n.WarId).FirstOrDefault();
                     if (war != null)
                     {
                         w.Wave = war.File.Waves[n.WaveId];
@@ -68,7 +69,7 @@ namespace NitroStudio2
 
         public override void Read(FileReader r)
         {
-            r.ReadUInt32();
+            _ = r.ReadUInt32();
             switch (r.ReadByte())
             {
                 case 0:
@@ -82,7 +83,7 @@ namespace NitroStudio2
                     break;
             }
             Inst.Read(r);
-            if (Inst as DirectInstrument != null)
+            if ((Inst as DirectInstrument) != null)
             {
                 Inst.NoteInfo[0].InstrumentType = (InstrumentType)r.ReadByte();
             }
@@ -91,15 +92,15 @@ namespace NitroStudio2
             {
                 return;
             }
-            Waves = new List<WaveEntry>();
+            Waves = [];
             uint numWaves = r.ReadUInt32();
             for (uint i = 0; i < numWaves; i++)
             {
                 Waves.Add(new WaveEntry() { WaveId = r.ReadUInt16(), WarId = r.ReadUInt16() });
                 if (r.ReadBoolean())
                 {
-                    Waves[Waves.Count - 1].Wave = new Wave();
-                    Waves[Waves.Count - 1].Wave = (Wave)r.ReadFile<Wave>();
+                    Waves[^1].Wave = new Wave();
+                    Waves[^1].Wave = r.ReadFile<Wave>();
                 }
             }
         }
@@ -114,7 +115,7 @@ namespace NitroStudio2
             ushort war3
         )
         {
-            var repl = bnk.Instruments.Where(x => x.Index == instrumentId).FirstOrDefault();
+            Instrument repl = bnk.Instruments.Where(x => x.Index == instrumentId).FirstOrDefault();
             Inst.Index = instrumentId;
             if (a == null)
             {
@@ -123,25 +124,25 @@ namespace NitroStudio2
             WaveArchiveInfo[] wars = new WaveArchiveInfo[4];
             if (war0 != 0xFFFF)
             {
-                wars[0] = a.WaveArchives.Where(x => x.Index == (int)war0).FirstOrDefault();
+                wars[0] = a.WaveArchives.Where(x => x.Index == war0).FirstOrDefault();
             }
             if (war1 != 0xFFFF)
             {
-                wars[1] = a.WaveArchives.Where(x => x.Index == (int)war1).FirstOrDefault();
+                wars[1] = a.WaveArchives.Where(x => x.Index == war1).FirstOrDefault();
             }
             if (war2 != 0xFFFF)
             {
-                wars[2] = a.WaveArchives.Where(x => x.Index == (int)war2).FirstOrDefault();
+                wars[2] = a.WaveArchives.Where(x => x.Index == war2).FirstOrDefault();
             }
             if (war3 != 0xFFFF)
             {
-                wars[3] = a.WaveArchives.Where(x => x.Index == (int)war3).FirstOrDefault();
+                wars[3] = a.WaveArchives.Where(x => x.Index == war3).FirstOrDefault();
             }
             if (wars.Where(x => x != null).Count() < 1)
             {
                 return;
             }
-            foreach (var r in Inst.NoteInfo)
+            foreach (NoteInfo r in Inst.NoteInfo)
             {
                 if (r.InstrumentType != InstrumentType.PCM)
                 {
@@ -151,7 +152,7 @@ namespace NitroStudio2
                 {
                     continue;
                 }
-                var e = Waves
+                WaveEntry e = Waves
                     .Where(x => x.WarId == r.WarId && x.WaveId == r.WaveId)
                     .FirstOrDefault();
                 if (e == null)
@@ -181,15 +182,17 @@ namespace NitroStudio2
                 }
                 if (!found)
                 {
-                    RiffWave riff = new RiffWave();
+                    RiffWave riff = new();
                     riff.FromOtherStreamFile(e.Wave);
-                    WaveMapper mapper = new WaveMapper(
-                        new List<RiffWave>() { riff },
+                    WaveMapper mapper = new(
+                        [riff],
                         wars.Where(x => x != null).ToList(),
                         true
-                    );
-                    mapper.MinimizeBox = false;
-                    mapper.ShowDialog();
+                    )
+                    {
+                        MinimizeBox = false
+                    };
+                    _ = mapper.ShowDialog();
                     if (mapper.WarMap == null)
                     {
                         return;
@@ -229,7 +232,7 @@ namespace NitroStudio2
                     break;
             }
             w.Write(Inst);
-            if (Inst as DirectInstrument != null)
+            if ((Inst as DirectInstrument) != null)
             {
                 w.Write((byte)Inst.NoteInfo[0].InstrumentType);
             }
@@ -239,7 +242,7 @@ namespace NitroStudio2
                 return;
             }
             w.Write((uint)Waves.Count);
-            foreach (var v in Waves)
+            foreach (WaveEntry v in Waves)
             {
                 w.Write(v.WaveId);
                 w.Write(v.WarId);

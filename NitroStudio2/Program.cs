@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GotaSoundIO.Sound.Formats;
+using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using GotaSoundBank.DLS;
-using GotaSoundBank.SF2;
-using GotaSoundIO.Sound;
-using NitroFileLoader;
 
 namespace NitroStudio2
 {
-    static class Program
+    internal static class Program
     {
         public static string NitroPath = Application.StartupPath;
 
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            _ = Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length > 0)
@@ -41,8 +35,8 @@ namespace NitroStudio2
                         Application.Run(new WaveArchiveEditor(args[0]));
                         break;
                     case ".strm":
-                        RiffWave r = new RiffWave();
-                        NitroFileLoader.Stream s = new NitroFileLoader.Stream();
+                        RiffWave r = new();
+                        NitroFileLoader.Stream s = new();
                         s.Read(args[0]);
                         r.FromOtherStreamFile(s);
                         r.Write(MainWindow.NitroPath + "/" + "tmpStream" + 0 + ".wav");

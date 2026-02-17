@@ -1,18 +1,15 @@
-﻿using System;
+﻿using GotaSequenceLib;
+using GotaSoundIO.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSequenceLib;
-using GotaSoundIO.IO;
 
-namespace NitroFileLoader
+namespace NitroFileLoader.Instrument
 {
     public class KeySplitInstrument : Instrument
     {
         public override void Read(FileReader r)
         {
-            List<byte> indices = new List<byte>();
+            List<byte> indices = [];
             for (int i = 0; i < 8; i++)
             {
                 byte b = r.ReadByte();
@@ -32,18 +29,24 @@ namespace NitroFileLoader
 
         public override void Write(FileWriter w)
         {
-            var indices = NoteInfo.Select(x => (byte)x.Key).ToArray();
+            byte[] indices = NoteInfo.Select(x => (byte)x.Key).ToArray();
             w.Write(indices);
             w.Write(new byte[8 - indices.Length]);
-            foreach (var v in NoteInfo)
+            foreach (NoteInfo v in NoteInfo)
             {
                 w.Write((ushort)v.InstrumentType);
                 w.Write(v);
             }
         }
 
-        public override InstrumentType Type() => InstrumentType.KeySplit;
+        public override InstrumentType Type()
+        {
+            return InstrumentType.KeySplit;
+        }
 
-        public override uint MaxInstruments() => 8;
+        public override uint MaxInstruments()
+        {
+            return 8;
+        }
     }
 }

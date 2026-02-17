@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
+using System;
 
 namespace GotaSequenceLib
 {
@@ -13,20 +9,8 @@ namespace GotaSequenceLib
         public static uint MIN = 0;
         public uint Value
         {
-            get => m_value;
-            set
-            {
-                if (value <= MAX && value >= MIN)
-                {
-                    m_value = value;
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-            }
+            get; set => field = value <= MAX && value >= MIN ? value : throw new ArgumentOutOfRangeException();
         }
-        private uint m_value;
 
         public UInt24() { }
 
@@ -38,37 +22,30 @@ namespace GotaSequenceLib
         #region Others
         public bool Equals(UInt24 other)
         {
-            return m_value == other.m_value;
+            return Value == other.Value;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-                return false;
-            return obj is UInt24 && Equals((UInt24)obj);
+            return obj is not null && obj is UInt24 && Equals((UInt24)obj);
         }
 
         public override int GetHashCode()
         {
-            return (int)m_value;
+            return (int)Value;
         }
 
         public override string ToString()
         {
-            return m_value.ToString();
+            return Value.ToString();
         }
 
         public void Read(FileReader r)
         {
             byte[] data = r.ReadBytes(3);
-            if (r.ByteOrder == ByteOrder.BigEndian)
-            {
-                Value = (uint)((data[0] << 16) + (data[1] << 8) + data[2]);
-            }
-            else
-            {
-                Value = (uint)(data[0] + (data[1] << 8) + (data[2] << 16));
-            }
+            Value = r.ByteOrder == ByteOrder.BigEndian
+                ? (uint)((data[0] << 16) + (data[1] << 8) + data[2])
+                : (uint)(data[0] + (data[1] << 8) + (data[2] << 16));
         }
 
         public void Write(FileWriter w)
@@ -89,7 +66,7 @@ namespace GotaSequenceLib
 
         public static implicit operator uint(UInt24 val)
         {
-            return val.m_value;
+            return val.Value;
         }
 
         public static implicit operator UInt24(int val)
@@ -149,13 +126,13 @@ namespace GotaSequenceLib
 
         public static UInt24 operator ++(UInt24 val)
         {
-            val.Value = val.Value + 1;
+            val.Value++;
             return val;
         }
 
         public static UInt24 operator --(UInt24 val)
         {
-            val.Value = val.Value - 1;
+            val.Value--;
             return val;
         }
         #endregion

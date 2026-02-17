@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundBank.SF2;
+﻿using GotaSoundBank.SF2;
 using GotaSoundIO.IO;
 using GotaSoundIO.IO.RIFF;
-using GotaSoundIO.Sound;
+using GotaSoundIO.Sound.Formats;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GotaSoundBank.DLS
 {
     public class DownloadableSounds : IOFile
     {
-        public List<Instrument> Instruments = new List<Instrument>();
-        public List<RiffWave> Waves = new List<RiffWave>();
+        public List<Instrument> Instruments = [];
+        public List<RiffWave> Waves = [];
 
         public DownloadableSounds() { }
 
@@ -23,26 +19,28 @@ namespace GotaSoundBank.DLS
 
         public DownloadableSounds(SoundFont sf2)
         {
-            List<string> waveMd5s = new List<string>();
-            Dictionary<int, string> newWaveIds = new Dictionary<int, string>();
-            Dictionary<int, sbyte> tunings = new Dictionary<int, sbyte>();
-            Dictionary<int, byte> origPitches = new Dictionary<int, byte>();
-            Dictionary<int, uint> channelFlags = new Dictionary<int, uint>();
-            Waves = new List<RiffWave>();
-            foreach (var i in sf2.Instruments)
+            List<string> waveMd5s = [];
+            Dictionary<int, string> newWaveIds = [];
+            Dictionary<int, sbyte> tunings = [];
+            Dictionary<int, byte> origPitches = [];
+            Dictionary<int, uint> channelFlags = [];
+            Waves = [];
+            foreach (SF2.Instrument i in sf2.Instruments)
             {
-                foreach (var z in i.GetAllZones())
+                foreach (Zone z in i.GetAllZones())
                 {
-                    foreach (var g in z.Generators.Where(x => x.Gen == SF2Generators.SampleID))
+                    foreach (Generator g in z.Generators.Where(x => x.Gen == SF2Generators.SampleID))
                     {
-                        var s = sf2.Samples[g.Amount.UAmount];
-                        RiffWave wav = new RiffWave();
-                        wav.Loops = s.Wave.Loops;
-                        wav.LoopStart = s.Wave.LoopStart;
-                        wav.LoopEnd = s.Wave.LoopEnd;
-                        wav.SampleRate = s.Wave.SampleRate;
+                        SampleItem s = sf2.Samples[g.Amount.UAmount];
+                        RiffWave wav = new()
+                        {
+                            Loops = s.Wave.Loops,
+                            LoopStart = s.Wave.LoopStart,
+                            LoopEnd = s.Wave.LoopEnd,
+                            SampleRate = s.Wave.SampleRate
+                        };
                         wav.Audio.Channels =
-                            new List<List<GotaSoundIO.Sound.Encoding.IAudioEncoding>>();
+                            [];
                         switch (s.LinkType)
                         {
                             case SF2LinkTypes.Left:
@@ -91,7 +89,7 @@ namespace GotaSoundBank.DLS
                                 }
                                 break;
                             case SF2LinkTypes.Linked:
-                                foreach (var w in sf2.Samples)
+                                foreach (SampleItem w in sf2.Samples)
                                 {
                                     if (w.LinkType == SF2LinkTypes.Linked && w.Link == s.Link)
                                     {
@@ -127,19 +125,21 @@ namespace GotaSoundBank.DLS
                     }
                 }
             }
-            Instruments = new List<Instrument>();
+            Instruments = [];
             int instId = 0;
-            foreach (var inst in sf2.Instruments)
+            foreach (SF2.Instrument inst in sf2.Instruments)
             {
-                Instrument i = new Instrument();
-                i.Name = inst.Name;
-                i.Regions = new List<Region>();
-                i.BankId = 0;
-                foreach (var p in sf2.Presets)
+                Instrument i = new()
                 {
-                    foreach (var z in p.GetAllZones())
+                    Name = inst.Name,
+                    Regions = [],
+                    BankId = 0
+                };
+                foreach (Preset p in sf2.Presets)
+                {
+                    foreach (Zone z in p.GetAllZones())
                     {
-                        foreach (var g in z.Generators)
+                        foreach (Generator g in z.Generators)
                         {
                             if (g.Gen == SF2Generators.Instrument && g.Amount.Amount == instId)
                             {
@@ -150,9 +150,9 @@ namespace GotaSoundBank.DLS
                     }
                 }
                 instId++;
-                foreach (var z in inst.Zones)
+                foreach (Zone z in inst.Zones)
                 {
-                    var reg = GetInstrumentRegion(z, inst.GlobalZone);
+                    Region reg = GetInstrumentRegion(z, inst.GlobalZone);
                     if (reg != null)
                     {
                         i.Regions.Add(reg);
@@ -160,7 +160,7 @@ namespace GotaSoundBank.DLS
                 }
                 if (i.Regions.Count < 1)
                 {
-                    var reg = GetInstrumentRegion(inst.GlobalZone, null);
+                    Region reg = GetInstrumentRegion(inst.GlobalZone, null);
                     if (reg != null)
                     {
                         i.Regions.Add(reg);
@@ -174,26 +174,28 @@ namespace GotaSoundBank.DLS
                 {
                     return null;
                 }
-                Region r = new Region();
+                Region r = new();
                 int sampleNumRaw = SF2Value(SF2Generators.SampleID).UAmount;
                 int sampleNum = waveMd5s.IndexOf(newWaveIds[sampleNumRaw]);
                 r.WaveId = (uint)sampleNum;
                 r.Tuning = (short)(tunings[sampleNumRaw] % 12 * 65536);
-                r.RootNote = (byte)(origPitches[sampleNumRaw] + tunings[sampleNumRaw] / 12);
+                r.RootNote = (byte)(origPitches[sampleNumRaw] + (tunings[sampleNumRaw] / 12));
                 r.ChannelFlags = channelFlags[sampleNumRaw];
                 r.Loops = Waves[sampleNum].Loops;
                 r.LoopStart = Waves[sampleNum].LoopStart;
                 r.LoopLength = Waves[sampleNum].LoopEnd - Waves[sampleNum].LoopStart;
-                Articulator art = new Articulator();
-                art.Connections = new List<Connection>();
-                var c = art.Connections;
-                foreach (var gen in z.Generators)
+                Articulator art = new()
+                {
+                    Connections = []
+                };
+                List<Connection> c = art.Connections;
+                foreach (Generator gen in z.Generators)
                 {
                     DestinationConnection d = DestinationConnection.Center;
                     switch (gen.Gen)
                     {
                         case SF2Generators.OverridingRootKey:
-                            r.RootNote = (byte)(gen.Amount.Amount + tunings[sampleNumRaw] / 12);
+                            r.RootNote = (byte)(gen.Amount.Amount + (tunings[sampleNumRaw] / 12));
                             continue;
                         case SF2Generators.KeyRange:
                             r.NoteLow = gen.Amount.LowByte;
@@ -256,278 +258,273 @@ namespace GotaSoundBank.DLS
                 }
                 SF2GeneratorAmount SF2Value(SF2Generators gen)
                 {
-                    var ret = new SF2GeneratorAmount();
+                    SF2GeneratorAmount ret = new();
                     if (g != null)
                     {
-                        var a = g.Generators.Where(x => x.Gen == gen).FirstOrDefault();
+                        Generator a = g.Generators.Where(x => x.Gen == gen).FirstOrDefault();
                         if (a != null)
                         {
                             ret.Amount += a.Amount.Amount;
                         }
                     }
-                    var b = z.Generators.Where(x => x.Gen == gen).FirstOrDefault();
+                    Generator b = z.Generators.Where(x => x.Gen == gen).FirstOrDefault();
                     if (b != null)
                     {
                         ret.Amount = b.Amount.Amount;
                     }
                     return ret;
                 }
-                r.Articulators = new List<Articulator>() { art };
+                r.Articulators = [art];
                 return r;
             }
         }
 
         public override void Read(FileReader r2)
         {
-            using (RiffReader r = new RiffReader(r2.BaseStream))
+            using RiffReader r = new(r2.BaseStream);
+            r.OpenChunk(r.GetChunk("colh"));
+            uint numInsts = r.ReadUInt32();
+            Waves = [];
+            foreach (Chunk c in (r.GetChunk("wvpl") as ListChunk).Chunks)
             {
-                r.OpenChunk(r.GetChunk("colh"));
-                uint numInsts = r.ReadUInt32();
-                Waves = new List<RiffWave>();
-                foreach (var c in (r.GetChunk("wvpl") as ListChunk).Chunks)
+                r.OpenChunk(c);
+                r.BaseStream.Position -= 8;
+                int len = r.ReadInt32() + 8;
+                r.BaseStream.Position -= 8;
+                RiffWave wav = new();
+                wav.Read(r.ReadBytes(len));
+                Waves.Add(wav);
+            }
+            foreach (ListChunk c in (r.GetChunk("lins") as ListChunk).Chunks)
+            {
+                r.OpenChunk(c);
+                Instrument inst = new();
+                r.OpenChunk(c.GetChunk("insh"));
+                _ = r.ReadUInt32();
+                inst.BankId = r.ReadUInt32();
+                inst.InstrumentId = r.ReadUInt32();
+                foreach (ListChunk g in (c.GetChunk("lrgn") as ListChunk).Chunks)
                 {
-                    r.OpenChunk(c);
-                    r.BaseStream.Position -= 8;
-                    int len = r.ReadInt32() + 8;
-                    r.BaseStream.Position -= 8;
-                    RiffWave wav = new RiffWave();
-                    wav.Read(r.ReadBytes(len));
-                    Waves.Add(wav);
-                }
-                foreach (ListChunk c in (r.GetChunk("lins") as ListChunk).Chunks)
-                {
-                    r.OpenChunk(c);
-                    Instrument inst = new Instrument();
-                    r.OpenChunk(c.GetChunk("insh"));
-                    r.ReadUInt32();
-                    inst.BankId = r.ReadUInt32();
-                    inst.InstrumentId = r.ReadUInt32();
-                    foreach (ListChunk g in (c.GetChunk("lrgn") as ListChunk).Chunks)
+                    Region reg = new();
+                    r.OpenChunk(g.GetChunk("rgnh"));
+                    reg.NoteLow = r.ReadUInt16();
+                    reg.NoteHigh = r.ReadUInt16();
+                    reg.VelocityLow = r.ReadUInt16();
+                    reg.VelocityHigh = r.ReadUInt16();
+                    reg.DoublePlayback = r.ReadUInt16() > 0;
+                    reg.KeyGroup = (byte)r.ReadUInt16();
+                    reg.Layer = r.ReadUInt16();
+                    r.OpenChunk(g.GetChunk("wsmp"));
+                    _ = r.ReadUInt32();
+                    reg.RootNote = (byte)r.ReadUInt16();
+                    reg.Tuning = r.ReadInt16();
+                    reg.Gain = r.ReadInt32();
+                    uint flags = r.ReadUInt32();
+                    reg.NoTruncation = (flags & 0b1) > 0;
+                    reg.NoCompression = (flags & 0b10) > 0;
+                    reg.Loops = r.ReadUInt32() > 0;
+                    if (reg.Loops)
                     {
-                        Region reg = new Region();
-                        r.OpenChunk(g.GetChunk("rgnh"));
-                        reg.NoteLow = r.ReadUInt16();
-                        reg.NoteHigh = r.ReadUInt16();
-                        reg.VelocityLow = r.ReadUInt16();
-                        reg.VelocityHigh = r.ReadUInt16();
-                        reg.DoublePlayback = r.ReadUInt16() > 0;
-                        reg.KeyGroup = (byte)r.ReadUInt16();
-                        reg.Layer = r.ReadUInt16();
-                        r.OpenChunk(g.GetChunk("wsmp"));
-                        r.ReadUInt32();
-                        reg.RootNote = (byte)r.ReadUInt16();
-                        reg.Tuning = r.ReadInt16();
-                        reg.Gain = r.ReadInt32();
-                        uint flags = r.ReadUInt32();
-                        reg.NoTruncation = (flags & 0b1) > 0;
-                        reg.NoCompression = (flags & 0b10) > 0;
-                        reg.Loops = r.ReadUInt32() > 0;
-                        if (reg.Loops)
+                        _ = r.ReadUInt32();
+                        reg.LoopAndRelease = r.ReadUInt32() > 0;
+                        reg.LoopStart = r.ReadUInt32();
+                        reg.LoopLength = r.ReadUInt32();
+                    }
+                    r.OpenChunk(g.GetChunk("wlnk"));
+                    uint flg = r.ReadUInt16();
+                    reg.PhaseMaster = (flg & 0b1) > 0;
+                    reg.MultiChannel = (flg & 0b10) > 0;
+                    reg.PhaseGroup = r.ReadUInt16();
+                    reg.ChannelFlags = r.ReadUInt32();
+                    reg.WaveId = r.ReadUInt32();
+                    Waves[(int)reg.WaveId].Loops = reg.Loops;
+                    if (reg.Loops)
+                    {
+                        Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
+                        Waves[(int)reg.WaveId].LoopEnd =
+                            reg.LoopLength == 0
+                                ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples
+                                : reg.LoopStart + reg.LoopLength;
+                    }
+                    Chunk lar = g.GetChunk("lar2");
+                    lar ??= g.GetChunk("lar1");
+                    foreach (Chunk art in (g.GetChunk("lar2") as ListChunk).Chunks)
+                    {
+                        Articulator a = new();
+                        r.OpenChunk(art);
+                        _ = r.ReadUInt32();
+                        uint numCons = r.ReadUInt32();
+                        for (uint i = 0; i < numCons; i++)
                         {
-                            r.ReadUInt32();
-                            reg.LoopAndRelease = r.ReadUInt32() > 0;
-                            reg.LoopStart = r.ReadUInt32();
-                            reg.LoopLength = r.ReadUInt32();
-                        }
-                        r.OpenChunk(g.GetChunk("wlnk"));
-                        uint flg = r.ReadUInt16();
-                        reg.PhaseMaster = (flg & 0b1) > 0;
-                        reg.MultiChannel = (flg & 0b10) > 0;
-                        reg.PhaseGroup = r.ReadUInt16();
-                        reg.ChannelFlags = r.ReadUInt32();
-                        reg.WaveId = r.ReadUInt32();
-                        Waves[(int)reg.WaveId].Loops = reg.Loops;
-                        if (reg.Loops)
-                        {
-                            Waves[(int)reg.WaveId].LoopStart = reg.LoopStart;
-                            Waves[(int)reg.WaveId].LoopEnd =
-                                reg.LoopLength == 0
-                                    ? (uint)Waves[(int)reg.WaveId].Audio.NumSamples
-                                    : reg.LoopStart + reg.LoopLength;
-                        }
-                        var lar = g.GetChunk("lar2");
-                        if (lar == null)
-                        {
-                            lar = g.GetChunk("lar1");
-                        }
-                        foreach (Chunk art in (g.GetChunk("lar2") as ListChunk).Chunks)
-                        {
-                            Articulator a = new Articulator();
-                            r.OpenChunk(art);
-                            r.ReadUInt32();
-                            uint numCons = r.ReadUInt32();
-                            for (uint i = 0; i < numCons; i++)
+                            Connection con = new()
                             {
-                                Connection con = new Connection();
-                                con.SourceConnection = (SourceConnection)r.ReadUInt16();
-                                con.ControlConnection = r.ReadUInt16();
-                                con.DestinationConnection = (DestinationConnection)r.ReadUInt16();
-                                con.TransformConnection = (TransformConnection)r.ReadUInt16();
-                                con.Scale = r.ReadInt32();
-                                a.Connections.Add(con);
-                            }
-                            reg.Articulators.Add(a);
+                                SourceConnection = (SourceConnection)r.ReadUInt16(),
+                                ControlConnection = r.ReadUInt16(),
+                                DestinationConnection = (DestinationConnection)r.ReadUInt16(),
+                                TransformConnection = (TransformConnection)r.ReadUInt16(),
+                                Scale = r.ReadInt32()
+                            };
+                            a.Connections.Add(con);
                         }
-                        inst.Regions.Add(reg);
+                        reg.Articulators.Add(a);
                     }
-                    var info = c.GetChunk("INFO");
-                    if (info != null)
-                    {
-                        var inam = (info as ListChunk).GetChunk("INAM");
-                        if (inam != null)
-                        {
-                            r.OpenChunk(inam);
-                            r.BaseStream.Position -= 4;
-                            uint siz = r.ReadUInt32();
-                            inst.Name = new string(
-                                r.ReadChars((int)siz).Where(x => x != 0).ToArray()
-                            );
-                        }
-                    }
-                    Instruments.Add(inst);
+                    inst.Regions.Add(reg);
                 }
+                Chunk info = c.GetChunk("INFO");
+                if (info != null)
+                {
+                    Chunk inam = (info as ListChunk).GetChunk("INAM");
+                    if (inam != null)
+                    {
+                        r.OpenChunk(inam);
+                        r.BaseStream.Position -= 4;
+                        uint siz = r.ReadUInt32();
+                        inst.Name = new string(
+                            r.ReadChars((int)siz).Where(x => x != 0).ToArray()
+                        );
+                    }
+                }
+                Instruments.Add(inst);
             }
         }
 
         public override void Write(FileWriter w2)
         {
-            using (RiffWriter w = new RiffWriter(w2.BaseStream))
+            using RiffWriter w = new(w2.BaseStream);
+            w.InitFile("DLS ");
+            w.StartChunk("colh");
+            w.Write((uint)Instruments.Count);
+            w.EndChunk();
+            w.StartListChunk("lins");
+            foreach (Instrument inst in Instruments)
             {
-                w.InitFile("DLS ");
-                w.StartChunk("colh");
-                w.Write((uint)Instruments.Count);
+                w.StartListChunk("ins ");
+                w.StartChunk("insh");
+                w.Write((uint)inst.Regions.Count);
+                w.Write(inst.BankId);
+                w.Write(inst.InstrumentId);
                 w.EndChunk();
-                w.StartListChunk("lins");
-                foreach (var inst in Instruments)
+                w.StartListChunk("lrgn");
+                foreach (Region r in inst.Regions)
                 {
-                    w.StartListChunk("ins ");
-                    w.StartChunk("insh");
-                    w.Write((uint)inst.Regions.Count);
-                    w.Write(inst.BankId);
-                    w.Write(inst.InstrumentId);
+                    w.StartListChunk("rgn2");
+                    w.StartChunk("rgnh");
+                    w.Write(r.NoteLow);
+                    w.Write(r.NoteHigh);
+                    w.Write(r.VelocityLow);
+                    w.Write(r.VelocityHigh);
+                    w.Write((ushort)(r.DoublePlayback ? 1 : 0));
+                    w.Write((ushort)r.KeyGroup);
+                    w.Write(r.Layer);
                     w.EndChunk();
-                    w.StartListChunk("lrgn");
-                    foreach (Region r in inst.Regions)
+                    w.StartChunk("wsmp");
+                    w.Write((uint)0x14);
+                    w.Write((ushort)r.RootNote);
+                    w.Write(r.Tuning);
+                    w.Write(r.Gain);
+                    uint flags = 0;
+                    if (r.NoTruncation)
                     {
-                        w.StartListChunk("rgn2");
-                        w.StartChunk("rgnh");
-                        w.Write(r.NoteLow);
-                        w.Write(r.NoteHigh);
-                        w.Write(r.VelocityLow);
-                        w.Write(r.VelocityHigh);
-                        w.Write((ushort)(r.DoublePlayback ? 1 : 0));
-                        w.Write((ushort)r.KeyGroup);
-                        w.Write(r.Layer);
-                        w.EndChunk();
-                        w.StartChunk("wsmp");
-                        w.Write((uint)0x14);
-                        w.Write((ushort)r.RootNote);
-                        w.Write(r.Tuning);
-                        w.Write(r.Gain);
-                        uint flags = 0;
-                        if (r.NoTruncation)
+                        flags |= 0b1;
+                    }
+                    if (r.NoCompression)
+                    {
+                        flags |= 0b10;
+                    }
+                    w.Write(flags);
+                    w.Write((uint)(r.Loops ? 1 : 0));
+                    if (r.Loops)
+                    {
+                        w.Write((uint)0x10);
+                        w.Write((uint)(r.LoopAndRelease ? 1 : 0));
+                        w.Write(r.LoopStart);
+                        w.Write(r.LoopLength);
+                    }
+                    w.EndChunk();
+                    w.StartChunk("wlnk");
+                    ushort flg = 0;
+                    if (r.PhaseMaster)
+                    {
+                        flg |= 0b1;
+                    }
+                    if (r.MultiChannel)
+                    {
+                        flg |= 0b10;
+                    }
+                    w.Write(flg);
+                    w.Write(r.PhaseGroup);
+                    w.Write(r.ChannelFlags);
+                    w.Write(r.WaveId);
+                    w.EndChunk();
+                    w.StartListChunk("lar2");
+                    foreach (Articulator a in r.Articulators)
+                    {
+                        w.StartChunk("art2");
+                        w.Write((uint)8);
+                        w.Write((uint)a.Connections.Count);
+                        foreach (Connection c in a.Connections)
                         {
-                            flags |= 0b1;
+                            w.Write((ushort)c.SourceConnection);
+                            w.Write(c.ControlConnection);
+                            w.Write((ushort)c.DestinationConnection);
+                            w.Write((ushort)c.TransformConnection);
+                            w.Write(c.Scale);
                         }
-                        if (r.NoCompression)
-                        {
-                            flags |= 0b10;
-                        }
-                        w.Write(flags);
-                        w.Write((uint)(r.Loops ? 1 : 0));
-                        if (r.Loops)
-                        {
-                            w.Write((uint)0x10);
-                            w.Write((uint)(r.LoopAndRelease ? 1 : 0));
-                            w.Write(r.LoopStart);
-                            w.Write(r.LoopLength);
-                        }
-                        w.EndChunk();
-                        w.StartChunk("wlnk");
-                        ushort flg = 0;
-                        if (r.PhaseMaster)
-                        {
-                            flg |= 0b1;
-                        }
-                        if (r.MultiChannel)
-                        {
-                            flg |= 0b10;
-                        }
-                        w.Write(flg);
-                        w.Write(r.PhaseGroup);
-                        w.Write(r.ChannelFlags);
-                        w.Write(r.WaveId);
-                        w.EndChunk();
-                        w.StartListChunk("lar2");
-                        foreach (var a in r.Articulators)
-                        {
-                            w.StartChunk("art2");
-                            w.Write((uint)8);
-                            w.Write((uint)a.Connections.Count);
-                            foreach (var c in a.Connections)
-                            {
-                                w.Write((ushort)c.SourceConnection);
-                                w.Write(c.ControlConnection);
-                                w.Write((ushort)c.DestinationConnection);
-                                w.Write((ushort)c.TransformConnection);
-                                w.Write(c.Scale);
-                            }
-                            w.EndChunk();
-                        }
-                        w.EndChunk();
                         w.EndChunk();
                     }
                     w.EndChunk();
-                    if (inst.Name != "")
-                    {
-                        w.StartListChunk("INFO");
-                        w.StartChunk("INAM");
-                        w.Write(inst.Name.ToCharArray());
-                        w.Write("\0".ToCharArray());
-                        int len = inst.Name.Length + 1;
-                        while (len % 4 != 0)
-                        {
-                            w.Write((byte)0);
-                            len++;
-                        }
-                        w.EndChunk();
-                        w.EndChunk();
-                    }
                     w.EndChunk();
                 }
                 w.EndChunk();
-                w.StartChunk("ptbl");
-                w.Write((uint)8);
-                w.Write((uint)Waves.Count);
-                long ptblStart = w.BaseStream.Position;
-                w.Write(new byte[Waves.Count * 4]);
-                w.EndChunk();
-                w.StartListChunk("wvpl");
-                long waveTableStart = w.BaseStream.Position;
-                int waveNum = 0;
-                foreach (var wav in Waves)
+                if (inst.Name != "")
                 {
-                    long wBak = w.BaseStream.Position;
-                    w.BaseStream.Position = ptblStart + waveNum++ * 4;
-                    w.Write((uint)(wBak - waveTableStart));
-                    w.BaseStream.Position = wBak;
-                    w.WriteWave(wav);
+                    w.StartListChunk("INFO");
+                    w.StartChunk("INAM");
+                    w.Write(inst.Name.ToCharArray());
+                    w.Write("\0".ToCharArray());
+                    int len = inst.Name.Length + 1;
+                    while (len % 4 != 0)
+                    {
+                        w.Write((byte)0);
+                        len++;
+                    }
+                    w.EndChunk();
+                    w.EndChunk();
                 }
                 w.EndChunk();
-                w.StartListChunk("INFO");
-                w.StartChunk("INAM");
-                w.Write("Instrument Set".ToCharArray());
-                w.EndChunk();
-                w.EndChunk();
-                w.CloseFile();
             }
+            w.EndChunk();
+            w.StartChunk("ptbl");
+            w.Write((uint)8);
+            w.Write((uint)Waves.Count);
+            long ptblStart = w.BaseStream.Position;
+            w.Write(new byte[Waves.Count * 4]);
+            w.EndChunk();
+            w.StartListChunk("wvpl");
+            long waveTableStart = w.BaseStream.Position;
+            int waveNum = 0;
+            foreach (RiffWave wav in Waves)
+            {
+                long wBak = w.BaseStream.Position;
+                w.BaseStream.Position = ptblStart + (waveNum++ * 4);
+                w.Write((uint)(wBak - waveTableStart));
+                w.BaseStream.Position = wBak;
+                w.WriteWave(wav);
+            }
+            w.EndChunk();
+            w.StartListChunk("INFO");
+            w.StartChunk("INAM");
+            w.Write("Instrument Set".ToCharArray());
+            w.EndChunk();
+            w.EndChunk();
+            w.CloseFile();
         }
 
         public void AssignLoops()
         {
-            foreach (var i in Instruments)
+            foreach (Instrument i in Instruments)
             {
-                foreach (var reg in i.Regions)
+                foreach (Region reg in i.Regions)
                 {
                     if (reg.Loops)
                     {

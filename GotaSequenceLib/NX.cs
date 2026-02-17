@@ -1,16 +1,13 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
 
 namespace GotaSequenceLib
 {
     public class NX : SequencePlatform
     {
-        public override Dictionary<SequenceCommands, byte> CommandMap() =>
-            new Dictionary<SequenceCommands, byte>()
+        public override Dictionary<SequenceCommands, byte> CommandMap()
+        {
+            return new Dictionary<SequenceCommands, byte>()
             {
                 { SequenceCommands.Wait, 0x80 },
                 { SequenceCommands.ProgramChange, 0x81 },
@@ -76,9 +73,11 @@ namespace GotaSequenceLib
                 { SequenceCommands.AllocateTrack, 0xFE },
                 { SequenceCommands.Fin, 0xFF },
             };
+        }
 
-        public override Dictionary<SequenceCommands, byte> ExtendedCommands() =>
-            new Dictionary<SequenceCommands, byte>()
+        public override Dictionary<SequenceCommands, byte> ExtendedCommands()
+        {
+            return new Dictionary<SequenceCommands, byte>()
             {
                 { SequenceCommands.SetVar, 0x80 },
                 { SequenceCommands.AddVar, 0x81 },
@@ -124,7 +123,11 @@ namespace GotaSequenceLib
                 { SequenceCommands.Mod4Delay, 0xE5 },
                 { SequenceCommands.Mod4Period, 0xE6 },
             };
+        }
 
-        public override ByteOrder SequenceDataByteOrder() => ByteOrder.LittleEndian;
+        public override ByteOrder SequenceDataByteOrder()
+        {
+            return ByteOrder.LittleEndian;
+        }
     }
 }

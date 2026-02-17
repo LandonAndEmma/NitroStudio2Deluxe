@@ -1,11 +1,7 @@
-﻿using System;
+﻿using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
 
 namespace NitroFileLoader
 {
@@ -27,19 +23,19 @@ namespace NitroFileLoader
 
         public void Write(FileWriter w)
         {
-            w.Write((uint)((uint)ReadingFileId | (LoadIndividually ? 0x01000000U : 0)));
+            w.Write(ReadingFileId | (LoadIndividually ? 0x01000000U : 0));
         }
 
         public void WriteTextFormat(string path, string name)
         {
-            List<string> swls = new List<string>();
+            List<string> swls = [];
             int ind = 0;
-            Directory.CreateDirectory(path + "/" + name);
-            foreach (var w in File.Waves)
+            _ = Directory.CreateDirectory(path + "/" + name);
+            foreach (Wave w in File.Waves)
             {
                 swls.Add(name + "/" + ind.ToString("D4") + ".adpcm.swav");
                 w.Write(path + "/" + name + "/" + ind.ToString("D4") + ".adpcm.swav");
-                RiffWave r = new RiffWave();
+                RiffWave r = new();
                 r.FromOtherStreamFile(w);
                 r.Write(path + "/" + name + "/" + ind.ToString("D4") + ".wav");
                 ind++;

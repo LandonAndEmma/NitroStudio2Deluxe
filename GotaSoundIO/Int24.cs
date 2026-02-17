@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GotaSoundIO.IO;
+﻿using GotaSoundIO.IO;
 
 namespace GotaSoundIO
 {
@@ -15,10 +10,7 @@ namespace GotaSoundIO
 
         private void NullCheck()
         {
-            if (Data == null)
-            {
-                Data = new byte[3];
-            }
+            Data ??= new byte[3];
         }
 
         private int GetInt()
@@ -26,8 +18,8 @@ namespace GotaSoundIO
             NullCheck();
             int ret = 0;
             ret |= Data[2];
-            ret |= (Data[1] << 8);
-            ret |= ((Data[0] & 0x7F) << 16);
+            ret |= Data[1] << 8;
+            ret |= (Data[0] & 0x7F) << 16;
             if ((Data[0] & 0x80) > 0)
             {
                 ret = MinValue + ret;
@@ -37,7 +29,7 @@ namespace GotaSoundIO
 
         private static Int24 FromInt(int val)
         {
-            Int24 ret = new Int24();
+            Int24 ret = new();
             ret.NullCheck();
             if (val > MaxValue)
             {
@@ -62,13 +54,25 @@ namespace GotaSoundIO
             return ret;
         }
 
-        public static implicit operator int(Int24 val) => val.GetInt();
+        public static implicit operator int(Int24 val)
+        {
+            return val.GetInt();
+        }
 
-        public static explicit operator Int24(int val) => Int24.FromInt(val);
+        public static explicit operator Int24(int val)
+        {
+            return Int24.FromInt(val);
+        }
 
-        public static explicit operator Int24(uint val) => Int24.FromInt((int)val);
+        public static explicit operator Int24(uint val)
+        {
+            return Int24.FromInt((int)val);
+        }
 
-        public static explicit operator Int24(float val) => Int24.FromInt((int)val);
+        public static explicit operator Int24(float val)
+        {
+            return Int24.FromInt((int)val);
+        }
 
         public void Read(FileReader r)
         {

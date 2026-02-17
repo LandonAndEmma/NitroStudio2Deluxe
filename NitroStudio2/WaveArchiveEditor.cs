@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GotaSoundIO.IO;
-using GotaSoundIO.Sound;
+﻿using GotaSoundIO.IO;
+using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
+using System;
+using System.IO;
+using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
 namespace NitroStudio2
@@ -18,7 +13,7 @@ namespace NitroStudio2
         public WaveArchive WA => File as WaveArchive;
         public GotaSoundIO.Sound.Playback.StreamPlayer Player;
         public bool PositionBarFree = true;
-        public Timer Timer = new Timer();
+        public Timer Timer = new();
 
         public WaveArchiveEditor(MainWindow mainWindow)
             : base(typeof(WaveArchive), "Wave Archive", "war", "Wave Archive Editor", mainWindow)
@@ -58,7 +53,7 @@ namespace NitroStudio2
             Player = new GotaSoundIO.Sound.Playback.StreamPlayer();
             Icon = Properties.Resources.War;
             tree.Nodes.RemoveAt(0);
-            tree.Nodes.Add("root", "Wave Archive", 5, 5);
+            _ = tree.Nodes.Add("root", "Wave Archive", 5, 5);
             UpdateNodes();
             tree.Nodes[0].Expand();
             FormClosing += new FormClosingEventHandler(WAClosing);
@@ -120,7 +115,7 @@ namespace NitroStudio2
                 tree.Nodes[0].ContextMenuStrip = rootMenu;
                 for (int i = 0; i < WA.Waves.Count; i++)
                 {
-                    tree.Nodes[0].Nodes.Add("wave" + i, "Wave " + i, 14, 14);
+                    _ = tree.Nodes[0].Nodes.Add("wave" + i, "Wave " + i, 14, 14);
                     tree.Nodes[0].Nodes["wave" + i].ContextMenuStrip = nodeMenu;
                 }
             }
@@ -151,18 +146,12 @@ namespace NitroStudio2
 
         public void PauseClick(object sender, EventArgs e)
         {
-            if (Player != null)
-            {
-                Player.Pause();
-            }
+            Player?.Pause();
         }
 
         public void StopClick(object sender, EventArgs e)
         {
-            if (Player != null)
-            {
-                Player.Stop();
-            }
+            Player?.Stop();
         }
 
         public void VolumeChanged(object sender, EventArgs e) { }
@@ -202,29 +191,31 @@ namespace NitroStudio2
 
         public void AddWave(int index)
         {
-            OpenFileDialog o = new OpenFileDialog();
-            o.Filter = "Supported Audio Files|*.wav;*.swav;*.strm";
-            o.RestoreDirectory = true;
-            o.ShowDialog();
+            OpenFileDialog o = new()
+            {
+                Filter = "Supported Audio Files|*.wav;*.swav;*.strm",
+                RestoreDirectory = true
+            };
+            _ = o.ShowDialog();
             if (o.FileName != "")
             {
-                Wave w = new Wave();
+                Wave w = new();
                 switch (Path.GetExtension(o.FileName))
                 {
                     case ".wav":
-                        RiffWave r = new RiffWave(o.FileName);
+                        RiffWave r = new(o.FileName);
                         w.FromOtherStreamFile(r);
                         break;
                     case ".swav":
                         w.Read(o.FileName);
                         break;
                     case ".strm":
-                        NitroFileLoader.Stream s = new NitroFileLoader.Stream();
+                        NitroFileLoader.Stream s = new();
                         s.Read(o.FileName);
                         w.FromOtherStreamFile(s);
                         break;
                     default:
-                        MessageBox.Show("Unsupported file format!");
+                        _ = MessageBox.Show("Unsupported file format!");
                         return;
                 }
                 WA.Waves.Insert(index, w);
@@ -270,29 +261,31 @@ namespace NitroStudio2
 
         public override void NodeReplace()
         {
-            OpenFileDialog o = new OpenFileDialog();
-            o.Filter = "Supported Audio Files|*.wav;*.swav;*.strm";
-            o.RestoreDirectory = true;
-            o.ShowDialog();
+            OpenFileDialog o = new()
+            {
+                Filter = "Supported Audio Files|*.wav;*.swav;*.strm",
+                RestoreDirectory = true
+            };
+            _ = o.ShowDialog();
             if (o.FileName != "")
             {
-                Wave w = new Wave();
+                Wave w = new();
                 switch (Path.GetExtension(o.FileName))
                 {
                     case ".wav":
-                        RiffWave r = new RiffWave(o.FileName);
+                        RiffWave r = new(o.FileName);
                         w.FromOtherStreamFile(r);
                         break;
                     case ".swav":
                         w.Read(o.FileName);
                         break;
                     case ".strm":
-                        NitroFileLoader.Stream s = new NitroFileLoader.Stream();
+                        NitroFileLoader.Stream s = new();
                         s.Read(o.FileName);
                         w.FromOtherStreamFile(s);
                         break;
                     default:
-                        MessageBox.Show("Unsupported file format!");
+                        _ = MessageBox.Show("Unsupported file format!");
                         return;
                 }
                 WA.Waves[tree.SelectedNode.Index] = w;
@@ -303,19 +296,21 @@ namespace NitroStudio2
 
         public override void NodeExport()
         {
-            SaveFileDialog s = new SaveFileDialog();
-            s.Filter =
-                "Supported Audio Files|*.wav;*.swav;*.strm|Wave|*.wav|Sound Wave|*.swav|Sound Stream|*.strm";
-            s.RestoreDirectory = true;
-            s.FileName = "Wave " + tree.SelectedNode.Index + ".swav";
-            s.ShowDialog();
+            SaveFileDialog s = new()
+            {
+                Filter =
+                    "Supported Audio Files|*.wav;*.swav;*.strm|Wave|*.wav|Sound Wave|*.swav|Sound Stream|*.strm",
+                RestoreDirectory = true,
+                FileName = "Wave " + tree.SelectedNode.Index + ".swav"
+            };
+            _ = s.ShowDialog();
             if (s.FileName != "")
             {
                 Wave w = WA.Waves[tree.SelectedNode.Index];
                 switch (Path.GetExtension(s.FileName))
                 {
                     case ".wav":
-                        RiffWave r = new RiffWave();
+                        RiffWave r = new();
                         r.FromOtherStreamFile(w);
                         r.Write(s.FileName);
                         break;
@@ -323,12 +318,12 @@ namespace NitroStudio2
                         w.Write(s.FileName);
                         break;
                     case ".strm":
-                        NitroFileLoader.Stream stm = new NitroFileLoader.Stream();
+                        NitroFileLoader.Stream stm = new();
                         stm.FromOtherStreamFile(w);
                         stm.Write(s.FileName);
                         break;
                     default:
-                        MessageBox.Show("Unsupported file format!");
+                        _ = MessageBox.Show("Unsupported file format!");
                         return;
                 }
             }

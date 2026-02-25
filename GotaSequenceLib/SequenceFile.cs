@@ -1,5 +1,6 @@
 ﻿using GotaSoundIO;
 using GotaSoundIO.IO;
+using Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -468,7 +469,7 @@ namespace GotaSequenceLib
 
         public void FromMIDI(string filePath, int timeBase = 48, bool privateLabelsForCalls = false)
         {
-            Sanford.Multimedia.Midi.Sequence s = new(filePath);
+            Sequence s = new(filePath);
             Commands = SMF.ToSequenceCommands(
                 s,
                 out Dictionary<string, int> pub,
@@ -484,7 +485,7 @@ namespace GotaSequenceLib
         public void SaveMIDI(string filePath, ushort trackMask = 0xFFFF)
         {
             ReadCommandData();
-            Sanford.Multimedia.Midi.Sequence s = SMF.FromSequenceCommands(Commands, 0, trackMask);
+            Sequence s = SMF.FromSequenceCommands(Commands, 0, trackMask);
             s.Save(filePath);
         }
 

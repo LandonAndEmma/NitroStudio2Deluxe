@@ -1,5 +1,7 @@
 ﻿using GotaSequenceLib.Playback;
 using Sanford.Multimedia.Midi;
+using Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages;
+using Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

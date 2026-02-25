@@ -1,4 +1,4 @@
-﻿using Sanford.Multimedia.Midi;
+﻿using Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages;
 
 namespace GotaSequenceLib.Playback
 {

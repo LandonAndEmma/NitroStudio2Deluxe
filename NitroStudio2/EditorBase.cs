@@ -1,6 +1,4 @@
 using GotaSequenceLib;
-using GotaSoundBank.DLS;
-using GotaSoundBank.SF2;
 using GotaSoundIO.IO;
 using NitroFileLoader;
 using ScintillaNET;
@@ -29,8 +27,6 @@ namespace NitroStudio2
         public Panel pnlPianoKeys;
         private Dictionary<Notes, PianoKey> pianoKeys = new();
         public ToolStripMenuItem toolsToolStripMenuItem;
-        private ToolStripMenuItem helpToolStripMenuItem;
-        private ToolStripMenuItem getHelpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private ToolStripMenuItem aboutNitroStudio2ToolStripMenuItem;
         private ToolStripMenuItem bankGeneratorToolStripMenuItem;
@@ -107,16 +103,16 @@ namespace NitroStudio2
         public CheckBox playerFlag12Box => playerFlagBoxes[12];
         public CheckBox playerFlag11Box => playerFlagBoxes[11];
         public CheckBox playerFlag10Box => playerFlagBoxes[10];
-        public CheckBox playerFlag9Box  => playerFlagBoxes[9];
-        public CheckBox playerFlag8Box  => playerFlagBoxes[8];
-        public CheckBox playerFlag7Box  => playerFlagBoxes[7];
-        public CheckBox playerFlag6Box  => playerFlagBoxes[6];
-        public CheckBox playerFlag5Box  => playerFlagBoxes[5];
-        public CheckBox playerFlag4Box  => playerFlagBoxes[4];
-        public CheckBox playerFlag3Box  => playerFlagBoxes[3];
-        public CheckBox playerFlag2Box  => playerFlagBoxes[2];
-        public CheckBox playerFlag1Box  => playerFlagBoxes[1];
-        public CheckBox playerFlag0Box  => playerFlagBoxes[0];
+        public CheckBox playerFlag9Box => playerFlagBoxes[9];
+        public CheckBox playerFlag8Box => playerFlagBoxes[8];
+        public CheckBox playerFlag7Box => playerFlagBoxes[7];
+        public CheckBox playerFlag6Box => playerFlagBoxes[6];
+        public CheckBox playerFlag5Box => playerFlagBoxes[5];
+        public CheckBox playerFlag4Box => playerFlagBoxes[4];
+        public CheckBox playerFlag3Box => playerFlagBoxes[3];
+        public CheckBox playerFlag2Box => playerFlagBoxes[2];
+        public CheckBox playerFlag1Box => playerFlagBoxes[1];
+        public CheckBox playerFlag0Box => playerFlagBoxes[0];
         public Panel kermalisSoundPlayerPanel;
         public Label soundPlayerLabel;
         private TableLayoutPanel tableLayoutPanel9;
@@ -190,54 +186,53 @@ namespace NitroStudio2
         private ToolStripMenuItem creaveWaveToolStripMenuItem;
         private ToolStripMenuItem waveArchiveEditorToolStripMenuItem;
         public ToolStripStatusLabel currentNote;
-        private TableLayoutPanel tableLayoutPanel1;
-        public CheckBox[] trackBoxes     = new CheckBox[16];
+        public CheckBox[] trackBoxes = new CheckBox[16];
         public PictureBox[] trackPictures = new PictureBox[16];
-        public Button[] trackSolos       = new Button[16];
+        public Button[] trackSolos = new Button[16];
         private TableLayoutPanel[] trackPanels = new TableLayoutPanel[16];
         // Named accessors for backward compatibility
-        public CheckBox track0Box  => trackBoxes[0];
-        public CheckBox track1Box  => trackBoxes[1];
-        public CheckBox track2Box  => trackBoxes[2];
-        public CheckBox track3Box  => trackBoxes[3];
-        public CheckBox track4Box  => trackBoxes[4];
-        public CheckBox track5Box  => trackBoxes[5];
-        public CheckBox track6Box  => trackBoxes[6];
-        public CheckBox track7Box  => trackBoxes[7];
-        public CheckBox track8Box  => trackBoxes[8];
-        public CheckBox track9Box  => trackBoxes[9];
+        public CheckBox track0Box => trackBoxes[0];
+        public CheckBox track1Box => trackBoxes[1];
+        public CheckBox track2Box => trackBoxes[2];
+        public CheckBox track3Box => trackBoxes[3];
+        public CheckBox track4Box => trackBoxes[4];
+        public CheckBox track5Box => trackBoxes[5];
+        public CheckBox track6Box => trackBoxes[6];
+        public CheckBox track7Box => trackBoxes[7];
+        public CheckBox track8Box => trackBoxes[8];
+        public CheckBox track9Box => trackBoxes[9];
         public CheckBox track10Box => trackBoxes[10];
         public CheckBox track11Box => trackBoxes[11];
         public CheckBox track12Box => trackBoxes[12];
         public CheckBox track13Box => trackBoxes[13];
         public CheckBox track14Box => trackBoxes[14];
         public CheckBox track15Box => trackBoxes[15];
-        public PictureBox track0Picture  => trackPictures[0];
-        public PictureBox track1Picture  => trackPictures[1];
-        public PictureBox track2Picture  => trackPictures[2];
-        public PictureBox track3Picture  => trackPictures[3];
-        public PictureBox track4Picture  => trackPictures[4];
-        public PictureBox track5Picture  => trackPictures[5];
-        public PictureBox track6Picture  => trackPictures[6];
-        public PictureBox track7Picture  => trackPictures[7];
-        public PictureBox track8Picture  => trackPictures[8];
-        public PictureBox track9Picture  => trackPictures[9];
+        public PictureBox track0Picture => trackPictures[0];
+        public PictureBox track1Picture => trackPictures[1];
+        public PictureBox track2Picture => trackPictures[2];
+        public PictureBox track3Picture => trackPictures[3];
+        public PictureBox track4Picture => trackPictures[4];
+        public PictureBox track5Picture => trackPictures[5];
+        public PictureBox track6Picture => trackPictures[6];
+        public PictureBox track7Picture => trackPictures[7];
+        public PictureBox track8Picture => trackPictures[8];
+        public PictureBox track9Picture => trackPictures[9];
         public PictureBox track10Picture => trackPictures[10];
         public PictureBox track11Picture => trackPictures[11];
         public PictureBox track12Picture => trackPictures[12];
         public PictureBox track13Picture => trackPictures[13];
         public PictureBox track14Picture => trackPictures[14];
         public PictureBox track15Picture => trackPictures[15];
-        public Button track0Solo  => trackSolos[0];
-        public Button track1Solo  => trackSolos[1];
-        public Button track2Solo  => trackSolos[2];
-        public Button track3Solo  => trackSolos[3];
-        public Button track4Solo  => trackSolos[4];
-        public Button track5Solo  => trackSolos[5];
-        public Button track6Solo  => trackSolos[6];
-        public Button track7Solo  => trackSolos[7];
-        public Button track8Solo  => trackSolos[8];
-        public Button track9Solo  => trackSolos[9];
+        public Button track0Solo => trackSolos[0];
+        public Button track1Solo => trackSolos[1];
+        public Button track2Solo => trackSolos[2];
+        public Button track3Solo => trackSolos[3];
+        public Button track4Solo => trackSolos[4];
+        public Button track5Solo => trackSolos[5];
+        public Button track6Solo => trackSolos[6];
+        public Button track7Solo => trackSolos[7];
+        public Button track8Solo => trackSolos[8];
+        public Button track9Solo => trackSolos[9];
         public Button track10Solo => trackSolos[10];
         public Button track11Solo => trackSolos[11];
         public Button track12Solo => trackSolos[12];
@@ -256,10 +251,7 @@ namespace NitroStudio2
         private DataGridViewTextBoxColumn sustain;
         private DataGridViewTextBoxColumn release;
         private DataGridViewTextBoxColumn pan;
-        private ToolStripMenuItem sF2ToDLSToolStripMenuItem;
-        private ToolStripMenuItem dLSToSF2ToolStripMenuItem;
         public TrackBar kermalisPosition;
-        private ToolStripMenuItem batchExportMIDIDLSSF2ToolStripMenuItem;
         private TableLayoutPanel tableLayoutPanel36;
         public Button exportWavButton;
         public Button exportMidiButton;
@@ -418,12 +410,6 @@ namespace NitroStudio2
             creaveWaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             createStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             exportSDKProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            sF2ToDLSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            dLSToSF2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            batchExportMIDIDLSSF2ToolStripMenuItem =
-                new System.Windows.Forms.ToolStripMenuItem();
-            helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            getHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutNitroStudio2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -434,10 +420,10 @@ namespace NitroStudio2
             tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
             for (int _t = 0; _t < 16; _t++)
             {
-                trackPanels[_t]   = new System.Windows.Forms.TableLayoutPanel();
-                trackBoxes[_t]    = new System.Windows.Forms.CheckBox();
+                trackPanels[_t] = new System.Windows.Forms.TableLayoutPanel();
+                trackBoxes[_t] = new System.Windows.Forms.CheckBox();
                 trackPictures[_t] = new System.Windows.Forms.PictureBox();
-                trackSolos[_t]    = new System.Windows.Forms.Button();
+                trackSolos[_t] = new System.Windows.Forms.Button();
             }
             label28 = new System.Windows.Forms.Label();
             tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
@@ -704,7 +690,6 @@ namespace NitroStudio2
                     fileMenu,
                     editToolStripMenuItem,
                     toolsToolStripMenuItem,
-                    helpToolStripMenuItem,
                     aboutToolStripMenuItem,
                 }
             );
@@ -821,9 +806,6 @@ namespace NitroStudio2
                     creaveWaveToolStripMenuItem,
                     createStreamToolStripMenuItem,
                     exportSDKProjectToolStripMenuItem,
-                    sF2ToDLSToolStripMenuItem,
-                    dLSToSF2ToolStripMenuItem,
-                    batchExportMIDIDLSSF2ToolStripMenuItem,
                 }
             );
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -905,46 +887,6 @@ namespace NitroStudio2
             exportSDKProjectToolStripMenuItem.Text = "Export SDK Project";
             exportSDKProjectToolStripMenuItem.Click += new System.EventHandler(
                 ExportSDKProjectToolStripMenuItem_Click
-            );
-            sF2ToDLSToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("sF2ToDLSToolStripMenuItem.Image")
-            ;
-            sF2ToDLSToolStripMenuItem.Name = "sF2ToDLSToolStripMenuItem";
-            sF2ToDLSToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            sF2ToDLSToolStripMenuItem.Text = "SF2 To DLS";
-            sF2ToDLSToolStripMenuItem.Click += new System.EventHandler(
-                sF2ToDLSToolStripMenuItem_Click
-            );
-            dLSToSF2ToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("dLSToSF2ToolStripMenuItem.Image")
-            ;
-            dLSToSF2ToolStripMenuItem.Name = "dLSToSF2ToolStripMenuItem";
-            dLSToSF2ToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            dLSToSF2ToolStripMenuItem.Text = "DLS To SF2";
-            dLSToSF2ToolStripMenuItem.Click += new System.EventHandler(
-                dLSToSF2ToolStripMenuItem_Click
-            );
-            batchExportMIDIDLSSF2ToolStripMenuItem.Image =
-                (System.Drawing.Image)
-                    resources.GetObject("batchExportMIDIDLSSF2ToolStripMenuItem.Image")
-
-            ;
-            batchExportMIDIDLSSF2ToolStripMenuItem.Name =
-                "batchExportMIDIDLSSF2ToolStripMenuItem";
-            batchExportMIDIDLSSF2ToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            batchExportMIDIDLSSF2ToolStripMenuItem.Text = "Batch Export MIDI/DLS/SF2";
-            helpToolStripMenuItem.DropDownItems.AddRange(
-                new System.Windows.Forms.ToolStripItem[] { getHelpToolStripMenuItem }
-            );
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            helpToolStripMenuItem.Text = "Help";
-            getHelpToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Help;
-            getHelpToolStripMenuItem.Name = "getHelpToolStripMenuItem";
-            getHelpToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
-            getHelpToolStripMenuItem.Text = "Get Help";
-            getHelpToolStripMenuItem.Click += new System.EventHandler(
-                GetHelpToolStripMenuItem_Click
             );
             aboutToolStripMenuItem.DropDownItems.AddRange(
                 new System.Windows.Forms.ToolStripItem[] { aboutNitroStudio2ToolStripMenuItem }
@@ -1070,21 +1012,21 @@ namespace NitroStudio2
                 int _col = _t % 2;       // 0=even, 1=odd
                 int _row = _t / 2;
                 var _panel = trackPanels[_t];
-                var _box   = trackBoxes[_t];
-                var _pic   = trackPictures[_t];
-                var _solo  = trackSolos[_t];
+                var _box = trackBoxes[_t];
+                var _pic = trackPictures[_t];
+                var _solo = trackSolos[_t];
 
                 // Inner track TableLayoutPanel
                 _panel.ColumnCount = 3;
                 _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
                 _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
                 _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-                _panel.Controls.Add(_box,  0, 0);
+                _panel.Controls.Add(_box, 0, 0);
                 _panel.Controls.Add(_solo, 1, 0);
-                _panel.Controls.Add(_pic,  2, 0);
-                _panel.Dock    = System.Windows.Forms.DockStyle.Fill;
-                _panel.Margin  = new System.Windows.Forms.Padding(0);
-                _panel.Name    = "trackPanel" + _t;
+                _panel.Controls.Add(_pic, 2, 0);
+                _panel.Dock = System.Windows.Forms.DockStyle.Fill;
+                _panel.Margin = new System.Windows.Forms.Padding(0);
+                _panel.Name = "trackPanel" + _t;
                 _panel.RowCount = 1;
                 _ = _panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
                 _ = _panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -1092,35 +1034,35 @@ namespace NitroStudio2
 
                 // CheckBox
                 _box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-                _box.Checked    = true;
+                _box.Checked = true;
                 _box.CheckState = System.Windows.Forms.CheckState.Checked;
-                _box.Dock       = System.Windows.Forms.DockStyle.Fill;
-                _box.Location   = new System.Drawing.Point(3, 3);
-                _box.Name       = "track" + _t + "Box";
-                _box.Size       = new System.Drawing.Size(68, 16);
-                _box.TabIndex   = 2;
-                _box.Text       = "Track " + _t + ":";
+                _box.Dock = System.Windows.Forms.DockStyle.Fill;
+                _box.Location = new System.Drawing.Point(3, 3);
+                _box.Name = "track" + _t + "Box";
+                _box.Size = new System.Drawing.Size(68, 16);
+                _box.TabIndex = 2;
+                _box.Text = "Track " + _t + ":";
                 _box.UseVisualStyleBackColor = true;
 
                 // PictureBox
-                _pic.BackgroundImage       = global::NitroStudio2.Properties.Resources.Idle;
+                _pic.BackgroundImage = global::NitroStudio2.Properties.Resources.Idle;
                 _pic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-                _pic.Dock                  = System.Windows.Forms.DockStyle.Fill;
-                _pic.Location              = new System.Drawing.Point(111, 0);
-                _pic.Margin                = new System.Windows.Forms.Padding(0);
-                _pic.Name                  = "track" + _t + "Picture";
-                _pic.Size                  = new System.Drawing.Size(38, 22);
-                _pic.TabIndex              = 0;
-                _pic.TabStop               = false;
+                _pic.Dock = System.Windows.Forms.DockStyle.Fill;
+                _pic.Location = new System.Drawing.Point(111, 0);
+                _pic.Margin = new System.Windows.Forms.Padding(0);
+                _pic.Name = "track" + _t + "Picture";
+                _pic.Size = new System.Drawing.Size(38, 22);
+                _pic.TabIndex = 0;
+                _pic.TabStop = false;
 
                 // Solo Button
-                _solo.Dock     = System.Windows.Forms.DockStyle.Fill;
+                _solo.Dock = System.Windows.Forms.DockStyle.Fill;
                 _solo.Location = new System.Drawing.Point(74, 0);
-                _solo.Margin   = new System.Windows.Forms.Padding(0);
-                _solo.Name     = "track" + _t + "Solo";
-                _solo.Size     = new System.Drawing.Size(37, 22);
+                _solo.Margin = new System.Windows.Forms.Padding(0);
+                _solo.Name = "track" + _t + "Solo";
+                _solo.Size = new System.Drawing.Size(37, 22);
                 _solo.TabIndex = 3;
-                _solo.Text     = "Solo";
+                _solo.Text = "Solo";
                 _solo.UseVisualStyleBackColor = true;
 
                 tableLayoutPanel20.Controls.Add(_panel, _col, _row);
@@ -2230,14 +2172,14 @@ namespace NitroStudio2
             {
                 int _col = _i % 4;
                 int _row = _i / 4;
-                var _cb  = playerFlagBoxes[_i];
+                var _cb = playerFlagBoxes[_i];
                 tableLayoutPanel8.Controls.Add(_cb, _col, _row);
                 _cb.AutoSize = true;
                 _cb.Location = new System.Drawing.Point(_col * 74 + 3, _row * 25 + 3);
-                _cb.Name     = "playerFlag" + _i + "Box";
-                _cb.Size     = new System.Drawing.Size(_i < 10 ? 32 : 38, 17);
+                _cb.Name = "playerFlag" + _i + "Box";
+                _cb.Size = new System.Drawing.Size(_i < 10 ? 32 : 38, 17);
                 _cb.TabIndex = _i;
-                _cb.Text     = _i.ToString();
+                _cb.Text = _i.ToString();
                 _cb.UseVisualStyleBackColor = true;
             }
             label19.Anchor =
@@ -5494,15 +5436,6 @@ namespace NitroStudio2
             }
         }
 
-        private void GetHelpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _ = System.Diagnostics.Process.Start("https://gota7.github.io/NitroStudio2/#guide");
-            }
-            catch { }
-        }
-
         // Piano key data: (Notes, x, w, h, shape, isBlack, tabIndex, text)
         private static readonly (Notes note, int x, int w, int h, PianoKeyShape shape, bool isBlack, int tabIdx, string text)[] PianoKeyDefs =
         {
@@ -5609,20 +5542,20 @@ namespace NitroStudio2
                 var key = pianoKeys[note];
                 if (isBlack)
                 {
-                    key.BackColor    = System.Drawing.Color.Black;
-                    key.KeyOffColor  = System.Drawing.Color.Black;
+                    key.BackColor = System.Drawing.Color.Black;
+                    key.KeyOffColor = System.Drawing.Color.Black;
                 }
                 else
                 {
                     key.KeyOffColor = System.Drawing.Color.White;
                 }
-                key.KeyOnColor  = System.Drawing.Color.Blue;
-                key.Location    = new System.Drawing.Point(x, 2);
-                key.Name        = "pkey" + note.ToString();
+                key.KeyOnColor = System.Drawing.Color.Blue;
+                key.Location = new System.Drawing.Point(x, 2);
+                key.Name = "pkey" + note.ToString();
                 key.Orientation = PianoKeyOrientation.Vertical;
-                key.Shape       = shape;
-                key.Size        = new System.Drawing.Size(w, h);
-                key.TabIndex    = tabIdx;
+                key.Shape = shape;
+                key.Size = new System.Drawing.Size(w, h);
+                key.TabIndex = tabIdx;
                 if (text != null) key.Text = text;
                 key.StateChanged += new System.EventHandler(PianoChanged);
             }
@@ -5646,52 +5579,6 @@ namespace NitroStudio2
         {
             AboutWindow a = new();
             _ = a.ShowDialog();
-        }
-
-        private void sF2ToDLSToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog o = new()
-            {
-                RestoreDirectory = true,
-                Filter = "Sound Font|*.sf2"
-            };
-            if (o.ShowDialog() == DialogResult.OK)
-            {
-                SaveFileDialog s = new()
-                {
-                    Filter = "Downloadable Sounds|*.dls",
-                    RestoreDirectory = true,
-                    FileName = Path.GetFileNameWithoutExtension(o.FileName) + ".dls"
-                };
-                if (s.ShowDialog() == DialogResult.OK)
-                {
-                    SoundFont h = new(o.FileName);
-                    new DownloadableSounds(h).Write(s.FileName);
-                }
-            }
-        }
-
-        private void dLSToSF2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog o = new()
-            {
-                RestoreDirectory = true,
-                Filter = "Downloadable Sounds|*.dls"
-            };
-            if (o.ShowDialog() == DialogResult.OK)
-            {
-                SaveFileDialog s = new()
-                {
-                    Filter = "Sound Font|*.sf2",
-                    RestoreDirectory = true,
-                    FileName = Path.GetFileNameWithoutExtension(o.FileName) + ".sf2"
-                };
-                if (s.ShowDialog() == DialogResult.OK)
-                {
-                    DownloadableSounds h = new(o.FileName);
-                    new SoundFont(h).Write(s.FileName);
-                }
-            }
         }
     }
 }

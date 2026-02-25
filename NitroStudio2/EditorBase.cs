@@ -383,227 +383,227 @@ namespace NitroStudio2
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources =
                 new(typeof(EditorBase));
-            System.Windows.Forms.TreeNode treeNode1 = new(
+            TreeNode treeNode1 = new(
                 "File Information",
                 10,
                 10
             );
-            menuStrip = new System.Windows.Forms.MenuStrip();
-            fileMenu = new System.Windows.Forms.ToolStripMenuItem();
-            newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            blankFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            importFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            exportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            sequenceEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            menuStrip = new MenuStrip();
+            fileMenu = new ToolStripMenuItem();
+            newToolStripMenuItem = new ToolStripMenuItem();
+            openToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            closeToolStripMenuItem = new ToolStripMenuItem();
+            quitToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            blankFileToolStripMenuItem = new ToolStripMenuItem();
+            importFileToolStripMenuItem = new ToolStripMenuItem();
+            exportFileToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            sequenceEditorToolStripMenuItem = new ToolStripMenuItem();
             sequenceArchiveEditorToolStripMenuItem =
-                new System.Windows.Forms.ToolStripMenuItem();
-            bankEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            waveArchiveEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            bankGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            creaveWaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            createStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            exportSDKProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            aboutNitroStudio2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
-            seqBankPanel = new System.Windows.Forms.Panel();
-            tableLayoutPanel36 = new System.Windows.Forms.TableLayoutPanel();
-            exportWavButton = new System.Windows.Forms.Button();
-            exportMidiButton = new System.Windows.Forms.Button();
-            tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
+                new ToolStripMenuItem();
+            bankEditorToolStripMenuItem = new ToolStripMenuItem();
+            waveArchiveEditorToolStripMenuItem = new ToolStripMenuItem();
+            bankGeneratorToolStripMenuItem = new ToolStripMenuItem();
+            creaveWaveToolStripMenuItem = new ToolStripMenuItem();
+            createStreamToolStripMenuItem = new ToolStripMenuItem();
+            exportSDKProjectToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
+            aboutNitroStudio2ToolStripMenuItem = new ToolStripMenuItem();
+            splitContainer1 = new SplitContainer();
+            seqBankPanel = new Panel();
+            tableLayoutPanel36 = new TableLayoutPanel();
+            exportWavButton = new Button();
+            exportMidiButton = new Button();
+            tableLayoutPanel20 = new TableLayoutPanel();
             for (int _t = 0; _t < 16; _t++)
             {
-                trackPanels[_t] = new System.Windows.Forms.TableLayoutPanel();
-                trackBoxes[_t] = new System.Windows.Forms.CheckBox();
-                trackPictures[_t] = new System.Windows.Forms.PictureBox();
-                trackSolos[_t] = new System.Windows.Forms.Button();
+                trackPanels[_t] = new TableLayoutPanel();
+                trackBoxes[_t] = new CheckBox();
+                trackPictures[_t] = new PictureBox();
+                trackSolos[_t] = new Button();
             }
-            label28 = new System.Windows.Forms.Label();
-            tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-            seqEditorBankComboBox = new System.Windows.Forms.ComboBox();
-            seqEditorBankBox = new System.Windows.Forms.NumericUpDown();
-            bankEditorPanel = new System.Windows.Forms.Panel();
-            bankRegions = new System.Windows.Forms.DataGridView();
-            playSampleButton = new System.Windows.Forms.DataGridViewButtonColumn();
-            endNote = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            instrumentType = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            waveId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            waveArchiveId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            baseNote = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            attack = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            decay = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            sustain = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            release = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            pan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            label32 = new System.Windows.Forms.Label();
-            tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
-            drumSetStartRangeComboBox = new System.Windows.Forms.ComboBox();
-            drumSetStartRangeBox = new System.Windows.Forms.NumericUpDown();
-            drumSetRangeStartLabel = new System.Windows.Forms.Label();
-            tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
-            keySplitBox = new System.Windows.Forms.RadioButton();
-            drumSetBox = new System.Windows.Forms.RadioButton();
-            directBox = new System.Windows.Forms.RadioButton();
-            label30 = new System.Windows.Forms.Label();
-            seqArcSeqPanel = new System.Windows.Forms.Panel();
-            label29 = new System.Windows.Forms.Label();
-            tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-            seqArcSeqComboBox = new System.Windows.Forms.ComboBox();
-            seqArcSeqBox = new System.Windows.Forms.NumericUpDown();
-            seqArcPanel = new System.Windows.Forms.Panel();
-            seqArcOpenFileButton = new System.Windows.Forms.Button();
-            seqPanel = new System.Windows.Forms.Panel();
-            tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            seqPlayerComboBox = new System.Windows.Forms.ComboBox();
-            seqPlayerBox = new System.Windows.Forms.NumericUpDown();
-            label27 = new System.Windows.Forms.Label();
-            seqPlayerPriorityBox = new System.Windows.Forms.NumericUpDown();
-            label26 = new System.Windows.Forms.Label();
-            seqChannelPriorityBox = new System.Windows.Forms.NumericUpDown();
-            label25 = new System.Windows.Forms.Label();
-            seqVolumeBox = new System.Windows.Forms.NumericUpDown();
-            label24 = new System.Windows.Forms.Label();
-            tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            seqBankComboBox = new System.Windows.Forms.ComboBox();
-            seqBankBox = new System.Windows.Forms.NumericUpDown();
-            label23 = new System.Windows.Forms.Label();
-            playerPanel = new System.Windows.Forms.Panel();
-            tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            for (int _i = 0; _i < 16; _i++) playerFlagBoxes[_i] = new System.Windows.Forms.CheckBox();
-            label19 = new System.Windows.Forms.Label();
-            playerHeapSizeBox = new System.Windows.Forms.NumericUpDown();
-            label18 = new System.Windows.Forms.Label();
-            playerMaxSequencesBox = new System.Windows.Forms.NumericUpDown();
-            label17 = new System.Windows.Forms.Label();
-            stmPanel = new System.Windows.Forms.Panel();
-            stmMonoToStereoBox = new System.Windows.Forms.CheckBox();
-            label16 = new System.Windows.Forms.Label();
-            label15 = new System.Windows.Forms.Label();
-            tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            stmPlayerComboBox = new System.Windows.Forms.ComboBox();
-            stmPlayerBox = new System.Windows.Forms.NumericUpDown();
-            stmPriorityBox = new System.Windows.Forms.NumericUpDown();
-            label14 = new System.Windows.Forms.Label();
-            stmVolumeBox = new System.Windows.Forms.NumericUpDown();
-            label13 = new System.Windows.Forms.Label();
-            streamPlayerPanel = new System.Windows.Forms.Panel();
-            stmPlayerChannelType = new System.Windows.Forms.ComboBox();
-            label12 = new System.Windows.Forms.Label();
-            tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            stmPlayerLeftChannelBox = new System.Windows.Forms.NumericUpDown();
-            stmPlayerRightChannelBox = new System.Windows.Forms.NumericUpDown();
-            rightChannelLabel = new System.Windows.Forms.Label();
-            leftChannelLabel = new System.Windows.Forms.Label();
-            grpPanel = new System.Windows.Forms.Panel();
-            grpEntries = new System.Windows.Forms.DataGridView();
-            item = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            loadFlags = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            bankPanel = new System.Windows.Forms.Panel();
-            tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            bnkWar3ComboBox = new System.Windows.Forms.ComboBox();
-            bnkWar3Box = new System.Windows.Forms.NumericUpDown();
-            label11 = new System.Windows.Forms.Label();
-            tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            bnkWar2ComboBox = new System.Windows.Forms.ComboBox();
-            bnkWar2Box = new System.Windows.Forms.NumericUpDown();
-            label10 = new System.Windows.Forms.Label();
-            tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            bnkWar1ComboBox = new System.Windows.Forms.ComboBox();
-            bnkWar1Box = new System.Windows.Forms.NumericUpDown();
-            label7 = new System.Windows.Forms.Label();
-            tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            bnkWar0ComboBox = new System.Windows.Forms.ComboBox();
-            bnkWar0Box = new System.Windows.Forms.NumericUpDown();
-            label6 = new System.Windows.Forms.Label();
-            blankPanel = new System.Windows.Forms.Panel();
-            warPanel = new System.Windows.Forms.Panel();
-            loadIndividuallyBox = new System.Windows.Forms.CheckBox();
-            label9 = new System.Windows.Forms.Label();
-            forceUniqueFilePanel = new System.Windows.Forms.Panel();
-            forceUniqueFileBox = new System.Windows.Forms.CheckBox();
-            label8 = new System.Windows.Forms.Label();
-            indexPanel = new System.Windows.Forms.Panel();
-            swapAtIndexButton = new System.Windows.Forms.Button();
-            itemIndexBox = new System.Windows.Forms.NumericUpDown();
-            label5 = new System.Windows.Forms.Label();
-            settingsPanel = new System.Windows.Forms.Panel();
-            seqExportModeBox = new System.Windows.Forms.ComboBox();
-            label4 = new System.Windows.Forms.Label();
-            seqImportModeBox = new System.Windows.Forms.ComboBox();
-            label3 = new System.Windows.Forms.Label();
-            writeNamesBox = new System.Windows.Forms.CheckBox();
-            label2 = new System.Windows.Forms.Label();
-            noInfoPanel = new System.Windows.Forms.Panel();
-            label1 = new System.Windows.Forms.Label();
-            kermalisSoundPlayerPanel = new System.Windows.Forms.Panel();
-            kermalisPosition = new System.Windows.Forms.TrackBar();
-            tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-            label22 = new System.Windows.Forms.Label();
-            label21 = new System.Windows.Forms.Label();
-            kermalisStopButton = new System.Windows.Forms.Button();
-            kermalisPauseButton = new System.Windows.Forms.Button();
-            kermalisVolumeSlider = new System.Windows.Forms.TrackBar();
-            kermalisLoopBox = new System.Windows.Forms.CheckBox();
-            kermalisPlayButton = new System.Windows.Forms.Button();
-            soundPlayerLabel = new System.Windows.Forms.Label();
-            pnlPianoKeys = new System.Windows.Forms.Panel();
+            label28 = new Label();
+            tableLayoutPanel12 = new TableLayoutPanel();
+            seqEditorBankComboBox = new ComboBox();
+            seqEditorBankBox = new NumericUpDown();
+            bankEditorPanel = new Panel();
+            bankRegions = new DataGridView();
+            playSampleButton = new DataGridViewButtonColumn();
+            endNote = new DataGridViewComboBoxColumn();
+            instrumentType = new DataGridViewComboBoxColumn();
+            waveId = new DataGridViewTextBoxColumn();
+            waveArchiveId = new DataGridViewTextBoxColumn();
+            baseNote = new DataGridViewComboBoxColumn();
+            attack = new DataGridViewTextBoxColumn();
+            decay = new DataGridViewTextBoxColumn();
+            sustain = new DataGridViewTextBoxColumn();
+            release = new DataGridViewTextBoxColumn();
+            pan = new DataGridViewTextBoxColumn();
+            label32 = new Label();
+            tableLayoutPanel15 = new TableLayoutPanel();
+            drumSetStartRangeComboBox = new ComboBox();
+            drumSetStartRangeBox = new NumericUpDown();
+            drumSetRangeStartLabel = new Label();
+            tableLayoutPanel14 = new TableLayoutPanel();
+            keySplitBox = new RadioButton();
+            drumSetBox = new RadioButton();
+            directBox = new RadioButton();
+            label30 = new Label();
+            seqArcSeqPanel = new Panel();
+            label29 = new Label();
+            tableLayoutPanel13 = new TableLayoutPanel();
+            seqArcSeqComboBox = new ComboBox();
+            seqArcSeqBox = new NumericUpDown();
+            seqArcPanel = new Panel();
+            seqArcOpenFileButton = new Button();
+            seqPanel = new Panel();
+            tableLayoutPanel11 = new TableLayoutPanel();
+            seqPlayerComboBox = new ComboBox();
+            seqPlayerBox = new NumericUpDown();
+            label27 = new Label();
+            seqPlayerPriorityBox = new NumericUpDown();
+            label26 = new Label();
+            seqChannelPriorityBox = new NumericUpDown();
+            label25 = new Label();
+            seqVolumeBox = new NumericUpDown();
+            label24 = new Label();
+            tableLayoutPanel10 = new TableLayoutPanel();
+            seqBankComboBox = new ComboBox();
+            seqBankBox = new NumericUpDown();
+            label23 = new Label();
+            playerPanel = new Panel();
+            tableLayoutPanel8 = new TableLayoutPanel();
+            for (int _i = 0; _i < 16; _i++) playerFlagBoxes[_i] = new CheckBox();
+            label19 = new Label();
+            playerHeapSizeBox = new NumericUpDown();
+            label18 = new Label();
+            playerMaxSequencesBox = new NumericUpDown();
+            label17 = new Label();
+            stmPanel = new Panel();
+            stmMonoToStereoBox = new CheckBox();
+            label16 = new Label();
+            label15 = new Label();
+            tableLayoutPanel7 = new TableLayoutPanel();
+            stmPlayerComboBox = new ComboBox();
+            stmPlayerBox = new NumericUpDown();
+            stmPriorityBox = new NumericUpDown();
+            label14 = new Label();
+            stmVolumeBox = new NumericUpDown();
+            label13 = new Label();
+            streamPlayerPanel = new Panel();
+            stmPlayerChannelType = new ComboBox();
+            label12 = new Label();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            stmPlayerLeftChannelBox = new NumericUpDown();
+            stmPlayerRightChannelBox = new NumericUpDown();
+            rightChannelLabel = new Label();
+            leftChannelLabel = new Label();
+            grpPanel = new Panel();
+            grpEntries = new DataGridView();
+            item = new DataGridViewComboBoxColumn();
+            loadFlags = new DataGridViewComboBoxColumn();
+            bankPanel = new Panel();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            bnkWar3ComboBox = new ComboBox();
+            bnkWar3Box = new NumericUpDown();
+            label11 = new Label();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            bnkWar2ComboBox = new ComboBox();
+            bnkWar2Box = new NumericUpDown();
+            label10 = new Label();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            bnkWar1ComboBox = new ComboBox();
+            bnkWar1Box = new NumericUpDown();
+            label7 = new Label();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            bnkWar0ComboBox = new ComboBox();
+            bnkWar0Box = new NumericUpDown();
+            label6 = new Label();
+            blankPanel = new Panel();
+            warPanel = new Panel();
+            loadIndividuallyBox = new CheckBox();
+            label9 = new Label();
+            forceUniqueFilePanel = new Panel();
+            forceUniqueFileBox = new CheckBox();
+            label8 = new Label();
+            indexPanel = new Panel();
+            swapAtIndexButton = new Button();
+            itemIndexBox = new NumericUpDown();
+            label5 = new Label();
+            settingsPanel = new Panel();
+            seqExportModeBox = new ComboBox();
+            label4 = new Label();
+            seqImportModeBox = new ComboBox();
+            label3 = new Label();
+            writeNamesBox = new CheckBox();
+            label2 = new Label();
+            noInfoPanel = new Panel();
+            label1 = new Label();
+            kermalisSoundPlayerPanel = new Panel();
+            kermalisPosition = new TrackBar();
+            tableLayoutPanel9 = new TableLayoutPanel();
+            label22 = new Label();
+            label21 = new Label();
+            kermalisStopButton = new Button();
+            kermalisPauseButton = new Button();
+            kermalisVolumeSlider = new TrackBar();
+            kermalisLoopBox = new CheckBox();
+            kermalisPlayButton = new Button();
+            soundPlayerLabel = new Label();
+            pnlPianoKeys = new Panel();
             InitPianoKeys();
-            bankEditorWars = new System.Windows.Forms.Panel();
-            tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            war3ComboBox = new System.Windows.Forms.ComboBox();
-            war3Box = new System.Windows.Forms.NumericUpDown();
-            label31 = new System.Windows.Forms.Label();
-            tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
-            war2ComboBox = new System.Windows.Forms.ComboBox();
-            war2Box = new System.Windows.Forms.NumericUpDown();
-            label33 = new System.Windows.Forms.Label();
-            tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
-            war1ComboBox = new System.Windows.Forms.ComboBox();
-            war1Box = new System.Windows.Forms.NumericUpDown();
-            label34 = new System.Windows.Forms.Label();
-            tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
-            war0ComboBox = new System.Windows.Forms.ComboBox();
-            war0Box = new System.Windows.Forms.NumericUpDown();
-            label35 = new System.Windows.Forms.Label();
-            tree = new System.Windows.Forms.TreeView();
-            treeIcons = new System.Windows.Forms.ImageList(components);
-            sequenceEditorPanel = new System.Windows.Forms.Panel();
+            bankEditorWars = new Panel();
+            tableLayoutPanel16 = new TableLayoutPanel();
+            war3ComboBox = new ComboBox();
+            war3Box = new NumericUpDown();
+            label31 = new Label();
+            tableLayoutPanel17 = new TableLayoutPanel();
+            war2ComboBox = new ComboBox();
+            war2Box = new NumericUpDown();
+            label33 = new Label();
+            tableLayoutPanel18 = new TableLayoutPanel();
+            war1ComboBox = new ComboBox();
+            war1Box = new NumericUpDown();
+            label34 = new Label();
+            tableLayoutPanel19 = new TableLayoutPanel();
+            war0ComboBox = new ComboBox();
+            war0Box = new NumericUpDown();
+            label35 = new Label();
+            tree = new TreeView();
+            treeIcons = new ImageList(components);
+            sequenceEditorPanel = new Panel();
             sequenceEditor = new ScintillaNET.Scintilla();
-            openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            statusStrip = new System.Windows.Forms.StatusStrip();
-            status = new System.Windows.Forms.ToolStripStatusLabel();
-            currentNote = new System.Windows.Forms.ToolStripStatusLabel();
-            rootMenu = new System.Windows.Forms.ContextMenuStrip(components);
-            addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            expandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            collapseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            toolTip = new System.Windows.Forms.ToolTip(components);
-            nodeMenu = new System.Windows.Forms.ContextMenuStrip(components);
-            addAboveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            addBelowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            moveUpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            moveDownToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            replaceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            exportToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            bindingSource1 = new System.Windows.Forms.BindingSource(components);
-            sarEntryMenu = new System.Windows.Forms.ContextMenuStrip(components);
-            sarAddAbove = new System.Windows.Forms.ToolStripMenuItem();
-            sarAddBelow = new System.Windows.Forms.ToolStripMenuItem();
-            sarMoveUp = new System.Windows.Forms.ToolStripMenuItem();
-            sarMoveDown = new System.Windows.Forms.ToolStripMenuItem();
-            sarReplace = new System.Windows.Forms.ToolStripMenuItem();
-            sarExport = new System.Windows.Forms.ToolStripMenuItem();
-            sarRename = new System.Windows.Forms.ToolStripMenuItem();
-            sarDelete = new System.Windows.Forms.ToolStripMenuItem();
+            openFileDialog = new OpenFileDialog();
+            saveFileDialog = new SaveFileDialog();
+            statusStrip = new StatusStrip();
+            status = new ToolStripStatusLabel();
+            currentNote = new ToolStripStatusLabel();
+            rootMenu = new ContextMenuStrip(components);
+            addToolStripMenuItem = new ToolStripMenuItem();
+            expandToolStripMenuItem = new ToolStripMenuItem();
+            collapseToolStripMenuItem = new ToolStripMenuItem();
+            toolTip = new ToolTip(components);
+            nodeMenu = new ContextMenuStrip(components);
+            addAboveToolStripMenuItem1 = new ToolStripMenuItem();
+            addBelowToolStripMenuItem1 = new ToolStripMenuItem();
+            moveUpToolStripMenuItem1 = new ToolStripMenuItem();
+            moveDownToolStripMenuItem1 = new ToolStripMenuItem();
+            replaceFileToolStripMenuItem = new ToolStripMenuItem();
+            exportToolStripMenuItem1 = new ToolStripMenuItem();
+            deleteToolStripMenuItem1 = new ToolStripMenuItem();
+            bindingSource1 = new BindingSource(components);
+            sarEntryMenu = new ContextMenuStrip(components);
+            sarAddAbove = new ToolStripMenuItem();
+            sarAddBelow = new ToolStripMenuItem();
+            sarMoveUp = new ToolStripMenuItem();
+            sarMoveDown = new ToolStripMenuItem();
+            sarReplace = new ToolStripMenuItem();
+            sarExport = new ToolStripMenuItem();
+            sarRename = new ToolStripMenuItem();
+            sarDelete = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -685,7 +685,7 @@ namespace NitroStudio2
             sarEntryMenu.SuspendLayout();
             SuspendLayout();
             menuStrip.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     fileMenu,
                     editToolStripMenuItem,
@@ -693,13 +693,13 @@ namespace NitroStudio2
                     aboutToolStripMenuItem,
                 }
             );
-            menuStrip.Location = new System.Drawing.Point(0, 0);
+            menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new System.Drawing.Size(984, 24);
+            menuStrip.Size = new Size(984, 24);
             menuStrip.TabIndex = 0;
             menuStrip.Text = "menuStrip1";
             fileMenu.DropDownItems.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     newToolStripMenuItem,
                     openToolStripMenuItem,
@@ -710,52 +710,40 @@ namespace NitroStudio2
                 }
             );
             fileMenu.Name = "fileMenu";
-            fileMenu.Size = new System.Drawing.Size(37, 20);
+            fileMenu.Size = new Size(37, 20);
             fileMenu.Text = "File";
             newToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.New;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
-            newToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            newToolStripMenuItem.Size = new Size(114, 22);
             newToolStripMenuItem.Text = "New";
-            newToolStripMenuItem.Click += new System.EventHandler(
-                newToolStripMenuItem_Click
-            );
+            newToolStripMenuItem.Click += newToolStripMenuItem_Click;
             openToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Open;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            openToolStripMenuItem.Size = new Size(114, 22);
             openToolStripMenuItem.Text = "Open";
-            openToolStripMenuItem.Click += new System.EventHandler(
-                openToolStripMenuItem_Click
-            );
+            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             saveToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            saveToolStripMenuItem.Size = new Size(114, 22);
             saveToolStripMenuItem.Text = "Save";
-            saveToolStripMenuItem.Click += new System.EventHandler(
-                saveToolStripMenuItem_Click
-            );
+            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             saveAsToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save_As;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            saveAsToolStripMenuItem.Size = new Size(114, 22);
             saveAsToolStripMenuItem.Text = "Save As";
-            saveAsToolStripMenuItem.Click += new System.EventHandler(
-                saveAsToolStripMenuItem_Click
-            );
+            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             closeToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Close;
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            closeToolStripMenuItem.Size = new Size(114, 22);
             closeToolStripMenuItem.Text = "Close";
-            closeToolStripMenuItem.Click += new System.EventHandler(
-                closeToolStripMenuItem_Click
-            );
+            closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
             quitToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Quit;
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            quitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            quitToolStripMenuItem.Size = new Size(114, 22);
             quitToolStripMenuItem.Text = "Quit";
-            quitToolStripMenuItem.Click += new System.EventHandler(
-                quitToolStripMenuItem_Click
-            );
+            quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
             editToolStripMenuItem.DropDownItems.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     blankFileToolStripMenuItem,
                     importFileToolStripMenuItem,
@@ -763,40 +751,34 @@ namespace NitroStudio2
                 }
             );
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "Edit";
             blankFileToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Rename;
             blankFileToolStripMenuItem.Name = "blankFileToolStripMenuItem";
-            blankFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            blankFileToolStripMenuItem.Size = new Size(131, 22);
             blankFileToolStripMenuItem.Text = "Blank File";
-            blankFileToolStripMenuItem.Click += new System.EventHandler(
-                blankFileToolStripMenuItem_Click
-            );
+            blankFileToolStripMenuItem.Click += blankFileToolStripMenuItem_Click;
             importFileToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Import;
             importFileToolStripMenuItem.Name = "importFileToolStripMenuItem";
-            importFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            importFileToolStripMenuItem.Size = new Size(131, 22);
             importFileToolStripMenuItem.Text = "Import File";
-            importFileToolStripMenuItem.Click += new System.EventHandler(
-                importFileToolStripMenuItem_Click
-            );
+            importFileToolStripMenuItem.Click += importFileToolStripMenuItem_Click;
             exportFileToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Export;
             exportFileToolStripMenuItem.Name = "exportFileToolStripMenuItem";
-            exportFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            exportFileToolStripMenuItem.Size = new Size(131, 22);
             exportFileToolStripMenuItem.Text = "Export File";
-            exportFileToolStripMenuItem.Click += new System.EventHandler(
-                exportFileToolStripMenuItem_Click
-            );
+            exportFileToolStripMenuItem.Click += exportFileToolStripMenuItem_Click;
             toolsToolStripMenuItem.DropDownItems.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     sequenceEditorToolStripMenuItem,
                     sequenceArchiveEditorToolStripMenuItem,
@@ -809,104 +791,73 @@ namespace NitroStudio2
                 }
             );
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "Tools";
             toolsToolStripMenuItem.Visible = false;
             sequenceEditorToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("sequenceEditorToolStripMenuItem.Image")
-            ;
+                (Image)resources.GetObject("sequenceEditorToolStripMenuItem.Image");
             sequenceEditorToolStripMenuItem.Name = "sequenceEditorToolStripMenuItem";
-            sequenceEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            sequenceEditorToolStripMenuItem.Size = new Size(217, 22);
             sequenceEditorToolStripMenuItem.Text = "Sequence Editor";
-            sequenceEditorToolStripMenuItem.Click += new System.EventHandler(
-                SequenceEditorToolStripMenuItem_Click
-            );
-            sequenceArchiveEditorToolStripMenuItem.Image =
-                (System.Drawing.Image)
-                    resources.GetObject("sequenceArchiveEditorToolStripMenuItem.Image")
-
-            ;
-            sequenceArchiveEditorToolStripMenuItem.Name =
-                "sequenceArchiveEditorToolStripMenuItem";
-            sequenceArchiveEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            sequenceEditorToolStripMenuItem.Click += SequenceEditorToolStripMenuItem_Click;
+            sequenceArchiveEditorToolStripMenuItem.Image = (Image)resources.GetObject("sequenceArchiveEditorToolStripMenuItem.Image");
+            sequenceArchiveEditorToolStripMenuItem.Name = "sequenceArchiveEditorToolStripMenuItem";
+            sequenceArchiveEditorToolStripMenuItem.Size = new Size(217, 22);
             sequenceArchiveEditorToolStripMenuItem.Text = "Sequence Archive Editor";
-            sequenceArchiveEditorToolStripMenuItem.Click += new System.EventHandler(
-                SequenceArchiveEditorToolStripMenuItem_Click
-            );
+            sequenceArchiveEditorToolStripMenuItem.Click += SequenceArchiveEditorToolStripMenuItem_Click;
             bankEditorToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Bank;
             bankEditorToolStripMenuItem.Name = "bankEditorToolStripMenuItem";
-            bankEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            bankEditorToolStripMenuItem.Size = new Size(217, 22);
             bankEditorToolStripMenuItem.Text = "Bank Editor";
-            bankEditorToolStripMenuItem.Click += new System.EventHandler(
-                BankEditorToolStripMenuItem_Click
-            );
-            waveArchiveEditorToolStripMenuItem.Image =
-                (System.Drawing.Image)
-                    resources.GetObject("waveArchiveEditorToolStripMenuItem.Image")
-
-            ;
+            bankEditorToolStripMenuItem.Click += BankEditorToolStripMenuItem_Click;
+            waveArchiveEditorToolStripMenuItem.Image = (Image)resources.GetObject("waveArchiveEditorToolStripMenuItem.Image");
             waveArchiveEditorToolStripMenuItem.Name = "waveArchiveEditorToolStripMenuItem";
-            waveArchiveEditorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            waveArchiveEditorToolStripMenuItem.Size = new Size(217, 22);
             waveArchiveEditorToolStripMenuItem.Text = "Wave Archive Editor";
-            waveArchiveEditorToolStripMenuItem.Click += new System.EventHandler(
-                WaveArchiveEditorToolStripMenuItem_Click
-            );
+            waveArchiveEditorToolStripMenuItem.Click += WaveArchiveEditorToolStripMenuItem_Click;
             bankGeneratorToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("bankGeneratorToolStripMenuItem.Image")
-            ;
+                (Image)resources.GetObject("bankGeneratorToolStripMenuItem.Image");
             bankGeneratorToolStripMenuItem.Name = "bankGeneratorToolStripMenuItem";
-            bankGeneratorToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            bankGeneratorToolStripMenuItem.Size = new Size(217, 22);
             bankGeneratorToolStripMenuItem.Text = "Bank Generator";
-            bankGeneratorToolStripMenuItem.Click += new System.EventHandler(
-                BankGeneratorToolStripMenuItem_Click
-            );
+            bankGeneratorToolStripMenuItem.Click += BankGeneratorToolStripMenuItem_Click;
             creaveWaveToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("creaveWaveToolStripMenuItem.Image")
-            ;
+                (Image)resources.GetObject("creaveWaveToolStripMenuItem.Image");
             creaveWaveToolStripMenuItem.Name = "creaveWaveToolStripMenuItem";
-            creaveWaveToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            creaveWaveToolStripMenuItem.Size = new Size(217, 22);
             creaveWaveToolStripMenuItem.Text = "Creave Wave";
-            creaveWaveToolStripMenuItem.Click += new System.EventHandler(
-                CreaveWaveToolStripMenuItem_Click
-            );
+            creaveWaveToolStripMenuItem.Click += CreaveWaveToolStripMenuItem_Click;
             createStreamToolStripMenuItem.Image =
-                (System.Drawing.Image)resources.GetObject("createStreamToolStripMenuItem.Image")
-            ;
+                (Image)resources.GetObject("createStreamToolStripMenuItem.Image");
             createStreamToolStripMenuItem.Name = "createStreamToolStripMenuItem";
-            createStreamToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            createStreamToolStripMenuItem.Size = new Size(217, 22);
             createStreamToolStripMenuItem.Text = "Create Stream";
-            createStreamToolStripMenuItem.Click += new System.EventHandler(
-                CreateStreamToolStripMenuItem_Click
-            );
+            createStreamToolStripMenuItem.Click += CreateStreamToolStripMenuItem_Click;
             exportSDKProjectToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .NSM;
             exportSDKProjectToolStripMenuItem.Name = "exportSDKProjectToolStripMenuItem";
-            exportSDKProjectToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            exportSDKProjectToolStripMenuItem.Size = new Size(217, 22);
             exportSDKProjectToolStripMenuItem.Text = "Export SDK Project";
-            exportSDKProjectToolStripMenuItem.Click += new System.EventHandler(
-                ExportSDKProjectToolStripMenuItem_Click
-            );
+            exportSDKProjectToolStripMenuItem.Click += ExportSDKProjectToolStripMenuItem_Click;
             aboutToolStripMenuItem.DropDownItems.AddRange(
-                new System.Windows.Forms.ToolStripItem[] { aboutNitroStudio2ToolStripMenuItem }
+                new ToolStripItem[] { aboutNitroStudio2ToolStripMenuItem }
             );
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            aboutToolStripMenuItem.Size = new Size(52, 20);
             aboutToolStripMenuItem.Text = "About";
             aboutNitroStudio2ToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Ico;
             aboutNitroStudio2ToolStripMenuItem.Name = "aboutNitroStudio2ToolStripMenuItem";
-            aboutNitroStudio2ToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            aboutNitroStudio2ToolStripMenuItem.Size = new Size(183, 22);
             aboutNitroStudio2ToolStripMenuItem.Text = "About Nitro Studio 2";
-            aboutNitroStudio2ToolStripMenuItem.Click += new System.EventHandler(
-                AboutNitroStudio2ToolStripMenuItem_Click
-            );
+            aboutNitroStudio2ToolStripMenuItem.Click += AboutNitroStudio2ToolStripMenuItem_Click;
             splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainer1.Location = new System.Drawing.Point(0, 24);
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 24);
             splitContainer1.Name = "splitContainer1";
             splitContainer1.Panel1.Controls.Add(seqBankPanel);
             splitContainer1.Panel1.Controls.Add(bankEditorPanel);
@@ -929,80 +880,62 @@ namespace NitroStudio2
             splitContainer1.Panel2.Controls.Add(bankEditorWars);
             splitContainer1.Panel2.Controls.Add(tree);
             splitContainer1.Panel2.Controls.Add(sequenceEditorPanel);
-            splitContainer1.Size = new System.Drawing.Size(984, 540);
+            splitContainer1.Size = new Size(984, 540);
             splitContainer1.SplitterDistance = 327;
             splitContainer1.TabIndex = 1;
             seqBankPanel.Controls.Add(tableLayoutPanel36);
             seqBankPanel.Controls.Add(tableLayoutPanel20);
             seqBankPanel.Controls.Add(label28);
             seqBankPanel.Controls.Add(tableLayoutPanel12);
-            seqBankPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqBankPanel.Location = new System.Drawing.Point(0, 334);
+            seqBankPanel.Dock = DockStyle.Fill;
+            seqBankPanel.Location = new Point(0, 334);
             seqBankPanel.Name = "seqBankPanel";
-            seqBankPanel.Size = new System.Drawing.Size(325, 204);
+            seqBankPanel.Size = new Size(325, 204);
             seqBankPanel.TabIndex = 18;
             seqBankPanel.Visible = false;
-            tableLayoutPanel36.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel36.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel36.ColumnCount = 2;
-            _ = tableLayoutPanel36.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel36.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
-            _ = tableLayoutPanel36.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel36.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
             tableLayoutPanel36.Controls.Add(exportWavButton, 0, 0);
             tableLayoutPanel36.Controls.Add(exportMidiButton, 0, 0);
-            tableLayoutPanel36.Location = new System.Drawing.Point(14, 244);
+            tableLayoutPanel36.Location = new Point(14, 244);
             tableLayoutPanel36.Name = "tableLayoutPanel36";
             tableLayoutPanel36.RowCount = 1;
-            _ = tableLayoutPanel36.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel36.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 50F)
             );
-            tableLayoutPanel36.Size = new System.Drawing.Size(298, 25);
+            tableLayoutPanel36.Size = new Size(298, 25);
             tableLayoutPanel36.TabIndex = 30;
-            exportWavButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            exportWavButton.Location = new System.Drawing.Point(149, 0);
-            exportWavButton.Margin = new System.Windows.Forms.Padding(0);
+            exportWavButton.Dock = DockStyle.Fill;
+            exportWavButton.Location = new Point(149, 0);
+            exportWavButton.Margin = new Padding(0);
             exportWavButton.Name = "exportWavButton";
-            exportWavButton.Size = new System.Drawing.Size(149, 25);
+            exportWavButton.Size = new Size(149, 25);
             exportWavButton.TabIndex = 5;
             exportWavButton.Text = "Export WAV";
             exportWavButton.UseVisualStyleBackColor = true;
-            exportMidiButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            exportMidiButton.Location = new System.Drawing.Point(0, 0);
-            exportMidiButton.Margin = new System.Windows.Forms.Padding(0);
+            exportMidiButton.Dock = DockStyle.Fill;
+            exportMidiButton.Location = new Point(0, 0);
+            exportMidiButton.Margin = new Padding(0);
             exportMidiButton.Name = "exportMidiButton";
-            exportMidiButton.Size = new System.Drawing.Size(149, 25);
+            exportMidiButton.Size = new Size(149, 25);
             exportMidiButton.TabIndex = 4;
             exportMidiButton.Text = "Export MIDI";
             exportMidiButton.UseVisualStyleBackColor = true;
-            tableLayoutPanel20.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel20.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             // Track layout panel (outer 2-col x 8-row grid) setup
             tableLayoutPanel20.ColumnCount = 2;
-            _ = tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            _ = tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel20.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel20.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel20.RowCount = 8;
             for (int _r = 0; _r < 8; _r++)
-                _ = tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            tableLayoutPanel20.Size = new System.Drawing.Size(298, 176);
+                tableLayoutPanel20.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
+            tableLayoutPanel20.Size = new Size(298, 176);
             tableLayoutPanel20.TabIndex = 28;
 
             // Map: trackIndex -> (col, row) in tableLayoutPanel20
@@ -1018,115 +951,97 @@ namespace NitroStudio2
 
                 // Inner track TableLayoutPanel
                 _panel.ColumnCount = 3;
-                _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-                _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-                _ = _panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+                _panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+                _panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                _panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
                 _panel.Controls.Add(_box, 0, 0);
                 _panel.Controls.Add(_solo, 1, 0);
                 _panel.Controls.Add(_pic, 2, 0);
-                _panel.Dock = System.Windows.Forms.DockStyle.Fill;
-                _panel.Margin = new System.Windows.Forms.Padding(0);
+                _panel.Dock = DockStyle.Fill;
+                _panel.Margin = new Padding(0);
                 _panel.Name = "trackPanel" + _t;
                 _panel.RowCount = 1;
-                _ = _panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-                _ = _panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+                _panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+                _panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
                 _panel.TabIndex = 26 + _t;
 
                 // CheckBox
-                _box.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+                _box.CheckAlign = ContentAlignment.MiddleRight;
                 _box.Checked = true;
-                _box.CheckState = System.Windows.Forms.CheckState.Checked;
-                _box.Dock = System.Windows.Forms.DockStyle.Fill;
-                _box.Location = new System.Drawing.Point(3, 3);
+                _box.CheckState = CheckState.Checked;
+                _box.Dock = DockStyle.Fill;
+                _box.Location = new Point(3, 3);
                 _box.Name = "track" + _t + "Box";
-                _box.Size = new System.Drawing.Size(68, 16);
+                _box.Size = new Size(68, 16);
                 _box.TabIndex = 2;
                 _box.Text = "Track " + _t + ":";
                 _box.UseVisualStyleBackColor = true;
 
                 // PictureBox
                 _pic.BackgroundImage = global::NitroStudio2.Properties.Resources.Idle;
-                _pic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-                _pic.Dock = System.Windows.Forms.DockStyle.Fill;
-                _pic.Location = new System.Drawing.Point(111, 0);
-                _pic.Margin = new System.Windows.Forms.Padding(0);
+                _pic.BackgroundImageLayout = ImageLayout.Zoom;
+                _pic.Dock = DockStyle.Fill;
+                _pic.Location = new Point(111, 0);
+                _pic.Margin = new Padding(0);
                 _pic.Name = "track" + _t + "Picture";
-                _pic.Size = new System.Drawing.Size(38, 22);
+                _pic.Size = new Size(38, 22);
                 _pic.TabIndex = 0;
                 _pic.TabStop = false;
 
                 // Solo Button
-                _solo.Dock = System.Windows.Forms.DockStyle.Fill;
-                _solo.Location = new System.Drawing.Point(74, 0);
-                _solo.Margin = new System.Windows.Forms.Padding(0);
+                _solo.Dock = DockStyle.Fill;
+                _solo.Location = new Point(74, 0);
+                _solo.Margin = new Padding(0);
                 _solo.Name = "track" + _t + "Solo";
-                _solo.Size = new System.Drawing.Size(37, 22);
+                _solo.Size = new Size(37, 22);
                 _solo.TabIndex = 3;
                 _solo.Text = "Solo";
                 _solo.UseVisualStyleBackColor = true;
 
                 tableLayoutPanel20.Controls.Add(_panel, _col, _row);
             }
-            label28.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label28.Location = new System.Drawing.Point(11, 3);
+            label28.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label28.Location = new Point(11, 3);
             label28.Name = "label28";
-            label28.Size = new System.Drawing.Size(301, 20);
+            label28.Size = new Size(301, 20);
             label28.TabIndex = 25;
             label28.Text = "Preview Bank:";
-            label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel12.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label28.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel12.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel12.ColumnCount = 2;
-            _ = tableLayoutPanel12.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel12.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel12.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel12.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel12.Controls.Add(seqEditorBankComboBox, 0, 0);
             tableLayoutPanel12.Controls.Add(seqEditorBankBox, 1, 0);
-            tableLayoutPanel12.Location = new System.Drawing.Point(14, 25);
+            tableLayoutPanel12.Location = new Point(14, 25);
             tableLayoutPanel12.Name = "tableLayoutPanel12";
             tableLayoutPanel12.RowCount = 1;
-            _ = tableLayoutPanel12.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel12.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel12.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel12.Size = new Size(298, 31);
             tableLayoutPanel12.TabIndex = 24;
-            seqEditorBankComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            seqEditorBankComboBox.Dock = DockStyle.Fill;
             seqEditorBankComboBox.DropDownStyle = System
                 .Windows
                 .Forms
                 .ComboBoxStyle
                 .DropDownList;
             seqEditorBankComboBox.FormattingEnabled = true;
-            seqEditorBankComboBox.Location = new System.Drawing.Point(3, 3);
+            seqEditorBankComboBox.Location = new Point(3, 3);
             seqEditorBankComboBox.Name = "seqEditorBankComboBox";
-            seqEditorBankComboBox.Size = new System.Drawing.Size(247, 21);
+            seqEditorBankComboBox.Size = new Size(247, 21);
             seqEditorBankComboBox.TabIndex = 6;
             toolTip.SetToolTip(seqEditorBankComboBox, "Bank to use with the sequence.");
-            seqEditorBankBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqEditorBankBox.Location = new System.Drawing.Point(256, 3);
-            seqEditorBankBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            seqEditorBankBox.Dock = DockStyle.Fill;
+            seqEditorBankBox.Location = new Point(256, 3);
+            seqEditorBankBox.Maximum = 65535;
             seqEditorBankBox.Name = "seqEditorBankBox";
-            seqEditorBankBox.Size = new System.Drawing.Size(39, 20);
+            seqEditorBankBox.Size = new Size(39, 20);
             seqEditorBankBox.TabIndex = 7;
             toolTip.SetToolTip(
                 seqEditorBankBox,
@@ -1138,24 +1053,13 @@ namespace NitroStudio2
             bankEditorPanel.Controls.Add(drumSetRangeStartLabel);
             bankEditorPanel.Controls.Add(tableLayoutPanel14);
             bankEditorPanel.Controls.Add(label30);
-            bankEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            bankEditorPanel.Location = new System.Drawing.Point(0, 334);
+            bankEditorPanel.Dock = DockStyle.Fill;
+            bankEditorPanel.Location = new Point(0, 334);
             bankEditorPanel.Name = "bankEditorPanel";
-            bankEditorPanel.Size = new System.Drawing.Size(325, 204);
+            bankEditorPanel.Size = new Size(325, 204);
             bankEditorPanel.TabIndex = 21;
             bankEditorPanel.Visible = false;
-            bankRegions.Anchor =
-
-
-
-
-                                System.Windows.Forms.AnchorStyles.Top
-                                | System.Windows.Forms.AnchorStyles.Bottom
-                             | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            bankRegions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             bankRegions.AutoSizeColumnsMode = System
                 .Windows
                 .Forms
@@ -1167,7 +1071,7 @@ namespace NitroStudio2
                 .DataGridViewColumnHeadersHeightSizeMode
                 .AutoSize;
             bankRegions.Columns.AddRange(
-                new System.Windows.Forms.DataGridViewColumn[]
+                new DataGridViewColumn[]
                 {
                     playSampleButton,
                     endNote,
@@ -1182,9 +1086,9 @@ namespace NitroStudio2
                     pan,
                 }
             );
-            bankRegions.Location = new System.Drawing.Point(14, 141);
+            bankRegions.Location = new Point(14, 141);
             bankRegions.Name = "bankRegions";
-            bankRegions.Size = new System.Drawing.Size(298, 54);
+            bankRegions.Size = new Size(298, 54);
             bankRegions.TabIndex = 26;
             playSampleButton.HeaderText = "Play";
             playSampleButton.Name = "playSampleButton";
@@ -1337,7 +1241,7 @@ namespace NitroStudio2
             waveId.HeaderText = "Wave Id/PSG Cycle";
             waveId.MaxInputLength = 5;
             waveId.Name = "waveId";
-            waveId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            waveId.SortMode = DataGridViewColumnSortMode.NotSortable;
             waveId.Width = 99;
             waveArchiveId.HeaderText = "Wave Archive Id";
             waveArchiveId.MaxInputLength = 5;
@@ -1487,72 +1391,54 @@ namespace NitroStudio2
             attack.HeaderText = "Attack";
             attack.MaxInputLength = 3;
             attack.Name = "attack";
-            attack.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            attack.SortMode = DataGridViewColumnSortMode.NotSortable;
             attack.Width = 44;
             decay.HeaderText = "Decay";
             decay.MaxInputLength = 3;
             decay.Name = "decay";
-            decay.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            decay.SortMode = DataGridViewColumnSortMode.NotSortable;
             decay.Width = 44;
             sustain.HeaderText = "Sustain";
             sustain.MaxInputLength = 3;
             sustain.Name = "sustain";
-            sustain.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            sustain.SortMode = DataGridViewColumnSortMode.NotSortable;
             sustain.Width = 48;
             release.HeaderText = "Release";
             release.MaxInputLength = 3;
             release.Name = "release";
-            release.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            release.SortMode = DataGridViewColumnSortMode.NotSortable;
             release.Width = 52;
             pan.HeaderText = "Pan";
             pan.MaxInputLength = 3;
             pan.Name = "pan";
-            pan.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            pan.SortMode = DataGridViewColumnSortMode.NotSortable;
             pan.Width = 32;
-            label32.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label32.Location = new System.Drawing.Point(11, 118);
+            label32.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label32.Location = new Point(11, 118);
             label32.Name = "label32";
-            label32.Size = new System.Drawing.Size(301, 20);
+            label32.Size = new Size(301, 20);
             label32.TabIndex = 25;
             label32.Text = "Regions:";
-            label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel15.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label32.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel15.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel15.ColumnCount = 2;
-            _ = tableLayoutPanel15.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel15.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel15.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel15.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel15.Controls.Add(drumSetStartRangeComboBox, 0, 0);
             tableLayoutPanel15.Controls.Add(drumSetStartRangeBox, 1, 0);
-            tableLayoutPanel15.Location = new System.Drawing.Point(14, 84);
+            tableLayoutPanel15.Location = new Point(14, 84);
             tableLayoutPanel15.Name = "tableLayoutPanel15";
             tableLayoutPanel15.RowCount = 1;
-            _ = tableLayoutPanel15.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel15.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel15.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel15.Size = new Size(298, 31);
             tableLayoutPanel15.TabIndex = 24;
-            drumSetStartRangeComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            drumSetStartRangeComboBox.Dock = DockStyle.Fill;
             drumSetStartRangeComboBox.DropDownStyle = System
                 .Windows
                 .Forms
@@ -1692,207 +1578,153 @@ namespace NitroStudio2
                     "gn9",
                 }
             );
-            drumSetStartRangeComboBox.Location = new System.Drawing.Point(3, 3);
+            drumSetStartRangeComboBox.Location = new Point(3, 3);
             drumSetStartRangeComboBox.Name = "drumSetStartRangeComboBox";
-            drumSetStartRangeComboBox.Size = new System.Drawing.Size(247, 21);
+            drumSetStartRangeComboBox.Size = new Size(247, 21);
             drumSetStartRangeComboBox.TabIndex = 6;
             toolTip.SetToolTip(
                 drumSetStartRangeComboBox,
                 "What note to start the drum set range at."
             );
-            drumSetStartRangeBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            drumSetStartRangeBox.Location = new System.Drawing.Point(256, 3);
-            drumSetStartRangeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            drumSetStartRangeBox.Dock = DockStyle.Fill;
+            drumSetStartRangeBox.Location = new Point(256, 3);
+            drumSetStartRangeBox.Maximum = 127;
             drumSetStartRangeBox.Name = "drumSetStartRangeBox";
-            drumSetStartRangeBox.Size = new System.Drawing.Size(39, 20);
+            drumSetStartRangeBox.Size = new Size(39, 20);
             drumSetStartRangeBox.TabIndex = 7;
             toolTip.SetToolTip(
                 drumSetStartRangeBox,
                 "What note to start the drum set range at."
             );
-            drumSetRangeStartLabel.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            drumSetRangeStartLabel.Location = new System.Drawing.Point(8, 61);
+            drumSetRangeStartLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            drumSetRangeStartLabel.Location = new Point(8, 61);
             drumSetRangeStartLabel.Name = "drumSetRangeStartLabel";
-            drumSetRangeStartLabel.Size = new System.Drawing.Size(301, 20);
+            drumSetRangeStartLabel.Size = new Size(301, 20);
             drumSetRangeStartLabel.TabIndex = 3;
             drumSetRangeStartLabel.Text = "Drum Set Range Start:";
-            drumSetRangeStartLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel14.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            drumSetRangeStartLabel.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel14.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel14.ColumnCount = 3;
-            _ = tableLayoutPanel14.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(
-                    System.Windows.Forms.SizeType.Percent,
+            tableLayoutPanel14.ColumnStyles.Add(
+                new ColumnStyle(
+                    SizeType.Percent,
                     33.33333F
                 )
             );
-            _ = tableLayoutPanel14.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(
-                    System.Windows.Forms.SizeType.Percent,
+            tableLayoutPanel14.ColumnStyles.Add(
+                new ColumnStyle(
+                    SizeType.Percent,
                     33.33333F
                 )
             );
-            _ = tableLayoutPanel14.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(
-                    System.Windows.Forms.SizeType.Percent,
+            tableLayoutPanel14.ColumnStyles.Add(
+                new ColumnStyle(
+                    SizeType.Percent,
                     33.33333F
                 )
             );
             tableLayoutPanel14.Controls.Add(keySplitBox, 2, 0);
             tableLayoutPanel14.Controls.Add(drumSetBox, 1, 0);
             tableLayoutPanel14.Controls.Add(directBox, 0, 0);
-            tableLayoutPanel14.Location = new System.Drawing.Point(14, 28);
+            tableLayoutPanel14.Location = new Point(14, 28);
             tableLayoutPanel14.Name = "tableLayoutPanel14";
             tableLayoutPanel14.RowCount = 1;
-            _ = tableLayoutPanel14.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel14.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel14.Size = new System.Drawing.Size(298, 28);
+            tableLayoutPanel14.Size = new Size(298, 28);
             tableLayoutPanel14.TabIndex = 2;
             toolTip.SetToolTip(tableLayoutPanel14, "Type of instrument.");
-            keySplitBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            keySplitBox.Location = new System.Drawing.Point(201, 3);
+            keySplitBox.Dock = DockStyle.Fill;
+            keySplitBox.Location = new Point(201, 3);
             keySplitBox.Name = "keySplitBox";
-            keySplitBox.Size = new System.Drawing.Size(94, 22);
+            keySplitBox.Size = new Size(94, 22);
             keySplitBox.TabIndex = 2;
             keySplitBox.TabStop = true;
             keySplitBox.Text = "Key Split";
             keySplitBox.UseVisualStyleBackColor = true;
-            drumSetBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            drumSetBox.Location = new System.Drawing.Point(102, 3);
+            drumSetBox.Dock = DockStyle.Fill;
+            drumSetBox.Location = new Point(102, 3);
             drumSetBox.Name = "drumSetBox";
-            drumSetBox.Size = new System.Drawing.Size(93, 22);
+            drumSetBox.Size = new Size(93, 22);
             drumSetBox.TabIndex = 1;
             drumSetBox.TabStop = true;
             drumSetBox.Text = "Drum Set";
             drumSetBox.UseVisualStyleBackColor = true;
-            directBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            directBox.Location = new System.Drawing.Point(3, 3);
+            directBox.Dock = DockStyle.Fill;
+            directBox.Location = new Point(3, 3);
             directBox.Name = "directBox";
-            directBox.Size = new System.Drawing.Size(93, 22);
+            directBox.Size = new Size(93, 22);
             directBox.TabIndex = 0;
             directBox.TabStop = true;
             directBox.Text = "Direct";
             directBox.UseVisualStyleBackColor = true;
-            label30.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label30.Location = new System.Drawing.Point(11, 3);
+            label30.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label30.Location = new Point(11, 3);
             label30.Name = "label30";
-            label30.Size = new System.Drawing.Size(301, 20);
+            label30.Size = new Size(301, 20);
             label30.TabIndex = 1;
             label30.Text = "Instrument Type:";
-            label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label30.TextAlign = ContentAlignment.MiddleCenter;
             seqArcSeqPanel.Controls.Add(label29);
             seqArcSeqPanel.Controls.Add(tableLayoutPanel13);
-            seqArcSeqPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            seqArcSeqPanel.Location = new System.Drawing.Point(0, 270);
+            seqArcSeqPanel.Dock = DockStyle.Top;
+            seqArcSeqPanel.Location = new Point(0, 270);
             seqArcSeqPanel.Name = "seqArcSeqPanel";
-            seqArcSeqPanel.Size = new System.Drawing.Size(325, 64);
+            seqArcSeqPanel.Size = new Size(325, 64);
             seqArcSeqPanel.TabIndex = 20;
             seqArcSeqPanel.Visible = false;
-            label29.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label29.Location = new System.Drawing.Point(11, 3);
+            label29.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label29.Location = new Point(11, 3);
             label29.Name = "label29";
-            label29.Size = new System.Drawing.Size(301, 20);
+            label29.Size = new Size(301, 20);
             label29.TabIndex = 25;
             label29.Text = "Preview Sequence:";
-            label29.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel13.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label29.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel13.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel13.ColumnCount = 2;
-            _ = tableLayoutPanel13.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel13.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel13.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel13.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel13.Controls.Add(seqArcSeqComboBox, 0, 0);
             tableLayoutPanel13.Controls.Add(seqArcSeqBox, 1, 0);
-            tableLayoutPanel13.Location = new System.Drawing.Point(14, 25);
+            tableLayoutPanel13.Location = new Point(14, 25);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
             tableLayoutPanel13.RowCount = 1;
-            _ = tableLayoutPanel13.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel13.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel13.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel13.Size = new Size(298, 31);
             tableLayoutPanel13.TabIndex = 24;
-            seqArcSeqComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqArcSeqComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            seqArcSeqComboBox.Dock = DockStyle.Fill;
+            seqArcSeqComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             seqArcSeqComboBox.FormattingEnabled = true;
-            seqArcSeqComboBox.Location = new System.Drawing.Point(3, 3);
+            seqArcSeqComboBox.Location = new Point(3, 3);
             seqArcSeqComboBox.Name = "seqArcSeqComboBox";
-            seqArcSeqComboBox.Size = new System.Drawing.Size(247, 21);
+            seqArcSeqComboBox.Size = new Size(247, 21);
             seqArcSeqComboBox.TabIndex = 6;
             toolTip.SetToolTip(seqArcSeqComboBox, "Sequence to play.");
-            seqArcSeqBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqArcSeqBox.Location = new System.Drawing.Point(256, 3);
-            seqArcSeqBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            seqArcSeqBox.Dock = DockStyle.Fill;
+            seqArcSeqBox.Location = new Point(256, 3);
+            seqArcSeqBox.Maximum = 65535;
             seqArcSeqBox.Name = "seqArcSeqBox";
-            seqArcSeqBox.Size = new System.Drawing.Size(39, 20);
+            seqArcSeqBox.Size = new Size(39, 20);
             seqArcSeqBox.TabIndex = 7;
             toolTip.SetToolTip(seqArcSeqBox, "Id of the sequence to play.");
             seqArcPanel.Controls.Add(seqArcOpenFileButton);
-            seqArcPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqArcPanel.Location = new System.Drawing.Point(0, 270);
+            seqArcPanel.Dock = DockStyle.Fill;
+            seqArcPanel.Location = new Point(0, 270);
             seqArcPanel.Name = "seqArcPanel";
-            seqArcPanel.Size = new System.Drawing.Size(325, 268);
+            seqArcPanel.Size = new Size(325, 268);
             seqArcPanel.TabIndex = 19;
             seqArcPanel.Visible = false;
-            seqArcOpenFileButton.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqArcOpenFileButton.Location = new System.Drawing.Point(14, 6);
+            seqArcOpenFileButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqArcOpenFileButton.Location = new Point(14, 6);
             seqArcOpenFileButton.Name = "seqArcOpenFileButton";
-            seqArcOpenFileButton.Size = new System.Drawing.Size(298, 25);
+            seqArcOpenFileButton.Size = new Size(298, 25);
             seqArcOpenFileButton.TabIndex = 1;
             seqArcOpenFileButton.Text = "Open File";
             seqArcOpenFileButton.UseVisualStyleBackColor = true;
@@ -1906,266 +1738,167 @@ namespace NitroStudio2
             seqPanel.Controls.Add(label24);
             seqPanel.Controls.Add(tableLayoutPanel10);
             seqPanel.Controls.Add(label23);
-            seqPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqPanel.Location = new System.Drawing.Point(0, 270);
+            seqPanel.Dock = DockStyle.Fill;
+            seqPanel.Location = new Point(0, 270);
             seqPanel.Name = "seqPanel";
-            seqPanel.Size = new System.Drawing.Size(325, 268);
+            seqPanel.Size = new Size(325, 268);
             seqPanel.TabIndex = 17;
             seqPanel.Visible = false;
-            tableLayoutPanel11.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel11.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel11.ColumnCount = 2;
-            _ = tableLayoutPanel11.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel11.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel11.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel11.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel11.Controls.Add(seqPlayerComboBox, 0, 0);
             tableLayoutPanel11.Controls.Add(seqPlayerBox, 1, 0);
-            tableLayoutPanel11.Location = new System.Drawing.Point(14, 220);
+            tableLayoutPanel11.Location = new Point(14, 220);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
             tableLayoutPanel11.RowCount = 1;
-            _ = tableLayoutPanel11.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel11.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel11.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel11.Size = new Size(298, 31);
             tableLayoutPanel11.TabIndex = 23;
-            seqPlayerComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqPlayerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            seqPlayerComboBox.Dock = DockStyle.Fill;
+            seqPlayerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             seqPlayerComboBox.FormattingEnabled = true;
-            seqPlayerComboBox.Location = new System.Drawing.Point(3, 3);
+            seqPlayerComboBox.Location = new Point(3, 3);
             seqPlayerComboBox.Name = "seqPlayerComboBox";
-            seqPlayerComboBox.Size = new System.Drawing.Size(247, 21);
+            seqPlayerComboBox.Size = new Size(247, 21);
             seqPlayerComboBox.TabIndex = 6;
             toolTip.SetToolTip(seqPlayerComboBox, "Player to play the sequence.");
-            seqPlayerBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqPlayerBox.Location = new System.Drawing.Point(256, 3);
-            seqPlayerBox.Maximum = new decimal(new int[] { 31, 0, 0, 0 });
+            seqPlayerBox.Dock = DockStyle.Fill;
+            seqPlayerBox.Location = new Point(256, 3);
+            seqPlayerBox.Maximum = 31;
             seqPlayerBox.Name = "seqPlayerBox";
-            seqPlayerBox.Size = new System.Drawing.Size(39, 20);
+            seqPlayerBox.Size = new Size(39, 20);
             seqPlayerBox.TabIndex = 7;
             toolTip.SetToolTip(seqPlayerBox, "Id of the player to play the sequence.");
-            label27.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label27.Location = new System.Drawing.Point(11, 198);
+            label27.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label27.Location = new Point(11, 198);
             label27.Name = "label27";
-            label27.Size = new System.Drawing.Size(301, 22);
+            label27.Size = new Size(301, 22);
             label27.TabIndex = 22;
             label27.Text = "Player:";
-            label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            seqPlayerPriorityBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqPlayerPriorityBox.Location = new System.Drawing.Point(14, 175);
-            seqPlayerPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            label27.TextAlign = ContentAlignment.MiddleCenter;
+            seqPlayerPriorityBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqPlayerPriorityBox.Location = new Point(14, 175);
+            seqPlayerPriorityBox.Maximum = 127;
             seqPlayerPriorityBox.Name = "seqPlayerPriorityBox";
-            seqPlayerPriorityBox.Size = new System.Drawing.Size(298, 20);
+            seqPlayerPriorityBox.Size = new Size(298, 20);
             seqPlayerPriorityBox.TabIndex = 21;
             toolTip.SetToolTip(
                 seqPlayerPriorityBox,
                 "If the sounds can not all be played at once, the one with the highest priority wi"
                     + "ll play."
             );
-            label26.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label26.Location = new System.Drawing.Point(11, 152);
+            label26.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label26.Location = new Point(11, 152);
             label26.Name = "label26";
-            label26.Size = new System.Drawing.Size(301, 22);
+            label26.Size = new Size(301, 22);
             label26.TabIndex = 20;
             label26.Text = "Player Priority:";
-            label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            seqChannelPriorityBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqChannelPriorityBox.Location = new System.Drawing.Point(14, 129);
-            seqChannelPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            label26.TextAlign = ContentAlignment.MiddleCenter;
+            seqChannelPriorityBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqChannelPriorityBox.Location = new Point(14, 129);
+            seqChannelPriorityBox.Maximum = 127;
             seqChannelPriorityBox.Name = "seqChannelPriorityBox";
-            seqChannelPriorityBox.Size = new System.Drawing.Size(298, 20);
+            seqChannelPriorityBox.Size = new Size(298, 20);
             seqChannelPriorityBox.TabIndex = 19;
             toolTip.SetToolTip(
                 seqChannelPriorityBox,
                 "If the sounds can not all be played at once, the one with the highest priority wi"
                     + "ll play."
             );
-            label25.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label25.Location = new System.Drawing.Point(11, 106);
+            label25.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label25.Location = new Point(11, 106);
             label25.Name = "label25";
-            label25.Size = new System.Drawing.Size(301, 22);
+            label25.Size = new Size(301, 22);
             label25.TabIndex = 18;
             label25.Text = "Channel Priority:";
-            label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            seqVolumeBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqVolumeBox.Location = new System.Drawing.Point(14, 82);
-            seqVolumeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            label25.TextAlign = ContentAlignment.MiddleCenter;
+            seqVolumeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqVolumeBox.Location = new Point(14, 82);
+            seqVolumeBox.Maximum = 127;
             seqVolumeBox.Name = "seqVolumeBox";
-            seqVolumeBox.Size = new System.Drawing.Size(298, 20);
+            seqVolumeBox.Size = new Size(298, 20);
             seqVolumeBox.TabIndex = 17;
             toolTip.SetToolTip(seqVolumeBox, "The volume of the sequence.");
-            label24.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label24.Location = new System.Drawing.Point(11, 59);
+            label24.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label24.Location = new Point(11, 59);
             label24.Name = "label24";
-            label24.Size = new System.Drawing.Size(301, 22);
+            label24.Size = new Size(301, 22);
             label24.TabIndex = 16;
             label24.Text = "Volume:";
-            label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel10.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label24.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel10.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel10.ColumnCount = 2;
-            _ = tableLayoutPanel10.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel10.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel10.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel10.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel10.Controls.Add(seqBankComboBox, 0, 0);
             tableLayoutPanel10.Controls.Add(seqBankBox, 1, 0);
-            tableLayoutPanel10.Location = new System.Drawing.Point(14, 25);
+            tableLayoutPanel10.Location = new Point(14, 25);
             tableLayoutPanel10.Name = "tableLayoutPanel10";
             tableLayoutPanel10.RowCount = 1;
-            _ = tableLayoutPanel10.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel10.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel10.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel10.Size = new Size(298, 31);
             tableLayoutPanel10.TabIndex = 15;
-            seqBankComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqBankComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            seqBankComboBox.Dock = DockStyle.Fill;
+            seqBankComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             seqBankComboBox.FormattingEnabled = true;
-            seqBankComboBox.Location = new System.Drawing.Point(3, 3);
+            seqBankComboBox.Location = new Point(3, 3);
             seqBankComboBox.Name = "seqBankComboBox";
-            seqBankComboBox.Size = new System.Drawing.Size(247, 21);
+            seqBankComboBox.Size = new Size(247, 21);
             seqBankComboBox.TabIndex = 6;
             toolTip.SetToolTip(seqBankComboBox, "Bank to use with the sequence.");
-            seqBankBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            seqBankBox.Location = new System.Drawing.Point(256, 3);
-            seqBankBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            seqBankBox.Dock = DockStyle.Fill;
+            seqBankBox.Location = new Point(256, 3);
+            seqBankBox.Maximum = 65535;
             seqBankBox.Name = "seqBankBox";
-            seqBankBox.Size = new System.Drawing.Size(39, 20);
+            seqBankBox.Size = new Size(39, 20);
             seqBankBox.TabIndex = 7;
             toolTip.SetToolTip(seqBankBox, "Id of the bank to use with the sequence.");
-            label23.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label23.Location = new System.Drawing.Point(11, 3);
+            label23.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label23.Location = new Point(11, 3);
             label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(301, 22);
+            label23.Size = new Size(301, 22);
             label23.TabIndex = 2;
             label23.Text = "Bank:";
-            label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label23.TextAlign = ContentAlignment.MiddleCenter;
             playerPanel.Controls.Add(tableLayoutPanel8);
             playerPanel.Controls.Add(label19);
             playerPanel.Controls.Add(playerHeapSizeBox);
             playerPanel.Controls.Add(label18);
             playerPanel.Controls.Add(playerMaxSequencesBox);
             playerPanel.Controls.Add(label17);
-            playerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            playerPanel.Location = new System.Drawing.Point(0, 270);
+            playerPanel.Dock = DockStyle.Fill;
+            playerPanel.Location = new Point(0, 270);
             playerPanel.Name = "playerPanel";
-            playerPanel.Size = new System.Drawing.Size(325, 268);
+            playerPanel.Size = new Size(325, 268);
             playerPanel.TabIndex = 15;
             playerPanel.Visible = false;
-            tableLayoutPanel8.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel8.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel8.ColumnCount = 4;
-            _ = tableLayoutPanel8.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            tableLayoutPanel8.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 25F)
             );
-            _ = tableLayoutPanel8.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            tableLayoutPanel8.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 25F)
             );
-            _ = tableLayoutPanel8.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            tableLayoutPanel8.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 25F)
             );
-            _ = tableLayoutPanel8.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F)
+            tableLayoutPanel8.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 25F)
             );
             // Add player flags to the 4x4 grid
             for (int _i = 0; _i < 16; _i++)
@@ -2175,100 +1908,55 @@ namespace NitroStudio2
                 var _cb = playerFlagBoxes[_i];
                 tableLayoutPanel8.Controls.Add(_cb, _col, _row);
                 _cb.AutoSize = true;
-                _cb.Location = new System.Drawing.Point(_col * 74 + 3, _row * 25 + 3);
+                _cb.Location = new Point(_col * 74 + 3, _row * 25 + 3);
                 _cb.Name = "playerFlag" + _i + "Box";
-                _cb.Size = new System.Drawing.Size(_i < 10 ? 32 : 38, 17);
+                _cb.Size = new Size(_i < 10 ? 32 : 38, 17);
                 _cb.TabIndex = _i;
                 _cb.Text = _i.ToString();
                 _cb.UseVisualStyleBackColor = true;
             }
-            label19.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label19.Location = new System.Drawing.Point(11, 93);
+            label19.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label19.Location = new Point(11, 93);
             label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(301, 22);
+            label19.Size = new Size(301, 22);
             label19.TabIndex = 9;
             label19.Text = "Channel Flags:";
-            label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            playerHeapSizeBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label19.TextAlign = ContentAlignment.MiddleCenter;
+            playerHeapSizeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             playerHeapSizeBox.Hexadecimal = true;
-            playerHeapSizeBox.Location = new System.Drawing.Point(14, 70);
+            playerHeapSizeBox.Location = new Point(14, 70);
             playerHeapSizeBox.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
             playerHeapSizeBox.Name = "playerHeapSizeBox";
-            playerHeapSizeBox.Size = new System.Drawing.Size(298, 20);
+            playerHeapSizeBox.Size = new Size(298, 20);
             playerHeapSizeBox.TabIndex = 8;
             toolTip.SetToolTip(
                 playerHeapSizeBox,
                 "How much memory to reserve in the sound heap for the player."
             );
-            label18.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label18.Location = new System.Drawing.Point(11, 48);
+            label18.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label18.Location = new Point(11, 48);
             label18.Name = "label18";
-            label18.Size = new System.Drawing.Size(301, 22);
+            label18.Size = new Size(301, 22);
             label18.TabIndex = 7;
             label18.Text = "Heap Size:";
-            label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            playerMaxSequencesBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            playerMaxSequencesBox.Location = new System.Drawing.Point(14, 25);
-            playerMaxSequencesBox.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            label18.TextAlign = ContentAlignment.MiddleCenter;
+            playerMaxSequencesBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            playerMaxSequencesBox.Location = new Point(14, 25);
+            playerMaxSequencesBox.Maximum = 65535;
             playerMaxSequencesBox.Name = "playerMaxSequencesBox";
-            playerMaxSequencesBox.Size = new System.Drawing.Size(298, 20);
+            playerMaxSequencesBox.Size = new Size(298, 20);
             playerMaxSequencesBox.TabIndex = 6;
             toolTip.SetToolTip(
                 playerMaxSequencesBox,
                 "Max number of sequences the player can play."
             );
-            label17.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label17.Location = new System.Drawing.Point(11, 3);
+            label17.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label17.Location = new Point(11, 3);
             label17.Name = "label17";
-            label17.Size = new System.Drawing.Size(301, 22);
+            label17.Size = new Size(301, 22);
             label17.TabIndex = 5;
             label17.Text = "Max Sequences:";
-            label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label17.TextAlign = ContentAlignment.MiddleCenter;
             stmPanel.Controls.Add(stmMonoToStereoBox);
             stmPanel.Controls.Add(label16);
             stmPanel.Controls.Add(label15);
@@ -2277,193 +1965,112 @@ namespace NitroStudio2
             stmPanel.Controls.Add(label14);
             stmPanel.Controls.Add(stmVolumeBox);
             stmPanel.Controls.Add(label13);
-            stmPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            stmPanel.Location = new System.Drawing.Point(0, 270);
+            stmPanel.Dock = DockStyle.Fill;
+            stmPanel.Location = new Point(0, 270);
             stmPanel.Name = "stmPanel";
-            stmPanel.Size = new System.Drawing.Size(325, 268);
+            stmPanel.Size = new Size(325, 268);
             stmPanel.TabIndex = 14;
             stmPanel.Visible = false;
-            stmMonoToStereoBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            stmMonoToStereoBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            stmMonoToStereoBox.Location = new System.Drawing.Point(11, 171);
+            stmMonoToStereoBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            stmMonoToStereoBox.CheckAlign = ContentAlignment.MiddleCenter;
+            stmMonoToStereoBox.Location = new Point(11, 171);
             stmMonoToStereoBox.Name = "stmMonoToStereoBox";
-            stmMonoToStereoBox.Size = new System.Drawing.Size(301, 24);
+            stmMonoToStereoBox.Size = new Size(301, 24);
             stmMonoToStereoBox.TabIndex = 17;
             toolTip.SetToolTip(
                 stmMonoToStereoBox,
                 "If the stream is mono, play it through two channels."
             );
             stmMonoToStereoBox.UseVisualStyleBackColor = true;
-            label16.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label16.Location = new System.Drawing.Point(11, 149);
+            label16.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label16.Location = new Point(11, 149);
             label16.Name = "label16";
-            label16.Size = new System.Drawing.Size(301, 22);
+            label16.Size = new Size(301, 22);
             label16.TabIndex = 16;
             label16.Text = "Mono To Stereo:";
-            label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            label15.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label15.Location = new System.Drawing.Point(11, 93);
+            label16.TextAlign = ContentAlignment.MiddleCenter;
+            label15.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label15.Location = new Point(11, 93);
             label15.Name = "label15";
-            label15.Size = new System.Drawing.Size(301, 22);
+            label15.Size = new Size(301, 22);
             label15.TabIndex = 15;
             label15.Text = "Player:";
-            label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel7.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label15.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel7.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel7.ColumnCount = 2;
-            _ = tableLayoutPanel7.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel7.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel7.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel7.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel7.Controls.Add(stmPlayerComboBox, 0, 0);
             tableLayoutPanel7.Controls.Add(stmPlayerBox, 1, 0);
-            tableLayoutPanel7.Location = new System.Drawing.Point(14, 115);
+            tableLayoutPanel7.Location = new Point(14, 115);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             tableLayoutPanel7.RowCount = 1;
-            _ = tableLayoutPanel7.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel7.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel7.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel7.Size = new Size(298, 31);
             tableLayoutPanel7.TabIndex = 14;
-            stmPlayerComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            stmPlayerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            stmPlayerComboBox.Dock = DockStyle.Fill;
+            stmPlayerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             stmPlayerComboBox.FormattingEnabled = true;
-            stmPlayerComboBox.Location = new System.Drawing.Point(3, 3);
+            stmPlayerComboBox.Location = new Point(3, 3);
             stmPlayerComboBox.Name = "stmPlayerComboBox";
-            stmPlayerComboBox.Size = new System.Drawing.Size(247, 21);
+            stmPlayerComboBox.Size = new Size(247, 21);
             stmPlayerComboBox.TabIndex = 6;
             toolTip.SetToolTip(stmPlayerComboBox, "The player to play the stream.");
-            stmPlayerBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            stmPlayerBox.Location = new System.Drawing.Point(256, 3);
-            stmPlayerBox.Maximum = new decimal(new int[] { 3, 0, 0, 0 });
+            stmPlayerBox.Dock = DockStyle.Fill;
+            stmPlayerBox.Location = new Point(256, 3);
+            stmPlayerBox.Maximum = 3;
             stmPlayerBox.Name = "stmPlayerBox";
-            stmPlayerBox.Size = new System.Drawing.Size(39, 20);
+            stmPlayerBox.Size = new Size(39, 20);
             stmPlayerBox.TabIndex = 7;
             toolTip.SetToolTip(stmPlayerBox, "Id of the player to play the stream.");
-            stmPriorityBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            stmPriorityBox.Location = new System.Drawing.Point(14, 70);
-            stmPriorityBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            stmPriorityBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            stmPriorityBox.Location = new Point(14, 70);
+            stmPriorityBox.Maximum = 127;
             stmPriorityBox.Name = "stmPriorityBox";
-            stmPriorityBox.Size = new System.Drawing.Size(298, 20);
+            stmPriorityBox.Size = new Size(298, 20);
             stmPriorityBox.TabIndex = 7;
             toolTip.SetToolTip(
                 stmPriorityBox,
                 "If the sounds can not all be played at once, the one with the highest priority wi"
                     + "ll play."
             );
-            label14.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label14.Location = new System.Drawing.Point(11, 48);
+            label14.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label14.Location = new Point(11, 48);
             label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(301, 22);
+            label14.Size = new Size(301, 22);
             label14.TabIndex = 6;
             label14.Text = "Priority:";
-            label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            stmVolumeBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            stmVolumeBox.Location = new System.Drawing.Point(14, 25);
-            stmVolumeBox.Maximum = new decimal(new int[] { 127, 0, 0, 0 });
+            label14.TextAlign = ContentAlignment.MiddleCenter;
+            stmVolumeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            stmVolumeBox.Location = new Point(14, 25);
+            stmVolumeBox.Maximum = 127;
             stmVolumeBox.Name = "stmVolumeBox";
-            stmVolumeBox.Size = new System.Drawing.Size(298, 20);
+            stmVolumeBox.Size = new Size(298, 20);
             stmVolumeBox.TabIndex = 5;
             toolTip.SetToolTip(stmVolumeBox, "The volume of the stream.");
-            label13.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label13.Location = new System.Drawing.Point(11, 3);
+            label13.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label13.Location = new Point(11, 3);
             label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(301, 22);
+            label13.Size = new Size(301, 22);
             label13.TabIndex = 4;
             label13.Text = "Volume:";
-            label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label13.TextAlign = ContentAlignment.MiddleCenter;
             streamPlayerPanel.Controls.Add(stmPlayerChannelType);
             streamPlayerPanel.Controls.Add(label12);
             streamPlayerPanel.Controls.Add(tableLayoutPanel6);
-            streamPlayerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            streamPlayerPanel.Location = new System.Drawing.Point(0, 270);
+            streamPlayerPanel.Dock = DockStyle.Fill;
+            streamPlayerPanel.Location = new Point(0, 270);
             streamPlayerPanel.Name = "streamPlayerPanel";
-            streamPlayerPanel.Size = new System.Drawing.Size(325, 268);
+            streamPlayerPanel.Size = new Size(325, 268);
             streamPlayerPanel.TabIndex = 13;
             streamPlayerPanel.Visible = false;
-            stmPlayerChannelType.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            stmPlayerChannelType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             stmPlayerChannelType.DropDownStyle = System
                 .Windows
                 .Forms
@@ -2471,95 +2078,77 @@ namespace NitroStudio2
                 .DropDownList;
             stmPlayerChannelType.FormattingEnabled = true;
             stmPlayerChannelType.Items.AddRange(new object[] { "Mono", "Stereo" });
-            stmPlayerChannelType.Location = new System.Drawing.Point(14, 28);
+            stmPlayerChannelType.Location = new Point(14, 28);
             stmPlayerChannelType.Name = "stmPlayerChannelType";
-            stmPlayerChannelType.Size = new System.Drawing.Size(298, 21);
+            stmPlayerChannelType.Size = new Size(298, 21);
             stmPlayerChannelType.TabIndex = 4;
             toolTip.SetToolTip(stmPlayerChannelType, "If the stream is stereo or mono.");
-            label12.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label12.Location = new System.Drawing.Point(11, 3);
+            label12.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label12.Location = new Point(11, 3);
             label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(301, 22);
+            label12.Size = new Size(301, 22);
             label12.TabIndex = 3;
             label12.Text = "Channel Type:";
-            label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel6.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label12.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel6.ColumnCount = 2;
-            _ = tableLayoutPanel6.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel6.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
-            _ = tableLayoutPanel6.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel6.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
             tableLayoutPanel6.Controls.Add(stmPlayerLeftChannelBox, 0, 1);
             tableLayoutPanel6.Controls.Add(stmPlayerRightChannelBox, 0, 1);
             tableLayoutPanel6.Controls.Add(rightChannelLabel, 1, 0);
             tableLayoutPanel6.Controls.Add(leftChannelLabel, 0, 0);
-            tableLayoutPanel6.Location = new System.Drawing.Point(14, 55);
+            tableLayoutPanel6.Location = new Point(14, 55);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 2;
-            _ = tableLayoutPanel6.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel6.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 50F)
             );
-            _ = tableLayoutPanel6.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel6.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 50F)
             );
-            tableLayoutPanel6.Size = new System.Drawing.Size(298, 45);
+            tableLayoutPanel6.Size = new Size(298, 45);
             tableLayoutPanel6.TabIndex = 0;
-            stmPlayerLeftChannelBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            stmPlayerLeftChannelBox.Location = new System.Drawing.Point(3, 25);
-            stmPlayerLeftChannelBox.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
+            stmPlayerLeftChannelBox.Dock = DockStyle.Fill;
+            stmPlayerLeftChannelBox.Location = new Point(3, 25);
+            stmPlayerLeftChannelBox.Maximum = 15;
             stmPlayerLeftChannelBox.Name = "stmPlayerLeftChannelBox";
-            stmPlayerLeftChannelBox.Size = new System.Drawing.Size(143, 20);
+            stmPlayerLeftChannelBox.Size = new Size(143, 20);
             stmPlayerLeftChannelBox.TabIndex = 4;
             toolTip.SetToolTip(stmPlayerLeftChannelBox, "Channel to use for the stream.");
-            stmPlayerRightChannelBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            stmPlayerRightChannelBox.Location = new System.Drawing.Point(152, 25);
-            stmPlayerRightChannelBox.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
+            stmPlayerRightChannelBox.Dock = DockStyle.Fill;
+            stmPlayerRightChannelBox.Location = new Point(152, 25);
+            stmPlayerRightChannelBox.Maximum = 15;
             stmPlayerRightChannelBox.Name = "stmPlayerRightChannelBox";
-            stmPlayerRightChannelBox.Size = new System.Drawing.Size(143, 20);
+            stmPlayerRightChannelBox.Size = new Size(143, 20);
             stmPlayerRightChannelBox.TabIndex = 3;
             toolTip.SetToolTip(
                 stmPlayerRightChannelBox,
                 "Channel to use for the stream."
             );
-            rightChannelLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            rightChannelLabel.Location = new System.Drawing.Point(152, 0);
+            rightChannelLabel.Dock = DockStyle.Fill;
+            rightChannelLabel.Location = new Point(152, 0);
             rightChannelLabel.Name = "rightChannelLabel";
-            rightChannelLabel.Size = new System.Drawing.Size(143, 22);
+            rightChannelLabel.Size = new Size(143, 22);
             rightChannelLabel.TabIndex = 2;
             rightChannelLabel.Text = "Right Channel:";
-            rightChannelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            leftChannelLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            leftChannelLabel.Location = new System.Drawing.Point(3, 0);
+            rightChannelLabel.TextAlign = ContentAlignment.MiddleCenter;
+            leftChannelLabel.Dock = DockStyle.Fill;
+            leftChannelLabel.Location = new Point(3, 0);
             leftChannelLabel.Name = "leftChannelLabel";
-            leftChannelLabel.Size = new System.Drawing.Size(143, 22);
+            leftChannelLabel.Size = new Size(143, 22);
             leftChannelLabel.TabIndex = 1;
             leftChannelLabel.Text = "Left Channel:";
-            leftChannelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            leftChannelLabel.TextAlign = ContentAlignment.MiddleCenter;
             grpPanel.Controls.Add(grpEntries);
-            grpPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            grpPanel.Location = new System.Drawing.Point(0, 270);
+            grpPanel.Dock = DockStyle.Fill;
+            grpPanel.Location = new Point(0, 270);
             grpPanel.Name = "grpPanel";
-            grpPanel.Size = new System.Drawing.Size(325, 268);
+            grpPanel.Size = new Size(325, 268);
             grpPanel.TabIndex = 12;
             grpPanel.Visible = false;
             grpEntries.AllowUserToOrderColumns = true;
@@ -2570,22 +2159,22 @@ namespace NitroStudio2
                 .DataGridViewColumnHeadersHeightSizeMode
                 .AutoSize;
             grpEntries.Columns.AddRange(
-                new System.Windows.Forms.DataGridViewColumn[] { item, loadFlags }
+                new DataGridViewColumn[] { item, loadFlags }
             );
-            grpEntries.Dock = System.Windows.Forms.DockStyle.Fill;
-            grpEntries.Location = new System.Drawing.Point(0, 0);
+            grpEntries.Dock = DockStyle.Fill;
+            grpEntries.Location = new Point(0, 0);
             grpEntries.Name = "grpEntries";
-            grpEntries.Size = new System.Drawing.Size(325, 268);
+            grpEntries.Size = new Size(325, 268);
             grpEntries.TabIndex = 0;
             item.FillWeight = 1750F;
             item.HeaderText = "Item";
             item.Name = "item";
             item.Width = 175;
-            loadFlags.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            loadFlags.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             loadFlags.HeaderText = "Load Flags";
             loadFlags.Name = "loadFlags";
-            loadFlags.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            loadFlags.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            loadFlags.Resizable = DataGridViewTriState.True;
+            loadFlags.SortMode = DataGridViewColumnSortMode.Automatic;
             bankPanel.Controls.Add(tableLayoutPanel5);
             bankPanel.Controls.Add(label11);
             bankPanel.Controls.Add(tableLayoutPanel4);
@@ -2594,332 +2183,233 @@ namespace NitroStudio2
             bankPanel.Controls.Add(label7);
             bankPanel.Controls.Add(tableLayoutPanel2);
             bankPanel.Controls.Add(label6);
-            bankPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            bankPanel.Location = new System.Drawing.Point(0, 270);
+            bankPanel.Dock = DockStyle.Fill;
+            bankPanel.Location = new Point(0, 270);
             bankPanel.Name = "bankPanel";
-            bankPanel.Size = new System.Drawing.Size(325, 268);
+            bankPanel.Size = new Size(325, 268);
             bankPanel.TabIndex = 11;
             bankPanel.Visible = false;
-            tableLayoutPanel5.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel5.ColumnCount = 2;
-            _ = tableLayoutPanel5.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel5.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel5.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel5.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel5.Controls.Add(bnkWar3ComboBox, 0, 0);
             tableLayoutPanel5.Controls.Add(bnkWar3Box, 1, 0);
-            tableLayoutPanel5.Location = new System.Drawing.Point(14, 193);
+            tableLayoutPanel5.Location = new Point(14, 193);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
-            _ = tableLayoutPanel5.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel5.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel5.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel5.Size = new Size(298, 31);
             tableLayoutPanel5.TabIndex = 13;
-            bnkWar3ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar3ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            bnkWar3ComboBox.Dock = DockStyle.Fill;
+            bnkWar3ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             bnkWar3ComboBox.FormattingEnabled = true;
-            bnkWar3ComboBox.Location = new System.Drawing.Point(3, 3);
+            bnkWar3ComboBox.Location = new Point(3, 3);
             bnkWar3ComboBox.Name = "bnkWar3ComboBox";
-            bnkWar3ComboBox.Size = new System.Drawing.Size(247, 21);
+            bnkWar3ComboBox.Size = new Size(247, 21);
             bnkWar3ComboBox.TabIndex = 6;
             toolTip.SetToolTip(bnkWar3ComboBox, "Wave archive to be used for the bank.");
-            bnkWar3Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar3Box.Location = new System.Drawing.Point(256, 3);
-            bnkWar3Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            bnkWar3Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            bnkWar3Box.Dock = DockStyle.Fill;
+            bnkWar3Box.Location = new Point(256, 3);
+            bnkWar3Box.Maximum = 65534;
+            bnkWar3Box.Minimum = -1;
             bnkWar3Box.Name = "bnkWar3Box";
-            bnkWar3Box.Size = new System.Drawing.Size(39, 20);
+            bnkWar3Box.Size = new Size(39, 20);
             bnkWar3Box.TabIndex = 7;
             toolTip.SetToolTip(
                 bnkWar3Box,
                 "Id of the wave archive to use for this bank."
             );
-            label11.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label11.Location = new System.Drawing.Point(11, 171);
+            label11.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label11.Location = new Point(11, 171);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(301, 22);
+            label11.Size = new Size(301, 22);
             label11.TabIndex = 12;
             label11.Text = "Wave Archive 3:";
-            label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel4.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label11.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel4.ColumnCount = 2;
-            _ = tableLayoutPanel4.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel4.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel4.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel4.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel4.Controls.Add(bnkWar2ComboBox, 0, 0);
             tableLayoutPanel4.Controls.Add(bnkWar2Box, 1, 0);
-            tableLayoutPanel4.Location = new System.Drawing.Point(14, 137);
+            tableLayoutPanel4.Location = new Point(14, 137);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
-            _ = tableLayoutPanel4.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel4.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel4.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel4.Size = new Size(298, 31);
             tableLayoutPanel4.TabIndex = 11;
-            bnkWar2ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar2ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            bnkWar2ComboBox.Dock = DockStyle.Fill;
+            bnkWar2ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             bnkWar2ComboBox.FormattingEnabled = true;
-            bnkWar2ComboBox.Location = new System.Drawing.Point(3, 3);
+            bnkWar2ComboBox.Location = new Point(3, 3);
             bnkWar2ComboBox.Name = "bnkWar2ComboBox";
-            bnkWar2ComboBox.Size = new System.Drawing.Size(247, 21);
+            bnkWar2ComboBox.Size = new Size(247, 21);
             bnkWar2ComboBox.TabIndex = 6;
             toolTip.SetToolTip(bnkWar2ComboBox, "Wave archive to be used for the bank.");
-            bnkWar2Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar2Box.Location = new System.Drawing.Point(256, 3);
-            bnkWar2Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            bnkWar2Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            bnkWar2Box.Dock = DockStyle.Fill;
+            bnkWar2Box.Location = new Point(256, 3);
+            bnkWar2Box.Maximum = 65534;
+            bnkWar2Box.Minimum = -1;
             bnkWar2Box.Name = "bnkWar2Box";
-            bnkWar2Box.Size = new System.Drawing.Size(39, 20);
+            bnkWar2Box.Size = new Size(39, 20);
             bnkWar2Box.TabIndex = 7;
             toolTip.SetToolTip(
                 bnkWar2Box,
                 "Id of the wave archive to use for this bank."
             );
-            label10.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label10.Location = new System.Drawing.Point(11, 115);
+            label10.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label10.Location = new Point(11, 115);
             label10.Name = "label10";
-            label10.Size = new System.Drawing.Size(301, 22);
+            label10.Size = new Size(301, 22);
             label10.TabIndex = 10;
             label10.Text = "Wave Archive 2:";
-            label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel3.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label10.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel3.ColumnCount = 2;
-            _ = tableLayoutPanel3.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel3.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel3.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel3.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel3.Controls.Add(bnkWar1ComboBox, 0, 0);
             tableLayoutPanel3.Controls.Add(bnkWar1Box, 1, 0);
-            tableLayoutPanel3.Location = new System.Drawing.Point(14, 81);
+            tableLayoutPanel3.Location = new Point(14, 81);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
-            _ = tableLayoutPanel3.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel3.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel3.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel3.Size = new Size(298, 31);
             tableLayoutPanel3.TabIndex = 9;
-            bnkWar1ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar1ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            bnkWar1ComboBox.Dock = DockStyle.Fill;
+            bnkWar1ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             bnkWar1ComboBox.FormattingEnabled = true;
-            bnkWar1ComboBox.Location = new System.Drawing.Point(3, 3);
+            bnkWar1ComboBox.Location = new Point(3, 3);
             bnkWar1ComboBox.Name = "bnkWar1ComboBox";
-            bnkWar1ComboBox.Size = new System.Drawing.Size(247, 21);
+            bnkWar1ComboBox.Size = new Size(247, 21);
             bnkWar1ComboBox.TabIndex = 6;
             toolTip.SetToolTip(bnkWar1ComboBox, "Wave archive to be used for the bank.");
-            bnkWar1Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar1Box.Location = new System.Drawing.Point(256, 3);
-            bnkWar1Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            bnkWar1Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            bnkWar1Box.Dock = DockStyle.Fill;
+            bnkWar1Box.Location = new Point(256, 3);
+            bnkWar1Box.Maximum = 65534;
+            bnkWar1Box.Minimum = -1;
             bnkWar1Box.Name = "bnkWar1Box";
-            bnkWar1Box.Size = new System.Drawing.Size(39, 20);
+            bnkWar1Box.Size = new Size(39, 20);
             bnkWar1Box.TabIndex = 7;
             toolTip.SetToolTip(
                 bnkWar1Box,
                 "Id of the wave archive to use for this bank."
             );
-            label7.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label7.Location = new System.Drawing.Point(11, 59);
+            label7.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label7.Location = new Point(11, 59);
             label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(301, 22);
+            label7.Size = new Size(301, 22);
             label7.TabIndex = 8;
             label7.Text = "Wave Archive 1:";
-            label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel2.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label7.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel2.ColumnCount = 2;
-            _ = tableLayoutPanel2.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel2.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel2.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel2.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel2.Controls.Add(bnkWar0ComboBox, 0, 0);
             tableLayoutPanel2.Controls.Add(bnkWar0Box, 1, 0);
-            tableLayoutPanel2.Location = new System.Drawing.Point(14, 25);
+            tableLayoutPanel2.Location = new Point(14, 25);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
-            _ = tableLayoutPanel2.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel2.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel2.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel2.Size = new Size(298, 31);
             tableLayoutPanel2.TabIndex = 7;
-            bnkWar0ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar0ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            bnkWar0ComboBox.Dock = DockStyle.Fill;
+            bnkWar0ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             bnkWar0ComboBox.FormattingEnabled = true;
-            bnkWar0ComboBox.Location = new System.Drawing.Point(3, 3);
+            bnkWar0ComboBox.Location = new Point(3, 3);
             bnkWar0ComboBox.Name = "bnkWar0ComboBox";
-            bnkWar0ComboBox.Size = new System.Drawing.Size(247, 21);
+            bnkWar0ComboBox.Size = new Size(247, 21);
             bnkWar0ComboBox.TabIndex = 6;
             toolTip.SetToolTip(bnkWar0ComboBox, "Wave archive to be used for the bank.");
-            bnkWar0Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            bnkWar0Box.Location = new System.Drawing.Point(256, 3);
-            bnkWar0Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            bnkWar0Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            bnkWar0Box.Dock = DockStyle.Fill;
+            bnkWar0Box.Location = new Point(256, 3);
+            bnkWar0Box.Maximum = 65534;
+            bnkWar0Box.Minimum = -1;
             bnkWar0Box.Name = "bnkWar0Box";
-            bnkWar0Box.Size = new System.Drawing.Size(39, 20);
+            bnkWar0Box.Size = new Size(39, 20);
             bnkWar0Box.TabIndex = 7;
             toolTip.SetToolTip(
                 bnkWar0Box,
                 "Id of the wave archive to use for this bank."
             );
-            label6.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label6.Location = new System.Drawing.Point(11, 3);
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label6.Location = new Point(11, 3);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(301, 22);
+            label6.Size = new Size(301, 22);
             label6.TabIndex = 2;
             label6.Text = "Wave Archive 0:";
-            label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            blankPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            blankPanel.Location = new System.Drawing.Point(0, 270);
+            label6.TextAlign = ContentAlignment.MiddleCenter;
+            blankPanel.Dock = DockStyle.Fill;
+            blankPanel.Location = new Point(0, 270);
             blankPanel.Name = "blankPanel";
-            blankPanel.Size = new System.Drawing.Size(325, 268);
+            blankPanel.Size = new Size(325, 268);
             blankPanel.TabIndex = 10;
             blankPanel.Visible = false;
             warPanel.Controls.Add(loadIndividuallyBox);
             warPanel.Controls.Add(label9);
-            warPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            warPanel.Location = new System.Drawing.Point(0, 270);
+            warPanel.Dock = DockStyle.Fill;
+            warPanel.Location = new Point(0, 270);
             warPanel.Name = "warPanel";
-            warPanel.Size = new System.Drawing.Size(325, 268);
+            warPanel.Size = new Size(325, 268);
             warPanel.TabIndex = 9;
             warPanel.Visible = false;
-            loadIndividuallyBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            loadIndividuallyBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            loadIndividuallyBox.Location = new System.Drawing.Point(11, 25);
+            loadIndividuallyBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            loadIndividuallyBox.CheckAlign = ContentAlignment.MiddleCenter;
+            loadIndividuallyBox.Location = new Point(11, 25);
             loadIndividuallyBox.Name = "loadIndividuallyBox";
-            loadIndividuallyBox.Size = new System.Drawing.Size(301, 24);
+            loadIndividuallyBox.Size = new Size(301, 24);
             loadIndividuallyBox.TabIndex = 1;
             toolTip.SetToolTip(
                 loadIndividuallyBox,
                 "If the wave archive should be loaded individually."
             );
             loadIndividuallyBox.UseVisualStyleBackColor = true;
-            label9.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label9.Location = new System.Drawing.Point(11, 0);
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label9.Location = new Point(11, 0);
             label9.Name = "label9";
-            label9.Size = new System.Drawing.Size(301, 22);
+            label9.Size = new Size(301, 22);
             label9.TabIndex = 0;
             label9.Text = "Load Individually:";
-            label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label9.TextAlign = ContentAlignment.MiddleCenter;
             forceUniqueFilePanel.Controls.Add(forceUniqueFileBox);
             forceUniqueFilePanel.Controls.Add(label8);
-            forceUniqueFilePanel.Dock = System.Windows.Forms.DockStyle.Top;
-            forceUniqueFilePanel.Location = new System.Drawing.Point(0, 231);
+            forceUniqueFilePanel.Dock = DockStyle.Top;
+            forceUniqueFilePanel.Location = new Point(0, 231);
             forceUniqueFilePanel.Name = "forceUniqueFilePanel";
-            forceUniqueFilePanel.Size = new System.Drawing.Size(325, 39);
+            forceUniqueFilePanel.Size = new Size(325, 39);
             forceUniqueFilePanel.TabIndex = 8;
             forceUniqueFilePanel.Visible = false;
-            forceUniqueFileBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            forceUniqueFileBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            forceUniqueFileBox.Location = new System.Drawing.Point(11, 19);
+            forceUniqueFileBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            forceUniqueFileBox.CheckAlign = ContentAlignment.MiddleCenter;
+            forceUniqueFileBox.Location = new Point(11, 19);
             forceUniqueFileBox.Name = "forceUniqueFileBox";
-            forceUniqueFileBox.Size = new System.Drawing.Size(301, 18);
+            forceUniqueFileBox.Size = new Size(301, 18);
             forceUniqueFileBox.TabIndex = 1;
             toolTip.SetToolTip(
                 forceUniqueFileBox,
@@ -2928,44 +2418,26 @@ namespace NitroStudio2
                     + "ries for efficiency."
             );
             forceUniqueFileBox.UseVisualStyleBackColor = true;
-            label8.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label8.Location = new System.Drawing.Point(11, 0);
+            label8.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label8.Location = new Point(11, 0);
             label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(301, 17);
+            label8.Size = new Size(301, 17);
             label8.TabIndex = 0;
             label8.Text = "Force Unique File:";
-            label8.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            label8.TextAlign = ContentAlignment.BottomCenter;
             indexPanel.Controls.Add(swapAtIndexButton);
             indexPanel.Controls.Add(itemIndexBox);
             indexPanel.Controls.Add(label5);
-            indexPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            indexPanel.Location = new System.Drawing.Point(0, 150);
+            indexPanel.Dock = DockStyle.Top;
+            indexPanel.Location = new Point(0, 150);
             indexPanel.Name = "indexPanel";
-            indexPanel.Size = new System.Drawing.Size(325, 81);
+            indexPanel.Size = new Size(325, 81);
             indexPanel.TabIndex = 0;
             indexPanel.Visible = false;
-            swapAtIndexButton.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            swapAtIndexButton.Location = new System.Drawing.Point(14, 49);
+            swapAtIndexButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            swapAtIndexButton.Location = new Point(14, 49);
             swapAtIndexButton.Name = "swapAtIndexButton";
-            swapAtIndexButton.Size = new System.Drawing.Size(298, 25);
+            swapAtIndexButton.Size = new Size(298, 25);
             swapAtIndexButton.TabIndex = 0;
             swapAtIndexButton.Text = "Swap With Index";
             toolTip.SetToolTip(
@@ -2974,223 +2446,133 @@ namespace NitroStudio2
                     + "y just change the index."
             );
             swapAtIndexButton.UseVisualStyleBackColor = true;
-            itemIndexBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            itemIndexBox.Location = new System.Drawing.Point(14, 23);
+            itemIndexBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            itemIndexBox.Location = new Point(14, 23);
             itemIndexBox.Maximum = new decimal(new int[] { -1, 0, 0, 0 });
             itemIndexBox.Name = "itemIndexBox";
-            itemIndexBox.Size = new System.Drawing.Size(298, 20);
+            itemIndexBox.Size = new Size(298, 20);
             itemIndexBox.TabIndex = 1;
             toolTip.SetToolTip(
                 itemIndexBox,
                 "The index of the item as referenced to by the game."
             );
-            label5.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label5.Location = new System.Drawing.Point(11, 0);
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label5.Location = new Point(11, 0);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(301, 20);
+            label5.Size = new Size(301, 20);
             label5.TabIndex = 0;
             label5.Text = "Item Index:";
-            label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label5.TextAlign = ContentAlignment.MiddleCenter;
             settingsPanel.Controls.Add(seqExportModeBox);
             settingsPanel.Controls.Add(label4);
             settingsPanel.Controls.Add(seqImportModeBox);
             settingsPanel.Controls.Add(label3);
             settingsPanel.Controls.Add(writeNamesBox);
             settingsPanel.Controls.Add(label2);
-            settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            settingsPanel.Location = new System.Drawing.Point(0, 150);
+            settingsPanel.Dock = DockStyle.Fill;
+            settingsPanel.Location = new Point(0, 150);
             settingsPanel.Name = "settingsPanel";
-            settingsPanel.Size = new System.Drawing.Size(325, 388);
+            settingsPanel.Size = new Size(325, 388);
             settingsPanel.TabIndex = 1;
             settingsPanel.Visible = false;
-            seqExportModeBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqExportModeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            seqExportModeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqExportModeBox.DropDownStyle = ComboBoxStyle.DropDownList;
             seqExportModeBox.FormattingEnabled = true;
             seqExportModeBox.Items.AddRange(new object[] { "Nitro Studio", "Sseq2Midi" });
-            seqExportModeBox.Location = new System.Drawing.Point(11, 126);
+            seqExportModeBox.Location = new Point(11, 126);
             seqExportModeBox.Name = "seqExportModeBox";
-            seqExportModeBox.Size = new System.Drawing.Size(301, 21);
+            seqExportModeBox.Size = new Size(301, 21);
             seqExportModeBox.TabIndex = 5;
             toolTip.SetToolTip(
                 seqExportModeBox,
                 "What program should be used to export sequences. Nitro Studio is my custom export"
                     + "er, while Sseq2Midi is the exe included. I recommend you use my exporter."
             );
-            label4.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label4.Location = new System.Drawing.Point(11, 101);
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label4.Location = new Point(11, 101);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(301, 22);
+            label4.Size = new Size(301, 22);
             label4.TabIndex = 4;
             label4.Text = "Sequence Export Mode:";
-            label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            seqImportModeBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            seqImportModeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            label4.TextAlign = ContentAlignment.MiddleCenter;
+            seqImportModeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            seqImportModeBox.DropDownStyle = ComboBoxStyle.DropDownList;
             seqImportModeBox.FormattingEnabled = true;
             seqImportModeBox.Items.AddRange(
                 new object[] { "Nitro Studio", "Midi2Sseq", "Nintendo Tools" }
             );
-            seqImportModeBox.Location = new System.Drawing.Point(11, 77);
+            seqImportModeBox.Location = new Point(11, 77);
             seqImportModeBox.Name = "seqImportModeBox";
-            seqImportModeBox.Size = new System.Drawing.Size(301, 21);
+            seqImportModeBox.Size = new Size(301, 21);
             seqImportModeBox.TabIndex = 3;
             toolTip.SetToolTip(
                 seqImportModeBox,
                 resources.GetString("seqImportModeBox.ToolTip")
             );
-            label3.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label3.Location = new System.Drawing.Point(11, 52);
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label3.Location = new Point(11, 52);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(301, 22);
+            label3.Size = new Size(301, 22);
             label3.TabIndex = 2;
             label3.Text = "Sequence Import Mode:";
-            label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            writeNamesBox.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            writeNamesBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            writeNamesBox.Location = new System.Drawing.Point(11, 25);
+            label3.TextAlign = ContentAlignment.MiddleCenter;
+            writeNamesBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            writeNamesBox.CheckAlign = ContentAlignment.MiddleCenter;
+            writeNamesBox.Location = new Point(11, 25);
             writeNamesBox.Name = "writeNamesBox";
-            writeNamesBox.Size = new System.Drawing.Size(301, 24);
+            writeNamesBox.Size = new Size(301, 24);
             writeNamesBox.TabIndex = 1;
             toolTip.SetToolTip(
                 writeNamesBox,
                 "If the editor should export names for the sound archive."
             );
             writeNamesBox.UseVisualStyleBackColor = true;
-            label2.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label2.Location = new System.Drawing.Point(11, 0);
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label2.Location = new Point(11, 0);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(301, 22);
+            label2.Size = new Size(301, 22);
             label2.TabIndex = 0;
             label2.Text = "Write Names:";
-            label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            label2.TextAlign = ContentAlignment.BottomCenter;
             noInfoPanel.Controls.Add(label1);
-            noInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            noInfoPanel.Location = new System.Drawing.Point(0, 150);
+            noInfoPanel.Dock = DockStyle.Fill;
+            noInfoPanel.Location = new Point(0, 150);
             noInfoPanel.Name = "noInfoPanel";
-            noInfoPanel.Size = new System.Drawing.Size(325, 388);
+            noInfoPanel.Size = new Size(325, 388);
             noInfoPanel.TabIndex = 0;
-            label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            label1.Location = new System.Drawing.Point(0, 0);
+            label1.Dock = DockStyle.Fill;
+            label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(325, 388);
+            label1.Size = new Size(325, 388);
             label1.TabIndex = 0;
             label1.Text = "No Valid Info Selected!";
-            label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             kermalisSoundPlayerPanel.Controls.Add(kermalisPosition);
             kermalisSoundPlayerPanel.Controls.Add(tableLayoutPanel9);
             kermalisSoundPlayerPanel.Controls.Add(kermalisPlayButton);
             kermalisSoundPlayerPanel.Controls.Add(soundPlayerLabel);
-            kermalisSoundPlayerPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            kermalisSoundPlayerPanel.Location = new System.Drawing.Point(0, 0);
+            kermalisSoundPlayerPanel.Dock = DockStyle.Top;
+            kermalisSoundPlayerPanel.Location = new Point(0, 0);
             kermalisSoundPlayerPanel.Name = "kermalisSoundPlayerPanel";
-            kermalisSoundPlayerPanel.Size = new System.Drawing.Size(325, 150);
+            kermalisSoundPlayerPanel.Size = new Size(325, 150);
             kermalisSoundPlayerPanel.TabIndex = 16;
             kermalisSoundPlayerPanel.Visible = false;
-            kermalisPosition.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            kermalisPosition.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             kermalisPosition.LargeChange = 20;
-            kermalisPosition.Location = new System.Drawing.Point(14, 118);
+            kermalisPosition.Location = new Point(14, 118);
             kermalisPosition.Maximum = 100;
             kermalisPosition.Name = "kermalisPosition";
-            kermalisPosition.Size = new System.Drawing.Size(298, 45);
+            kermalisPosition.Size = new Size(298, 45);
             kermalisPosition.TabIndex = 5;
             kermalisPosition.TickFrequency = 5;
             toolTip.SetToolTip(kermalisPosition, "Sound position.");
-            tableLayoutPanel9.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel9.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel9.ColumnCount = 2;
-            _ = tableLayoutPanel9.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel9.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
-            _ = tableLayoutPanel9.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F)
+            tableLayoutPanel9.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50F)
             );
             tableLayoutPanel9.Controls.Add(label22, 1, 1);
             tableLayoutPanel9.Controls.Add(label21, 0, 1);
@@ -3198,106 +2580,81 @@ namespace NitroStudio2
             tableLayoutPanel9.Controls.Add(kermalisPauseButton, 0, 0);
             tableLayoutPanel9.Controls.Add(kermalisVolumeSlider, 0, 2);
             tableLayoutPanel9.Controls.Add(kermalisLoopBox, 1, 2);
-            tableLayoutPanel9.Location = new System.Drawing.Point(14, 49);
+            tableLayoutPanel9.Location = new Point(14, 49);
             tableLayoutPanel9.Name = "tableLayoutPanel9";
             tableLayoutPanel9.RowCount = 3;
-            _ = tableLayoutPanel9.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F)
+            tableLayoutPanel9.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 27F)
             );
-            _ = tableLayoutPanel9.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F)
+            tableLayoutPanel9.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 15F)
             );
-            _ = tableLayoutPanel9.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F)
+            tableLayoutPanel9.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 27F)
             );
-            tableLayoutPanel9.Size = new System.Drawing.Size(298, 63);
+            tableLayoutPanel9.Size = new Size(298, 63);
             tableLayoutPanel9.TabIndex = 4;
-            label22.Dock = System.Windows.Forms.DockStyle.Fill;
-            label22.Location = new System.Drawing.Point(152, 27);
+            label22.Dock = DockStyle.Fill;
+            label22.Location = new Point(152, 27);
             label22.Name = "label22";
-            label22.Size = new System.Drawing.Size(143, 15);
+            label22.Size = new Size(143, 15);
             label22.TabIndex = 5;
             label22.Text = "Loop:";
-            label22.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            label21.Dock = System.Windows.Forms.DockStyle.Fill;
-            label21.Location = new System.Drawing.Point(3, 27);
+            label22.TextAlign = ContentAlignment.BottomCenter;
+            label21.Dock = DockStyle.Fill;
+            label21.Location = new Point(3, 27);
             label21.Name = "label21";
-            label21.Size = new System.Drawing.Size(143, 15);
+            label21.Size = new Size(143, 15);
             label21.TabIndex = 4;
             label21.Text = "Volume:";
-            label21.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            kermalisStopButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            kermalisStopButton.Location = new System.Drawing.Point(152, 3);
+            label21.TextAlign = ContentAlignment.BottomCenter;
+            kermalisStopButton.Dock = DockStyle.Fill;
+            kermalisStopButton.Location = new Point(152, 3);
             kermalisStopButton.Name = "kermalisStopButton";
-            kermalisStopButton.Size = new System.Drawing.Size(143, 21);
+            kermalisStopButton.Size = new Size(143, 21);
             kermalisStopButton.TabIndex = 1;
             kermalisStopButton.Text = "Stop";
             kermalisStopButton.UseVisualStyleBackColor = true;
-            kermalisPauseButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            kermalisPauseButton.Location = new System.Drawing.Point(3, 3);
+            kermalisPauseButton.Dock = DockStyle.Fill;
+            kermalisPauseButton.Location = new Point(3, 3);
             kermalisPauseButton.Name = "kermalisPauseButton";
-            kermalisPauseButton.Size = new System.Drawing.Size(143, 21);
+            kermalisPauseButton.Size = new Size(143, 21);
             kermalisPauseButton.TabIndex = 0;
             kermalisPauseButton.Text = "Pause / Resume";
             kermalisPauseButton.UseVisualStyleBackColor = true;
-            kermalisVolumeSlider.Dock = System.Windows.Forms.DockStyle.Fill;
+            kermalisVolumeSlider.Dock = DockStyle.Fill;
             kermalisVolumeSlider.LargeChange = 10;
-            kermalisVolumeSlider.Location = new System.Drawing.Point(3, 45);
+            kermalisVolumeSlider.Location = new Point(3, 45);
             kermalisVolumeSlider.Maximum = 100;
             kermalisVolumeSlider.Name = "kermalisVolumeSlider";
-            kermalisVolumeSlider.Size = new System.Drawing.Size(143, 21);
+            kermalisVolumeSlider.Size = new Size(143, 21);
             kermalisVolumeSlider.SmallChange = 5;
             kermalisVolumeSlider.TabIndex = 2;
             kermalisVolumeSlider.TickFrequency = 10;
             kermalisVolumeSlider.Value = 75;
-            kermalisLoopBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            kermalisLoopBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            kermalisLoopBox.Location = new System.Drawing.Point(152, 45);
+            kermalisLoopBox.CheckAlign = ContentAlignment.MiddleCenter;
+            kermalisLoopBox.Dock = DockStyle.Fill;
+            kermalisLoopBox.Location = new Point(152, 45);
             kermalisLoopBox.Name = "kermalisLoopBox";
-            kermalisLoopBox.Size = new System.Drawing.Size(143, 21);
+            kermalisLoopBox.Size = new Size(143, 21);
             kermalisLoopBox.TabIndex = 3;
             kermalisLoopBox.UseVisualStyleBackColor = true;
-            kermalisPlayButton.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            kermalisPlayButton.Location = new System.Drawing.Point(14, 25);
+            kermalisPlayButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            kermalisPlayButton.Location = new Point(14, 25);
             kermalisPlayButton.Name = "kermalisPlayButton";
-            kermalisPlayButton.Size = new System.Drawing.Size(298, 20);
+            kermalisPlayButton.Size = new Size(298, 20);
             kermalisPlayButton.TabIndex = 3;
             kermalisPlayButton.Text = "Play";
             kermalisPlayButton.UseVisualStyleBackColor = true;
-            soundPlayerLabel.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            soundPlayerLabel.Location = new System.Drawing.Point(11, 3);
+            soundPlayerLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            soundPlayerLabel.Location = new Point(11, 3);
             soundPlayerLabel.Name = "soundPlayerLabel";
-            soundPlayerLabel.Size = new System.Drawing.Size(301, 22);
+            soundPlayerLabel.Size = new Size(301, 22);
             soundPlayerLabel.TabIndex = 1;
             soundPlayerLabel.Text = "Kermalis Sound Player:";
-            soundPlayerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            pnlPianoKeys.Anchor =
-
-
-                        System.Windows.Forms.AnchorStyles.Bottom
-                        | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            pnlPianoKeys.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            soundPlayerLabel.TextAlign = ContentAlignment.MiddleCenter;
+            pnlPianoKeys.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlPianoKeys.BackColor = SystemColors.ControlLightLight;
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.cn7]);
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.en7]);
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.cs7]);
@@ -3383,21 +2740,14 @@ namespace NitroStudio2
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.as5]);
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.bn5]);
             pnlPianoKeys.Controls.Add(pianoKeys[Notes.cn8]);
-            pnlPianoKeys.Location = new System.Drawing.Point(44, 478);
+            pnlPianoKeys.Location = new Point(44, 478);
             pnlPianoKeys.Name = "pnlPianoKeys";
-            pnlPianoKeys.Size = new System.Drawing.Size(565, 46);
+            pnlPianoKeys.Size = new Size(565, 46);
             pnlPianoKeys.TabIndex = 6;
             pnlPianoKeys.Visible = false;
             InitPianoKeysProperties();
-            bankEditorWars.Anchor =
-
-
-                        System.Windows.Forms.AnchorStyles.Top
-                        | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            bankEditorWars.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            bankEditorWars.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            bankEditorWars.BackColor = SystemColors.ControlLightLight;
             bankEditorWars.Controls.Add(tableLayoutPanel16);
             bankEditorWars.Controls.Add(label31);
             bankEditorWars.Controls.Add(tableLayoutPanel17);
@@ -3406,276 +2756,200 @@ namespace NitroStudio2
             bankEditorWars.Controls.Add(label34);
             bankEditorWars.Controls.Add(tableLayoutPanel19);
             bankEditorWars.Controls.Add(label35);
-            bankEditorWars.Location = new System.Drawing.Point(315, 13);
+            bankEditorWars.Location = new Point(315, 13);
             bankEditorWars.Name = "bankEditorWars";
-            bankEditorWars.Size = new System.Drawing.Size(325, 253);
+            bankEditorWars.Size = new Size(325, 253);
             bankEditorWars.TabIndex = 13;
             bankEditorWars.Visible = false;
-            tableLayoutPanel16.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            tableLayoutPanel16.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel16.ColumnCount = 2;
-            _ = tableLayoutPanel16.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel16.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel16.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel16.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel16.Controls.Add(war3ComboBox, 0, 0);
             tableLayoutPanel16.Controls.Add(war3Box, 1, 0);
-            tableLayoutPanel16.Location = new System.Drawing.Point(14, 193);
+            tableLayoutPanel16.Location = new Point(14, 193);
             tableLayoutPanel16.Name = "tableLayoutPanel16";
             tableLayoutPanel16.RowCount = 1;
-            _ = tableLayoutPanel16.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel16.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel16.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel16.Size = new Size(298, 31);
             tableLayoutPanel16.TabIndex = 13;
-            war3ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            war3ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            war3ComboBox.Dock = DockStyle.Fill;
+            war3ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             war3ComboBox.FormattingEnabled = true;
-            war3ComboBox.Location = new System.Drawing.Point(3, 3);
+            war3ComboBox.Location = new Point(3, 3);
             war3ComboBox.Name = "war3ComboBox";
-            war3ComboBox.Size = new System.Drawing.Size(247, 21);
+            war3ComboBox.Size = new Size(247, 21);
             war3ComboBox.TabIndex = 6;
             toolTip.SetToolTip(war3ComboBox, "Wave archive to be used for the bank.");
-            war3Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            war3Box.Location = new System.Drawing.Point(256, 3);
-            war3Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            war3Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            war3Box.Dock = DockStyle.Fill;
+            war3Box.Location = new Point(256, 3);
+            war3Box.Maximum = 65534;
+            war3Box.Minimum = -1;
             war3Box.Name = "war3Box";
-            war3Box.Size = new System.Drawing.Size(39, 20);
+            war3Box.Size = new Size(39, 20);
             war3Box.TabIndex = 7;
             toolTip.SetToolTip(war3Box, "Id of the wave archive to use for this bank.");
-            label31.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label31.Location = new System.Drawing.Point(11, 171);
+            label31.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label31.Location = new Point(11, 171);
             label31.Name = "label31";
-            label31.Size = new System.Drawing.Size(301, 22);
+            label31.Size = new Size(301, 22);
             label31.TabIndex = 12;
             label31.Text = "Wave Archive 3:";
-            label31.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel17.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label31.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel17.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel17.ColumnCount = 2;
-            _ = tableLayoutPanel17.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel17.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel17.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel17.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel17.Controls.Add(war2ComboBox, 0, 0);
             tableLayoutPanel17.Controls.Add(war2Box, 1, 0);
-            tableLayoutPanel17.Location = new System.Drawing.Point(14, 137);
+            tableLayoutPanel17.Location = new Point(14, 137);
             tableLayoutPanel17.Name = "tableLayoutPanel17";
             tableLayoutPanel17.RowCount = 1;
-            _ = tableLayoutPanel17.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel17.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel17.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel17.Size = new Size(298, 31);
             tableLayoutPanel17.TabIndex = 11;
-            war2ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            war2ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            war2ComboBox.Dock = DockStyle.Fill;
+            war2ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             war2ComboBox.FormattingEnabled = true;
-            war2ComboBox.Location = new System.Drawing.Point(3, 3);
+            war2ComboBox.Location = new Point(3, 3);
             war2ComboBox.Name = "war2ComboBox";
-            war2ComboBox.Size = new System.Drawing.Size(247, 21);
+            war2ComboBox.Size = new Size(247, 21);
             war2ComboBox.TabIndex = 6;
             toolTip.SetToolTip(war2ComboBox, "Wave archive to be used for the bank.");
-            war2Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            war2Box.Location = new System.Drawing.Point(256, 3);
-            war2Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            war2Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            war2Box.Dock = DockStyle.Fill;
+            war2Box.Location = new Point(256, 3);
+            war2Box.Maximum = 65534;
+            war2Box.Minimum = -1;
             war2Box.Name = "war2Box";
-            war2Box.Size = new System.Drawing.Size(39, 20);
+            war2Box.Size = new Size(39, 20);
             war2Box.TabIndex = 7;
             toolTip.SetToolTip(war2Box, "Id of the wave archive to use for this bank.");
-            label33.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label33.Location = new System.Drawing.Point(11, 115);
+            label33.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label33.Location = new Point(11, 115);
             label33.Name = "label33";
-            label33.Size = new System.Drawing.Size(301, 22);
+            label33.Size = new Size(301, 22);
             label33.TabIndex = 10;
             label33.Text = "Wave Archive 2:";
-            label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel18.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label33.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel18.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel18.ColumnCount = 2;
-            _ = tableLayoutPanel18.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel18.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel18.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel18.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel18.Controls.Add(war1ComboBox, 0, 0);
             tableLayoutPanel18.Controls.Add(war1Box, 1, 0);
-            tableLayoutPanel18.Location = new System.Drawing.Point(14, 81);
+            tableLayoutPanel18.Location = new Point(14, 81);
             tableLayoutPanel18.Name = "tableLayoutPanel18";
             tableLayoutPanel18.RowCount = 1;
-            _ = tableLayoutPanel18.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel18.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel18.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel18.Size = new Size(298, 31);
             tableLayoutPanel18.TabIndex = 9;
-            war1ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            war1ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            war1ComboBox.Dock = DockStyle.Fill;
+            war1ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             war1ComboBox.FormattingEnabled = true;
-            war1ComboBox.Location = new System.Drawing.Point(3, 3);
+            war1ComboBox.Location = new Point(3, 3);
             war1ComboBox.Name = "war1ComboBox";
-            war1ComboBox.Size = new System.Drawing.Size(247, 21);
+            war1ComboBox.Size = new Size(247, 21);
             war1ComboBox.TabIndex = 6;
             toolTip.SetToolTip(war1ComboBox, "Wave archive to be used for the bank.");
-            war1Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            war1Box.Location = new System.Drawing.Point(256, 3);
-            war1Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            war1Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            war1Box.Dock = DockStyle.Fill;
+            war1Box.Location = new Point(256, 3);
+            war1Box.Maximum = 65534;
+            war1Box.Minimum = -1;
             war1Box.Name = "war1Box";
-            war1Box.Size = new System.Drawing.Size(39, 20);
+            war1Box.Size = new Size(39, 20);
             war1Box.TabIndex = 7;
             toolTip.SetToolTip(war1Box, "Id of the wave archive to use for this bank.");
-            label34.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label34.Location = new System.Drawing.Point(11, 59);
+            label34.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label34.Location = new Point(11, 59);
             label34.Name = "label34";
-            label34.Size = new System.Drawing.Size(301, 22);
+            label34.Size = new Size(301, 22);
             label34.TabIndex = 8;
             label34.Text = "Wave Archive 1:";
-            label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tableLayoutPanel19.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
+            label34.TextAlign = ContentAlignment.MiddleCenter;
+            tableLayoutPanel19.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel19.ColumnCount = 2;
-            _ = tableLayoutPanel19.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F)
+            tableLayoutPanel19.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 85F)
             );
-            _ = tableLayoutPanel19.ColumnStyles.Add(
-                new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F)
+            tableLayoutPanel19.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 15F)
             );
             tableLayoutPanel19.Controls.Add(war0ComboBox, 0, 0);
             tableLayoutPanel19.Controls.Add(war0Box, 1, 0);
-            tableLayoutPanel19.Location = new System.Drawing.Point(14, 25);
+            tableLayoutPanel19.Location = new Point(14, 25);
             tableLayoutPanel19.Name = "tableLayoutPanel19";
             tableLayoutPanel19.RowCount = 1;
-            _ = tableLayoutPanel19.RowStyles.Add(
-                new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F)
+            tableLayoutPanel19.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F)
             );
-            tableLayoutPanel19.Size = new System.Drawing.Size(298, 31);
+            tableLayoutPanel19.Size = new Size(298, 31);
             tableLayoutPanel19.TabIndex = 7;
-            war0ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            war0ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            war0ComboBox.Dock = DockStyle.Fill;
+            war0ComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             war0ComboBox.FormattingEnabled = true;
-            war0ComboBox.Location = new System.Drawing.Point(3, 3);
+            war0ComboBox.Location = new Point(3, 3);
             war0ComboBox.Name = "war0ComboBox";
-            war0ComboBox.Size = new System.Drawing.Size(247, 21);
+            war0ComboBox.Size = new Size(247, 21);
             war0ComboBox.TabIndex = 6;
             toolTip.SetToolTip(war0ComboBox, "Wave archive to be used for the bank.");
-            war0Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            war0Box.Location = new System.Drawing.Point(256, 3);
-            war0Box.Maximum = new decimal(new int[] { 65534, 0, 0, 0 });
-            war0Box.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648 });
+            war0Box.Dock = DockStyle.Fill;
+            war0Box.Location = new Point(256, 3);
+            war0Box.Maximum = 65534;
+            war0Box.Minimum = -1;
             war0Box.Name = "war0Box";
-            war0Box.Size = new System.Drawing.Size(39, 20);
+            war0Box.Size = new Size(39, 20);
             war0Box.TabIndex = 7;
             toolTip.SetToolTip(war0Box, "Id of the wave archive to use for this bank.");
-            label35.Anchor =
-
-
-
-                            System.Windows.Forms.AnchorStyles.Top
-                            | System.Windows.Forms.AnchorStyles.Left
-                         | System.Windows.Forms.AnchorStyles.Right
-
-
-            ;
-            label35.Location = new System.Drawing.Point(11, 3);
+            label35.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label35.Location = new Point(11, 3);
             label35.Name = "label35";
-            label35.Size = new System.Drawing.Size(301, 22);
+            label35.Size = new Size(301, 22);
             label35.TabIndex = 2;
             label35.Text = "Wave Archive 0:";
-            label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            tree.Dock = System.Windows.Forms.DockStyle.Fill;
+            label35.TextAlign = ContentAlignment.MiddleCenter;
+            tree.Dock = DockStyle.Fill;
             tree.ImageIndex = 0;
             tree.ImageList = treeIcons;
             tree.Indent = 12;
-            tree.Location = new System.Drawing.Point(0, 0);
+            tree.Location = new Point(0, 0);
             tree.Name = "tree";
             treeNode1.ImageIndex = 10;
             treeNode1.Name = "fileInfo";
             treeNode1.SelectedImageIndex = 10;
             treeNode1.Text = "File Information";
-            tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] { treeNode1 });
+            tree.Nodes.AddRange(new TreeNode[] { treeNode1 });
             tree.SelectedImageIndex = 0;
             tree.ShowLines = false;
-            tree.Size = new System.Drawing.Size(651, 538);
+            tree.Size = new Size(651, 538);
             tree.TabIndex = 0;
-            tree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(
-                tree_NodeMouseClick
-            );
+            tree.NodeMouseClick += tree_NodeMouseClick;
             tree.NodeMouseDoubleClick +=
-                new System.Windows.Forms.TreeNodeMouseClickEventHandler(
+                new TreeNodeMouseClickEventHandler(
                     tree_NodeMouseDoubleClick
                 );
-            tree.KeyUp += new System.Windows.Forms.KeyEventHandler(tree_NodeKey);
+            tree.KeyUp += tree_NodeKey;
             treeIcons.ImageStream =
-                (System.Windows.Forms.ImageListStreamer)
-                    resources.GetObject("treeIcons.ImageStream")
-
-            ;
-            treeIcons.TransparentColor = System.Drawing.Color.Transparent;
+                (ImageListStreamer)
+                    resources.GetObject("treeIcons.ImageStream");
+            treeIcons.TransparentColor = Color.Transparent;
             treeIcons.Images.SetKeyName(0, "blank.png");
             treeIcons.Images.SetKeyName(1, "version.png");
             treeIcons.Images.SetKeyName(2, "sseq.png");
@@ -3696,34 +2970,34 @@ namespace NitroStudio2
             treeIcons.Images.SetKeyName(17, "psg.png");
             treeIcons.Images.SetKeyName(18, "whiteNoise.png");
             sequenceEditorPanel.Controls.Add(sequenceEditor);
-            sequenceEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            sequenceEditorPanel.Location = new System.Drawing.Point(0, 0);
+            sequenceEditorPanel.Dock = DockStyle.Fill;
+            sequenceEditorPanel.Location = new Point(0, 0);
             sequenceEditorPanel.Name = "sequenceEditorPanel";
-            sequenceEditorPanel.Size = new System.Drawing.Size(651, 538);
+            sequenceEditorPanel.Size = new Size(651, 538);
             sequenceEditorPanel.TabIndex = 3;
             sequenceEditorPanel.Visible = false;
-            sequenceEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            sequenceEditor.Location = new System.Drawing.Point(0, 0);
+            sequenceEditor.Dock = DockStyle.Fill;
+            sequenceEditor.Location = new Point(0, 0);
             sequenceEditor.Name = "sequenceEditor";
-            sequenceEditor.Size = new System.Drawing.Size(651, 538);
+            sequenceEditor.Size = new Size(651, 538);
             sequenceEditor.TabIndex = 0;
             openFileDialog.RestoreDirectory = true;
             statusStrip.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[] { status, currentNote }
+                new ToolStripItem[] { status, currentNote }
             );
-            statusStrip.Location = new System.Drawing.Point(0, 564);
+            statusStrip.Location = new Point(0, 564);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new System.Drawing.Size(984, 22);
+            statusStrip.Size = new Size(984, 22);
             statusStrip.TabIndex = 2;
             statusStrip.Text = "statusStrip1";
             status.Name = "status";
-            status.Size = new System.Drawing.Size(125, 17);
+            status.Size = new Size(125, 17);
             status.Text = "No Valid Info Selected!";
             currentNote.Name = "currentNote";
-            currentNote.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            currentNote.Size = new System.Drawing.Size(0, 17);
+            currentNote.RightToLeft = RightToLeft.No;
+            currentNote.Size = new Size(0, 17);
             rootMenu.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     addToolStripMenuItem,
                     expandToolStripMenuItem,
@@ -3731,34 +3005,28 @@ namespace NitroStudio2
                 }
             );
             rootMenu.Name = "rootMenu";
-            rootMenu.Size = new System.Drawing.Size(120, 70);
+            rootMenu.Size = new Size(120, 70);
             addToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.New;
             addToolStripMenuItem.Name = "addToolStripMenuItem";
-            addToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            addToolStripMenuItem.Size = new Size(119, 22);
             addToolStripMenuItem.Text = "Add";
-            addToolStripMenuItem.Click += new System.EventHandler(
-                addToolStripMenuItem_Click
-            );
+            addToolStripMenuItem.Click += addToolStripMenuItem_Click;
             expandToolStripMenuItem.Image = global::NitroStudio2.Properties.Resources.Save;
             expandToolStripMenuItem.Name = "expandToolStripMenuItem";
-            expandToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            expandToolStripMenuItem.Size = new Size(119, 22);
             expandToolStripMenuItem.Text = "Expand";
-            expandToolStripMenuItem.Click += new System.EventHandler(
-                expandToolStripMenuItem_Click
-            );
+            expandToolStripMenuItem.Click += expandToolStripMenuItem_Click;
             collapseToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Save_As;
             collapseToolStripMenuItem.Name = "collapseToolStripMenuItem";
-            collapseToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            collapseToolStripMenuItem.Size = new Size(119, 22);
             collapseToolStripMenuItem.Text = "Collapse";
-            collapseToolStripMenuItem.Click += new System.EventHandler(
-                collapseToolStripMenuItem_Click
-            );
-            nodeMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
+            collapseToolStripMenuItem.Click += collapseToolStripMenuItem_Click;
+            nodeMenu.ImeMode = ImeMode.Off;
             nodeMenu.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     addAboveToolStripMenuItem1,
                     addBelowToolStripMenuItem1,
@@ -3770,65 +3038,51 @@ namespace NitroStudio2
                 }
             );
             nodeMenu.Name = "contextMenuStrip1";
-            nodeMenu.Size = new System.Drawing.Size(139, 158);
+            nodeMenu.Size = new Size(139, 158);
             addAboveToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.New;
             addAboveToolStripMenuItem1.Name = "addAboveToolStripMenuItem1";
-            addAboveToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            addAboveToolStripMenuItem1.Size = new Size(138, 22);
             addAboveToolStripMenuItem1.Text = "Add Above";
-            addAboveToolStripMenuItem1.Click += new System.EventHandler(
-                addAboveToolStripMenuItem1_Click
-            );
+            addAboveToolStripMenuItem1.Click += addAboveToolStripMenuItem1_Click;
             addBelowToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Open;
             addBelowToolStripMenuItem1.Name = "addBelowToolStripMenuItem1";
-            addBelowToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            addBelowToolStripMenuItem1.Size = new Size(138, 22);
             addBelowToolStripMenuItem1.Text = "Add Below";
-            addBelowToolStripMenuItem1.Click += new System.EventHandler(
-                addBelowToolStripMenuItem1_Click
-            );
+            addBelowToolStripMenuItem1.Click += addBelowToolStripMenuItem1_Click;
             moveUpToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Save;
             moveUpToolStripMenuItem1.Name = "moveUpToolStripMenuItem1";
-            moveUpToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            moveUpToolStripMenuItem1.Size = new Size(138, 22);
             moveUpToolStripMenuItem1.Text = "Move Up";
-            moveUpToolStripMenuItem1.Click += new System.EventHandler(
-                moveUpToolStripMenuItem1_Click
-            );
+            moveUpToolStripMenuItem1.Click += moveUpToolStripMenuItem1_Click;
             moveDownToolStripMenuItem1.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Save_As;
             moveDownToolStripMenuItem1.Name = "moveDownToolStripMenuItem1";
-            moveDownToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            moveDownToolStripMenuItem1.Size = new Size(138, 22);
             moveDownToolStripMenuItem1.Text = "Move Down";
-            moveDownToolStripMenuItem1.Click += new System.EventHandler(
-                moveDownToolStripMenuItem1_Click
-            );
+            moveDownToolStripMenuItem1.Click += moveDownToolStripMenuItem1_Click;
             replaceFileToolStripMenuItem.Image = global::NitroStudio2
                 .Properties
                 .Resources
                 .Import;
             replaceFileToolStripMenuItem.Name = "replaceFileToolStripMenuItem";
-            replaceFileToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            replaceFileToolStripMenuItem.Size = new Size(138, 22);
             replaceFileToolStripMenuItem.Text = "Replace";
-            replaceFileToolStripMenuItem.Click += new System.EventHandler(
-                replaceFileToolStripMenuItem_Click
-            );
+            replaceFileToolStripMenuItem.Click += replaceFileToolStripMenuItem_Click;
             exportToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Export;
             exportToolStripMenuItem1.Name = "exportToolStripMenuItem1";
-            exportToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            exportToolStripMenuItem1.Size = new Size(138, 22);
             exportToolStripMenuItem1.Text = "Export";
-            exportToolStripMenuItem1.Click += new System.EventHandler(
-                exportToolStripMenuItem1_Click
-            );
+            exportToolStripMenuItem1.Click += exportToolStripMenuItem1_Click;
             deleteToolStripMenuItem1.Image = global::NitroStudio2.Properties.Resources.Close;
             deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            deleteToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            deleteToolStripMenuItem1.Size = new Size(138, 22);
             deleteToolStripMenuItem1.Text = "Delete";
-            deleteToolStripMenuItem1.Click += new System.EventHandler(
-                deleteToolStripMenuItem1_Click
-            );
-            sarEntryMenu.ImeMode = System.Windows.Forms.ImeMode.Off;
+            deleteToolStripMenuItem1.Click += deleteToolStripMenuItem1_Click;
+            sarEntryMenu.ImeMode = ImeMode.Off;
             sarEntryMenu.Items.AddRange(
-                new System.Windows.Forms.ToolStripItem[]
+                new ToolStripItem[]
                 {
                     sarAddAbove,
                     sarAddBelow,
@@ -3841,55 +3095,55 @@ namespace NitroStudio2
                 }
             );
             sarEntryMenu.Name = "contextMenuStrip1";
-            sarEntryMenu.Size = new System.Drawing.Size(139, 180);
+            sarEntryMenu.Size = new Size(139, 180);
             sarAddAbove.Image = global::NitroStudio2.Properties.Resources.New;
             sarAddAbove.Name = "sarAddAbove";
-            sarAddAbove.Size = new System.Drawing.Size(138, 22);
+            sarAddAbove.Size = new Size(138, 22);
             sarAddAbove.Text = "Add Above";
-            sarAddAbove.Click += new System.EventHandler(SarAddAbove_Click);
+            sarAddAbove.Click += SarAddAbove_Click;
             sarAddBelow.Image = global::NitroStudio2.Properties.Resources.Open;
             sarAddBelow.Name = "sarAddBelow";
-            sarAddBelow.Size = new System.Drawing.Size(138, 22);
+            sarAddBelow.Size = new Size(138, 22);
             sarAddBelow.Text = "Add Below";
-            sarAddBelow.Click += new System.EventHandler(SarAddBelow_Click);
+            sarAddBelow.Click += SarAddBelow_Click;
             sarMoveUp.Image = global::NitroStudio2.Properties.Resources.Save;
             sarMoveUp.Name = "sarMoveUp";
-            sarMoveUp.Size = new System.Drawing.Size(138, 22);
+            sarMoveUp.Size = new Size(138, 22);
             sarMoveUp.Text = "Move Up";
-            sarMoveUp.Click += new System.EventHandler(SarMoveUp_Click);
+            sarMoveUp.Click += SarMoveUp_Click;
             sarMoveDown.Image = global::NitroStudio2.Properties.Resources.Save_As;
             sarMoveDown.Name = "sarMoveDown";
-            sarMoveDown.Size = new System.Drawing.Size(138, 22);
+            sarMoveDown.Size = new Size(138, 22);
             sarMoveDown.Text = "Move Down";
-            sarMoveDown.Click += new System.EventHandler(SarMoveDown_Click);
+            sarMoveDown.Click += SarMoveDown_Click;
             sarReplace.Image = global::NitroStudio2.Properties.Resources.Import;
             sarReplace.Name = "sarReplace";
-            sarReplace.Size = new System.Drawing.Size(138, 22);
+            sarReplace.Size = new Size(138, 22);
             sarReplace.Text = "Replace";
-            sarReplace.Click += new System.EventHandler(SarReplace_Click);
+            sarReplace.Click += SarReplace_Click;
             sarExport.Image = global::NitroStudio2.Properties.Resources.Export;
             sarExport.Name = "sarExport";
-            sarExport.Size = new System.Drawing.Size(138, 22);
+            sarExport.Size = new Size(138, 22);
             sarExport.Text = "Export";
-            sarExport.Click += new System.EventHandler(SarExport_Click);
+            sarExport.Click += SarExport_Click;
             sarRename.Image = global::NitroStudio2.Properties.Resources.Rename;
             sarRename.Name = "sarRename";
-            sarRename.Size = new System.Drawing.Size(138, 22);
+            sarRename.Size = new Size(138, 22);
             sarRename.Text = "Rename";
-            sarRename.Click += new System.EventHandler(SarRename_Click);
+            sarRename.Click += SarRename_Click;
             sarDelete.Image = global::NitroStudio2.Properties.Resources.Close;
             sarDelete.Name = "sarDelete";
-            sarDelete.Size = new System.Drawing.Size(138, 22);
+            sarDelete.Size = new Size(138, 22);
             sarDelete.Text = "Delete";
-            sarDelete.Click += new System.EventHandler(SarDelete_Click);
-            ClientSize = new System.Drawing.Size(984, 586);
+            sarDelete.Click += SarDelete_Click;
+            ClientSize = new Size(984, 586);
             Controls.Add(splitContainer1);
             Controls.Add(menuStrip);
             Controls.Add(statusStrip);
             MainMenuStrip = menuStrip;
             Name = "EditorBase";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            FormClosing += new System.Windows.Forms.FormClosingEventHandler(form_Close);
+            StartPosition = FormStartPosition.CenterParent;
+            FormClosing += form_Close;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
@@ -3982,7 +3236,7 @@ namespace NitroStudio2
         {
             openFileDialog.FileName = "";
             openFileDialog.Filter = description + "|" + "*.s" + extension.ToLower();
-            _ = openFileDialog.ShowDialog();
+            openFileDialog.ShowDialog();
             return openFileDialog.FileName;
         }
 
@@ -3990,7 +3244,7 @@ namespace NitroStudio2
         {
             saveFileDialog.FileName = "";
             saveFileDialog.Filter = description + "|" + "*.s" + extension.ToLower();
-            _ = saveFileDialog.ShowDialog();
+            saveFileDialog.ShowDialog();
             if (saveFileDialog.FileName != "")
             {
                 if (Path.GetExtension(saveFileDialog.FileName) == "")
@@ -4019,7 +3273,7 @@ namespace NitroStudio2
             foreach (int ind in indices)
             {
                 ToolStripItem i = orig.Items[ind];
-                _ = c.Items.Add(i.Text, i.Image, eventHandlers[num++]);
+                c.Items.Add(i.Text, i.Image, eventHandlers[num++]);
             }
             return c;
         }
@@ -4189,7 +3443,7 @@ namespace NitroStudio2
             if (FileOpen)
             {
                 SaveQuitDialog q = new(this);
-                _ = q.ShowDialog();
+                q.ShowDialog();
             }
             else
             {
@@ -4246,7 +3500,7 @@ namespace NitroStudio2
             }
             if (ExtFile == null)
             {
-                _ = MessageBox.Show("You can't nullify data that is not in a parent file!", "Notice:");
+                MessageBox.Show("You can't nullify data that is not in a parent file!", "Notice:");
                 return;
             }
             File = null;
@@ -4278,7 +3532,7 @@ namespace NitroStudio2
             {
                 if (forceOpen)
                 {
-                    _ = MessageBox.Show("There must be a file open to do this!", "Notice:");
+                    MessageBox.Show("There must be a file open to do this!", "Notice:");
                     return false;
                 }
                 else
@@ -5397,7 +4651,7 @@ namespace NitroStudio2
         {
             if (!FileOpen || File == null)
             {
-                _ = MessageBox.Show("There must be a file open to do this!");
+                MessageBox.Show("There must be a file open to do this!");
                 return;
             }
             BankGenerator ed = new(this as MainWindow);
@@ -5542,22 +4796,22 @@ namespace NitroStudio2
                 var key = pianoKeys[note];
                 if (isBlack)
                 {
-                    key.BackColor = System.Drawing.Color.Black;
-                    key.KeyOffColor = System.Drawing.Color.Black;
+                    key.BackColor = Color.Black;
+                    key.KeyOffColor = Color.Black;
                 }
                 else
                 {
-                    key.KeyOffColor = System.Drawing.Color.White;
+                    key.KeyOffColor = Color.White;
                 }
-                key.KeyOnColor = System.Drawing.Color.Blue;
-                key.Location = new System.Drawing.Point(x, 2);
+                key.KeyOnColor = Color.Blue;
+                key.Location = new Point(x, 2);
                 key.Name = "pkey" + note.ToString();
                 key.Orientation = PianoKeyOrientation.Vertical;
                 key.Shape = shape;
-                key.Size = new System.Drawing.Size(w, h);
+                key.Size = new Size(w, h);
                 key.TabIndex = tabIdx;
                 if (text != null) key.Text = text;
-                key.StateChanged += new System.EventHandler(PianoChanged);
+                key.StateChanged += PianoChanged;
             }
         }
         public void ColorRegion(Color color, byte start, byte end)
@@ -5578,7 +4832,7 @@ namespace NitroStudio2
         private void AboutNitroStudio2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AboutWindow a = new();
-            _ = a.ShowDialog();
+            a.ShowDialog();
         }
     }
 }

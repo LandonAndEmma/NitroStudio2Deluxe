@@ -4,9 +4,7 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>GotaSequenceLib</RootNamespace>
     <AssemblyName>GotaSequenceLib</AssemblyName>
-    <Deterministic>true</Deterministic>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <PlatformTarget>x64</PlatformTarget>
     <NoWarn>$(NoWarn);NU1902;NU1903;NU1904;NU1701</NoWarn>
   </PropertyGroup>
 

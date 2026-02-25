@@ -4,8 +4,6 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>GotaSoundIO</RootNamespace>
     <AssemblyName>GotaSoundIO</AssemblyName>
-    <Deterministic>true</Deterministic>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 

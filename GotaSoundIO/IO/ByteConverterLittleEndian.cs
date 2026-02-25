@@ -1,24 +1,17 @@
-﻿using System.Security;
+﻿using System;
 
 namespace GotaSoundIO.IO
 {
-    [SecuritySafeCritical]
     public sealed class ByteConverterLittleEndian : ByteConverter
     {
         public override ByteOrder ByteOrder => ByteOrder.LittleEndian;
 
-        [SecuritySafeCritical]
-        public override unsafe void GetBytes(double value, byte[] buffer, int startIndex = 0)
+        public override void GetBytes(double value, byte[] buffer, int startIndex = 0)
         {
-            ulong num = (ulong)*(long*)&value;
-            buffer[startIndex] = (byte)num;
-            buffer[startIndex + 1] = (byte)(num >> 8);
-            buffer[startIndex + 2] = (byte)(num >> 16);
-            buffer[startIndex + 3] = (byte)(num >> 24);
-            buffer[startIndex + 4] = (byte)(num >> 32);
-            buffer[startIndex + 5] = (byte)(num >> 40);
-            buffer[startIndex + 6] = (byte)(num >> 48);
-            buffer[startIndex + 7] = (byte)(num >> 56);
+            byte[] doubleBytes = BitConverter.GetBytes(value);
+            if (!BitConverter.IsLittleEndian)
+                Array.Reverse(doubleBytes);
+            Array.Copy(doubleBytes, 0, buffer, startIndex, 8);
         }
 
         public override void GetBytes(short value, byte[] buffer, int startIndex = 0)
@@ -47,14 +40,12 @@ namespace GotaSoundIO.IO
             buffer[startIndex + 7] = (byte)(value >> 56);
         }
 
-        [SecuritySafeCritical]
-        public override unsafe void GetBytes(float value, byte[] buffer, int startIndex = 0)
+        public override void GetBytes(float value, byte[] buffer, int startIndex = 0)
         {
-            uint num = *(uint*)&value;
-            buffer[startIndex] = (byte)num;
-            buffer[startIndex + 1] = (byte)(num >> 8);
-            buffer[startIndex + 2] = (byte)(num >> 16);
-            buffer[startIndex + 3] = (byte)(num >> 24);
+            byte[] floatBytes = BitConverter.GetBytes(value);
+            if (!BitConverter.IsLittleEndian)
+                Array.Reverse(floatBytes);
+            Array.Copy(floatBytes, 0, buffer, startIndex, 4);
         }
 
         public override void GetBytes(ushort value, byte[] buffer, int startIndex = 0)
@@ -83,20 +74,13 @@ namespace GotaSoundIO.IO
             buffer[startIndex + 7] = (byte)(value >> 56);
         }
 
-        [SecuritySafeCritical]
-        public override unsafe double ToDouble(byte[] buffer, int startIndex = 0)
+        public override double ToDouble(byte[] buffer, int startIndex = 0)
         {
-            long i =
-                buffer[startIndex]
-                | ((long)buffer[startIndex + 1] << 8)
-                | ((long)buffer[startIndex + 2] << 16)
-                | ((long)buffer[startIndex + 3] << 24)
-                | ((long)buffer[startIndex + 4] << 32)
-                | ((long)buffer[startIndex + 5] << 40)
-                | ((long)buffer[startIndex + 6] << 48)
-                | ((long)buffer[startIndex + 7] << 56)
-            ;
-            return *(double*)&i;
+            byte[] doubleBytes = new byte[8];
+            Array.Copy(buffer, startIndex, doubleBytes, 0, 8);
+            if (!BitConverter.IsLittleEndian)
+                Array.Reverse(doubleBytes);
+            return BitConverter.ToDouble(doubleBytes, 0);
         }
 
         public override short ToInt16(byte[] buffer, int startIndex = 0)
@@ -124,16 +108,13 @@ namespace GotaSoundIO.IO
                 | ((long)buffer[startIndex + 7] << 56);
         }
 
-        [SecuritySafeCritical]
-        public override unsafe float ToSingle(byte[] buffer, int startIndex = 0)
+        public override float ToSingle(byte[] buffer, int startIndex = 0)
         {
-            int i =
-                buffer[startIndex]
-                | (buffer[startIndex + 1] << 8)
-                | (buffer[startIndex + 2] << 16)
-                | (buffer[startIndex + 3] << 24)
-            ;
-            return *(float*)&i;
+            byte[] floatBytes = new byte[4];
+            Array.Copy(buffer, startIndex, floatBytes, 0, 4);
+            if (!BitConverter.IsLittleEndian)
+                Array.Reverse(floatBytes);
+            return BitConverter.ToSingle(floatBytes, 0);
         }
 
         public override ushort ToUInt16(byte[] buffer, int startIndex = 0)

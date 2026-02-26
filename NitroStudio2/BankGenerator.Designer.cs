@@ -1,4 +1,6 @@
-﻿namespace NitroStudio2 {
+﻿using System.Drawing;
+
+namespace NitroStudio2 {
     partial class BankGenerator {
         private System.ComponentModel.IContainer components = null;
         protected override void Dispose(bool disposing) {
@@ -79,8 +81,8 @@
             this.createBnk.Text = "Create Bank And Wave Archive";
             this.createBnk.UseVisualStyleBackColor = true;
             this.createBnk.Click += new System.EventHandler(this.CreateBnk_Click);
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(552, 343);
             this.Controls.Add(this.createBnk);

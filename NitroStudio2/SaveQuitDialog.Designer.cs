@@ -1,4 +1,6 @@
-﻿namespace NitroStudio2
+﻿using System.Drawing;
+
+namespace NitroStudio2
 {
     partial class SaveQuitDialog
     {
@@ -47,8 +49,8 @@
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(320, 87);
             this.Controls.Add(this.CancelButton);

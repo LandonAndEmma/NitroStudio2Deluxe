@@ -1,4 +1,6 @@
-﻿namespace NitroStudio2 {
+﻿using System.Drawing;
+
+namespace NitroStudio2 {
     partial class StreamPlayer {
 #pragma warning disable CS0414
         private System.ComponentModel.IContainer components = null;
@@ -15,8 +17,8 @@
             this.statusLabel.TabIndex = 0;
             this.statusLabel.Text = "Now playing with NAudio...";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(632, 317);
             this.Controls.Add(this.statusLabel);
             this.Name = "StreamPlayer";

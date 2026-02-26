@@ -1,4 +1,6 @@
-﻿namespace NitroStudio2 {
+﻿using System.Drawing;
+
+namespace NitroStudio2 {
     partial class CreateStreamTool {
         private System.ComponentModel.IContainer components = null;
         protected override void Dispose(bool disposing) {
@@ -124,8 +126,8 @@
             this.exportButton.Text = "Export";
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(369, 204);
             this.Controls.Add(this.exportButton);

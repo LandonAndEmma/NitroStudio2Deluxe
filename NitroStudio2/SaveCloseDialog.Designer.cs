@@ -1,4 +1,6 @@
-﻿namespace NitroStudio2
+﻿using System.Drawing;
+
+namespace NitroStudio2
 {
     partial class SaveCloseDialog
     {
@@ -48,8 +50,8 @@
             this.YesButton.Text = "Save and Close";
             this.YesButton.UseVisualStyleBackColor = true;
             this.YesButton.Click += new System.EventHandler(this.YesButton_Click);
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(320, 87);
             this.ControlBox = false;

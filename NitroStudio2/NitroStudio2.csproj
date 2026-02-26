@@ -9,6 +9,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <NoWarn>$(NoWarn);NU1902;NU1903;NU1904;NU1701</NoWarn>
+    <HighDpiMode>SystemAware</HighDpiMode>
   </PropertyGroup>
 
   <ItemGroup>

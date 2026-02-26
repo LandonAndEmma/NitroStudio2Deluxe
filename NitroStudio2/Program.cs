@@ -12,8 +12,9 @@ namespace NitroStudio2
         [STAThread]
         private static void Main(string[] args)
         {
-            _ = Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            // Enable DPI-aware rendering for high-DPI displays
             Application.EnableVisualStyles();
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length > 0)
             {

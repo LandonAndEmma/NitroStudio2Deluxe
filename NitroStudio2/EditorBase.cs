@@ -936,6 +936,7 @@ namespace NitroStudio2
             for (int _r = 0; _r < 8; _r++)
                 tableLayoutPanel20.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
             tableLayoutPanel20.Size = new Size(298, 176);
+            tableLayoutPanel20.Location = new Point(14, 60);
             tableLayoutPanel20.TabIndex = 28;
 
             // Map: trackIndex -> (col, row) in tableLayoutPanel20
@@ -3144,6 +3145,8 @@ namespace NitroStudio2
             Name = "EditorBase";
             StartPosition = FormStartPosition.CenterParent;
             FormClosing += form_Close;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);

@@ -5,15 +5,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
     /// </summary>
     public class ShortMessageEventArgs : MidiEventArgs
     {
-        ShortMessage message;
 
         /// <summary>
-		/// A short message event that calculates the absolute ticks.
-		/// </summary>
+        /// A short message event that calculates the absolute ticks.
+        /// </summary>
         public ShortMessageEventArgs(ShortMessage message, int absoluteTicks = -1)
         {
-            this.message = message;
-            this.AbsoluteTicks = absoluteTicks;
+            Message = message;
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
@@ -21,9 +20,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
 		/// </summary>
         public ShortMessageEventArgs(int message, int timestamp = 0, int absoluteTicks = -1)
         {
-            this.message = new ShortMessage(message);
-            this.message.Timestamp = timestamp;
-            this.AbsoluteTicks = absoluteTicks;
+            Message = new ShortMessage(message)
+            {
+                Timestamp = timestamp
+            };
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
@@ -31,20 +32,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
 		/// </summary>
         public ShortMessageEventArgs(byte status, byte data1, byte data2, int absoluteTicks = -1)
         {
-            this.message = new ShortMessage(status, data1, data2);
-            this.AbsoluteTicks = absoluteTicks;
+            Message = new ShortMessage(status, data1, data2);
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
 		/// Gets and returns the message.
 		/// </summary>
-        public ShortMessage Message
-        {
-            get
-            {
-                return message;
-            }
-        }
+        public ShortMessage Message { get; }
 
         /// <summary>
 		/// Returns the channel message event.

@@ -54,7 +54,6 @@ namespace Sanford.Multimedia.Midi
         private MetaType type = MetaType.Text;
 
         // The built MetaMessage.
-        private MetaMessage result = null;
 
         // Indicates whether or not the text has changed since the message was 
         // last built.
@@ -129,7 +128,7 @@ namespace Sanford.Multimedia.Midi
 
             #endregion
 
-            this.text = string.Empty;
+            text = string.Empty;
         }
 
         /// <summary>
@@ -279,10 +278,10 @@ namespace Sanford.Multimedia.Midi
 
             #endregion
 
-            ASCIIEncoding encoding = new ASCIIEncoding();
+            ASCIIEncoding encoding = new();
 
             text = encoding.GetString(message.GetBytes());
-            this.type = message.MetaType;
+            type = message.MetaType;
         }
 
         /// <summary>
@@ -298,25 +297,15 @@ namespace Sanford.Multimedia.Midi
         /// </returns>
         private bool IsTextType(MetaType type)
         {
-            bool result;
-
-            if (type == MetaType.Copyright ||
-                type == MetaType.CuePoint ||
-                type == MetaType.DeviceName ||
-                type == MetaType.InstrumentName ||
-                type == MetaType.Lyric ||
-                type == MetaType.Marker ||
-                type == MetaType.ProgramName ||
-                type == MetaType.Text ||
-                type == MetaType.TrackName)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
-
+            bool result = type is MetaType.Copyright or
+                MetaType.CuePoint or
+                MetaType.DeviceName or
+                MetaType.InstrumentName or
+                MetaType.Lyric or
+                MetaType.Marker or
+                MetaType.ProgramName or
+                MetaType.Text or
+                MetaType.TrackName;
             return result;
         }
 
@@ -329,20 +318,10 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public string Text
         {
-            get
-            {
-                return text;
-            }
+            get => text;
             set
             {
-                if (value != null)
-                {
-                    text = value;
-                }
-                else
-                {
-                    text = string.Empty;
-                }
+                text = value ?? string.Empty;
 
                 changed = true;
             }
@@ -356,10 +335,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public MetaType Type
         {
-            get
-            {
-                return type;
-            }
+            get => type;
             set
             {
                 #region Require
@@ -381,13 +357,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the built MetaMessage.
         /// </summary>
-        public MetaMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public MetaMessage Result { get; private set; } = null;
 
         #endregion
 
@@ -408,9 +378,9 @@ namespace Sanford.Multimedia.Midi
                 // Build text MetaMessage.
                 //
 
-                ASCIIEncoding encoding = new ASCIIEncoding();
+                ASCIIEncoding encoding = new();
                 byte[] data = encoding.GetBytes(text);
-                result = new MetaMessage(Type, data);
+                Result = new MetaMessage(Type, data);
                 changed = false;
             }
         }

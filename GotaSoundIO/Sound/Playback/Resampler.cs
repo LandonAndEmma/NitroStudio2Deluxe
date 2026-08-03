@@ -94,7 +94,7 @@ namespace GotaSoundIO.Sound.Playback
             long limit = bufferStart + bufferFrames - Half;
             int capacity = (int)Math.Max(
                 0,
-                (((limit - SourcePosition(outputIndex)) * TargetRate) / SourceRate) + 2
+                ((limit - SourcePosition(outputIndex)) * TargetRate / SourceRate) + 2
             );
             short[] output = new short[capacity * TargetChannels];
 
@@ -143,7 +143,10 @@ namespace GotaSoundIO.Sound.Playback
         }
 
         /// <summary>Input frame index the given output frame reads from. Exact, never drifts.</summary>
-        private long SourcePosition(long output) => output * SourceRate / TargetRate;
+        private long SourcePosition(long output)
+        {
+            return output * SourceRate / TargetRate;
+        }
 
         /// <summary>Sub-sample offset of the given output frame, as a polyphase table index.</summary>
         private int PhaseOf(long output)
@@ -211,13 +214,17 @@ namespace GotaSoundIO.Sound.Playback
             return table;
         }
 
-        private static double Sinc(double x) =>
-            Math.Abs(x) < 1e-12 ? 1.0 : Math.Sin(Math.PI * x) / (Math.PI * x);
+        private static double Sinc(double x)
+        {
+            return Math.Abs(x) < 1e-12 ? 1.0 : Math.Sin(Math.PI * x) / (Math.PI * x);
+        }
 
         /// <summary>Blackman window over x in [-1, 1], zero outside.</summary>
-        private static double Blackman(double x) =>
-            Math.Abs(x) >= 1
+        private static double Blackman(double x)
+        {
+            return Math.Abs(x) >= 1
                 ? 0
                 : 0.42 + (0.5 * Math.Cos(Math.PI * x)) + (0.08 * Math.Cos(2 * Math.PI * x));
+        }
     }
 }

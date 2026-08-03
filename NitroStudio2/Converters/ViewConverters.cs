@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using NitroStudio2.Models;
+using NitroStudio2.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace NitroStudio2.ViewModels
+namespace NitroStudio2.Converters
 {
     /// <summary>Shows the tree or the sequence text depending on the editor's right-pane mode.</summary>
     public static class EnumConverters
@@ -60,7 +61,10 @@ namespace NitroStudio2.ViewModels
                 Type targetType,
                 object parameter,
                 CultureInfo culture
-            ) => throw new NotSupportedException();
+            )
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }

@@ -42,11 +42,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading
     /// </summary>
     public class InvokeCompletedEventArgs : AsyncCompletedEventArgs
     {
-        private Delegate method;
-
-        private object[] args;
-
-        private object result;
+        private readonly object[] args;
 
         /// <summary>
         /// Represents the delegate, objects and exceptions for the InvokeCompleted event.
@@ -66,9 +62,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading
         public InvokeCompletedEventArgs(Delegate method, object[] args, object result, Exception error)
             : base(error, false, null)
         {
-            this.method = method;
+            Method = method;
             this.args = args;
-            this.result = result;
+            Result = result;
         }
 
         /// <summary>
@@ -82,23 +78,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading
         /// <summary>
         /// Initializes method as a delegate.
         /// </summary>
-        public Delegate Method
-        {
-            get
-            {
-                return method;
-            }
-        }
+        public Delegate Method { get; }
 
         /// <summary>
         /// Initializes result as an object.
         /// </summary>
-        public object Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public object Result { get; }
     }
 }

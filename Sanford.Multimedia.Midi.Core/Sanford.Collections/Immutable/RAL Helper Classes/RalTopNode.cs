@@ -22,10 +22,8 @@ namespace Sanford.Collections.Immutable
         #region Instance Fields
 
         // The root of the tree the top node represents.
-        private readonly RalTreeNode root;
 
         // The next top node in the list.
-        private readonly RalTopNode nextNode;
 
         #endregion
 
@@ -42,12 +40,12 @@ namespace Sanford.Collections.Immutable
         /// <param name="nextNode">
         /// The next top node in the list.
         /// </param>
-		public RalTopNode(RalTreeNode root, RalTopNode nextNode)
+        public RalTopNode(RalTreeNode root, RalTopNode nextNode)
         {
             Debug.Assert(root != null);
 
-            this.root = root;
-            this.nextNode = nextNode;
+            Root = root;
+            NextNode = nextNode;
         }
 
         #endregion
@@ -106,7 +104,7 @@ namespace Sanford.Collections.Immutable
             {
                 // Descend into the tree.
                 result = new RalTopNode(
-                    root.SetValue(value, index),
+                    Root.SetValue(value, index),
                     NextNode);
             }
             // Else the element is further along in the list.
@@ -114,7 +112,7 @@ namespace Sanford.Collections.Immutable
             {
                 // Move to the next top node.
                 result = new RalTopNode(
-                    root,
+                    Root,
                     NextNode.SetValue(value, index - Root.Count));
             }
 
@@ -128,24 +126,12 @@ namespace Sanford.Collections.Immutable
         /// <summary>
         /// Gets the root node represented by the top node.
         /// </summary>
-        public RalTreeNode Root
-        {
-            get
-            {
-                return root;
-            }
-        }
+        public RalTreeNode Root { get; }
 
         /// <summary>
         /// Gets the next top node in the random access list.
         /// </summary>
-        public RalTopNode NextNode
-        {
-            get
-            {
-                return nextNode;
-            }
-        }
+        public RalTopNode NextNode { get; }
 
         #endregion
 

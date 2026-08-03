@@ -43,9 +43,6 @@ namespace Sanford.Multimedia.Midi
     /// </summary>
     public class KeySignatureBuilder : IMessageBuilder
     {
-        private Key key = Key.CMajor;
-
-        private MetaMessage result = null;
 
         /// <summary>
         /// Initializes a new instance of the KeySignatureBuilder class.
@@ -97,63 +94,63 @@ namespace Sanford.Multimedia.Midi
                 switch (b)
                 {
                     case -7:
-                        key = Key.CFlatMajor;
+                        Key = Key.CFlatMajor;
                         break;
 
                     case -6:
-                        key = Key.GFlatMajor;
+                        Key = Key.GFlatMajor;
                         break;
 
                     case -5:
-                        key = Key.DFlatMajor;
+                        Key = Key.DFlatMajor;
                         break;
 
                     case -4:
-                        key = Key.AFlatMajor;
+                        Key = Key.AFlatMajor;
                         break;
 
                     case -3:
-                        key = Key.EFlatMajor;
+                        Key = Key.EFlatMajor;
                         break;
 
                     case -2:
-                        key = Key.BFlatMajor;
+                        Key = Key.BFlatMajor;
                         break;
 
                     case -1:
-                        key = Key.FMajor;
+                        Key = Key.FMajor;
                         break;
 
                     case 0:
-                        key = Key.CMajor;
+                        Key = Key.CMajor;
                         break;
 
                     case 1:
-                        key = Key.GMajor;
+                        Key = Key.GMajor;
                         break;
 
                     case 2:
-                        key = Key.DMajor;
+                        Key = Key.DMajor;
                         break;
 
                     case 3:
-                        key = Key.AMajor;
+                        Key = Key.AMajor;
                         break;
 
                     case 4:
-                        key = Key.EMajor;
+                        Key = Key.EMajor;
                         break;
 
                     case 5:
-                        key = Key.BMajor;
+                        Key = Key.BMajor;
                         break;
 
                     case 6:
-                        key = Key.FSharpMajor;
+                        Key = Key.FSharpMajor;
                         break;
 
                     case 7:
-                        key = Key.CSharpMajor;
+                        Key = Key.CSharpMajor;
                         break;
                 }
 
@@ -164,63 +161,63 @@ namespace Sanford.Multimedia.Midi
                 switch (b)
                 {
                     case -7:
-                        key = Key.AFlatMinor;
+                        Key = Key.AFlatMinor;
                         break;
 
                     case -6:
-                        key = Key.EFlatMinor;
+                        Key = Key.EFlatMinor;
                         break;
 
                     case -5:
-                        key = Key.BFlatMinor;
+                        Key = Key.BFlatMinor;
                         break;
 
                     case -4:
-                        key = Key.FMinor;
+                        Key = Key.FMinor;
                         break;
 
                     case -3:
-                        key = Key.CMinor;
+                        Key = Key.CMinor;
                         break;
 
                     case -2:
-                        key = Key.GMinor;
+                        Key = Key.GMinor;
                         break;
 
                     case -1:
-                        key = Key.DMinor;
+                        Key = Key.DMinor;
                         break;
 
                     case 0:
-                        key = Key.AMinor;
+                        Key = Key.AMinor;
                         break;
 
                     case 1:
-                        key = Key.EMinor;
+                        Key = Key.EMinor;
                         break;
 
                     case 2:
-                        key = Key.BMinor;
+                        Key = Key.BMinor;
                         break;
 
                     case 3:
-                        key = Key.FSharpMinor;
+                        Key = Key.FSharpMinor;
                         break;
 
                     case 4:
-                        key = Key.CSharpMinor;
+                        Key = Key.CSharpMinor;
                         break;
 
                     case 5:
-                        key = Key.GSharpMinor;
+                        Key = Key.GSharpMinor;
                         break;
 
                     case 6:
-                        key = Key.DSharpMinor;
+                        Key = Key.DSharpMinor;
                         break;
 
                     case 7:
-                        key = Key.ASharpMinor;
+                        Key = Key.ASharpMinor;
                         break;
                 }
             }
@@ -229,28 +226,12 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
-        public Key Key
-        {
-            get
-            {
-                return key;
-            }
-            set
-            {
-                key = value;
-            }
-        }
+        public Key Key { get; set; } = Key.CMajor;
 
         /// <summary>
         /// The build key signature MetaMessage.
         /// </summary>
-        public MetaMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public MetaMessage Result { get; private set; } = null;
 
         #region IMessageBuilder Members
 
@@ -417,7 +398,7 @@ namespace Sanford.Multimedia.Midi
                 }
             }
 
-            result = new MetaMessage(MetaType.KeySignature, data);
+            Result = new MetaMessage(MetaType.KeySignature, data);
         }
 
         #endregion

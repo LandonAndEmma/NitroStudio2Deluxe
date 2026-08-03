@@ -1,7 +1,7 @@
-using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaEdit;
+using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using System;
 using System.Collections.Generic;
@@ -60,7 +60,7 @@ namespace NitroStudio2.Controls
             get
             {
                 List<string> lines = [];
-                foreach (var line in Document.Lines)
+                foreach (DocumentLine line in Document.Lines)
                 {
                     lines.Add(Document.GetText(line));
                 }

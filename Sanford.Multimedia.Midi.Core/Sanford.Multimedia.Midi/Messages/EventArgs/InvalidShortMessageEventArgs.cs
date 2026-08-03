@@ -5,26 +5,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
     /// </summary>
     public class InvalidShortMessageEventArgs : MidiEventArgs
     {
-        private int message;
 
         /// <summary>
         /// Main function for when the invalid short message event is declared.
         /// </summary>
         public InvalidShortMessageEventArgs(int message, int absoluteTicks = -1)
         {
-            this.message = message;
-            this.AbsoluteTicks = absoluteTicks;
+            Message = message;
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
         /// Gets and returns the message.
         /// </summary>
-        public int Message
-        {
-            get
-            {
-                return message;
-            }
-        }
+        public int Message { get; }
     }
 }

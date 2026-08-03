@@ -88,9 +88,7 @@ namespace NitroStudio2.ViewModels
         private void PopulateSequenceOptions()
         {
             List<(string Name, int Index)> names = SequenceNames();
-            string previous = SeqArcSeqPanel.Sequence is null
-                ? null
-                : SeqArcSeqPanel.Sequence[(SeqArcSeqPanel.Sequence.IndexOf(' ') + 1)..];
+            string previous = SeqArcSeqPanel.Sequence?[(SeqArcSeqPanel.Sequence.IndexOf(' ') + 1)..];
 
             SeqArcSeqPanel.WritingInfo = true;
             SeqArcSeqPanel.SequenceOptions.Clear();
@@ -190,7 +188,7 @@ namespace NitroStudio2.ViewModels
             {
                 return (SAR.Commands, 0);
             }
-            return (SAR.Commands, (int)SAR.PublicLabels[s.Name]);
+            return (SAR.Commands, SAR.PublicLabels[s.Name]);
         }
 
         /// <summary>
@@ -209,10 +207,15 @@ namespace NitroStudio2.ViewModels
             return s?.Bank ?? Archive?.Banks.FirstOrDefault(x => x.Index == s?.ReadingBankId);
         }
 
-        protected override string SongName() =>
-            System.IO.Path.GetFileNameWithoutExtension(SAR.Name ?? "Sequence Archive");
+        protected override string SongName()
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(SAR.Name ?? "Sequence Archive");
+        }
 
-        protected override void SaveMidi(string path) => SAR.SaveMIDI(path);
+        protected override void SaveMidi(string path)
+        {
+            SAR.SaveMIDI(path);
+        }
 
         public override async Task NewAsync()
         {

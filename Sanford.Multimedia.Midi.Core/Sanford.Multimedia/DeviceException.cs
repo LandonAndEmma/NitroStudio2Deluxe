@@ -93,25 +93,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia
 
         #endregion
 
-        private int errorCode;
 
         /// <summary>
         /// Calls the Device Exception error code.
         /// </summary>
         public DeviceException(int errorCode)
         {
-            this.errorCode = errorCode;
+            ErrorCode = errorCode;
         }
 
         /// <summary>
         /// Public integer for the error code.
         /// </summary>
-        public int ErrorCode
-        {
-            get
-            {
-                return errorCode;
-            }
-        }
+        public int ErrorCode { get; }
     }
 }

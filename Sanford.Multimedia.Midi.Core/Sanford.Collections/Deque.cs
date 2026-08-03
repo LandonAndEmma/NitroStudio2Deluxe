@@ -153,11 +153,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         public virtual void PushFront(object obj)
         {
             // The new node to add to the front of the deque.
-            Node newNode = new Node(obj);
-
-            // Link the new node to the front node. The current front node at 
-            // the front of the deque is now the second node in the deque.
-            newNode.Next = front;
+            Node newNode = new(obj)
+            {
+                // Link the new node to the front node. The current front node at 
+                // the front of the deque is now the second node in the deque.
+                Next = front
+            };
 
             // If the deque isn't empty.
             if (Count > 0)
@@ -197,12 +198,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         public virtual void PushBack(object obj)
         {
             // The new node to add to the back of the deque.
-            Node newNode = new Node(obj);
-
-            // Link the new node to the back node. The current back node at 
-            // the back of the deque is now the second to the last node in the
-            // deque.
-            newNode.Previous = back;
+            Node newNode = new(obj)
+            {
+                // Link the new node to the back node. The current back node at 
+                // the back of the deque is now the second to the last node in the
+                // deque.
+                Previous = back
+            };
 
             // If the deque is not empty.
             if (Count > 0)
@@ -472,7 +474,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         [Serializable()]
         private class Node
         {
-            private object value;
+            private readonly object value;
 
             private Node previous = null;
 
@@ -483,36 +485,16 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 this.value = value;
             }
 
-            public object Value
-            {
-                get
-                {
-                    return value;
-                }
-            }
+            public object Value => value;
 
             public Node Previous
             {
-                get
-                {
-                    return previous;
-                }
-                set
-                {
-                    previous = value;
-                }
+                get => previous; set => previous = value;
             }
 
             public Node Next
             {
-                get
-                {
-                    return next;
-                }
-                set
-                {
-                    next = value;
-                }
+                get => next; set => next = value;
             }
         }
 
@@ -523,7 +505,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         [Serializable()]
         private class DequeEnumerator : IEnumerator
         {
-            private Deque owner;
+            private readonly Deque owner;
 
             private Node currentNode;
 
@@ -531,13 +513,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
 
             private bool moveResult = false;
 
-            private long version;
+            private readonly long version;
 
             public DequeEnumerator(Deque owner)
             {
                 this.owner = owner;
                 currentNode = owner.front;
-                this.version = owner.version;
+                version = owner.version;
             }
 
             #region IEnumerator Members
@@ -620,10 +602,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             #region Fields
 
             // The wrapped deque.
-            private Deque deque;
+            private readonly Deque deque;
 
             // The object to lock on.
-            private object root;
+            private readonly object root;
 
             #endregion
 
@@ -631,17 +613,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
 
             public SynchronizedDeque(Deque deque)
             {
-                #region Require
 
-                if (deque == null)
-                {
-                    throw new ArgumentNullException("deque");
-                }
+                #region Require
 
                 #endregion
 
-                this.deque = deque;
-                this.root = deque.SyncRoot;
+                this.deque = deque ?? throw new ArgumentNullException("deque");
+                root = deque.SyncRoot;
             }
 
             #endregion
@@ -791,13 +769,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 }
             }
 
-            public override bool IsSynchronized
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public override bool IsSynchronized => true;
 
             #endregion
 
@@ -814,24 +786,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// Gets a value indicating whether access to the Deque is synchronized 
         /// (thread-safe).
         /// </summary>
-        public virtual bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsSynchronized => false;
 
         /// <summary>
         /// Gets the number of elements contained in the Deque.
         /// </summary>
-        public virtual int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public virtual int Count => count;
 
         /// <summary>
         /// Copies the Deque elements to an existing one-dimensional Array, 
@@ -888,13 +848,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// <summary>
         /// Gets an object that can be used to synchronize access to the Deque.
         /// </summary>
-        public virtual object SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public virtual object SyncRoot => this;
 
         #endregion
 
@@ -923,9 +877,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// </returns>
         public virtual object Clone()
         {
-            Deque clone = new Deque(this);
-
-            clone.version = this.version;
+            Deque clone = new(this)
+            {
+                version = version
+            };
 
             return clone;
         }

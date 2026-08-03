@@ -1,9 +1,7 @@
-using GotaSequenceLib.Playback;
 using GotaSoundBank.DLS;
 using GotaSoundBank.SF2;
 using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
-using NitroStudio2.Views;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -70,21 +68,21 @@ namespace NitroStudio2.ViewModels
             switch (System.IO.Path.GetExtension(path))
             {
                 case ".sseq":
-                {
-                    SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
-                    e.File = new Sequence();
-                    e.File.Read(path);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
+                        e.File = new Sequence();
+                        e.File.Read(path);
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".smft":
-                {
-                    SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
-                    e.File = new Sequence();
-                    e.File.FromText([.. System.IO.File.ReadAllLines(path)]);
-                    e.File.WriteCommandData();
-                    break;
-                }
+                    {
+                        SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
+                        e.File = new Sequence();
+                        e.File.FromText([.. System.IO.File.ReadAllLines(path)]);
+                        e.File.WriteCommandData();
+                        break;
+                    }
                 case ".mid":
                     if (!await ImportMidiAsync(ind, path))
                     {
@@ -92,34 +90,34 @@ namespace NitroStudio2.ViewModels
                     }
                     break;
                 case ".ssar":
-                {
-                    SequenceArchiveInfo e = SA.SequenceArchives.First(x => x.Index == ind);
-                    e.File = new SequenceArchive();
-                    e.File.Read(path);
-                    e.File.ReadCommandData(true);
-                    e.File.FromText([.. e.File.ToText()], SA);
-                    UpdateNodes();
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        SequenceArchiveInfo e = SA.SequenceArchives.First(x => x.Index == ind);
+                        e.File = new SequenceArchive();
+                        e.File.Read(path);
+                        e.File.ReadCommandData(true);
+                        e.File.FromText([.. e.File.ToText()], SA);
+                        UpdateNodes();
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".mus":
-                {
-                    SequenceArchiveInfo e = SA.SequenceArchives.First(x => x.Index == ind);
-                    e.File = new SequenceArchive();
-                    e.File.FromText([.. System.IO.File.ReadAllLines(path)], SA);
-                    e.File.WriteCommandData();
-                    UpdateNodes();
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        SequenceArchiveInfo e = SA.SequenceArchives.First(x => x.Index == ind);
+                        e.File = new SequenceArchive();
+                        e.File.FromText([.. System.IO.File.ReadAllLines(path)], SA);
+                        e.File.WriteCommandData();
+                        UpdateNodes();
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".sbnk":
-                {
-                    BankInfo e = SA.Banks.First(x => x.Index == ind);
-                    e.File = new Bank();
-                    e.File.Read(path);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        BankInfo e = SA.Banks.First(x => x.Index == ind);
+                        e.File = new Bank();
+                        e.File.Read(path);
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".sf2":
                     await ReplaceBankWithSoundFontAsync(
                         SA.Banks.First(x => x.Index == ind),
@@ -135,41 +133,41 @@ namespace NitroStudio2.ViewModels
                     DoInfoStuff();
                     return;
                 case ".swar":
-                {
-                    WaveArchiveInfo e = SA.WaveArchives.First(x => x.Index == ind);
-                    e.File = new WaveArchive();
-                    e.File.Read(path);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        WaveArchiveInfo e = SA.WaveArchives.First(x => x.Index == ind);
+                        e.File = new WaveArchive();
+                        e.File.Read(path);
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".strm":
-                {
-                    StreamInfo e = SA.Streams.First(x => x.Index == ind);
-                    e.File = new NitroFileLoader.Stream();
-                    e.File.Read(path);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        StreamInfo e = SA.Streams.First(x => x.Index == ind);
+                        e.File = new NitroFileLoader.Stream();
+                        e.File.Read(path);
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".swav":
-                {
-                    StreamInfo e = SA.Streams.First(x => x.Index == ind);
-                    e.File = new NitroFileLoader.Stream();
-                    Wave swav = new();
-                    swav.Read(path);
-                    e.File.FromOtherStreamFile(swav);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        StreamInfo e = SA.Streams.First(x => x.Index == ind);
+                        e.File = new NitroFileLoader.Stream();
+                        Wave swav = new();
+                        swav.Read(path);
+                        e.File.FromOtherStreamFile(swav);
+                        DoInfoStuff();
+                        break;
+                    }
                 case ".wav":
-                {
-                    StreamInfo e = SA.Streams.First(x => x.Index == ind);
-                    e.File = new NitroFileLoader.Stream();
-                    RiffWave riff = new();
-                    riff.Read(path);
-                    e.File.FromOtherStreamFile(riff);
-                    DoInfoStuff();
-                    break;
-                }
+                    {
+                        StreamInfo e = SA.Streams.First(x => x.Index == ind);
+                        e.File = new NitroFileLoader.Stream();
+                        RiffWave riff = new();
+                        riff.Read(path);
+                        e.File.FromOtherStreamFile(riff);
+                        DoInfoStuff();
+                        break;
+                    }
             }
         }
 
@@ -231,7 +229,7 @@ namespace NitroStudio2.ViewModels
             process.StartInfo.FileName = NitroPath + "/" + tool;
             process.StartInfo.Arguments = arguments;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.Start();
+            _ = process.Start();
             process.WaitForExit();
         }
 
@@ -312,45 +310,45 @@ namespace NitroStudio2.ViewModels
                     SA.Sequences.First(x => x.Index == ind).File.Write(path);
                     break;
                 case ".smft":
-                {
-                    if (nested)
                     {
-                        throw new NotImplementedException();
+                        if (nested)
+                        {
+                            throw new NotImplementedException();
+                        }
+                        SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
+                        e.File.ReadCommandData();
+                        e.File.Name = e.Name;
+                        System.IO.File.WriteAllLines(path, e.File.ToText());
+                        break;
                     }
-                    SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
-                    e.File.ReadCommandData();
-                    e.File.Name = e.Name;
-                    System.IO.File.WriteAllLines(path, e.File.ToText());
-                    break;
-                }
                 case ".mid":
-                {
-                    if (nested)
                     {
-                        throw new NotImplementedException();
-                    }
-                    SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
-                    if (SettingsPanel.ExportMode == 0)
-                    {
-                        e.File.SaveMIDI(path);
-                    }
-                    else
-                    {
-                        if (!await RequireToolAsync("sseq2midi.exe"))
+                        if (nested)
                         {
-                            return;
+                            throw new NotImplementedException();
                         }
-                        e.File.Write("temp.sseq");
-                        RunTool("sseq2midi.exe", "temp.sseq");
-                        if (System.IO.File.Exists(path) && path != "temp.mid")
+                        SequenceInfo e = SA.Sequences.First(x => x.Index == ind);
+                        if (SettingsPanel.ExportMode == 0)
                         {
-                            System.IO.File.Delete(path);
+                            e.File.SaveMIDI(path);
                         }
-                        System.IO.File.Move("temp.mid", path);
-                        Delete("temp.sseq");
+                        else
+                        {
+                            if (!await RequireToolAsync("sseq2midi.exe"))
+                            {
+                                return;
+                            }
+                            e.File.Write("temp.sseq");
+                            RunTool("sseq2midi.exe", "temp.sseq");
+                            if (System.IO.File.Exists(path) && path != "temp.mid")
+                            {
+                                System.IO.File.Delete(path);
+                            }
+                            System.IO.File.Move("temp.mid", path);
+                            Delete("temp.sseq");
+                        }
+                        break;
                     }
-                    break;
-                }
                 case ".wav":
                     await ExportWavAsync(ind, path, nested);
                     break;
@@ -364,17 +362,17 @@ namespace NitroStudio2.ViewModels
                     SA.Banks.First(x => x.Index == ind).File.Write(path);
                     break;
                 case ".sf2":
-                {
-                    BankInfo e = SA.Banks.First(x => x.Index == ind);
-                    e.File.ToSoundFont(SA, e).Write(path);
-                    break;
-                }
+                    {
+                        BankInfo e = SA.Banks.First(x => x.Index == ind);
+                        e.File.ToSoundFont(SA, e).Write(path);
+                        break;
+                    }
                 case ".dls":
-                {
-                    BankInfo e = SA.Banks.First(x => x.Index == ind);
-                    e.File.ToDLS(SA, e).Write(path);
-                    break;
-                }
+                    {
+                        BankInfo e = SA.Banks.First(x => x.Index == ind);
+                        e.File.ToDLS(SA, e).Write(path);
+                        break;
+                    }
                 case ".swar":
                     SA.WaveArchives.First(x => x.Index == ind).File.Write(path);
                     break;
@@ -382,12 +380,12 @@ namespace NitroStudio2.ViewModels
                     SA.Streams.First(x => x.Index == ind).File.Write(path);
                     break;
                 case ".swav":
-                {
-                    Wave swav = new();
-                    swav.FromOtherStreamFile(SA.Streams.First(x => x.Index == ind).File);
-                    swav.Write(path);
-                    break;
-                }
+                    {
+                        Wave swav = new();
+                        swav.FromOtherStreamFile(SA.Streams.First(x => x.Index == ind).File);
+                        swav.Write(path);
+                        break;
+                    }
             }
         }
 
@@ -453,8 +451,10 @@ namespace NitroStudio2.ViewModels
             }
         }
 
-        private Task ShowRecorder(SequenceRecorderViewModel recorder) =>
-            ShowRecorderRequested?.Invoke(recorder) ?? Task.CompletedTask;
+        private Task ShowRecorder(SequenceRecorderViewModel recorder)
+        {
+            return ShowRecorderRequested?.Invoke(recorder) ?? Task.CompletedTask;
+        }
 
         /// <summary>
         /// Round-trips a sequence archive through a fresh parse so its labels line up with the
@@ -491,7 +491,10 @@ namespace NitroStudio2.ViewModels
         /// Plays whichever sequence the tree has selected, from the archive or from inside a
         /// sequence archive. Port of MainWindow.PlayClick.
         /// </summary>
-        private void Play() => _ = PlayAsync();
+        private void Play()
+        {
+            _ = PlayAsync();
+        }
 
         /// <summary>Space previews a sequence, or one inside a sequence archive.</summary>
         public override void PlaySelected()

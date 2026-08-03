@@ -41,7 +41,7 @@ using System.Threading;
 
 namespace Sanford.Multimedia.Midi
 {
-    internal struct MidiInParams
+    internal readonly struct MidiInParams
     {
         public readonly IntPtr Param1;
         public readonly IntPtr Param2;
@@ -72,7 +72,7 @@ namespace Sanford.Multimedia.Midi
 
         private void HandleMessage(IntPtr hnd, int msg, IntPtr instance, IntPtr param1, IntPtr param2)
         {
-            var param = new MidiInParams(param1, param2);
+            MidiInParams param = new(param1, param2);
 
             if (msg == MIM_OPEN)
             {
@@ -83,44 +83,64 @@ namespace Sanford.Multimedia.Midi
             else if (msg == MIM_DATA)
             {
                 if (PostDriverCallbackToDelegateQueue)
+                {
                     delegateQueue.Post(HandleShortMessage, param);
+                }
                 else
+                {
                     HandleShortMessage(param);
+                }
             }
             else if (msg == MIM_MOREDATA)
             {
                 if (PostDriverCallbackToDelegateQueue)
+                {
                     delegateQueue.Post(HandleShortMessage, param);
+                }
                 else
+                {
                     HandleShortMessage(param);
+                }
             }
             else if (msg == MIM_LONGDATA)
             {
                 if (PostDriverCallbackToDelegateQueue)
+                {
                     delegateQueue.Post(HandleSysExMessage, param);
+                }
                 else
+                {
                     HandleSysExMessage(param);
+                }
             }
             else if (msg == MIM_ERROR)
             {
                 if (PostDriverCallbackToDelegateQueue)
+                {
                     delegateQueue.Post(HandleInvalidShortMessage, param);
+                }
                 else
+                {
                     HandleInvalidShortMessage(param);
+                }
             }
             else if (msg == MIM_LONGERROR)
             {
                 if (PostDriverCallbackToDelegateQueue)
+                {
                     delegateQueue.Post(HandleInvalidSysExMessage, param);
+                }
                 else
+                {
                     HandleInvalidSysExMessage(param);
+                }
             }
         }
 
         private void HandleShortMessage(object state)
         {
 
-            var param = (MidiInParams)state;
+            MidiInParams param = (MidiInParams)state;
             int message = param.Param1.ToInt32();
             int timestamp = param.Param2.ToInt32();
 
@@ -129,9 +149,9 @@ namespace Sanford.Multimedia.Midi
 
             int status = ShortMessage.UnpackStatus(message);
 
-            if (status >= (int)ChannelCommand.NoteOff &&
-                   status <= (int)ChannelCommand.PitchWheel +
-                   ChannelMessage.MidiChannelMaxValue)
+            if (status is >= ((int)ChannelCommand.NoteOff) and
+                   <= ((int)ChannelCommand.PitchWheel +
+                   ChannelMessage.MidiChannelMaxValue))
             {
                 cmBuilder.Message = message;
                 cmBuilder.Build();
@@ -140,10 +160,10 @@ namespace Sanford.Multimedia.Midi
                 OnMessageReceived(cmBuilder.Result);
                 OnChannelMessageReceived(new ChannelMessageEventArgs(cmBuilder.Result));
             }
-            else if (status == (int)SysCommonType.MidiTimeCode ||
-                   status == (int)SysCommonType.SongPositionPointer ||
-                   status == (int)SysCommonType.SongSelect ||
-                   status == (int)SysCommonType.TuneRequest)
+            else if (status is ((int)SysCommonType.MidiTimeCode) or
+                   ((int)SysCommonType.SongPositionPointer) or
+                   ((int)SysCommonType.SongSelect) or
+                   ((int)SysCommonType.TuneRequest))
             {
                 scBuilder.Message = message;
                 scBuilder.Build();
@@ -197,7 +217,7 @@ namespace Sanford.Multimedia.Midi
         {
             lock (lockObject)
             {
-                var param = (MidiInParams)state;
+                MidiInParams param = (MidiInParams)state;
                 IntPtr headerPtr = param.Param1;
 
                 MidiHeader header = (MidiHeader)Marshal.PtrToStructure(headerPtr, typeof(MidiHeader));
@@ -209,10 +229,12 @@ namespace Sanford.Multimedia.Midi
                         sysExData.Add(Marshal.ReadByte(header.data, i));
                     }
 
-                    if (sysExData.Count > 1 && sysExData[0] == 0xF0 && sysExData[sysExData.Count - 1] == 0xF7)
+                    if (sysExData.Count > 1 && sysExData[0] == 0xF0 && sysExData[^1] == 0xF7)
                     {
-                        SysExMessage message = new SysExMessage(sysExData.ToArray());
-                        message.Timestamp = param.Param2.ToInt32();
+                        SysExMessage message = new(sysExData.ToArray())
+                        {
+                            Timestamp = param.Param2.ToInt32()
+                        };
 
                         sysExData.Clear();
 
@@ -236,7 +258,7 @@ namespace Sanford.Multimedia.Midi
 
         private void HandleInvalidShortMessage(object state)
         {
-            var param = (MidiInParams)state;
+            MidiInParams param = (MidiInParams)state;
             OnInvalidShortMessageReceived(new InvalidShortMessageEventArgs(param.Param1.ToInt32()));
         }
 
@@ -244,7 +266,7 @@ namespace Sanford.Multimedia.Midi
         {
             lock (lockObject)
             {
-                var param = (MidiInParams)state;
+                MidiInParams param = (MidiInParams)state;
                 IntPtr headerPtr = param.Param1;
 
                 MidiHeader header = (MidiHeader)Marshal.PtrToStructure(headerPtr, typeof(MidiHeader));
@@ -322,7 +344,7 @@ namespace Sanford.Multimedia.Midi
                     // Unprepare header - there's a chance that this will fail 
                     // for whatever reason, but there's not a lot that can be
                     // done at this point.
-                    midiInUnprepareHeader(Handle, headerPtr, SizeOfMidiHeader);
+                    _ = midiInUnprepareHeader(Handle, headerPtr, SizeOfMidiHeader);
 
                     bufferCount--;
 

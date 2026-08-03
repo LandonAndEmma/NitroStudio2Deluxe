@@ -3,10 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
-using System.Linq;
 using NitroStudio2.Services;
 using NitroStudio2.ViewModels;
 using System;
+using System.Linq;
 
 namespace NitroStudio2.Views
 {
@@ -97,8 +97,7 @@ namespace NitroStudio2.Views
             if (viewModel is BankEditorViewModel bank)
             {
                 bank.ShowWaveMapperRequested = vm => new WaveMapperWindow(vm).ShowDialog(this);
-                bank.ColorRegionRequested = (color, start, end) =>
-                    Piano.ColorRegion(color, start, end);
+                bank.ColorRegionRequested = Piano.ColorRegion;
                 bank.ResetPianoColorsRequested = Piano.ResetColors;
             }
         }
@@ -123,36 +122,36 @@ namespace NitroStudio2.Views
             switch (entry)
             {
                 case NitroFileLoader.SequenceInfo s:
-                {
-                    SequenceEditorViewModel vm = new(dialogs, archive.SA);
-                    window.Attach(vm);
-                    vm.LoadEmbedded(s.File, s.Name);
-                    // Preview against the bank the archive gives this sequence. ReadingBankId is
-                    // the fallback for an id that pointed at no entry when the archive was read.
-                    vm.SelectPreviewBank(s.Bank is null ? s.ReadingBankId : (uint)s.Bank.Index);
-                    break;
-                }
+                    {
+                        SequenceEditorViewModel vm = new(dialogs, archive.SA);
+                        window.Attach(vm);
+                        vm.LoadEmbedded(s.File, s.Name);
+                        // Preview against the bank the archive gives this sequence. ReadingBankId is
+                        // the fallback for an id that pointed at no entry when the archive was read.
+                        vm.SelectPreviewBank(s.Bank is null ? s.ReadingBankId : (uint)s.Bank.Index);
+                        break;
+                    }
                 case NitroFileLoader.SequenceArchiveInfo s:
-                {
-                    SequenceArchiveEditorViewModel vm = new(dialogs, archive.SA);
-                    window.Attach(vm);
-                    vm.LoadEmbedded(s.File, s.Name);
-                    break;
-                }
+                    {
+                        SequenceArchiveEditorViewModel vm = new(dialogs, archive.SA);
+                        window.Attach(vm);
+                        vm.LoadEmbedded(s.File, s.Name);
+                        break;
+                    }
                 case NitroFileLoader.BankInfo b:
-                {
-                    BankEditorViewModel vm = new(dialogs, archive.SA);
-                    window.Attach(vm);
-                    vm.LoadEmbedded(b.File, b.Name, b);
-                    break;
-                }
+                    {
+                        BankEditorViewModel vm = new(dialogs, archive.SA);
+                        window.Attach(vm);
+                        vm.LoadEmbedded(b.File, b.Name, b);
+                        break;
+                    }
                 case NitroFileLoader.WaveArchiveInfo w:
-                {
-                    WaveArchiveEditorViewModel vm = new(dialogs, archive.SA);
-                    window.Attach(vm);
-                    vm.LoadEmbedded(w.File, w.Name);
-                    break;
-                }
+                    {
+                        WaveArchiveEditorViewModel vm = new(dialogs, archive.SA);
+                        window.Attach(vm);
+                        vm.LoadEmbedded(w.File, w.Name);
+                        break;
+                    }
                 default:
                     return;
             }
@@ -161,8 +160,10 @@ namespace NitroStudio2.Views
 
         private EditorViewModelBase ViewModel => DataContext as EditorViewModelBase;
 
-        private void OnTreeDoubleTapped(object sender, RoutedEventArgs e) =>
+        private void OnTreeDoubleTapped(object sender, RoutedEventArgs e)
+        {
             ViewModel?.NodeMouseDoubleClick();
+        }
 
         /// <summary>
         /// Dragging the position bar must not fight the 30 fps tick, the way the WinForms
@@ -230,11 +231,13 @@ namespace NitroStudio2.Views
             );
         }
 
-        private static bool IsPositionBar(object source) =>
-            source is Visual visual
+        private static bool IsPositionBar(object source)
+        {
+            return source is Visual visual
             && visual.GetSelfAndVisualAncestors()
                 .OfType<Slider>()
                 .Any(s => (s.Tag as string) == "Position");
+        }
 
         /// <summary>
         /// Credits, previously read from Assets/About/About.txt by a dedicated window. Inlined
@@ -259,14 +262,20 @@ namespace NitroStudio2.Views
             + "\n"
             + "©2026 Gota7, Lonk, & NitroShell";
 
-        private async void OnAbout(object sender, RoutedEventArgs e) =>
+        private async void OnAbout(object sender, RoutedEventArgs e)
+        {
             await new DialogService(this).ShowMessageAsync(AboutText, "About Nitro Studio 2");
+        }
 
-        private void OnCreateWave(object sender, RoutedEventArgs e) =>
+        private void OnCreateWave(object sender, RoutedEventArgs e)
+        {
             new CreateStreamToolWindow(true).Show();
+        }
 
-        private void OnCreateStream(object sender, RoutedEventArgs e) =>
+        private void OnCreateStream(object sender, RoutedEventArgs e)
+        {
             new CreateStreamToolWindow(false).Show();
+        }
 
         // The remaining Tools entries open editors that are wired up with the sound archive
         // window; each concrete editor supplies the handler through these hooks.
@@ -282,23 +291,35 @@ namespace NitroStudio2.Views
 
         public Action ExportSdkProjectRequested { get; set; }
 
-        private void OnOpenSequenceEditor(object sender, RoutedEventArgs e) =>
+        private void OnOpenSequenceEditor(object sender, RoutedEventArgs e)
+        {
             OpenSequenceEditorRequested?.Invoke();
+        }
 
-        private void OnOpenSequenceArchiveEditor(object sender, RoutedEventArgs e) =>
+        private void OnOpenSequenceArchiveEditor(object sender, RoutedEventArgs e)
+        {
             OpenSequenceArchiveEditorRequested?.Invoke();
+        }
 
-        private void OnOpenBankEditor(object sender, RoutedEventArgs e) =>
+        private void OnOpenBankEditor(object sender, RoutedEventArgs e)
+        {
             OpenBankEditorRequested?.Invoke();
+        }
 
-        private void OnOpenWaveArchiveEditor(object sender, RoutedEventArgs e) =>
+        private void OnOpenWaveArchiveEditor(object sender, RoutedEventArgs e)
+        {
             OpenWaveArchiveEditorRequested?.Invoke();
+        }
 
-        private void OnOpenBankGenerator(object sender, RoutedEventArgs e) =>
+        private void OnOpenBankGenerator(object sender, RoutedEventArgs e)
+        {
             OpenBankGeneratorRequested?.Invoke();
+        }
 
-        private void OnExportSdkProject(object sender, RoutedEventArgs e) =>
+        private void OnExportSdkProject(object sender, RoutedEventArgs e)
+        {
             ExportSdkProjectRequested?.Invoke();
+        }
 
         protected override void OnClosed(EventArgs e)
         {

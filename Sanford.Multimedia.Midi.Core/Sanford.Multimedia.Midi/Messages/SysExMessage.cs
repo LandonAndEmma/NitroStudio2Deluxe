@@ -72,7 +72,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         #region Fields
 
         // The system exclusive data.
-        private byte[] data;
+        private readonly byte[] data;
 
         #endregion
 
@@ -98,8 +98,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
                 throw new ArgumentException(
                     "System exclusive data is too short.", "data");
             }
-            else if (data[0] != (byte)SysExType.Start &&
-                data[0] != (byte)SysExType.Continuation)
+            else if (data[0] is not ((byte)SysExType.Start) and
+                not ((byte)SysExType.Continuation))
             {
                 throw new ArgumentException(
                     "Unknown status value.", "data");
@@ -145,7 +145,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Guard
 
-            if (!(obj is SysExMessage))
+            if (obj is not SysExMessage)
             {
                 return false;
             }
@@ -156,12 +156,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             bool equals = true;
 
-            if (this.Length != message.Length)
+            if (Length != message.Length)
             {
                 equals = false;
             }
 
-            for (int i = 0; i < this.Length && equals; i++)
+            for (int i = 0; i < Length && equals; i++)
             {
                 if (this[i] != message[i])
                 {
@@ -224,24 +224,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the length of the system exclusive data.
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return data.Length;
-            }
-        }
+        public int Length => data.Length;
 
         /// <summary>
         /// Gets the system exclusive type.
         /// </summary>
-        public SysExType SysExType
-        {
-            get
-            {
-                return (SysExType)data[0];
-            }
-        }
+        public SysExType SysExType => (SysExType)data[0];
 
         #endregion
 
@@ -250,24 +238,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the status value.
         /// </summary>
-        public int Status
-        {
-            get
-            {
-                return (int)data[0];
-            }
-        }
+        public int Status => data[0];
 
         /// <summary>
         /// Gets the MessageType.
         /// </summary>
-        public MessageType MessageType
-        {
-            get
-            {
-                return MessageType.SystemExclusive;
-            }
-        }
+        public MessageType MessageType => MessageType.SystemExclusive;
 
         #region IEnumerable Members
 

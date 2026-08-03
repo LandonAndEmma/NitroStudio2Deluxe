@@ -61,7 +61,6 @@ namespace NitroStudio2.Controls
         private static readonly IPen BorderPen = new Pen(Brushes.Black, 2.0);
 
         private Point[] points = [];
-        private StreamGeometry geometry;
         private bool keyOn;
 
         static PianoKey()
@@ -103,7 +102,10 @@ namespace NitroStudio2.Controls
             set => SetValue(KeyOffColorProperty, value);
         }
 
-        public bool IsKeyOn() => keyOn;
+        public bool IsKeyOn()
+        {
+            return keyOn;
+        }
 
         public void TurnKeyOn()
         {
@@ -166,7 +168,10 @@ namespace NitroStudio2.Controls
         }
 
         /// <summary>Only the drawn polygon is clickable, not the whole bounding box.</summary>
-        public bool HitTest(Point point) => Geometry?.FillContains(point) ?? false;
+        public bool HitTest(Point point)
+        {
+            return Geometry?.FillContains(point) ?? false;
+        }
 
         // ------------------------------------------------------------------ rendering
 
@@ -193,7 +198,7 @@ namespace NitroStudio2.Controls
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
-            geometry = null;
+            Geometry = null;
             base.OnSizeChanged(e);
         }
 
@@ -201,10 +206,10 @@ namespace NitroStudio2.Controls
         {
             foreach (AvaloniaProperty property in properties)
             {
-                property.Changed.AddClassHandler<PianoKey>(
+                _ = property.Changed.AddClassHandler<PianoKey>(
                     (key, _) =>
                     {
-                        key.geometry = null;
+                        key.Geometry = null;
                         key.InvalidateVisual();
                     }
                 );
@@ -215,13 +220,15 @@ namespace NitroStudio2.Controls
         {
             get
             {
-                if (geometry is null && Bounds.Width > 0 && Bounds.Height > 0)
+                if (field is null && Bounds.Width > 0 && Bounds.Height > 0)
                 {
                     InitPoints();
-                    geometry = BuildGeometry();
+                    field = BuildGeometry();
                 }
-                return geometry;
+                return field;
             }
+
+            set;
         }
 
         private StreamGeometry BuildGeometry()

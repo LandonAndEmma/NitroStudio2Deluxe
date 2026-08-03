@@ -48,17 +48,15 @@ namespace Sanford.Multimedia.Midi
         #region Class Fields
 
         // Stores the SystemCommonMessages.
-        private static Hashtable messageCache = Hashtable.Synchronized(new Hashtable());
+        private static readonly Hashtable messageCache = Hashtable.Synchronized([]);
 
         #endregion
 
         #region Fields
 
         // The SystemCommonMessage as a packed integer.
-        private int message = 0;
 
         // The built SystemCommonMessage.
-        private SysCommonMessage result = null;
 
         #endregion
 
@@ -103,7 +101,7 @@ namespace Sanford.Multimedia.Midi
         /// </param>
         public void Initialize(SysCommonMessage message)
         {
-            this.message = message.Message;
+            Message = message.Message;
         }
 
         /// <summary>
@@ -121,53 +119,24 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the number of messages in the SysCommonMessageBuilder cache.
         /// </summary>
-        public static int Count
-        {
-            get
-            {
-                return messageCache.Count;
-            }
-        }
+        public static int Count => messageCache.Count;
 
         /// <summary>
         /// Gets the built SysCommonMessage.
         /// </summary>
-        public SysCommonMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public SysCommonMessage Result { get; private set; } = null;
 
         /// <summary>
         /// Gets or sets the SysCommonMessage as a packed integer.
         /// </summary>
-        internal int Message
-        {
-            get
-            {
-                return message;
-            }
-            set
-            {
-                message = value;
-            }
-        }
+        internal int Message { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the type of SysCommonMessage.
         /// </summary>
         public SysCommonType Type
         {
-            get
-            {
-                return (SysCommonType)ShortMessage.UnpackStatus(message);
-            }
-            set
-            {
-                message = ShortMessage.PackStatus(message, (int)value);
-            }
+            get => (SysCommonType)ShortMessage.UnpackStatus(Message); set => Message = ShortMessage.PackStatus(Message, (int)value);
         }
 
         /// <summary>
@@ -179,14 +148,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Data1
         {
-            get
-            {
-                return ShortMessage.UnpackData1(message);
-            }
-            set
-            {
-                message = ShortMessage.PackData1(message, value);
-            }
+            get => ShortMessage.UnpackData1(Message); set => Message = ShortMessage.PackData1(Message, value);
         }
 
         /// <summary>
@@ -198,14 +160,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Data2
         {
-            get
-            {
-                return ShortMessage.UnpackData2(message);
-            }
-            set
-            {
-                message = ShortMessage.PackData2(message, value);
-            }
+            get => ShortMessage.UnpackData2(Message); set => Message = ShortMessage.PackData2(Message, value);
         }
 
         #endregion
@@ -219,13 +174,13 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public void Build()
         {
-            result = (SysCommonMessage)messageCache[message];
+            Result = (SysCommonMessage)messageCache[Message];
 
-            if (result == null)
+            if (Result == null)
             {
-                result = new SysCommonMessage(message);
+                Result = new SysCommonMessage(Message);
 
-                messageCache.Add(message, result);
+                messageCache.Add(Message, Result);
             }
         }
 

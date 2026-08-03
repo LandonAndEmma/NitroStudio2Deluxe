@@ -16,8 +16,6 @@ namespace NitroStudio2.Models
     {
         private string text;
         private int imageIndex;
-        private bool isExpanded;
-        private bool isSelected;
 
         public EditorTreeNode(string name, string text, int imageIndex = 0)
         {
@@ -64,14 +62,14 @@ namespace NitroStudio2.Models
 
         public bool IsExpanded
         {
-            get => isExpanded;
-            set => SetProperty(ref isExpanded, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public bool IsSelected
         {
-            get => isSelected;
-            set => SetProperty(ref isSelected, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         /// <summary>Actions offered by this node's context menu, or null for none.</summary>

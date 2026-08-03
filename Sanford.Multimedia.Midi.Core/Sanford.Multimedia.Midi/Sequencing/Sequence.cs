@@ -51,17 +51,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         #region Fields
 
         // The collection of Tracks for the Sequence.
-        private List<Track> tracks = new List<Track>();
+        private List<Track> tracks = [];
 
         // The Sequence's MIDI file properties.
-        private MidiFileProperties properties = new MidiFileProperties();
+        private MidiFileProperties properties = new();
 
-        private BackgroundWorker loadWorker = new BackgroundWorker();
+        private readonly BackgroundWorker loadWorker = new();
 
-        private BackgroundWorker saveWorker = new BackgroundWorker();
-
-        private ISite site = null;
-
+        private readonly BackgroundWorker saveWorker = new();
         private bool disposed = false;
 
         #endregion
@@ -184,14 +181,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             #endregion                        
 
-            FileStream stream = new FileStream(fileName, FileMode.Open,
+            FileStream stream = new(fileName, FileMode.Open,
                 FileAccess.Read, FileShare.Read);
 
             using (stream)
             {
-                MidiFileProperties newProperties = new MidiFileProperties();
-                TrackReader reader = new TrackReader();
-                List<Track> newTracks = new List<Track>();
+                MidiFileProperties newProperties = new();
+                TrackReader reader = new();
+                List<Track> newTracks = [];
 
                 newProperties.Read(stream);
 
@@ -239,9 +236,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             using (fileStream)
             {
-                MidiFileProperties newProperties = new MidiFileProperties();
-                TrackReader reader = new TrackReader();
-                List<Track> newTracks = new List<Track>();
+                MidiFileProperties newProperties = new();
+                TrackReader reader = new();
+                List<Track> newTracks = [];
 
                 newProperties.Read(fileStream);
 
@@ -325,7 +322,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             #endregion
 
-            FileStream stream = new FileStream(fileName, FileMode.Create,
+            FileStream stream = new(fileName, FileMode.Create,
                 FileAccess.Write, FileShare.None);
             using (stream)
             {
@@ -343,7 +340,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         {
             properties.Write(stream);
 
-            TrackWriter writer = new TrackWriter();
+            TrackWriter writer = new();
 
             foreach (Track trk in tracks)
             {
@@ -430,36 +427,26 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         private void OnLoadCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            EventHandler<AsyncCompletedEventArgs> handler = LoadCompleted;
-
-            if (handler != null)
-            {
-                handler(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
-            }
+            LoadCompleted?.Invoke(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
         }
 
         private void OnLoadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressChangedEventHandler handler = LoadProgressChanged;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            LoadProgressChanged?.Invoke(this, e);
         }
 
         private void LoadDoWork(object sender, DoWorkEventArgs e)
         {
             string fileName = (string)e.Argument;
 
-            FileStream stream = new FileStream(fileName, FileMode.Open,
+            FileStream stream = new(fileName, FileMode.Open,
                 FileAccess.Read, FileShare.Read);
 
             using (stream)
             {
-                MidiFileProperties newProperties = new MidiFileProperties();
-                TrackReader reader = new TrackReader();
-                List<Track> newTracks = new List<Track>();
+                MidiFileProperties newProperties = new();
+                TrackReader reader = new();
+                List<Track> newTracks = [];
 
                 newProperties.Read(stream);
 
@@ -489,36 +476,26 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         private void OnSaveCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            EventHandler<AsyncCompletedEventArgs> handler = SaveCompleted;
-
-            if (handler != null)
-            {
-                handler(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
-            }
+            SaveCompleted?.Invoke(this, new AsyncCompletedEventArgs(e.Error, e.Cancelled, null));
         }
 
         private void OnSaveProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressChangedEventHandler handler = SaveProgressChanged;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            SaveProgressChanged?.Invoke(this, e);
         }
 
         private void SaveDoWork(object sender, DoWorkEventArgs e)
         {
             string fileName = (string)e.Argument;
 
-            FileStream stream = new FileStream(fileName, FileMode.Create,
+            FileStream stream = new(fileName, FileMode.Create,
                 FileAccess.Write, FileShare.None);
 
             using (stream)
             {
                 properties.Write(stream);
 
-                TrackWriter writer = new TrackWriter();
+                TrackWriter writer = new();
 
                 float percentage;
 
@@ -654,13 +631,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// <summary>
         /// If the loader is busy.
         /// </summary>
-        public bool IsBusy
-        {
-            get
-            {
-                return loadWorker.IsBusy || saveWorker.IsBusy;
-            }
-        }
+        public bool IsBusy => loadWorker.IsBusy || saveWorker.IsBusy;
 
         #endregion
 
@@ -871,17 +842,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// <summary>
         /// Gets or sets the site associated with the sequence.
         /// </summary>
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         #endregion
 
@@ -905,13 +866,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
             saveWorker.Dispose();
 
             disposed = true;
-
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Disposed?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

@@ -28,7 +28,10 @@ namespace NitroStudio2.Models
         public ICommand Command { get; }
 
         /// <summary>Re-evaluates CanExecute so the item enables/disables with the current state.</summary>
-        public void RaiseCanExecuteChanged() => ((DelegateCommand)Command).RaiseCanExecuteChanged();
+        public void RaiseCanExecuteChanged()
+        {
+            ((DelegateCommand)Command).RaiseCanExecuteChanged();
+        }
     }
 
     /// <summary>
@@ -48,11 +51,19 @@ namespace NitroStudio2.Models
 
         public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object parameter) => canExecute?.Invoke() ?? true;
+        public bool CanExecute(object parameter)
+        {
+            return canExecute?.Invoke() ?? true;
+        }
 
-        public void Execute(object parameter) => execute?.Invoke();
+        public void Execute(object parameter)
+        {
+            execute?.Invoke();
+        }
 
-        public void RaiseCanExecuteChanged() =>
+        public void RaiseCanExecuteChanged()
+        {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

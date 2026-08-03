@@ -62,19 +62,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         #region Fields
 
         // The skip list header. It also serves as the NIL node.
-        private Node header = new Node(MaxLevel);
+        private readonly Node header = new(MaxLevel);
 
         // Comparer for comparing keys.
-        private IComparer comparer;
+        private readonly IComparer comparer;
 
         // Random number generator for generating random node levels.
-        private Random random = new Random();
+        private readonly Random random = new();
 
         // Current maximum list level.
         private int listLevel;
 
         // Current number of elements in the skip list.
-        private int count;
 
         // Version of the skip list. Used for validation checks with 
         // enumerators.
@@ -138,7 +137,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         private void Initialize()
         {
             listLevel = 1;
-            count = 0;
+            Count = 0;
 
             // When the list is empty, make sure all forward references in the
             // header point back to the header. This is important because the 
@@ -180,10 +179,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// </returns>
         private bool Search(object key)
         {
-            Node curr;
             Node[] dummy = new Node[MaxLevel];
-
-            return Search(key, out curr, dummy);
+            return Search(key, out _, dummy);
         }
 
         /// <summary>
@@ -220,9 +217,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// </returns>
         private bool Search(object key, Node[] update)
         {
-            Node curr;
-
-            return Search(key, out curr, update);
+            return Search(key, out _, update);
         }
 
         /// <summary>
@@ -249,18 +244,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 throw new ArgumentNullException("An attempt was made to pass a null key to a SkipList.");
             }
 
-            bool result;
+            bool result = comparer != null
+                ? SearchWithComparer(key, out curr, update)
+                // Else we're using the IComparable interface.
+                : SearchWithComparable(key, out curr, update);
 
             // Check to see if we will search with a comparer.
-            if (comparer != null)
-            {
-                result = SearchWithComparer(key, out curr, update);
-            }
-            // Else we're using the IComparable interface.
-            else
-            {
-                result = SearchWithComparable(key, out curr, update);
-            }
 
             return result;
         }
@@ -357,7 +346,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             Node[] update)
         {
             // Make sure key is comparable.
-            if (!(key is IComparable))
+            if (key is not IComparable)
             {
                 throw new ArgumentException("The SkipList was set to use the IComparable interface and an attempt was made to add a key that does not support this interface.");
             }
@@ -446,7 +435,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             }
 
             // Create the new node.
-            Node newNode = new Node(newLevel, key, val);
+            Node newNode = new(newLevel, key, val);
 
             // Insert the new node into the skip list.
             for (int i = 0; i < newLevel; i++)
@@ -462,7 +451,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             }
 
             // Keep track of the number of nodes in the skip list.
-            count++;
+            Count++;
 
             // Indicate that the skip list has changed.
             version++;
@@ -485,10 +474,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             public Node[] forward;
 
             // Node key.
-            private Object key;
 
             // Node value.
-            private Object val;
 
             #endregion
 
@@ -527,43 +514,17 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             /// <summary>
             /// Key property.
             /// </summary>
-            public Object Key
-            {
-                get
-                {
-                    return key;
-                }
-                set
-                {
-                    key = value;
-                }
-            }
+            public object Key { get; set; }
 
             /// <summary>
             /// Value property.
             /// </summary>
-            public Object Value
-            {
-                get
-                {
-                    return val;
-                }
-                set
-                {
-                    val = value;
-                }
-            }
+            public object Value { get; set; }
 
             /// <summary>
             /// Node dictionary Entry property - contains key/value pair. 
             /// </summary>
-            public DictionaryEntry Entry
-            {
-                get
-                {
-                    return new DictionaryEntry(Key, Value);
-                }
-            }
+            public DictionaryEntry Entry => new(Key, Value);
 
             #region IDisposable Members
 
@@ -595,13 +556,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             #region Fields
 
             // The skip list to enumerate.
-            private SkipList list;
+            private readonly SkipList list;
 
             // The current node.
             private Node current;
 
             // The version of the skip list we are enumerating.
-            private long version;
+            private readonly long version;
 
             // Keeps track of previous move result so that we can know 
             // whether or not we are at the end of the skip list.
@@ -632,25 +593,17 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             {
                 get
                 {
-                    DictionaryEntry entry;
+                    DictionaryEntry entry = version != list.version
+                        ? throw new InvalidOperationException("SkipListEnumerator is no longer valid. The SkipList has been modified since the creation of this enumerator.")
+                        // Make sure we are not before the beginning or beyond the 
+                        // end of the skip list.
+                        : current == list.header
+                            ? throw new InvalidOperationException("SkipListEnumerator is no longer valid. The SkipList has been modified since the creation of this enumerator.")
+                            // Finally, all checks have passed. Get the current entry.
+                            : current.Entry;
 
                     // Make sure the skip list hasn't been modified since the
                     // enumerator was created.
-                    if (version != list.version)
-                    {
-                        throw new InvalidOperationException("SkipListEnumerator is no longer valid. The SkipList has been modified since the creation of this enumerator.");
-                    }
-                    // Make sure we are not before the beginning or beyond the 
-                    // end of the skip list.
-                    else if (current == list.header)
-                    {
-                        throw new InvalidOperationException("SkipListEnumerator is no longer valid. The SkipList has been modified since the creation of this enumerator.");
-                    }
-                    // Finally, all checks have passed. Get the current entry.
-                    else
-                    {
-                        entry = current.Entry;
-                    }
 
                     return entry;
                 }
@@ -752,13 +705,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             /// <summary>
             /// Gets the current element in the skip list.
             /// </summary>
-            public object Current
-            {
-                get
-                {
-                    return Entry;
-                }
-            }
+            public object Current => Entry;
 
             #endregion
         }
@@ -856,9 +803,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         public void Remove(object key)
         {
             Node[] update = new Node[MaxLevel];
-            Node curr;
 
-            if (Search(key, out curr, update))
+            if (Search(key, out Node curr, update))
             {
                 // Take the forward references that point to the node to be 
                 // removed and reassign them to the nodes that come after it.
@@ -879,7 +825,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 }
 
                 // Keep track of the number of nodes.
-                count--;
+                Count--;
                 // Indicate that the skip list has changed.
                 version++;
             }
@@ -888,24 +834,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// <summary>
         /// Gets a value indicating whether the SkipList has a fixed size.
         /// </summary>
-        public bool IsFixedSize
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsFixedSize => false;
 
         /// <summary>
         /// Gets a value indicating whether the IDictionary is read-only.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets the element with the specified key. This is the 
@@ -916,9 +850,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             get
             {
                 object val = null;
-                Node curr;
 
-                if (Search(key, out curr))
+                if (Search(key, out Node curr))
                 {
                     val = curr.Entry.Value;
                 }
@@ -928,10 +861,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             set
             {
                 Node[] update = new Node[MaxLevel];
-                Node curr;
 
                 // If the search key already exists in the skip list.
-                if (Search(key, out curr, update))
+                if (Search(key, out Node curr, update))
                 {
                     // Replace the current value with the new value.
                     curr.Value = value;
@@ -957,13 +889,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 // Start at the beginning of the skip list.
                 Node curr = header.forward[0];
                 // Create a collection to hold the keys.
-                ArrayList collection = new ArrayList();
+                ArrayList collection = [];
 
                 // While we haven't reached the end of the skip list.
                 while (curr != header)
                 {
                     // Add the key to the collection.
-                    collection.Add(curr.Entry.Key);
+                    _ = collection.Add(curr.Entry.Key);
                     // Move forward in the skip list.
                     curr = curr.forward[0];
                 }
@@ -982,13 +914,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 // Start at the beginning of the skip list.
                 Node curr = header.forward[0];
                 // Create a collection to hold the values.
-                ArrayList collection = new ArrayList();
+                ArrayList collection = [];
 
                 // While we haven't reached the end of the skip list.
                 while (curr != header)
                 {
                     // Add the value to the collection.
-                    collection.Add(curr.Entry.Value);
+                    _ = collection.Add(curr.Entry.Value);
                     // Move forward in the skip list.
                     curr = curr.forward[0];
                 }
@@ -1058,37 +990,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// <summary>
         /// Gets the number of elements contained in the SkipList.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether access to the SkipList is 
         /// synchronized (thread-safe).
         /// </summary>
-        public bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsSynchronized => false;
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the 
         /// SkipList.
         /// </summary>
-        public object SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public object SyncRoot => this;
 
         #endregion
 

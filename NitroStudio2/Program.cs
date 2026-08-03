@@ -14,10 +14,14 @@ namespace NitroStudio2
         );
 
         [STAThread]
-        private static void Main(string[] args) =>
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        private static void Main(string[] args)
+        {
+            _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
 
-        public static AppBuilder BuildAvaloniaApp() =>
-            AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().LogToTrace();
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            return AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().LogToTrace();
+        }
     }
 }

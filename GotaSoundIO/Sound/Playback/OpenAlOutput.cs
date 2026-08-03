@@ -45,7 +45,6 @@ namespace GotaSoundIO.Sound.Playback
         private Resampler resampler;
         private byte[] readBuffer = [];
         private short[] sampleBuffer = [];
-        private float volume = 1f;
 
         /// <summary>
         /// Takes a source on the shared device. Throws if no device is available, which is what
@@ -68,16 +67,16 @@ namespace GotaSoundIO.Sound.Playback
 
         public float Volume
         {
-            get => volume;
+            get;
             set
             {
-                volume = Math.Clamp(value, 0f, 1f);
+                field = Math.Clamp(value, 0f, 1f);
                 lock (Gate)
                 {
-                    al.SetSourceProperty(source, SourceFloat.Gain, volume);
+                    al.SetSourceProperty(source, SourceFloat.Gain, field);
                 }
             }
-        }
+        } = 1f;
 
         public PlaybackState PlaybackState { get; private set; } = PlaybackState.Stopped;
 
@@ -277,7 +276,7 @@ namespace GotaSoundIO.Sound.Playback
         public void Dispose()
         {
             running = false;
-            feeder?.Join(500);
+            _ = (feeder?.Join(500));
             feeder = null;
             // Only this output's source and buffers go; the device and context are shared with
             // every other editor and stay open for the life of the process.

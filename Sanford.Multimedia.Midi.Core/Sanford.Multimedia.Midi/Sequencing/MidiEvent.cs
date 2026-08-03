@@ -42,16 +42,6 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
     /// </summary>
     public class MidiEvent
     {
-        private object owner = null;
-
-        private int absoluteTicks;
-
-        private IMidiMessage message;
-
-        private MidiEvent next = null;
-
-        private MidiEvent previous = null;
-
         internal MidiEvent(object owner, int absoluteTicks, IMidiMessage message)
         {
             #region Require
@@ -72,34 +62,22 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             #endregion
 
-            this.owner = owner;
-            this.absoluteTicks = absoluteTicks;
-            this.message = message;
+            Owner = owner;
+            AbsoluteTicks = absoluteTicks;
+            MidiMessage = message;
         }
 
         internal void SetAbsoluteTicks(int absoluteTicks)
         {
-            this.absoluteTicks = absoluteTicks;
+            AbsoluteTicks = absoluteTicks;
         }
 
-        internal object Owner
-        {
-            get
-            {
-                return owner;
-            }
-        }
+        internal object Owner { get; } = null;
 
         /// <summary>
 		/// Gets and returns the amount of absolute ticks.
 		/// </summary>
-        public int AbsoluteTicks
-        {
-            get
-            {
-                return absoluteTicks;
-            }
-        }
+        public int AbsoluteTicks { get; private set; }
 
         /// <summary>
 		/// Gets the amount of delta ticks from absolute ticks, subtracted from the previous absolute ticks, if the previous tick is not null; otherwise, obtains the amount of absolute ticks.
@@ -108,17 +86,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         {
             get
             {
-                int deltaTicks;
-
-                if (Previous != null)
-                {
-                    deltaTicks = AbsoluteTicks - previous.AbsoluteTicks;
-                }
-                else
-                {
-                    deltaTicks = AbsoluteTicks;
-                }
-
+                int deltaTicks = Previous != null ? AbsoluteTicks - Previous.AbsoluteTicks : AbsoluteTicks;
                 return deltaTicks;
             }
         }
@@ -126,36 +94,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// <summary>
 		/// Gets and returns the MIDI message.
 		/// </summary>
-        public IMidiMessage MidiMessage
-        {
-            get
-            {
-                return message;
-            }
-        }
+        public IMidiMessage MidiMessage { get; }
 
-        internal MidiEvent Next
-        {
-            get
-            {
-                return next;
-            }
-            set
-            {
-                next = value;
-            }
-        }
+        internal MidiEvent Next { get; set; } = null;
 
-        internal MidiEvent Previous
-        {
-            get
-            {
-                return previous;
-            }
-            set
-            {
-                previous = value;
-            }
-        }
+        internal MidiEvent Previous { get; set; } = null;
     }
 }

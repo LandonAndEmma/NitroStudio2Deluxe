@@ -54,7 +54,6 @@ namespace Sanford.Multimedia.Midi
             };
 
         // The Track to write to the Stream.
-        private Track track = new Track();
 
         // The Stream to write to.
         private Stream stream;
@@ -63,17 +62,17 @@ namespace Sanford.Multimedia.Midi
         private int runningStatus = 0;
 
         // The Track data in raw bytes.
-        private List<byte> trackData = new List<byte>();
+        private readonly List<byte> trackData = [];
 
         public void Write(Stream strm)
         {
-            this.stream = strm;
+            stream = strm;
 
             trackData.Clear();
 
             stream.Write(TrackHeader, 0, TrackHeader.Length);
 
-            foreach (MidiEvent e in track.Iterator())
+            foreach (MidiEvent e in Track.Iterator())
             {
                 WriteVariableLengthValue(e.DeltaTicks);
 
@@ -196,7 +195,7 @@ namespace Sanford.Multimedia.Midi
             runningStatus = 0;
 
             // Escaped message.
-            trackData.Add((byte)0xF7);
+            trackData.Add(0xF7);
 
             trackData.Add((byte)message.Status);
 
@@ -223,7 +222,7 @@ namespace Sanford.Multimedia.Midi
             runningStatus = 0;
 
             // Escaped message.
-            trackData.Add((byte)0xF7);
+            trackData.Add(0xF7);
 
             trackData.Add((byte)message.Status);
         }
@@ -233,26 +232,19 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public Track Track
         {
-            get
-            {
-                return track;
-            }
+            get;
             set
             {
-                #region Require
 
-                if (value == null)
-                {
-                    throw new ArgumentNullException("Track");
-                }
+                #region Require
 
                 #endregion
 
                 runningStatus = 0;
                 trackData.Clear();
 
-                track = value;
+                field = value ?? throw new ArgumentNullException("Track");
             }
-        }
+        } = new Track();
     }
 }

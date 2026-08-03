@@ -48,17 +48,15 @@ namespace Sanford.Multimedia.Midi
         #region Class Fields
 
         // Stores the ChannelMessages.
-        private static Hashtable messageCache = Hashtable.Synchronized(new Hashtable());
+        private static readonly Hashtable messageCache = Hashtable.Synchronized([]);
 
         #endregion
 
         #region Fields
 
         // The channel message as a packed integer.
-        private int message = 0;
 
         // The built ChannelMessage
-        private ChannelMessage result = null;
 
         #endregion
 
@@ -104,7 +102,7 @@ namespace Sanford.Multimedia.Midi
         /// </param>
         public void Initialize(ChannelMessage message)
         {
-            this.message = message.Message;
+            Message = message.Message;
         }
 
         /// <summary>
@@ -122,39 +120,17 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the number of messages in the ChannelMessageEventArgs cache.
         /// </summary>
-        public static int Count
-        {
-            get
-            {
-                return messageCache.Count;
-            }
-        }
+        public static int Count => messageCache.Count;
 
         /// <summary>
         /// Gets the built ChannelMessageEventArgs.
         /// </summary>
-        public ChannelMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public ChannelMessage Result { get; private set; } = null;
 
         /// <summary>
         /// Gets or sets the ChannelMessageEventArgs as a packed integer. 
         /// </summary>
-        internal int Message
-        {
-            get
-            {
-                return message;
-            }
-            set
-            {
-                message = value;
-            }
-        }
+        internal int Message { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the Command value to use for building the 
@@ -162,14 +138,7 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public ChannelCommand Command
         {
-            get
-            {
-                return ChannelMessage.UnpackCommand(message);
-            }
-            set
-            {
-                message = ChannelMessage.PackCommand(message, value);
-            }
+            get => ChannelMessage.UnpackCommand(Message); set => Message = ChannelMessage.PackCommand(Message, value);
         }
 
         /// <summary>
@@ -181,14 +150,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int MidiChannel
         {
-            get
-            {
-                return ChannelMessage.UnpackMidiChannel(message);
-            }
-            set
-            {
-                message = ChannelMessage.PackMidiChannel(message, value);
-            }
+            get => ChannelMessage.UnpackMidiChannel(Message); set => Message = ChannelMessage.PackMidiChannel(Message, value);
         }
 
         /// <summary>
@@ -200,14 +162,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Data1
         {
-            get
-            {
-                return ShortMessage.UnpackData1(message);
-            }
-            set
-            {
-                message = ShortMessage.PackData1(message, value);
-            }
+            get => ShortMessage.UnpackData1(Message); set => Message = ShortMessage.PackData1(Message, value);
         }
 
         /// <summary>
@@ -219,14 +174,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Data2
         {
-            get
-            {
-                return ShortMessage.UnpackData2(message);
-            }
-            set
-            {
-                message = ShortMessage.PackData2(message, value);
-            }
+            get => ShortMessage.UnpackData2(Message); set => Message = ShortMessage.PackData2(Message, value);
         }
 
         #endregion
@@ -240,15 +188,15 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public void Build()
         {
-            result = (ChannelMessage)messageCache[message];
+            Result = (ChannelMessage)messageCache[Message];
 
             // If the message does not exist.
-            if (result == null)
+            if (Result == null)
             {
-                result = new ChannelMessage(message);
+                Result = new ChannelMessage(Message);
 
                 // Add message to cache.
-                messageCache.Add(message, result);
+                messageCache.Add(Message, Result);
             }
         }
 

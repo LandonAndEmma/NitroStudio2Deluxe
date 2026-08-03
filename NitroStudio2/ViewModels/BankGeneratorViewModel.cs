@@ -3,7 +3,6 @@ using GotaSequenceLib;
 using GotaSequenceLib.Playback;
 using NitroFileLoader;
 using NitroFileLoader.Instrument;
-using InstrumentType = NitroFileLoader.Instrument.InstrumentType;
 using NitroStudio2.Services;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using InstrumentType = NitroFileLoader.Instrument.InstrumentType;
 
 namespace NitroStudio2.ViewModels
 {
@@ -21,11 +21,6 @@ namespace NitroStudio2.ViewModels
     /// </summary>
     public sealed class BankGeneratorRow : ViewModelBase
     {
-        private string bank;
-        private string instrument;
-        private string newId = "";
-        private string waveArchiveMode;
-
         public ObservableCollection<string> InstrumentOptions { get; } = [];
 
         public ObservableCollection<string> WaveArchiveModeOptions { get; } =
@@ -33,26 +28,26 @@ namespace NitroStudio2.ViewModels
 
         public string Bank
         {
-            get => bank;
-            set => SetProperty(ref bank, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public string Instrument
         {
-            get => instrument;
-            set => SetProperty(ref instrument, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public string NewId
         {
-            get => newId;
-            set => SetProperty(ref newId, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = "";
 
         public string WaveArchiveMode
         {
-            get => waveArchiveMode;
-            set => SetProperty(ref waveArchiveMode, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         /// <summary>True while the row is still the untouched trailing placeholder.</summary>
@@ -60,8 +55,10 @@ namespace NitroStudio2.ViewModels
             Bank is null && Instrument is null && WaveArchiveMode is null && NewId == "";
 
         /// <summary>Index parsed out of an "[3] - Name" entry.</summary>
-        public static int IdOf(string entry) =>
-            int.Parse(entry.Split('[')[1].Split(']')[0]);
+        public static int IdOf(string entry)
+        {
+            return int.Parse(entry.Split('[')[1].Split(']')[0]);
+        }
     }
 
     /// <summary>
@@ -134,7 +131,7 @@ namespace NitroStudio2.ViewModels
                 return;
             }
             row.PropertyChanged -= OnRowChanged;
-            Rows.Remove(row);
+            _ = Rows.Remove(row);
             NormalizeRows();
         }
 

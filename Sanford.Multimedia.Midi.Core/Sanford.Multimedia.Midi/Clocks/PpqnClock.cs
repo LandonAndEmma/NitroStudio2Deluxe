@@ -60,7 +60,6 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         private const int MicrosecondsPerMillisecond = 1000;
 
         // The pulses per quarter note value.
-        private int ppqn = PpqnMinValue;
 
         // The tempo in microseconds.
         private int tempo = DefaultTempo;
@@ -70,7 +69,6 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         private int periodResolution;
 
         // The number of ticks per MIDI clock.
-        private int ticksPerClock;
 
         // The running fractional tick count.
         private int fractionalTicks = 0;
@@ -155,7 +153,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         protected int GenerateTicks()
         {
             int ticks = (fractionalTicks + periodResolution) / tempo;
-            fractionalTicks += periodResolution - ticks * tempo;
+            fractionalTicks += periodResolution - (ticks * tempo);
 
             return ticks;
         }
@@ -165,7 +163,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         private void CalculatePeriodResolution()
         {
-            periodResolution = ppqn * timerPeriod * MicrosecondsPerMillisecond;
+            periodResolution = Ppqn * timerPeriod * MicrosecondsPerMillisecond;
         }
 
         /// <summary>
@@ -173,7 +171,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         private void CalculateTicksPerClock()
         {
-            ticksPerClock = ppqn / PpqnMinValue;
+            TicksPerClock = Ppqn / PpqnMinValue;
         }
 
         /// <summary>
@@ -181,12 +179,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         protected virtual void OnTick(EventArgs e)
         {
-            EventHandler handler = Tick;
-
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Tick?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -194,12 +187,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         protected virtual void OnStarted(EventArgs e)
         {
-            EventHandler handler = Started;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Started?.Invoke(this, e);
         }
 
         /// <summary>
@@ -207,12 +195,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         protected virtual void OnStopped(EventArgs e)
         {
-            EventHandler handler = Stopped;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Stopped?.Invoke(this, e);
         }
 
         /// <summary>
@@ -220,12 +203,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         protected virtual void OnContinued(EventArgs e)
         {
-            EventHandler handler = Continued;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Continued?.Invoke(this, e);
         }
 
         #endregion
@@ -237,10 +215,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         public int Ppqn
         {
-            get
-            {
-                return ppqn;
-            }
+            get;
             set
             {
                 #region Require
@@ -253,12 +228,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
 
                 #endregion
 
-                ppqn = value;
+                field = value;
 
                 CalculatePeriodResolution();
                 CalculateTicksPerClock();
             }
-        }
+        } = PpqnMinValue;
 
         /// <summary>
         /// An abstract integer that gets the amount of ticks.
@@ -274,13 +249,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// <returns>
         /// The amount of ticks per clock.
         /// </returns>
-        public int TicksPerClock
-        {
-            get
-            {
-                return ticksPerClock;
-            }
-        }
+        public int TicksPerClock { get; private set; }
 
         #endregion
 
@@ -311,13 +280,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// <summary>
         /// Checks if PPQN Clock is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return running;
-            }
-        }
+        public bool IsRunning => running;
 
         #endregion
     }

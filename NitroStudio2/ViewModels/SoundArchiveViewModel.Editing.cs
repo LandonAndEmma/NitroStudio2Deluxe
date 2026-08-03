@@ -31,9 +31,11 @@ namespace NitroStudio2.ViewModels
 
         // ------------------------------------------------------------------ id allocation
 
-        private bool RootHasId(string categoryKey, int id) =>
-            Nodes.First(n => n.Name == categoryKey)
+        private bool RootHasId(string categoryKey, int id)
+        {
+            return Nodes.First(n => n.Name == categoryKey)
                 .Nodes.Any(n => n.Text.Contains("[" + id + "]"));
+        }
 
         /// <summary>First free id at or after the preferred one, wrapping to 0. -1 when full.</summary>
         private async Task<int> NextAvailableForwardIdAsync(
@@ -93,9 +95,15 @@ namespace NitroStudio2.ViewModels
 
         // ------------------------------------------------------------------ add
 
-        public override void NodeAddAbove() => _ = AddRelativeAsync(above: true);
+        public override void NodeAddAbove()
+        {
+            _ = AddRelativeAsync(above: true);
+        }
 
-        public override void NodeAddBelow() => _ = AddRelativeAsync(above: false);
+        public override void NodeAddBelow()
+        {
+            _ = AddRelativeAsync(above: false);
+        }
 
         private async Task AddRelativeAsync(bool above)
         {
@@ -117,7 +125,10 @@ namespace NitroStudio2.ViewModels
             RefreshAndSelect(category.Key, id);
         }
 
-        public override void RootAdd() => _ = RootAddAsync();
+        public override void RootAdd()
+        {
+            _ = RootAddAsync();
+        }
 
         /// <summary>Adds an entry to whichever category root is selected, at the first free id.</summary>
         private async Task RootAddAsync()
@@ -141,7 +152,10 @@ namespace NitroStudio2.ViewModels
 
         // ------------------------------------------------------------------ entry factories
 
-        private void AddSequence(int index) => _ = AddSequenceAsync(index);
+        private void AddSequence(int index)
+        {
+            _ = AddSequenceAsync(index);
+        }
 
         private async Task AddSequenceAsync(int index)
         {
@@ -170,7 +184,10 @@ namespace NitroStudio2.ViewModels
             SA.Sequences.Add(e);
         }
 
-        private void AddSequenceArchive(int index) => _ = AddSequenceArchiveAsync(index);
+        private void AddSequenceArchive(int index)
+        {
+            _ = AddSequenceArchiveAsync(index);
+        }
 
         private async Task AddSequenceArchiveAsync(int index)
         {
@@ -199,7 +216,8 @@ namespace NitroStudio2.ViewModels
             );
         }
 
-        private void AddBank(int index) =>
+        private void AddBank(int index)
+        {
             SA.Banks.Add(
                 new BankInfo
                 {
@@ -208,8 +226,10 @@ namespace NitroStudio2.ViewModels
                     Index = index,
                 }
             );
+        }
 
-        private void AddWaveArchive(int index) =>
+        private void AddWaveArchive(int index)
+        {
             SA.WaveArchives.Add(
                 new WaveArchiveInfo
                 {
@@ -218,8 +238,10 @@ namespace NitroStudio2.ViewModels
                     Index = index,
                 }
             );
+        }
 
-        private void AddSequencePlayer(int index) =>
+        private void AddSequencePlayer(int index)
+        {
             SA.Players.Add(
                 new PlayerInfo
                 {
@@ -228,8 +250,10 @@ namespace NitroStudio2.ViewModels
                     ChannelFlags = Enumerable.Repeat(true, 16).ToArray(),
                 }
             );
+        }
 
-        private void AddGroup(int index) =>
+        private void AddGroup(int index)
+        {
             SA.Groups.Add(
                 new GroupInfo
                 {
@@ -238,8 +262,10 @@ namespace NitroStudio2.ViewModels
                     Entries = [],
                 }
             );
+        }
 
-        private void AddStreamPlayer(int index) =>
+        private void AddStreamPlayer(int index)
+        {
             SA.StreamPlayers.Add(
                 new StreamPlayerInfo
                 {
@@ -251,8 +277,12 @@ namespace NitroStudio2.ViewModels
                     Index = index,
                 }
             );
+        }
 
-        private void AddStream(int index) => _ = AddStreamAsync(index);
+        private void AddStream(int index)
+        {
+            _ = AddStreamAsync(index);
+        }
 
         private async Task AddStreamAsync(int index)
         {

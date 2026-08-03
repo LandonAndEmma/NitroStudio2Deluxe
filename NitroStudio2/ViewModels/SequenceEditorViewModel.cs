@@ -1,5 +1,4 @@
 using GotaSequenceLib;
-using GotaSequenceLib.Playback;
 using GotaSoundIO.IO;
 using NitroFileLoader;
 using NitroStudio2.Services;
@@ -107,10 +106,12 @@ namespace NitroStudio2.ViewModels
             SeqBankPanel.WritingInfo = false;
         }
 
-        private static int BankIdOf(string entry) =>
-            entry is null || entry == "Other Index"
+        private static int BankIdOf(string entry)
+        {
+            return entry is null or "Other Index"
                 ? 0
                 : int.Parse(entry.Split('[')[1].Split(']')[0]);
+        }
 
         private void BankComboChanged()
         {
@@ -128,8 +129,10 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>The bank chosen for previewing, or null when it does not exist.</summary>
-        protected virtual BankInfo ResolvePreviewBank() =>
-            Archive?.Banks.FirstOrDefault(x => x.Index == (int)SeqBankPanel.BankId);
+        protected virtual BankInfo ResolvePreviewBank()
+        {
+            return Archive?.Banks.FirstOrDefault(x => x.Index == (int)SeqBankPanel.BankId);
+        }
 
         /// <summary>
         /// Points the preview at a specific bank. A sequence opened out of an archive should
@@ -197,10 +200,16 @@ namespace NitroStudio2.ViewModels
         /// <summary>Commands and start offset the player should use for the current selection.</summary>
         protected abstract (List<SequenceCommand> Commands, int Start) SongToPlay();
 
-        private void Play() => _ = PlayAsync();
+        private void Play()
+        {
+            _ = PlayAsync();
+        }
 
         /// <summary>Space previews the sequence, matching the transport's Play button.</summary>
-        public override void PlaySelected() => Play();
+        public override void PlaySelected()
+        {
+            Play();
+        }
 
         private async Task PlayAsync()
         {
@@ -226,7 +235,7 @@ namespace NitroStudio2.ViewModels
             {
                 return;
             }
-            playback.LoadSong(b.File, b.GetAssociatedWaves(), commands, start);
+            _ = playback.LoadSong(b.File, b.GetAssociatedWaves(), commands, start);
             playback.Play();
         }
 
@@ -299,7 +308,10 @@ namespace NitroStudio2.ViewModels
             base.OnClosing();
         }
 
-        public void Dispose() => playback.Dispose();
+        public void Dispose()
+        {
+            playback.Dispose();
+        }
     }
 
     /// <summary>Editor for a single .sseq sequence. Ported from the WinForms SequenceEditor.</summary>
@@ -353,12 +365,20 @@ namespace NitroStudio2.ViewModels
             return SEQ.WritingCommandSuccess;
         }
 
-        protected override (List<SequenceCommand>, int) SongToPlay() => (SEQ.Commands, 0);
+        protected override (List<SequenceCommand>, int) SongToPlay()
+        {
+            return (SEQ.Commands, 0);
+        }
 
-        protected override string SongName() =>
-            System.IO.Path.GetFileNameWithoutExtension(SEQ.Name ?? "Sequence");
+        protected override string SongName()
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(SEQ.Name ?? "Sequence");
+        }
 
-        protected override void SaveMidi(string path) => SEQ.SaveMIDI(path);
+        protected override void SaveMidi(string path)
+        {
+            SEQ.SaveMIDI(path);
+        }
 
         public override async Task NewAsync()
         {

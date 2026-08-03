@@ -6,7 +6,6 @@ using NitroStudio2.ViewModels.Panels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace NitroStudio2.ViewModels
 {
@@ -193,7 +192,10 @@ namespace NitroStudio2.ViewModels
 
         private readonly Dictionary<string, Category> categories = [];
 
-        private static IList<object> Wrap<T>(List<T> list) => [.. list.Cast<object>()];
+        private static IList<object> Wrap<T>(List<T> list)
+        {
+            return [.. list.Cast<object>()];
+        }
 
         private void BuildCategories()
         {
@@ -346,11 +348,13 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Category the selection belongs to, or null for a root or nested node.</summary>
-        private Category Selected() =>
-            SelectedNode?.Parent is not null
+        private Category Selected()
+        {
+            return SelectedNode?.Parent is not null
             && categories.TryGetValue(SelectedNode.Parent.Name, out Category category)
                 ? category
                 : null;
+        }
 
         /// <summary>The archive entry the selected node stands for.</summary>
         private object SelectedEntry()
@@ -365,8 +369,10 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Pulls the id out of a node's "[3] NAME" label, as GetIdFromNode did.</summary>
-        public static int IdFromNode(EditorTreeNode node) =>
-            int.Parse(node.Text.Split('[')[1].Split(']')[0]);
+        public static int IdFromNode(EditorTreeNode node)
+        {
+            return int.Parse(node.Text.Split('[')[1].Split(']')[0]);
+        }
 
         /// <summary>Human-readable file size, ported from MainWindow.GetBytesSize.</summary>
         public static string GetBytesSize(IOFile file)
@@ -460,8 +466,8 @@ namespace NitroStudio2.ViewModels
                 actions.Add(
                     name switch
                     {
-                        "AddAbove" => new MenuAction("Add Above", "New", () => NodeAddAbove()),
-                        "AddBelow" => new MenuAction("Add Below", "Open", () => NodeAddBelow()),
+                        "AddAbove" => new MenuAction("Add Above", "New", NodeAddAbove),
+                        "AddBelow" => new MenuAction("Add Below", "Open", NodeAddBelow),
                         "Replace" => new MenuAction("Replace", "Import", () => _ = ReplaceAsync()),
                         "Export" => new MenuAction("Export", "Export", () => _ = ExportAsync()),
                         "Rename" => new MenuAction("Rename", "Rename", () => _ = RenameAsync()),
@@ -594,10 +600,12 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>"[3] NAME Selected. File Is 1.2 KB." as the WinForms status bar showed it.</summary>
-        private void SetStatus(int index, string name, IOFile file) =>
+        private void SetStatus(int index, string name, IOFile file)
+        {
             Status =
                 "[" + index + "] " + name + " Selected."
                 + (file is null ? "" : " File Is " + GetBytesSize(file) + ".");
+        }
 
         public override void OnClosing()
         {

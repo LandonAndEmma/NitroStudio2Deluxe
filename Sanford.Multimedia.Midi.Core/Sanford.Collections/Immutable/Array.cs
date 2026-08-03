@@ -24,10 +24,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         #region Instance Fields
 
         // The length of the array.
-        private int length;
 
         // The head node of the random access list.
-        private RalTopNode head;
+        private readonly RalTopNode head;
 
         #endregion
 
@@ -49,7 +48,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                     "Array length out of range.");
             }
 
-            this.length = length;
+            Length = length;
 
             int n = length;
             int exponent;
@@ -97,7 +96,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         private Array(RalTopNode head, int length)
         {
             this.head = head;
-            this.length = length;
+            Length = length;
         }
 
         #endregion
@@ -120,13 +119,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public object GetValue(int index)
         {
             // Preconditions.
-            if (index < 0 || index >= Length)
-            {
-                throw new ArgumentOutOfRangeException(
-                    "Index out of range.");
-            }
-
-            return head.GetValue(index);
+            return index < 0 || index >= Length
+                ? throw new ArgumentOutOfRangeException(
+                    "Index out of range.")
+                : head.GetValue(index);
         }
 
         /// <summary>
@@ -149,13 +145,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public Array SetValue(object value, int index)
         {
             // Preconditions.
-            if (index < 0 || index >= Length)
-            {
-                throw new ArgumentOutOfRangeException(
-                    "Index out of range.");
-            }
-
-            return new Array(head.SetValue(value, index), Length);
+            return index < 0 || index >= Length
+                ? throw new ArgumentOutOfRangeException(
+                    "Index out of range.")
+                : new Array(head.SetValue(value, index), Length);
         }
 
         // Creates subtrees within the random access list.
@@ -184,13 +177,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// Gets an integer that represents the total number of elements in all 
         /// the dimensions of the Array.
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return length;
-            }
-        }
+        public int Length { get; }
 
         #endregion
 
@@ -206,7 +193,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            return new RalEnumerator(head, length);
+            return new RalEnumerator(head, Length);
         }
 
         #endregion

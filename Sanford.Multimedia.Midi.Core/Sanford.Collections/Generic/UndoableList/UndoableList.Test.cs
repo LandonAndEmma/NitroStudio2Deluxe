@@ -47,8 +47,8 @@ namespace Sanford.Collections.Generic
         public static void Test()
         {
             int count = 10;
-            List<int> comparisonList = new List<int>(count);
-            UndoableList<int> undoList = new UndoableList<int>(count);
+            List<int> comparisonList = new(count);
+            UndoableList<int> undoList = new(count);
 
             PopulateLists(comparisonList, undoList, count);
             TestAdd(comparisonList, undoList);
@@ -66,11 +66,11 @@ namespace Sanford.Collections.Generic
         {
             TestEquals(comparisonList, undoList);
 
-            Stack<int> redoStack = new Stack<int>();
+            Stack<int> redoStack = new();
 
             while (comparisonList.Count > 0)
             {
-                redoStack.Push(comparisonList[comparisonList.Count - 1]);
+                redoStack.Push(comparisonList[^1]);
                 comparisonList.RemoveAt(comparisonList.Count - 1);
                 Debug.Assert(undoList.Undo());
                 TestEquals(comparisonList, undoList);
@@ -150,8 +150,8 @@ namespace Sanford.Collections.Generic
 
             int item = comparisonList[index];
 
-            comparisonList.Remove(item);
-            undoList.Remove(item);
+            _ = comparisonList.Remove(item);
+            _ = undoList.Remove(item);
 
             TestEquals(comparisonList, undoList);
 
@@ -243,7 +243,7 @@ namespace Sanford.Collections.Generic
         [Conditional("DEBUG")]
         private static void PopulateLists(IList<int> a, IList<int> b, int count)
         {
-            Random r = new Random();
+            Random r = new();
             int item;
 
             for (int i = 0; i < count; i++)

@@ -59,10 +59,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         #region Fields
 
         // The number of items in the ArrayList.
-        private int count = 0;
 
         // The root of the tree.
-        private IAvlNode root;
+        private readonly IAvlNode root;
 
         #endregion
 
@@ -117,7 +116,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 root = GetSubTree(DefaultCapacityHeight);
             }
 
-            count = collection.Count;
+            Count = collection.Count;
         }
 
         /// <summary>
@@ -133,7 +132,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         private ArrayList(IAvlNode root, int count)
         {
             this.root = root;
-            this.count = count;
+            Count = count;
         }
 
         #endregion        
@@ -154,14 +153,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
             ArrayList result;
 
             // If the tree has been filled.
-            if (count == root.Count)
+            if (Count == root.Count)
             {
                 // Create a new ArrayList while enlarging the tree. The 
                 // current count serves as an index for setting the specified
                 // value.
                 result = new ArrayList(
-                    SetValue(count, value, EnlargeTree()),
-                    count + 1);
+                    SetValue(Count, value, EnlargeTree()),
+                    Count + 1);
             }
             // Else the tree has not been filled.
             else
@@ -169,8 +168,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 // Create a new ArrayList. The current count serves as an index 
                 // for setting the specified value.
                 result = new ArrayList(
-                    SetValue(count, value, root),
-                    count + 1);
+                    SetValue(Count, value, root),
+                    Count + 1);
             }
 
             // Postconditions.
@@ -252,7 +251,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
             }
 
             // Create new ArrayList with the value inserted at the specified index.
-            ArrayList result = new ArrayList(Insert(index, value, root), count + 1);
+            ArrayList result = new(Insert(index, value, root), Count + 1);
 
             // Post conditions.
             Debug.Assert(result.GetValue(index) == value);
@@ -317,7 +316,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
 
             // Create a new ArrayList with the element at the specified index 
             // removed.
-            ArrayList result = new ArrayList(RemoveAt(index, root), count - 1);
+            ArrayList result = new(RemoveAt(index, root), Count - 1);
 
             // Postconditions.
             Debug.Assert(result.Count == Count - 1);
@@ -340,13 +339,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public object GetValue(int index)
         {
             // Preconditions.
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException("index", index,
-                    "Index out of range.");
-            }
-
-            return GetValue(index, root);
+            return index < 0 || index >= Count
+                ? throw new ArgumentOutOfRangeException("index", index,
+                    "Index out of range.")
+                : GetValue(index, root);
         }
 
         /// <summary>
@@ -367,7 +363,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public ArrayList SetValue(int index, object value)
         {
             // Preconditions.
-            if (index < 0 || index >= count)
+            if (index < 0 || index >= Count)
             {
                 throw new ArgumentOutOfRangeException(
                     "ArrayList index out of range.");
@@ -375,7 +371,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
 
             // Create a new ArrayList with the specified value set at the 
             // specified index.
-            ArrayList result = new ArrayList(SetValue(index, value, root), count);
+            ArrayList result = new(SetValue(index, value, root), Count);
 
             // Postconditions.
             Debug.Assert(result.GetValue(index) == value);
@@ -618,11 +614,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
             // Preconditions.
             Debug.Assert(index >= 0 && index < Count);
             Debug.Assert(node != AvlNode.NullNode);
-
-            IAvlNode newNode = AvlNode.NullNode;
-
             int leftCount = node.LeftChild.Count;
 
+
+            IAvlNode newNode;
             // If the node has been found.
             if (index == leftCount)
             {
@@ -667,13 +662,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Gets the number of elements contained in the ArrayList.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; } = 0;
 
         #endregion
 

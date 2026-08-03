@@ -41,25 +41,18 @@ namespace Sanford.Multimedia.Midi
     /// </summary>
     public class NoOpEventArgs : EventArgs
     {
-        private int data;
 
         /// <summary>
         /// The function for the no operation events.
         /// </summary>
         public NoOpEventArgs(int data)
         {
-            this.data = data;
+            Data = data;
         }
 
         /// <summary>
         /// Gets and returns the data.
         /// </summary>
-        public int Data
-        {
-            get
-            {
-                return data;
-            }
-        }
+        public int Data { get; }
     }
 }

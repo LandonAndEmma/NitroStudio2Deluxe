@@ -15,8 +15,6 @@ namespace NitroStudio2.ViewModels
     /// <summary>One instrument offered for import, with its tick box.</summary>
     public sealed class InstrumentRow : ViewModelBase
     {
-        private bool use = true;
-
         public InstrumentRow(int index, int instrumentId, string name)
         {
             Index = index;
@@ -33,9 +31,9 @@ namespace NitroStudio2.ViewModels
 
         public bool Use
         {
-            get => use;
-            set => SetProperty(ref use, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = true;
     }
 
     /// <summary>

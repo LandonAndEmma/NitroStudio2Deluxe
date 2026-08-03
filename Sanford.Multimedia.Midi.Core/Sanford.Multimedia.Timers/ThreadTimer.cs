@@ -32,16 +32,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
     /// <summary>
     /// Replacement for the Windows multimedia timer that also runs on Mono
     /// </summary>
-    sealed class ThreadTimer : ITimer
+    internal sealed class ThreadTimer : ITimer
     {
-        ThreadTimerQueue queue;
+        private readonly ThreadTimerQueue queue;
+        private TimerMode mode;
+        private TimeSpan resolution;
 
-        bool isRunning;
-        TimerMode mode;
-        TimeSpan period;
-        TimeSpan resolution;
-
-        static object[] emptyArgs = new object[] { EventArgs.Empty };
+        private static readonly object[] emptyArgs = new object[] { EventArgs.Empty };
 
         public ThreadTimer()
             : this(ThreadTimerQueue.Instance)
@@ -51,15 +48,15 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
                 throw new NotImplementedException("Stopwatch is not IsHighResolution");
             }
 
-            isRunning = false;
+            IsRunning = false;
             mode = TimerMode.Periodic;
             resolution = TimeSpan.FromMilliseconds(1);
-            period = resolution;
+            PeriodTimeSpan = resolution;
 
             tickRaiser = new EventRaiser(OnTick);
         }
 
-        ThreadTimer(ThreadTimerQueue queue)
+        private ThreadTimer(ThreadTimerQueue queue)
         {
             this.queue = queue;
         }
@@ -68,7 +65,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         {
             if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
             {
-                SynchronizingObject.BeginInvoke(tickRaiser, emptyArgs);
+                _ = SynchronizingObject.BeginInvoke(tickRaiser, emptyArgs);
             }
             else
             {
@@ -80,18 +77,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         private delegate void EventRaiser(EventArgs e);
 
         // Represents the method that raises the Tick event.
-        private EventRaiser tickRaiser;
+        private readonly EventRaiser tickRaiser;
 
         // The ISynchronizeInvoke object to use for marshaling events.
-        private ISynchronizeInvoke synchronizingObject = null;
 
-        public bool IsRunning
-        {
-            get
-            {
-                return isRunning;
-            }
-        }
+        public bool IsRunning { get; private set; }
 
         public TimerMode Mode
         {
@@ -143,7 +133,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                 #endregion
 
-                return (int)period.TotalMilliseconds;
+                return (int)PeriodTimeSpan.TotalMilliseconds;
             }
             set
             {
@@ -156,14 +146,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                 #endregion
 
-                var wasRunning = IsRunning;
+                bool wasRunning = IsRunning;
 
                 if (wasRunning)
                 {
                     Stop();
                 }
 
-                period = TimeSpan.FromMilliseconds(value);
+                PeriodTimeSpan = TimeSpan.FromMilliseconds(value);
 
                 if (wasRunning)
                 {
@@ -172,39 +162,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             }
         }
 
-        public TimeSpan PeriodTimeSpan
-        {
-            get { return period; }
-        }
+        public TimeSpan PeriodTimeSpan { get; private set; }
 
         public int Resolution
         {
-            get
-            {
-                return (int)resolution.TotalMilliseconds;
-            }
+            get => (int)resolution.TotalMilliseconds;
 
-            set
-            {
-                resolution = TimeSpan.FromMilliseconds(value);
-            }
+            set => resolution = TimeSpan.FromMilliseconds(value);
         }
 
         // For implementing IComponent.
-        private ISite site = null;
 
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the object used to marshal event-handler calls.
@@ -222,7 +191,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                 #endregion
 
-                return synchronizingObject;
+                return field;
             }
             set
             {
@@ -235,9 +204,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                 #endregion
 
-                synchronizingObject = value;
+                field = value;
             }
-        }
+        } = null;
 
         public event EventHandler Disposed;
         public event EventHandler Started;
@@ -256,50 +225,30 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         // Raises the Disposed event.
         private void OnDisposed(EventArgs e)
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Disposed?.Invoke(this, e);
         }
 
         // Raises the Started event.
         private void OnStarted(EventArgs e)
         {
-            EventHandler handler = Started;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Started?.Invoke(this, e);
         }
 
         // Raises the Stopped event.
         private void OnStopped(EventArgs e)
         {
-            EventHandler handler = Stopped;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Stopped?.Invoke(this, e);
         }
 
         // Raises the Tick event.
         private void OnTick(EventArgs e)
         {
-            EventHandler handler = Tick;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Tick?.Invoke(this, e);
         }
 
         #endregion        
 
-        bool disposed = false;
+        private bool disposed = false;
 
         public void Start()
         {
@@ -325,7 +274,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             if (Mode == TimerMode.Periodic)
             {
                 queue.Add(this);
-                isRunning = true;
+                IsRunning = true;
             }
             // Else the one shot event callback should be used.
             else
@@ -335,7 +284,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
             {
-                SynchronizingObject.BeginInvoke(
+                _ = SynchronizingObject.BeginInvoke(
                     new EventRaiser(OnStarted),
                     new object[] { EventArgs.Empty });
             }
@@ -366,11 +315,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             #endregion
 
             queue.Remove(this);
-            isRunning = false;
+            IsRunning = false;
 
             if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
             {
-                SynchronizingObject.BeginInvoke(
+                _ = SynchronizingObject.BeginInvoke(
                     new EventRaiser(OnStopped),
                     new object[] { EventArgs.Empty });
             }

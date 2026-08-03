@@ -44,13 +44,11 @@ namespace Sanford.Multimedia.Midi
     /// </summary>
     internal class TrackReader
     {
-        private Track track = new Track();
+        private Track newTrack = new();
 
-        private Track newTrack = new Track();
+        private readonly ChannelMessageBuilder cmBuilder = new();
 
-        private ChannelMessageBuilder cmBuilder = new ChannelMessageBuilder();
-
-        private SysCommonMessageBuilder scBuilder = new SysCommonMessageBuilder();
+        private readonly SysCommonMessageBuilder scBuilder = new();
 
         private Stream stream;
 
@@ -89,7 +87,7 @@ namespace Sanford.Multimedia.Midi
 
             ParseTrackData();
 
-            track = newTrack;
+            Track = newTrack;
         }
 
         private void FindTrack()
@@ -174,9 +172,9 @@ namespace Sanford.Multimedia.Midi
         private void ParseMessage()
         {
             // If this is a channel message.
-            if (status >= (int)ChannelCommand.NoteOff &&
-                status <= (int)ChannelCommand.PitchWheel +
-                ChannelMessage.MidiChannelMaxValue)
+            if (status is >= ((int)ChannelCommand.NoteOff) and
+                <= ((int)ChannelCommand.PitchWheel +
+                ChannelMessage.MidiChannelMaxValue))
             {
                 ParseChannelMessage();
             }
@@ -196,14 +194,14 @@ namespace Sanford.Multimedia.Midi
                 ParseSysExMessageContinue();
             }
             // Else if this is a system common message.
-            else if (status >= (int)SysCommonType.MidiTimeCode &&
-                status <= (int)SysCommonType.TuneRequest)
+            else if (status is >= ((int)SysCommonType.MidiTimeCode) and
+                <= ((int)SysCommonType.TuneRequest))
             {
                 ParseSysCommonMessage();
             }
             // Else if this is a system realtime message.
-            else if (status >= (int)SysRealtimeType.Clock &&
-                status <= (int)SysRealtimeType.Reset)
+            else if (status is >= ((int)SysRealtimeType.Clock) and
+                <= ((int)SysRealtimeType.Reset))
             {
                 ParseSysRealtimeMessage();
             }
@@ -410,10 +408,7 @@ namespace Sanford.Multimedia.Midi
                 throw new MidiFileException("End of track unexpectedly reached.");
             }
 
-            int result = 0;
-
-            result = trackData[trackIndex];
-
+            int result = trackData[trackIndex];
             trackIndex++;
 
             if ((result & 0x80) == 0x80)
@@ -439,12 +434,6 @@ namespace Sanford.Multimedia.Midi
             return result;
         }
 
-        public Track Track
-        {
-            get
-            {
-                return track;
-            }
-        }
+        public Track Track { get; private set; } = new Track();
     }
 }

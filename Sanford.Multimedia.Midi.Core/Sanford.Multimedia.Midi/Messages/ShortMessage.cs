@@ -98,8 +98,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 		/// </summary>
         protected int msg = 0;
 
-        byte[] message;
-        bool rawMessageBuilt;
+        private byte[] message;
+        private bool rawMessageBuilt;
 
         #region Methods
 
@@ -124,7 +124,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 		/// </summary>
         public ShortMessage(int message)
         {
-            this.msg = message;
+            msg = message;
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 		/// </summary>
         public ShortMessage(byte status, byte data1, byte data2)
         {
-            this.message = new byte[] { status, data1, data2 };
+            message = new byte[] { status, data1, data2 };
             rawMessageBuilt = true;
-            msg = BuildIntMessage(this.message);
+            msg = BuildIntMessage(message);
         }
 
         private static byte[] BuildByteMessage(int intMessage)
@@ -149,7 +149,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
         private static int BuildIntMessage(byte[] message)
         {
-            var intMessage = 0;
+            int intMessage = 0;
             intMessage = ShortMessage.PackStatus(intMessage, message[0]);
             intMessage = ShortMessage.PackData1(intMessage, message[1]);
             intMessage = ShortMessage.PackData2(intMessage, message[2]);
@@ -160,7 +160,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Require
 
-            if (status < 0 || status > StatusMaxValue)
+            if (status is < 0 or > StatusMaxValue)
             {
                 throw new ArgumentOutOfRangeException("status", status,
                     "Status value out of range.");
@@ -175,7 +175,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Require
 
-            if (data1 < 0 || data1 > DataMaxValue)
+            if (data1 is < 0 or > DataMaxValue)
             {
                 throw new ArgumentOutOfRangeException("data1", data1,
                     "Data 1 value out of range.");
@@ -190,7 +190,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Require
 
-            if (data2 < 0 || data2 > DataMaxValue)
+            if (data2 is < 0 or > DataMaxValue)
             {
                 throw new ArgumentOutOfRangeException("data2", data2,
                     "Data 2 value out of range.");
@@ -241,24 +241,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// of the low-word represents the first data value, and the low-order
         /// byte of the high-word represents the second data value.
         /// </remarks>
-        public int Message
-        {
-            get
-            {
-                return msg;
-            }
-        }
+        public int Message => msg;
 
         /// <summary>
         /// Gets the messages's status value.
         /// </summary>
-        public int Status
-        {
-            get
-            {
-                return UnpackStatus(msg);
-            }
-        }
+        public int Status => UnpackStatus(msg);
 
         /// <summary>
 		/// Gets the bytes for the MIDI short message.
@@ -272,7 +260,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
             {
                 if (!rawMessageBuilt)
                 {
-                    this.message = BuildByteMessage(msg);
+                    message = BuildByteMessage(msg);
                     rawMessageBuilt = true;
                 }
                 return message;
@@ -282,13 +270,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
 		/// Gets the message type and returns the message type with a short message.
 		/// </summary>
-        public virtual MessageType MessageType
-        {
-            get
-            {
-                return MessageType.Short;
-            }
-        }
+        public virtual MessageType MessageType => MessageType.Short;
 
         #endregion
 

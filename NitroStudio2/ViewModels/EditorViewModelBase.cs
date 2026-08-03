@@ -26,20 +26,6 @@ namespace NitroStudio2.ViewModels
     /// </summary>
     public abstract class EditorViewModelBase : ViewModelBase
     {
-        private object activePanel;
-        private RightPaneMode rightPane = RightPaneMode.Tree;
-        private bool showPiano;
-        private bool showToolsMenu;
-        private bool showLeftPane = true;
-        private string title;
-        private string status = "No Valid Info Selected!";
-        private string currentNote = "";
-        private EditorTreeNode selectedNode;
-        private bool showSoundPlayer;
-        private bool showIndexPanel;
-        private bool showForceUniqueFilePanel;
-        private bool showSeqArcSeqPanel;
-
         protected EditorViewModelBase(
             IDialogService dialogs,
             Type fileType,
@@ -96,54 +82,54 @@ namespace NitroStudio2.ViewModels
 
         public string Title
         {
-            get => title;
-            protected set => SetProperty(ref title, value);
+            get;
+            protected set => SetProperty(ref field, value);
         }
 
         public string Status
         {
-            get => status;
-            set => SetProperty(ref status, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = "No Valid Info Selected!";
 
         /// <summary>Right-hand status label showing the note currently under the pointer.</summary>
         public string CurrentNote
         {
-            get => currentNote;
-            set => SetProperty(ref currentNote, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = "";
 
         /// <summary>Info panel currently shown on the left; a DataTemplate picks its layout.</summary>
         public object ActivePanel
         {
-            get => activePanel;
-            set => SetProperty(ref activePanel, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public RightPaneMode RightPane
         {
-            get => rightPane;
-            set => SetProperty(ref rightPane, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = RightPaneMode.Tree;
 
         public bool ShowPiano
         {
-            get => showPiano;
-            set => SetProperty(ref showPiano, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         /// <summary>The Tools menu is hidden everywhere except the sound archive window.</summary>
         public bool ShowToolsMenu
         {
-            get => showToolsMenu;
-            protected set => SetProperty(ref showToolsMenu, value);
+            get;
+            protected set => SetProperty(ref field, value);
         }
 
         public bool ShowLeftPane
         {
-            get => showLeftPane;
-            set => SetProperty(ref showLeftPane, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = true;
 
         public NoInfoPanelViewModel NoInfoPanel { get; } = new();
 
@@ -152,26 +138,26 @@ namespace NitroStudio2.ViewModels
 
         public bool ShowSoundPlayer
         {
-            get => showSoundPlayer;
-            set => SetProperty(ref showSoundPlayer, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public bool ShowIndexPanel
         {
-            get => showIndexPanel;
-            set => SetProperty(ref showIndexPanel, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public bool ShowForceUniqueFilePanel
         {
-            get => showForceUniqueFilePanel;
-            set => SetProperty(ref showForceUniqueFilePanel, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public bool ShowSeqArcSeqPanel
         {
-            get => showSeqArcSeqPanel;
-            set => SetProperty(ref showSeqArcSeqPanel, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public IndexPanelViewModel IndexPanel { get; } = new();
@@ -187,11 +173,9 @@ namespace NitroStudio2.ViewModels
         /// </summary>
         public SoundPlayerPanelViewModel SoundPlayerPanel
         {
-            get => soundPlayerPanel;
-            protected set => SetProperty(ref soundPlayerPanel, value);
+            get;
+            protected set => SetProperty(ref field, value);
         }
-
-        private SoundPlayerPanelViewModel soundPlayerPanel;
 
         // ------------------------------------------------------------------ tree
 
@@ -199,10 +183,10 @@ namespace NitroStudio2.ViewModels
 
         public EditorTreeNode SelectedNode
         {
-            get => selectedNode;
+            get;
             set
             {
-                if (SetProperty(ref selectedNode, value) && !restoringSelection)
+                if (SetProperty(ref field, value) && !restoringSelection)
                 {
                     DoInfoStuff();
                 }
@@ -243,7 +227,10 @@ namespace NitroStudio2.ViewModels
         /// <summary>Raised when the window should close, e.g. from File ▸ Quit.</summary>
         public event EventHandler CloseRequested;
 
-        protected void RequestClose() => CloseRequested?.Invoke(this, EventArgs.Empty);
+        protected void RequestClose()
+        {
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
 
         // ------------------------------------------------------------------ node bookkeeping
 
@@ -419,11 +406,20 @@ namespace NitroStudio2.ViewModels
             RequestClose();
         }
 
-        public virtual Task BlankFileAsync() => Task.CompletedTask;
+        public virtual Task BlankFileAsync()
+        {
+            return Task.CompletedTask;
+        }
 
-        public virtual Task ImportFileAsync() => Task.CompletedTask;
+        public virtual Task ImportFileAsync()
+        {
+            return Task.CompletedTask;
+        }
 
-        public virtual Task ExportFileAsync() => Task.CompletedTask;
+        public virtual Task ExportFileAsync()
+        {
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Port of EditorBase.FileTest: offers to save before an action that discards the current
@@ -457,8 +453,10 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Open picker filtered to this editor's own extension.</summary>
-        public Task<string> GetFileOpenerPathAsync(string description, string extension) =>
-            Dialogs.OpenFileAsync(description + "|*.s" + extension.ToLower());
+        public Task<string> GetFileOpenerPathAsync(string description, string extension)
+        {
+            return Dialogs.OpenFileAsync(description + "|*.s" + extension.ToLower());
+        }
 
         /// <summary>Save picker filtered to this editor's own extension.</summary>
         public async Task<string> GetFileSaverPathAsync(string description, string extension)

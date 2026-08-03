@@ -28,17 +28,17 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// An empty SortedList.
         /// </summary>
-        public static readonly SortedList Empty = new SortedList();
+        public static readonly SortedList Empty = [];
 
         #endregion
 
         #region Instance Fields
 
         // The compare object used for making comparisions.
-        private IComparer comparer = null;
+        private readonly IComparer comparer = null;
 
         // The root of the AVL tree.
-        private IAvlNode root = AvlNode.NullNode;
+        private readonly IAvlNode root = AvlNode.NullNode;
 
         // Represents the method responsible for comparing keys.
         private delegate int CompareHandler(object x, object y);
@@ -128,7 +128,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 throw new ArgumentNullException("key",
                     "Key cannot be null.");
             }
-            else if (comparer == null && !(key is IComparable))
+            else if (comparer == null && key is not IComparable)
             {
                 throw new ArgumentException(
                     "Key does not implement IComparable interface.");
@@ -189,7 +189,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 throw new ArgumentNullException("key",
                     "Key cannot be null.");
             }
-            else if (comparer == null && !(key is IComparable))
+            else if (comparer == null && key is not IComparable)
             {
                 throw new ArgumentException(
                     "Key does not implement IComparable interface.");
@@ -201,14 +201,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         // Initializes the delegate to use for making key comparisons.
         private void InitializeCompareHandler()
         {
-            if (comparer == null)
-            {
-                compareHandler = new CompareHandler(CompareWithoutComparer);
-            }
-            else
-            {
-                compareHandler = new CompareHandler(CompareWithComparer);
-            }
+            compareHandler = comparer == null ? new CompareHandler(CompareWithoutComparer) : new CompareHandler(CompareWithComparer);
         }
 
         // Method for comparing keys using the IComparable interface.
@@ -383,24 +376,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Gets the value associated with the specified key.
         /// </summary>
-        public object this[object key]
-        {
-            get
-            {
-                return Search(key, root);
-            }
-        }
+        public object this[object key] => Search(key, root);
 
         /// <summary>
         /// Gets the number of elements contained in the SortedList.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return root.Count;
-            }
-        }
+        public int Count => root.Count;
 
         #endregion
 
@@ -415,7 +396,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
 
             #region Instance Fields
 
-            private AvlEnumerator enumerator;
+            private readonly AvlEnumerator enumerator;
 
             #endregion
 
@@ -478,13 +459,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 enumerator.Reset();
             }
 
-            public object Current
-            {
-                get
-                {
-                    return enumerator.Current;
-                }
-            }
+            public object Current => enumerator.Current;
 
             public bool MoveNext()
             {

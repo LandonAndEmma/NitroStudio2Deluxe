@@ -112,7 +112,7 @@ namespace NitroStudio2.Controls
             (Notes.cn8, 543, 12, 42, PianoKeyShape.RectShape, false),
         };
 
-        private readonly Dictionary<Notes, PianoKey> keys = new();
+        private readonly Dictionary<Notes, PianoKey> keys = [];
         private readonly Canvas surface = new() { Width = DesignWidth, Height = DesignHeight };
         private readonly Viewbox scaler;
 
@@ -154,7 +154,10 @@ namespace NitroStudio2.Controls
         /// <summary>Raised once no key is held any more.</summary>
         public event EventHandler Released;
 
-        public PianoKey GetKey(Notes note) => keys.GetValueOrDefault(note);
+        public PianoKey GetKey(Notes note)
+        {
+            return keys.GetValueOrDefault(note);
+        }
 
         /// <summary>
         /// Paints the inclusive note range in the given colour to show an instrument's region.

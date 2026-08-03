@@ -10,7 +10,10 @@ namespace GotaSoundIO.IO
         {
             byte[] doubleBytes = BitConverter.GetBytes(value);
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(doubleBytes);
+            }
+
             Array.Copy(doubleBytes, 0, buffer, startIndex, 8);
         }
 
@@ -44,7 +47,10 @@ namespace GotaSoundIO.IO
         {
             byte[] floatBytes = BitConverter.GetBytes(value);
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(floatBytes);
+            }
+
             Array.Copy(floatBytes, 0, buffer, startIndex, 4);
         }
 
@@ -79,7 +85,10 @@ namespace GotaSoundIO.IO
             byte[] doubleBytes = new byte[8];
             Array.Copy(buffer, startIndex, doubleBytes, 0, 8);
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(doubleBytes);
+            }
+
             return BitConverter.ToDouble(doubleBytes, 0);
         }
 
@@ -113,7 +122,10 @@ namespace GotaSoundIO.IO
             byte[] floatBytes = new byte[4];
             Array.Copy(buffer, startIndex, floatBytes, 0, 4);
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(floatBytes);
+            }
+
             return BitConverter.ToSingle(floatBytes, 0);
         }
 

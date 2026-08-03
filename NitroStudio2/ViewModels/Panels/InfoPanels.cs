@@ -49,41 +49,35 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>Sound archive settings: name writing and the sequence import/export backends.</summary>
     public sealed class SettingsPanelViewModel : InfoPanelViewModel
     {
-        private bool writeNames = true;
-        private int importMode;
-        private int exportMode;
-
         public System.Action Edited { get; set; }
 
         public bool WriteNames
         {
-            get => writeNames;
-            set => SetEdited(ref writeNames, value, Edited);
-        }
+            get;
+            set => SetEdited(ref field, value, Edited);
+        } = true;
 
         public IReadOnlyList<string> ImportModes { get; } =
             ["Nitro Studio", "Midi2Sseq", "Nintendo Tools"];
 
         public int ImportMode
         {
-            get => importMode;
-            set => SetEdited(ref importMode, value, Edited);
+            get;
+            set => SetEdited(ref field, value, Edited);
         }
 
         public IReadOnlyList<string> ExportModes { get; } = ["Nitro Studio", "Sseq2Midi"];
 
         public int ExportMode
         {
-            get => exportMode;
-            set => SetEdited(ref exportMode, value, Edited);
+            get;
+            set => SetEdited(ref field, value, Edited);
         }
     }
 
     /// <summary>The index an entry is referenced by, plus the swap button.</summary>
     public sealed class IndexPanelViewModel : InfoPanelViewModel
     {
-        private decimal itemIndex;
-
         public IndexPanelViewModel()
         {
             SwapCommand = new RelayCommand(() => SwapRequested?.Invoke());
@@ -93,8 +87,8 @@ namespace NitroStudio2.ViewModels.Panels
 
         public decimal ItemIndex
         {
-            get => itemIndex;
-            set => SetProperty(ref itemIndex, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public decimal Maximum { get; set; } = uint.MaxValue;
@@ -105,37 +99,30 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>Whether an entry's file is written out on its own rather than shared.</summary>
     public sealed class ForceUniqueFilePanelViewModel : InfoPanelViewModel
     {
-        private bool forceUniqueFile;
-
         public System.Action Edited { get; set; }
 
         public bool ForceUniqueFile
         {
-            get => forceUniqueFile;
-            set => SetEdited(ref forceUniqueFile, value, Edited);
+            get;
+            set => SetEdited(ref field, value, Edited);
         }
     }
 
     /// <summary>Wave archive load flag.</summary>
     public sealed class WaveArchivePanelViewModel : InfoPanelViewModel
     {
-        private bool loadIndividually;
-
         public System.Action Edited { get; set; }
 
         public bool LoadIndividually
         {
-            get => loadIndividually;
-            set => SetEdited(ref loadIndividually, value, Edited);
+            get;
+            set => SetEdited(ref field, value, Edited);
         }
     }
 
     /// <summary>One of the four "wave archive N" rows a bank can reference.</summary>
     public sealed class WaveArchiveSlotViewModel : ViewModelBase
     {
-        private string selected;
-        private decimal id;
-
         public WaveArchiveSlotViewModel(int slot)
         {
             Slot = slot;
@@ -157,10 +144,10 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string Selected
         {
-            get => selected;
+            get;
             set
             {
-                if (SetProperty(ref selected, value) && !WritingInfo)
+                if (SetProperty(ref field, value) && !WritingInfo)
                 {
                     ComboEdited?.Invoke();
                 }
@@ -169,10 +156,10 @@ namespace NitroStudio2.ViewModels.Panels
 
         public decimal Id
         {
-            get => id;
+            get;
             set
             {
-                if (SetProperty(ref id, value) && !WritingInfo)
+                if (SetProperty(ref field, value) && !WritingInfo)
                 {
                     IdEdited?.Invoke();
                 }
@@ -216,9 +203,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>One row of the group grid: which file, and how it is loaded.</summary>
     public sealed class GroupEntryRow : ViewModelBase
     {
-        private string item;
-        private string loadFlags;
-
         public ObservableCollection<string> ItemOptions { get; } = [];
 
         public ObservableCollection<string> LoadFlagOptions { get; } = [];
@@ -231,14 +215,14 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string Item
         {
-            get => item;
-            set => Set(ref item, value);
+            get;
+            set => Set(ref field, value);
         }
 
         public string LoadFlags
         {
-            get => loadFlags;
-            set => Set(ref loadFlags, value);
+            get;
+            set => Set(ref field, value);
         }
 
         private void Set<T>(
@@ -257,10 +241,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>Stream player: mono/stereo and which hardware channels it occupies.</summary>
     public sealed class StreamPlayerPanelViewModel : InfoPanelViewModel
     {
-        private int channelType;
-        private decimal leftChannel;
-        private decimal rightChannel;
-
         public System.Action ChannelTypeEdited { get; set; }
 
         public System.Action LeftChannelEdited { get; set; }
@@ -271,35 +251,29 @@ namespace NitroStudio2.ViewModels.Panels
 
         public int ChannelType
         {
-            get => channelType;
-            set => SetEdited(ref channelType, value, ChannelTypeEdited);
+            get;
+            set => SetEdited(ref field, value, ChannelTypeEdited);
         }
 
         /// <summary>Stereo shows both channel boxes; mono shows only the left one.</summary>
-        public bool IsStereo => channelType == 1;
+        public bool IsStereo => ChannelType == 1;
 
         public decimal LeftChannel
         {
-            get => leftChannel;
-            set => SetEdited(ref leftChannel, value, LeftChannelEdited);
+            get;
+            set => SetEdited(ref field, value, LeftChannelEdited);
         }
 
         public decimal RightChannel
         {
-            get => rightChannel;
-            set => SetEdited(ref rightChannel, value, RightChannelEdited);
+            get;
+            set => SetEdited(ref field, value, RightChannelEdited);
         }
     }
 
     /// <summary>Stream entry info: volume, priority, player and the mono-to-stereo flag.</summary>
     public sealed class StreamPanelViewModel : InfoPanelViewModel
     {
-        private decimal volume;
-        private decimal priority;
-        private string player;
-        private decimal playerId;
-        private bool monoToStereo;
-
         public System.Action VolumeEdited { get; set; }
 
         public System.Action PriorityEdited { get; set; }
@@ -312,43 +286,40 @@ namespace NitroStudio2.ViewModels.Panels
 
         public decimal Volume
         {
-            get => volume;
-            set => SetEdited(ref volume, value, VolumeEdited);
+            get;
+            set => SetEdited(ref field, value, VolumeEdited);
         }
 
         public decimal Priority
         {
-            get => priority;
-            set => SetEdited(ref priority, value, PriorityEdited);
+            get;
+            set => SetEdited(ref field, value, PriorityEdited);
         }
 
         public ObservableCollection<string> PlayerOptions { get; } = [];
 
         public string Player
         {
-            get => player;
-            set => SetEdited(ref player, value, PlayerComboEdited);
+            get;
+            set => SetEdited(ref field, value, PlayerComboEdited);
         }
 
         public decimal PlayerId
         {
-            get => playerId;
-            set => SetEdited(ref playerId, value, PlayerIdEdited);
+            get;
+            set => SetEdited(ref field, value, PlayerIdEdited);
         }
 
         public bool MonoToStereo
         {
-            get => monoToStereo;
-            set => SetEdited(ref monoToStereo, value, MonoToStereoEdited);
+            get;
+            set => SetEdited(ref field, value, MonoToStereoEdited);
         }
     }
 
     /// <summary>Sequence player info: sequence limit, heap size and the 16 channel flags.</summary>
     public sealed class PlayerPanelViewModel : InfoPanelViewModel
     {
-        private decimal maxSequences;
-        private decimal heapSize;
-
         public PlayerPanelViewModel()
         {
             ChannelFlags = new ChannelFlag[16];
@@ -372,14 +343,14 @@ namespace NitroStudio2.ViewModels.Panels
 
         public decimal MaxSequences
         {
-            get => maxSequences;
-            set => SetEdited(ref maxSequences, value, MaxSequencesEdited);
+            get;
+            set => SetEdited(ref field, value, MaxSequencesEdited);
         }
 
         public decimal HeapSize
         {
-            get => heapSize;
-            set => SetEdited(ref heapSize, value, HeapSizeEdited);
+            get;
+            set => SetEdited(ref field, value, HeapSizeEdited);
         }
 
         public ChannelFlag[] ChannelFlags { get; }
@@ -389,7 +360,6 @@ namespace NitroStudio2.ViewModels.Panels
     public sealed class ChannelFlag : ViewModelBase
     {
         private readonly System.Action onChanged;
-        private bool isSet;
 
         public ChannelFlag(int index, System.Action onChanged)
         {
@@ -403,10 +373,10 @@ namespace NitroStudio2.ViewModels.Panels
 
         public bool IsSet
         {
-            get => isSet;
+            get;
             set
             {
-                if (SetProperty(ref isSet, value))
+                if (SetProperty(ref field, value))
                 {
                     onChanged?.Invoke();
                 }
@@ -417,14 +387,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>Sequence entry info: bank, volume, priorities and player.</summary>
     public sealed class SequencePanelViewModel : InfoPanelViewModel
     {
-        private string bank;
-        private decimal bankId;
-        private decimal volume;
-        private decimal channelPriority;
-        private decimal playerPriority;
-        private string player;
-        private decimal playerId;
-
         public System.Action BankComboEdited { get; set; }
 
         public System.Action BankIdEdited { get; set; }
@@ -443,46 +405,46 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string Bank
         {
-            get => bank;
-            set => SetEdited(ref bank, value, BankComboEdited);
+            get;
+            set => SetEdited(ref field, value, BankComboEdited);
         }
 
         public decimal BankId
         {
-            get => bankId;
-            set => SetEdited(ref bankId, value, BankIdEdited);
+            get;
+            set => SetEdited(ref field, value, BankIdEdited);
         }
 
         public decimal Volume
         {
-            get => volume;
-            set => SetEdited(ref volume, value, VolumeEdited);
+            get;
+            set => SetEdited(ref field, value, VolumeEdited);
         }
 
         public decimal ChannelPriority
         {
-            get => channelPriority;
-            set => SetEdited(ref channelPriority, value, ChannelPriorityEdited);
+            get;
+            set => SetEdited(ref field, value, ChannelPriorityEdited);
         }
 
         public decimal PlayerPriority
         {
-            get => playerPriority;
-            set => SetEdited(ref playerPriority, value, PlayerPriorityEdited);
+            get;
+            set => SetEdited(ref field, value, PlayerPriorityEdited);
         }
 
         public ObservableCollection<string> PlayerOptions { get; } = [];
 
         public string Player
         {
-            get => player;
-            set => SetEdited(ref player, value, PlayerComboEdited);
+            get;
+            set => SetEdited(ref field, value, PlayerComboEdited);
         }
 
         public decimal PlayerId
         {
-            get => playerId;
-            set => SetEdited(ref playerId, value, PlayerIdEdited);
+            get;
+            set => SetEdited(ref field, value, PlayerIdEdited);
         }
     }
 
@@ -492,9 +454,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// </summary>
     public sealed class SequenceBankPanelViewModel : InfoPanelViewModel
     {
-        private string bank;
-        private decimal bankId;
-
         public SequenceBankPanelViewModel()
         {
             Tracks = new TrackViewModel[16];
@@ -518,14 +477,14 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string Bank
         {
-            get => bank;
-            set => SetEdited(ref bank, value, BankComboEdited);
+            get;
+            set => SetEdited(ref field, value, BankComboEdited);
         }
 
         public decimal BankId
         {
-            get => bankId;
-            set => SetEdited(ref bankId, value, BankIdEdited);
+            get;
+            set => SetEdited(ref field, value, BankIdEdited);
         }
 
         public bool BankSelectionEnabled { get; set; } = true;
@@ -540,9 +499,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>One of the 16 sequence tracks: enabled tick box, solo button and state light.</summary>
     public sealed class TrackViewModel : ViewModelBase
     {
-        private bool isEnabled = true;
-        private string state = "Idle";
-
         public TrackViewModel(int index)
         {
             Index = index;
@@ -559,30 +515,30 @@ namespace NitroStudio2.ViewModels.Panels
 
         public bool IsEnabled
         {
-            get => isEnabled;
+            get;
             set
             {
-                if (SetProperty(ref isEnabled, value))
+                if (SetProperty(ref field, value))
                 {
                     EnabledChanged?.Invoke(Index);
                 }
             }
-        }
+        } = true;
 
         /// <summary>"Idle", "Mute" or "NoteDown"; names the image under Assets/Tracks.</summary>
         public string State
         {
-            get => state;
+            get;
             set
             {
-                if (SetProperty(ref state, value))
+                if (SetProperty(ref field, value))
                 {
                     OnPropertyChanged(nameof(StateImage));
                 }
             }
-        }
+        } = "Idle";
 
-        public Avalonia.Media.Imaging.Bitmap StateImage => Assets.Track(state);
+        public Avalonia.Media.Imaging.Bitmap StateImage => Assets.Track(State);
 
         public ICommand SoloCommand { get; }
     }
@@ -603,9 +559,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>Sequence archive editor: which contained sequence to preview.</summary>
     public sealed class SequenceArchiveSequencePanelViewModel : InfoPanelViewModel
     {
-        private string sequence;
-        private decimal sequenceId;
-
         public System.Action SequenceComboEdited { get; set; }
 
         public System.Action SequenceIdEdited { get; set; }
@@ -614,26 +567,20 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string Sequence
         {
-            get => sequence;
-            set => SetEdited(ref sequence, value, SequenceComboEdited);
+            get;
+            set => SetEdited(ref field, value, SequenceComboEdited);
         }
 
         public decimal SequenceId
         {
-            get => sequenceId;
-            set => SetEdited(ref sequenceId, value, SequenceIdEdited);
+            get;
+            set => SetEdited(ref field, value, SequenceIdEdited);
         }
     }
 
     /// <summary>Bank editor: instrument type, drum set range and the region grid.</summary>
     public sealed class BankEditorPanelViewModel : InfoPanelViewModel
     {
-        private string instrumentType = "Direct";
-        private string drumSetStartNote;
-        private decimal drumSetStartId;
-        private bool canBeDirect = true;
-        private bool canBeKeySplit = true;
-
         public System.Action InstrumentTypeEdited { get; set; }
 
         public System.Action DrumSetRangeComboEdited { get; set; }
@@ -645,10 +592,10 @@ namespace NitroStudio2.ViewModels.Panels
         /// <summary>"Direct", "Drum Set" or "Key Split"; drives the three radio buttons.</summary>
         public string InstrumentType
         {
-            get => instrumentType;
+            get;
             set
             {
-                if (SetEdited(ref instrumentType, value, InstrumentTypeEdited))
+                if (SetEdited(ref field, value, InstrumentTypeEdited))
                 {
                     OnPropertyChanged(nameof(IsDirect));
                     OnPropertyChanged(nameof(IsDrumSet));
@@ -656,11 +603,11 @@ namespace NitroStudio2.ViewModels.Panels
                     OnPropertyChanged(nameof(ShowsDrumSetRange));
                 }
             }
-        }
+        } = "Direct";
 
         public bool IsDirect
         {
-            get => instrumentType == "Direct";
+            get => InstrumentType == "Direct";
             set
             {
                 if (value)
@@ -672,7 +619,7 @@ namespace NitroStudio2.ViewModels.Panels
 
         public bool IsDrumSet
         {
-            get => instrumentType == "Drum Set";
+            get => InstrumentType == "Drum Set";
             set
             {
                 if (value)
@@ -684,7 +631,7 @@ namespace NitroStudio2.ViewModels.Panels
 
         public bool IsKeySplit
         {
-            get => instrumentType == "Key Split";
+            get => InstrumentType == "Key Split";
             set
             {
                 if (value)
@@ -700,28 +647,28 @@ namespace NitroStudio2.ViewModels.Panels
         /// <summary>Direct holds one region, key split at most eight; beyond that only a drum set.</summary>
         public bool CanBeDirect
         {
-            get => canBeDirect;
-            set => SetProperty(ref canBeDirect, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = true;
 
         public bool CanBeKeySplit
         {
-            get => canBeKeySplit;
-            set => SetProperty(ref canBeKeySplit, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = true;
 
         public IReadOnlyList<string> NoteOptions { get; } = NoteNames.All;
 
         public string DrumSetStartNote
         {
-            get => drumSetStartNote;
-            set => SetEdited(ref drumSetStartNote, value, DrumSetRangeComboEdited);
+            get;
+            set => SetEdited(ref field, value, DrumSetRangeComboEdited);
         }
 
         public decimal DrumSetStartId
         {
-            get => drumSetStartId;
-            set => SetEdited(ref drumSetStartId, value, DrumSetRangeIdEdited);
+            get;
+            set => SetEdited(ref field, value, DrumSetRangeIdEdited);
         }
 
         public ObservableCollection<BankRegionRow> Regions { get; } = [];
@@ -730,17 +677,6 @@ namespace NitroStudio2.ViewModels.Panels
     /// <summary>One row of the bank editor's region grid.</summary>
     public sealed class BankRegionRow : ViewModelBase
     {
-        private string endNote;
-        private string instrumentType;
-        private string waveId = "";
-        private string waveArchiveId = "";
-        private string baseNote;
-        private string attack = "";
-        private string decay = "";
-        private string sustain = "";
-        private string release = "";
-        private string pan = "";
-
         public System.Action<BankRegionRow> Edited { get; set; }
 
         public System.Action<BankRegionRow> PlayRequested { get; set; }
@@ -773,63 +709,63 @@ namespace NitroStudio2.ViewModels.Panels
 
         public string EndNote
         {
-            get => endNote;
-            set => Set(ref endNote, value);
+            get;
+            set => Set(ref field, value);
         }
 
         public string InstrumentType
         {
-            get => instrumentType;
-            set => Set(ref instrumentType, value);
+            get;
+            set => Set(ref field, value);
         }
 
         public string WaveId
         {
-            get => waveId;
-            set => Set(ref waveId, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string WaveArchiveId
         {
-            get => waveArchiveId;
-            set => Set(ref waveArchiveId, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string BaseNote
         {
-            get => baseNote;
-            set => Set(ref baseNote, value);
+            get;
+            set => Set(ref field, value);
         }
 
         public string Attack
         {
-            get => attack;
-            set => Set(ref attack, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string Decay
         {
-            get => decay;
-            set => Set(ref decay, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string Sustain
         {
-            get => sustain;
-            set => Set(ref sustain, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string Release
         {
-            get => release;
-            set => Set(ref release, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         public string Pan
         {
-            get => pan;
-            set => Set(ref pan, value);
-        }
+            get;
+            set => Set(ref field, value);
+        } = "";
 
         private void Set<T>(
             ref T field,

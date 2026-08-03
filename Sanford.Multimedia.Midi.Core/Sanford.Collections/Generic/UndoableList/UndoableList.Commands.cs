@@ -45,13 +45,13 @@ namespace Sanford.Collections.Generic
 
         private class SetCommand : ICommand
         {
-            private IList<T> theList;
+            private readonly IList<T> theList;
 
-            private int index;
+            private readonly int index;
 
             private T oldItem;
 
-            private T newItem;
+            private readonly T newItem;
 
             private bool undone = true;
 
@@ -59,7 +59,7 @@ namespace Sanford.Collections.Generic
             {
                 this.theList = theList;
                 this.index = index;
-                this.newItem = item;
+                newItem = item;
             }
 
             #region ICommand Members
@@ -109,11 +109,11 @@ namespace Sanford.Collections.Generic
 
         private class InsertCommand : ICommand
         {
-            private IList<T> theList;
+            private readonly IList<T> theList;
 
-            private int index;
+            private readonly int index;
 
-            private T item;
+            private readonly T item;
 
             private bool undone = true;
 
@@ -175,11 +175,11 @@ namespace Sanford.Collections.Generic
 
         private class InsertRangeCommand : ICommand
         {
-            private List<T> theList;
+            private readonly List<T> theList;
 
-            private int index;
+            private readonly int index;
 
-            private List<T> insertList;
+            private readonly List<T> insertList;
 
             private bool undone = true;
 
@@ -188,7 +188,7 @@ namespace Sanford.Collections.Generic
                 this.theList = theList;
                 this.index = index;
 
-                insertList = new List<T>(collection);
+                insertList = [.. collection];
             }
 
             #region ICommand Members
@@ -238,9 +238,9 @@ namespace Sanford.Collections.Generic
 
         private class RemoveAtCommand : ICommand
         {
-            private IList<T> theList;
+            private readonly IList<T> theList;
 
-            private int index;
+            private readonly int index;
 
             private T item;
 
@@ -303,13 +303,13 @@ namespace Sanford.Collections.Generic
 
         private class RemoveRangeCommand : ICommand
         {
-            private List<T> theList;
+            private readonly List<T> theList;
 
-            private int index;
+            private readonly int index;
 
-            private int count;
+            private readonly int count;
 
-            private List<T> rangeList = new List<T>();
+            private List<T> rangeList = [];
 
             private bool undone = true;
 
@@ -336,7 +336,7 @@ namespace Sanford.Collections.Generic
                 Debug.Assert(index >= 0 && index < theList.Count);
                 Debug.Assert(index + count <= theList.Count);
 
-                rangeList = new List<T>(theList.GetRange(index, count));
+                rangeList = [.. theList.GetRange(index, count)];
 
                 theList.RemoveRange(index, count);
 
@@ -368,7 +368,7 @@ namespace Sanford.Collections.Generic
 
         private class ClearCommand : ICommand
         {
-            private IList<T> theList;
+            private readonly IList<T> theList;
 
             private IList<T> undoList;
 
@@ -392,7 +392,7 @@ namespace Sanford.Collections.Generic
 
                 #endregion
 
-                undoList = new List<T>(theList);
+                undoList = [.. theList];
 
                 theList.Clear();
 
@@ -431,20 +431,20 @@ namespace Sanford.Collections.Generic
 
         private class ReverseCommand : ICommand
         {
-            private List<T> theList;
+            private readonly List<T> theList;
 
-            private int index;
+            private readonly int index;
 
-            private int count;
+            private readonly int count;
 
-            private bool reverseRange;
+            private readonly bool reverseRange;
 
             private bool undone = true;
 
             public ReverseCommand(List<T> theList)
             {
                 this.theList = theList;
-                this.reverseRange = false;
+                reverseRange = false;
             }
 
             public ReverseCommand(List<T> theList, int index, int count)
@@ -452,7 +452,7 @@ namespace Sanford.Collections.Generic
                 this.theList = theList;
                 this.index = index;
                 this.count = count;
-                this.reverseRange = true;
+                reverseRange = true;
             }
 
             #region ICommand Members

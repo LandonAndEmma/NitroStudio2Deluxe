@@ -18,18 +18,13 @@ namespace Sanford.Threading
         private class DelegateQueueAsyncResult : AsyncResult
         {
             // The delegate to be invoked.
-            private Delegate method;
 
             // Args to be passed to the delegate.
-            private object[] args;
+            private readonly object[] args;
 
             // The object returned from the delegate.
-            private object returnValue = null;
 
             // Represents a possible exception thrown by invoking the method.
-            private Exception error = null;
-
-            private NotificationType notificationType;
 
             public DelegateQueueAsyncResult(
                 object owner,
@@ -39,9 +34,9 @@ namespace Sanford.Threading
                 NotificationType notificationType)
                 : base(owner, null, null)
             {
-                this.method = method;
+                Method = method;
                 this.args = args;
-                this.notificationType = notificationType;
+                NotificationType = notificationType;
             }
 
             public DelegateQueueAsyncResult(
@@ -54,20 +49,20 @@ namespace Sanford.Threading
                 NotificationType notificationType)
                 : base(owner, callback, state)
             {
-                this.method = method;
+                Method = method;
                 this.args = args;
-                this.notificationType = notificationType;
+                NotificationType = notificationType;
             }
 
             public void Invoke()
             {
                 try
                 {
-                    returnValue = method.DynamicInvoke(args);
+                    ReturnValue = Method.DynamicInvoke(args);
                 }
                 catch (Exception ex)
                 {
-                    error = ex;
+                    Error = ex;
                 }
                 finally
                 {
@@ -80,41 +75,13 @@ namespace Sanford.Threading
                 return args;
             }
 
-            public object ReturnValue
-            {
-                get
-                {
-                    return returnValue;
-                }
-            }
+            public object ReturnValue { get; private set; } = null;
 
-            public Exception Error
-            {
-                get
-                {
-                    return error;
-                }
-                set
-                {
-                    error = value;
-                }
-            }
+            public Exception Error { get; set; } = null;
 
-            public Delegate Method
-            {
-                get
-                {
-                    return method;
-                }
-            }
+            public Delegate Method { get; }
 
-            public NotificationType NotificationType
-            {
-                get
-                {
-                    return notificationType;
-                }
-            }
+            public NotificationType NotificationType { get; }
         }
     }
 }

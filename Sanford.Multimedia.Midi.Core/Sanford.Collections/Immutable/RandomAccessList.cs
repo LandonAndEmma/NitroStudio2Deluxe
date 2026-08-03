@@ -27,23 +27,20 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Represents an empty random access list.
         /// </summary> 
-        public static readonly RandomAccessList Empty = new RandomAccessList();
+        public static readonly RandomAccessList Empty = new();
 
         #endregion
 
         #region Instance Fields
 
         // The number of elements in the random access list.
-        private readonly int count;
 
         // The first top node in the list.
         private readonly RalTopNode first;
 
         // A random access list representing the head of the current list.
-        private RandomAccessList head = null;
 
         // A random access list representing the tail of the current list.
-        private RandomAccessList tail = null;
 
         #endregion
 
@@ -52,9 +49,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Initializes a new instance of the RandomAccessList class.
         /// </summary>
-		public RandomAccessList()
+        public RandomAccessList()
         {
-            count = 0;
+            Count = 0;
             first = null;
         }
 
@@ -71,7 +68,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         private RandomAccessList(RalTopNode first, int count)
         {
             this.first = first;
-            this.count = count;
+            Count = count;
         }
 
         #endregion
@@ -99,7 +96,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                 first.Root.Count < first.NextNode.Root.Count)
             {
                 // Create a new first node with the specified value.
-                RalTreeNode newRoot = new RalTreeNode(value, null, null);
+                RalTreeNode newRoot = new(value, null, null);
 
                 // Create a new random access list.
                 result = new RandomAccessList(
@@ -113,7 +110,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
 
                 // Create a new first node with the old first and second node 
                 // as the left and right children respectively.
-                RalTreeNode newRoot = new RalTreeNode(
+                RalTreeNode newRoot = new(
                     value,
                     first.Root,
                     first.NextNode.Root);
@@ -145,13 +142,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public object GetValue(int index)
         {
             // Precondition.
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException("index", index,
-                    "Index out of range.");
-            }
-
-            return first.GetValue(index);
+            return index < 0 || index >= Count
+                ? throw new ArgumentOutOfRangeException("index", index,
+                    "Index out of range.")
+                : first.GetValue(index);
         }
 
         /// <summary>
@@ -176,13 +170,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         public RandomAccessList SetValue(object value, int index)
         {
             // Precondition.
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException("index", index,
-                    "Index out of range.");
-            }
-
-            return new RandomAccessList(first.SetValue(value, index), Count);
+            return index < 0 || index >= Count
+                ? throw new ArgumentOutOfRangeException("index", index,
+                    "Index out of range.")
+                : new RandomAccessList(first.SetValue(value, index), Count);
         }
 
         #endregion
@@ -192,13 +183,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Gets the number of elements in the RandomAccessList.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; }
 
         /// <summary>
         /// Gets a RandomAccessList with first element of the current 
@@ -218,19 +203,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                         "Cannot get the head of an empty random access list.");
                 }
 
-                if (head == null)
+                if (field == null)
                 {
-                    RalTreeNode newRoot = new RalTreeNode(
+                    RalTreeNode newRoot = new(
                         first.Root.Value, null, null);
 
-                    RalTopNode newFirst = new RalTopNode(newRoot, null);
+                    RalTopNode newFirst = new(newRoot, null);
 
-                    head = new RandomAccessList(newFirst, 1);
+                    field = new RandomAccessList(newFirst, 1);
                 }
 
-                return head;
+                return field;
             }
-        }
+        } = null;
 
         /// <summary>
         /// Gets a RandomAccessList with all but the first element of the
@@ -250,11 +235,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                         "Cannot get the tail of an empty random access list.");
                 }
 
-                if (tail == null)
+                if (field == null)
                 {
                     if (Count == 1)
                     {
-                        tail = Empty;
+                        field = Empty;
                     }
                     else
                     {
@@ -263,23 +248,23 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                             RalTreeNode left = first.Root.LeftChild;
                             RalTreeNode right = first.Root.RightChild;
 
-                            RalTopNode newSecond = new RalTopNode(
+                            RalTopNode newSecond = new(
                                 right, first.NextNode);
-                            RalTopNode newFirst = new RalTopNode(
+                            RalTopNode newFirst = new(
                                 left, newSecond);
 
-                            tail = new RandomAccessList(newFirst, Count - 1);
+                            field = new RandomAccessList(newFirst, Count - 1);
                         }
                         else
                         {
-                            tail = new RandomAccessList(first.NextNode, Count - 1);
+                            field = new RandomAccessList(first.NextNode, Count - 1);
                         }
                     }
                 }
 
-                return tail;
+                return field;
             }
-        }
+        } = null;
 
         #endregion
 

@@ -41,23 +41,14 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the Input Device handle.
         /// </summary>
-        public override IntPtr Handle
-        {
-            get
-            {
-                return handle;
-            }
-        }
+        public override IntPtr Handle => handle;
 
         /// <summary>
         /// Gets and sets the system ex buffer size.
         /// </summary>
         public int SysExBufferSize
         {
-            get
-            {
-                return sysExBufferSize;
-            }
+            get => sysExBufferSize;
             set
             {
                 #region Require
@@ -76,12 +67,6 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Determines how many Input Devices there are.
         /// </summary>
-        public static int DeviceCount
-        {
-            get
-            {
-                return midiInGetNumDevs();
-            }
-        }
+        public static int DeviceCount => midiInGetNumDevs();
     }
 }

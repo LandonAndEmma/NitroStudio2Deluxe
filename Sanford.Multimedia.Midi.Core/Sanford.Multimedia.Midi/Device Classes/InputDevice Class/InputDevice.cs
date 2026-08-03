@@ -67,8 +67,8 @@ namespace Sanford.Multimedia.Midi
             }
             else
             {
-                midiInReset(handle);
-                midiInClose(handle);
+                _ = midiInReset(handle);
+                _ = midiInClose(handle);
             }
 
             base.Dispose(disposing);
@@ -94,7 +94,7 @@ namespace Sanford.Multimedia.Midi
         #region Fields
 
         // Error message.
-        private StringBuilder errMsg = new StringBuilder(128);
+        private StringBuilder errMsg = new(128);
 
         #endregion 
 
@@ -110,7 +110,7 @@ namespace Sanford.Multimedia.Midi
         public InputDeviceException(int errCode) : base(errCode)
         {
             // Get error message.
-            midiInGetErrorText(errCode, errMsg, errMsg.Capacity);
+            _ = midiInGetErrorText(errCode, errMsg, errMsg.Capacity);
         }
 
         #endregion
@@ -120,13 +120,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets a message that describes the current exception.
         /// </summary>
-        public override string Message
-        {
-            get
-            {
-                return errMsg.ToString();
-            }
-        }
+        public override string Message => errMsg.ToString();
 
         #endregion
 

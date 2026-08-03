@@ -10,7 +10,7 @@ namespace Sanford.Collections.Generic
         [Serializable()]
         private class Node
         {
-            private T value;
+            private readonly T value;
 
             private Node previous = null;
 
@@ -21,36 +21,16 @@ namespace Sanford.Collections.Generic
                 this.value = value;
             }
 
-            public T Value
-            {
-                get
-                {
-                    return value;
-                }
-            }
+            public T Value => value;
 
             public Node Previous
             {
-                get
-                {
-                    return previous;
-                }
-                set
-                {
-                    previous = value;
-                }
+                get => previous; set => previous = value;
             }
 
             public Node Next
             {
-                get
-                {
-                    return next;
-                }
-                set
-                {
-                    next = value;
-                }
+                get => next; set => next = value;
             }
         }
 

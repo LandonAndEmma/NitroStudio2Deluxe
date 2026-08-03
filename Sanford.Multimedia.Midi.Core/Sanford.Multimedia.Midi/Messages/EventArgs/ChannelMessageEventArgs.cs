@@ -5,26 +5,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
     /// </summary>
     public class ChannelMessageEventArgs : MidiEventArgs
     {
-        private ChannelMessage message;
 
         /// <summary>
         /// The function that contains events for channel messages.
         /// </summary>
         public ChannelMessageEventArgs(ChannelMessage message, int absoluteTicks = -1)
         {
-            this.message = message;
-            this.AbsoluteTicks = absoluteTicks;
+            Message = message;
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
         /// Gets the channel messages.
         /// </summary>
-        public ChannelMessage Message
-        {
-            get
-            {
-                return message;
-            }
-        }
+        public ChannelMessage Message { get; }
     }
 }

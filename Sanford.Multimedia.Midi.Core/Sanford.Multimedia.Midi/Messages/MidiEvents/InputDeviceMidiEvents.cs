@@ -8,25 +8,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
     /// </summary>
     public class InputDeviceMidiEvents : MidiEvents
     {
-        readonly InputDevice FInDevice;
+        private readonly InputDevice FInDevice;
 
         /// <summary>
         /// Gets the device ID.
         /// </summary>
-        public int DeviceID
-        {
-            get
-            {
-                if (FInDevice != null)
-                {
-                    return FInDevice.DeviceID;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-        }
+        public int DeviceID => FInDevice != null ? FInDevice.DeviceID : -1;
 
         /// <summary>
         /// Create Midisignal with an input device which fires the events
@@ -51,7 +38,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public static InputDeviceMidiEvents FromDeviceID(int deviceID)
         {
-            var deviceCount = InputDevice.DeviceCount;
+            int deviceCount = InputDevice.DeviceCount;
             if (deviceCount > 0)
             {
                 deviceID %= deviceCount;
@@ -65,14 +52,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
 		/// </summary>
 		public event MidiMessageEventHandler MessageReceived
         {
-            add
-            {
-                FInDevice.MessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.MessageReceived -= value;
-            }
+            add => FInDevice.MessageReceived += value; remove => FInDevice.MessageReceived -= value;
         }
 
         /// <summary>
@@ -80,14 +60,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public event EventHandler<ShortMessageEventArgs> ShortMessageReceived
         {
-            add
-            {
-                FInDevice.ShortMessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.ShortMessageReceived -= value;
-            }
+            add => FInDevice.ShortMessageReceived += value; remove => FInDevice.ShortMessageReceived -= value;
         }
 
         /// <summary>
@@ -95,14 +68,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public event EventHandler<ChannelMessageEventArgs> ChannelMessageReceived
         {
-            add
-            {
-                FInDevice.ChannelMessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.ChannelMessageReceived -= value;
-            }
+            add => FInDevice.ChannelMessageReceived += value; remove => FInDevice.ChannelMessageReceived -= value;
         }
 
         /// <summary>
@@ -110,14 +76,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public event EventHandler<SysExMessageEventArgs> SysExMessageReceived
         {
-            add
-            {
-                FInDevice.SysExMessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.SysExMessageReceived -= value;
-            }
+            add => FInDevice.SysExMessageReceived += value; remove => FInDevice.SysExMessageReceived -= value;
         }
 
         /// <summary>
@@ -125,14 +84,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public event EventHandler<SysCommonMessageEventArgs> SysCommonMessageReceived
         {
-            add
-            {
-                FInDevice.SysCommonMessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.SysCommonMessageReceived -= value;
-            }
+            add => FInDevice.SysCommonMessageReceived += value; remove => FInDevice.SysCommonMessageReceived -= value;
         }
 
         /// <summary>
@@ -140,14 +92,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
         /// </summary>
         public event EventHandler<SysRealtimeMessageEventArgs> SysRealtimeMessageReceived
         {
-            add
-            {
-                FInDevice.SysRealtimeMessageReceived += value;
-            }
-            remove
-            {
-                FInDevice.SysRealtimeMessageReceived -= value;
-            }
+            add => FInDevice.SysRealtimeMessageReceived += value; remove => FInDevice.SysRealtimeMessageReceived -= value;
         }
     }
 }

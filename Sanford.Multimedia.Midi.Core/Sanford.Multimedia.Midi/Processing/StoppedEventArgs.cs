@@ -8,25 +8,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
     /// </summary>
     public class StoppedEventArgs : EventArgs
     {
-        private ICollection messages;
 
         /// <summary>
-		/// Main function for stopped events.
-		/// </summary>
+        /// Main function for stopped events.
+        /// </summary>
         public StoppedEventArgs(ICollection messages)
         {
-            this.messages = messages;
+            Messages = messages;
         }
 
         /// <summary>
 		/// Gets and returns messages.
 		/// </summary>
-        public ICollection Messages
-        {
-            get
-            {
-                return messages;
-            }
-        }
+        public ICollection Messages { get; }
     }
 }

@@ -9,15 +9,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
     /// </summary>
     public class RecordingSession
     {
-        private IClock clock;
+        private readonly IClock clock;
 
-        private List<TimestampedMessage> buffer = new List<TimestampedMessage>();
-
-        private Track result = new Track();
+        private readonly List<TimestampedMessage> buffer = [];
 
         /// <summary>
-		/// Main function for the recording sessions.
-		/// </summary>
+        /// Main function for the recording sessions.
+        /// </summary>
         public RecordingSession(IClock clock)
         {
             this.clock = clock;
@@ -28,13 +26,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 		/// </summary>
         public void Build()
         {
-            result = new Track();
+            Result = new Track();
 
             buffer.Sort(new TimestampComparer());
 
             foreach (TimestampedMessage tm in buffer)
             {
-                result.Insert(tm.ticks, tm.message);
+                Result.Insert(tm.ticks, tm.message);
             }
         }
 
@@ -49,13 +47,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// <summary>
 		/// Gets and returns the track result for the recording session.
 		/// </summary>
-        public Track Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public Track Result { get; private set; } = new Track();
 
         /// <summary>
 		/// Records a channel message if the clock is running.
@@ -98,18 +90,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             public int Compare(TimestampedMessage x, TimestampedMessage y)
             {
-                if (x.ticks > y.ticks)
-                {
-                    return 1;
-                }
-                else if (x.ticks < y.ticks)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return x.ticks > y.ticks ? 1 : x.ticks < y.ticks ? -1 : 0;
             }
 
             #endregion

@@ -106,8 +106,6 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         private int division = PpqnClock.PpqnMinValue;
 
-        private SequenceType sequenceType = SequenceType.Ppqn;
-
         public MidiFileProperties()
         {
         }
@@ -126,9 +124,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
             format = trackCount = division = 0;
 
             FindHeader(strm);
-            Format = (int)ReadProperty(strm);
-            TrackCount = (int)ReadProperty(strm);
-            Division = (int)ReadProperty(strm);
+            Format = ReadProperty(strm);
+            TrackCount = ReadProperty(strm);
+            Division = ReadProperty(strm);
 
             #region Invariant
 
@@ -240,14 +238,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
                 Array.Reverse(data);
             }
 
-            if ((sbyte)data[0] < 0)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
+            result = (sbyte)data[0] < 0;
 
             return result;
         }
@@ -257,7 +248,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         {
             if (trackCount > 1)
             {
-                Debug.Assert(Format == 1 || Format == 2);
+                Debug.Assert(Format is 1 or 2);
             }
 
             if (IsSmpte(Division))
@@ -273,15 +264,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         public int Format
         {
-            get
-            {
-                return format;
-            }
+            get => format;
             set
             {
                 #region Require
 
-                if (value < 0 || value > 2)
+                if (value is < 0 or > 2)
                 {
                     throw new ArgumentOutOfRangeException("Format", value,
                         "MIDI file format out of range.");
@@ -306,10 +294,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         public int TrackCount
         {
-            get
-            {
-                return trackCount;
-            }
+            get => trackCount;
             set
             {
                 #region Require
@@ -339,10 +324,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
         public int Division
         {
-            get
-            {
-                return division;
-            }
+            get => division;
             set
             {
                 if (IsSmpte(value))
@@ -354,29 +336,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
                         Array.Reverse(data);
                     }
 
-                    if ((sbyte)data[0] != -(int)SmpteFrameRate.Smpte24 &&
-                        (sbyte)data[0] != -(int)SmpteFrameRate.Smpte25 &&
-                        (sbyte)data[0] != -(int)SmpteFrameRate.Smpte30 &&
-                        (sbyte)data[0] != -(int)SmpteFrameRate.Smpte30Drop)
-                    {
-                        throw new ArgumentException("Invalid SMPTE frame rate.");
-                    }
-                    else
-                    {
-                        sequenceType = SequenceType.Smpte;
-                    }
+                    SequenceType = (sbyte)data[0] is not -(int)SmpteFrameRate.Smpte24 and
+                        not -(int)SmpteFrameRate.Smpte25 and
+                        not -(int)SmpteFrameRate.Smpte30 and
+                        not -(int)SmpteFrameRate.Smpte30Drop
+                        ? throw new ArgumentException("Invalid SMPTE frame rate.")
+                        : SequenceType.Smpte;
                 }
                 else
                 {
-                    if (value < PpqnClock.PpqnMinValue)
-                    {
-                        throw new ArgumentOutOfRangeException("Ppqn", value,
-                            "Pulses per quarter note is smaller than 24.");
-                    }
-                    else
-                    {
-                        sequenceType = SequenceType.Ppqn;
-                    }
+                    SequenceType = value < PpqnClock.PpqnMinValue
+                        ? throw new ArgumentOutOfRangeException("Ppqn", value,
+                            "Pulses per quarter note is smaller than 24.")
+                        : SequenceType.Ppqn;
                 }
 
                 division = value;
@@ -389,13 +361,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
             }
         }
 
-        public SequenceType SequenceType
-        {
-            get
-            {
-                return sequenceType;
-            }
-        }
+        public SequenceType SequenceType { get; private set; } = SequenceType.Ppqn;
     }
 
     /// <summary>

@@ -102,15 +102,15 @@ namespace Sanford.Multimedia.Midi
 
         private const int EventCodeOffset = 8;
 
-        private MidiOutProc midiOutProc;
+        private readonly MidiOutProc midiOutProc;
 
         private int offsetTicks = 0;
 
-        private byte[] streamID = new byte[4];
+        private readonly byte[] streamID = new byte[4];
 
-        private List<byte> events = new List<byte>();
+        private readonly List<byte> events = [];
 
-        private MidiHeaderBuilder headerBuilder = new MidiHeaderBuilder();
+        private readonly MidiHeaderBuilder headerBuilder = new();
 
         /// <summary>
         /// Handles the event for no operations.
@@ -153,8 +153,8 @@ namespace Sanford.Multimedia.Midi
             }
             else
             {
-                midiOutReset(Handle);
-                midiStreamClose(Handle);
+                _ = midiOutReset(Handle);
+                _ = midiStreamClose(Handle);
             }
 
             base.Dispose(disposing);
@@ -314,7 +314,7 @@ namespace Sanford.Multimedia.Midi
 
             // Event code.
             byte[] eventCode = message.GetBytes();
-            eventCode[eventCode.Length - 1] = MEVT_SHORTMSG;
+            eventCode[^1] = MEVT_SHORTMSG;
             events.AddRange(eventCode);
 
             offsetTicks = 0;
@@ -339,7 +339,7 @@ namespace Sanford.Multimedia.Midi
 
             // Event code.
             byte[] eventCode = BitConverter.GetBytes(message.Length);
-            eventCode[eventCode.Length - 1] = MEVT_LONGMSG;
+            eventCode[^1] = MEVT_LONGMSG;
             events.AddRange(eventCode);
 
             byte[] sysExData;
@@ -370,11 +370,11 @@ namespace Sanford.Multimedia.Midi
                 // Stream ID.
                 events.AddRange(streamID);
 
-                TempoChangeBuilder builder = new TempoChangeBuilder(message);
+                TempoChangeBuilder builder = new(message);
 
                 byte[] t = BitConverter.GetBytes(builder.Tempo);
 
-                t[t.Length - 1] = MEVT_SHORTMSG | MEVT_TEMPO;
+                t[^1] = MEVT_SHORTMSG | MEVT_TEMPO;
 
                 // Event code.
                 events.AddRange(t);
@@ -400,7 +400,7 @@ namespace Sanford.Multimedia.Midi
 
             // Event code.
             byte[] eventCode = BitConverter.GetBytes(data);
-            eventCode[eventCode.Length - 1] = (byte)(MEVT_NOP | MEVT_CALLBACK);
+            eventCode[^1] = MEVT_NOP | MEVT_CALLBACK;
             events.AddRange(eventCode);
 
             offsetTicks = 0;
@@ -444,7 +444,7 @@ namespace Sanford.Multimedia.Midi
 
                 if (result != MidiDeviceException.MMSYSERR_NOERROR)
                 {
-                    midiOutUnprepareHeader(Handle, headerBuilder.Result, SizeOfMidiHeader);
+                    _ = midiOutUnprepareHeader(Handle, headerBuilder.Result, SizeOfMidiHeader);
 
                     headerBuilder.Destroy();
 
@@ -467,9 +467,10 @@ namespace Sanford.Multimedia.Midi
 
             #endregion
 
-            Time t = new Time();
-
-            t.type = (int)type;
+            Time t = new()
+            {
+                type = (int)type
+            };
 
             lock (lockObject)
             {
@@ -486,12 +487,7 @@ namespace Sanford.Multimedia.Midi
 
         private void OnNoOpOccurred(NoOpEventArgs e)
         {
-            EventHandler<NoOpEventArgs> handler = NoOpOccurred;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            NoOpOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -527,7 +523,7 @@ namespace Sanford.Multimedia.Midi
                 // Clear the event type byte.
                 midiEvent[EventTypeIndex] = 0;
 
-                NoOpEventArgs e = new NoOpEventArgs(BitConverter.ToInt32(midiEvent, EventCodeOffset));
+                NoOpEventArgs e = new(BitConverter.ToInt32(midiEvent, EventCodeOffset));
 
                 context.Post(new SendOrPostCallback(delegate (object s)
                 {
@@ -552,9 +548,10 @@ namespace Sanford.Multimedia.Midi
 
                 #endregion
 
-                Property d = new Property();
-
-                d.sizeOfProperty = Marshal.SizeOf(typeof(Property));
+                Property d = new()
+                {
+                    sizeOfProperty = Marshal.SizeOf(typeof(Property))
+                };
 
                 lock (lockObject)
                 {
@@ -584,10 +581,11 @@ namespace Sanford.Multimedia.Midi
 
                 #endregion
 
-                Property d = new Property();
-
-                d.sizeOfProperty = Marshal.SizeOf(typeof(Property));
-                d.property = value;
+                Property d = new()
+                {
+                    sizeOfProperty = Marshal.SizeOf(typeof(Property)),
+                    property = value
+                };
 
                 lock (lockObject)
                 {
@@ -617,8 +615,10 @@ namespace Sanford.Multimedia.Midi
 
                 #endregion
 
-                Property t = new Property();
-                t.sizeOfProperty = Marshal.SizeOf(typeof(Property));
+                Property t = new()
+                {
+                    sizeOfProperty = Marshal.SizeOf(typeof(Property))
+                };
 
                 lock (lockObject)
                 {
@@ -648,9 +648,11 @@ namespace Sanford.Multimedia.Midi
 
                 #endregion
 
-                Property t = new Property();
-                t.sizeOfProperty = Marshal.SizeOf(typeof(Property));
-                t.property = value;
+                Property t = new()
+                {
+                    sizeOfProperty = Marshal.SizeOf(typeof(Property)),
+                    property = value
+                };
 
                 lock (lockObject)
                 {

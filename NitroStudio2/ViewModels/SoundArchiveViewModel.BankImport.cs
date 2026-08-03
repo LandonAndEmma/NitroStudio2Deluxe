@@ -25,8 +25,10 @@ namespace NitroStudio2.ViewModels
 
         public Func<WaveMapperViewModel, Task> ShowWaveMapperRequested { get; set; }
 
-        private Task ReplaceBankWithSoundFontAsync(BankInfo bank, SoundFont soundFont) =>
-            ReplaceBankWithDlsAsync(bank, new DownloadableSounds(soundFont));
+        private Task ReplaceBankWithSoundFontAsync(BankInfo bank, SoundFont soundFont)
+        {
+            return ReplaceBankWithDlsAsync(bank, new DownloadableSounds(soundFont));
+        }
 
         private async Task ReplaceBankWithDlsAsync(BankInfo b, DownloadableSounds d)
         {
@@ -204,10 +206,14 @@ namespace NitroStudio2.ViewModels
             }
         }
 
-        private Task ShowSelector(InstrumentSelectorViewModel vm) =>
-            ShowInstrumentSelectorRequested?.Invoke(vm) ?? Task.CompletedTask;
+        private Task ShowSelector(InstrumentSelectorViewModel vm)
+        {
+            return ShowInstrumentSelectorRequested?.Invoke(vm) ?? Task.CompletedTask;
+        }
 
-        private Task ShowMapper(WaveMapperViewModel vm) =>
-            ShowWaveMapperRequested?.Invoke(vm) ?? Task.CompletedTask;
+        private Task ShowMapper(WaveMapperViewModel vm)
+        {
+            return ShowWaveMapperRequested?.Invoke(vm) ?? Task.CompletedTask;
+        }
     }
 }

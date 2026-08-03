@@ -182,17 +182,16 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// End of track meta message.
         /// </summary>
         public static readonly MetaMessage EndOfTrackMessage =
-            new MetaMessage(MetaType.EndOfTrack, new byte[0]);
+            new(MetaType.EndOfTrack, new byte[0]);
 
         #endregion
 
         #region Fields
 
         // The meta message type.
-        private MetaType type;
 
         // The meta message data.
-        private byte[] data;
+        private readonly byte[] data;
 
         // The hash code value.
         private int hashCode;
@@ -239,7 +238,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             #endregion
 
-            this.type = type;
+            MetaType = type;
 
             // Create storage for meta message data.
             this.data = new byte[data.Length];
@@ -291,7 +290,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Guard
 
-            if (!(obj is MetaMessage))
+            if (obj is not MetaMessage)
             {
                 return false;
             }
@@ -348,7 +347,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             for (int i = 2; i < data.Length; i += 3)
             {
-                hashCode ^= data[i] << Shift * 2;
+                hashCode ^= data[i] << (Shift * 2);
             }
         }
 
@@ -380,7 +379,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
             switch (type)
             {
                 case MetaType.SequenceNumber:
-                    if (length != 0 || length != 2)
+                    if (length is not 0 and not 2)
                     {
                         result = false;
                     }
@@ -460,24 +459,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the length of the meta message.
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return data.Length;
-            }
-        }
+        public int Length => data.Length;
 
         /// <summary>
         /// Gets the type of meta message.
         /// </summary>
-        public MetaType MetaType
-        {
-            get
-            {
-                return type;
-            }
-        }
+        public MetaType MetaType { get; }
 
         #endregion
 
@@ -488,25 +475,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the status value.
         /// </summary>
-        public int Status
-        {
-            get
-            {
-                // All meta messages have the same status value (0xFF).
-                return 0xFF;
-            }
-        }
+        public int Status =>
+            // All meta messages have the same status value (0xFF).
+            0xFF;
 
         /// <summary>
         /// Gets the MetaMessage's MessageType.
         /// </summary>
-        public MessageType MessageType
-        {
-            get
-            {
-                return MessageType.Meta;
-            }
-        }
+        public MessageType MessageType => MessageType.Meta;
 
         #endregion
     }

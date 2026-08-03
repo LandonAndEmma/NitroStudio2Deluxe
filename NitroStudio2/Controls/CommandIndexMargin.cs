@@ -56,8 +56,10 @@ namespace NitroStudio2.Controls
             InvalidateVisual();
         }
 
-        protected override Size MeasureOverride(Size availableSize) =>
-            new(MarginWidth, 0);
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return new(MarginWidth, 0);
+        }
 
         public override void Render(DrawingContext context)
         {
@@ -98,19 +100,15 @@ namespace NitroStudio2.Controls
 
         protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
         {
-            if (oldTextView is not null)
-            {
-                oldTextView.VisualLinesChanged -= OnVisualLinesChanged;
-            }
+            oldTextView?.VisualLinesChanged -= OnVisualLinesChanged;
             base.OnTextViewChanged(oldTextView, newTextView);
-            if (newTextView is not null)
-            {
-                newTextView.VisualLinesChanged += OnVisualLinesChanged;
-            }
+            newTextView?.VisualLinesChanged += OnVisualLinesChanged;
             Refresh();
         }
 
-        private void OnVisualLinesChanged(object sender, System.EventArgs e) =>
+        private void OnVisualLinesChanged(object sender, System.EventArgs e)
+        {
             InvalidateVisual();
+        }
     }
 }

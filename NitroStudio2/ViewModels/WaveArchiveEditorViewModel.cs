@@ -77,8 +77,9 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>The seven-item node menu, matching the WinForms nodeMenu.</summary>
-        private IReadOnlyList<MenuAction> NodeActions() =>
-        [
+        private IReadOnlyList<MenuAction> NodeActions()
+        {
+            return [
             new MenuAction("Add Above", "New", NodeAddAbove),
             new MenuAction("Add Below", "Open", NodeAddBelow),
             new MenuAction("Move Up", "Save", NodeMoveUp),
@@ -87,6 +88,7 @@ namespace NitroStudio2.ViewModels
             new MenuAction("Export", "Export", NodeExport),
             new MenuAction("Delete", "Close", NodeDelete),
         ];
+        }
 
         public override void DoInfoStuff()
         {
@@ -111,7 +113,10 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Space previews the selected wave.</summary>
-        public override void PlaySelected() => Play();
+        public override void PlaySelected()
+        {
+            Play();
+        }
 
         private void Play()
         {
@@ -125,11 +130,20 @@ namespace NitroStudio2.ViewModels
 
         // ------------------------------------------------------------------ node actions
 
-        public override void RootAdd() => _ = AddWaveAsync(WA.Waves.Count);
+        public override void RootAdd()
+        {
+            _ = AddWaveAsync(WA.Waves.Count);
+        }
 
-        public override void NodeAddAbove() => _ = AddWaveAsync(SelectedNode.Index);
+        public override void NodeAddAbove()
+        {
+            _ = AddWaveAsync(SelectedNode.Index);
+        }
 
-        public override void NodeAddBelow() => _ = AddWaveAsync(SelectedNode.Index + 1);
+        public override void NodeAddBelow()
+        {
+            _ = AddWaveAsync(SelectedNode.Index + 1);
+        }
 
         public override void NodeMoveUp()
         {
@@ -151,9 +165,15 @@ namespace NitroStudio2.ViewModels
             }
         }
 
-        public override void NodeReplace() => _ = ReplaceWaveAsync();
+        public override void NodeReplace()
+        {
+            _ = ReplaceWaveAsync();
+        }
 
-        public override void NodeExport() => _ = ExportWaveAsync();
+        public override void NodeExport()
+        {
+            _ = ExportWaveAsync();
+        }
 
         public override void NodeDelete()
         {
@@ -267,6 +287,9 @@ namespace NitroStudio2.ViewModels
             base.OnClosing();
         }
 
-        public void Dispose() => playback.Dispose();
+        public void Dispose()
+        {
+            playback.Dispose();
+        }
     }
 }

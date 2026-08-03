@@ -150,11 +150,12 @@ namespace Sanford.Collections.Generic
         public virtual void PushFront(T item)
         {
             // The new node to add to the front of the deque.
-            Node newNode = new Node(item);
-
-            // Link the new node to the front node. The current front node at 
-            // the front of the deque is now the second node in the deque.
-            newNode.Next = front;
+            Node newNode = new(item)
+            {
+                // Link the new node to the front node. The current front node at 
+                // the front of the deque is now the second node in the deque.
+                Next = front
+            };
 
             // If the deque isn't empty.
             if (Count > 0)
@@ -194,12 +195,13 @@ namespace Sanford.Collections.Generic
         public virtual void PushBack(T item)
         {
             // The new node to add to the back of the deque.
-            Node newNode = new Node(item);
-
-            // Link the new node to the back node. The current back node at 
-            // the back of the deque is now the second to the last node in the
-            // deque.
-            newNode.Previous = back;
+            Node newNode = new(item)
+            {
+                // Link the new node to the back node. The current back node at 
+                // the back of the deque is now the second to the last node in the
+                // deque.
+                Previous = back
+            };
 
             // If the deque is not empty.
             if (Count > 0)
@@ -471,24 +473,12 @@ namespace Sanford.Collections.Generic
         /// Gets a value indicating whether access to the Deque is synchronized 
         /// (thread-safe).
         /// </summary>
-        public virtual bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsSynchronized => false;
 
         /// <summary>
         /// Gets the number of elements contained in the Deque.
         /// </summary>
-        public virtual int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public virtual int Count => count;
 
         /// <summary>
         /// Copies the Deque elements to an existing one-dimensional Array, 
@@ -545,13 +535,7 @@ namespace Sanford.Collections.Generic
         /// <summary>
         /// Gets an object that can be used to synchronize access to the Deque.
         /// </summary>
-        public virtual object SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public virtual object SyncRoot => this;
 
         #endregion
 
@@ -580,9 +564,10 @@ namespace Sanford.Collections.Generic
         /// </returns>
         public virtual object Clone()
         {
-            Deque<T> clone = new Deque<T>(this);
-
-            clone.version = this.version;
+            Deque<T> clone = new(this)
+            {
+                version = version
+            };
 
             return clone;
         }

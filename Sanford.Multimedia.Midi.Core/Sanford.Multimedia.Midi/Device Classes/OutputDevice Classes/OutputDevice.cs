@@ -55,10 +55,7 @@ namespace Sanford.Multimedia.Midi
 
         #endregion 
 
-        private MidiOutProc midiOutProc;
-
-        private bool runningStatusEnabled = false;
-
+        private readonly MidiOutProc midiOutProc;
         private int runningStatus = 0;
 
         #region Construction
@@ -103,8 +100,8 @@ namespace Sanford.Multimedia.Midi
             }
             else
             {
-                midiOutReset(Handle);
-                midiOutClose(Handle);
+                _ = midiOutReset(Handle);
+                _ = midiOutClose(Handle);
             }
 
             base.Dispose(disposing);
@@ -139,7 +136,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -158,7 +155,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -166,7 +163,7 @@ namespace Sanford.Multimedia.Midi
             lock (lockObject)
             {
                 // If running status is enabled.
-                if (runningStatusEnabled)
+                if (RunningStatusEnabled)
                 {
                     // If the message's status value matches the running status.
                     if (message.Status == runningStatus)
@@ -213,7 +210,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -232,18 +229,15 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public bool RunningStatusEnabled
         {
-            get
-            {
-                return runningStatusEnabled;
-            }
+            get;
             set
             {
-                runningStatusEnabled = value;
+                field = value;
 
                 // Reset running status.
                 runningStatus = 0;
             }
-        }
+        } = false;
 
         #endregion
     }
@@ -267,7 +261,7 @@ namespace Sanford.Multimedia.Midi
         #region Fields
 
         // The error message.
-        private StringBuilder message = new StringBuilder(128);
+        private readonly StringBuilder message = new(128);
 
         #endregion
 
@@ -283,7 +277,7 @@ namespace Sanford.Multimedia.Midi
         public OutputDeviceException(int errCode) : base(errCode)
         {
             // Get error message.
-            midiOutGetErrorText(errCode, message, message.Capacity);
+            _ = midiOutGetErrorText(errCode, message, message.Capacity);
         }
 
         #endregion
@@ -293,13 +287,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets a message that describes the current exception.
         /// </summary>
-        public override string Message
-        {
-            get
-            {
-                return message.ToString();
-            }
-        }
+        public override string Message => message.ToString();
 
         #endregion
 

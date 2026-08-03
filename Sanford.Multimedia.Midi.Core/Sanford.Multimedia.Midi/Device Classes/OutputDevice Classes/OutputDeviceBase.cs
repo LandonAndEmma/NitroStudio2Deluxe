@@ -121,12 +121,12 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// For releasing buffers.
         /// </summary>
-        protected DelegateQueue delegateQueue = new DelegateQueue();
+        protected DelegateQueue delegateQueue = new();
 
         /// <summary>
         /// This object remains locked in place.
         /// </summary>
-        protected readonly object lockObject = new object();
+        protected readonly object lockObject = new();
 
         /// <summary>
         /// The number of buffers still in the queue.
@@ -136,7 +136,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Builds MidiHeader structures for sending system exclusive messages.
         /// </summary>
-        private MidiHeaderBuilder headerBuilder = new MidiHeaderBuilder();
+        private readonly MidiHeaderBuilder headerBuilder = new();
 
         /// <summary>
         /// The device handle.
@@ -183,7 +183,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -200,7 +200,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -217,7 +217,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -241,7 +241,7 @@ namespace Sanford.Multimedia.Midi
                     // If the system exclusive message could not be sent.
                     if (result != MidiDeviceException.MMSYSERR_NOERROR)
                     {
-                        midiOutUnprepareHeader(Handle, headerBuilder.Result, SizeOfMidiHeader);
+                        _ = midiOutUnprepareHeader(Handle, headerBuilder.Result, SizeOfMidiHeader);
                         bufferCount--;
                         headerBuilder.Destroy();
 
@@ -270,7 +270,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -287,7 +287,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -304,7 +304,7 @@ namespace Sanford.Multimedia.Midi
 
             if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -318,7 +318,7 @@ namespace Sanford.Multimedia.Midi
                 {
                     while (bufferCount > 0)
                     {
-                        Monitor.Wait(lockObject);
+                        _ = Monitor.Wait(lockObject);
                     }
                 }
                 else
@@ -350,10 +350,10 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public static MidiOutCaps GetDeviceCapabilities(int deviceID)
         {
-            MidiOutCaps caps = new MidiOutCaps();
+            MidiOutCaps caps = new();
 
             // Get the device's capabilities.
-            IntPtr devId = (IntPtr)deviceID;
+            IntPtr devId = deviceID;
             int result = midiOutGetDevCaps(devId, ref caps, Marshal.SizeOf(caps));
 
             // If the capabilities could not be retrieved.
@@ -436,23 +436,11 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Handles the MIDI output device pointer.
         /// </summary>
-        public override IntPtr Handle
-        {
-            get
-            {
-                return DeviceHandle;
-            }
-        }
+        public override IntPtr Handle => DeviceHandle;
 
         /// <summary>
         /// Counts the number of MIDI output devices.
         /// </summary>
-        public static int DeviceCount
-        {
-            get
-            {
-                return midiOutGetNumDevs();
-            }
-        }
+        public static int DeviceCount => midiOutGetNumDevs();
     }
 }

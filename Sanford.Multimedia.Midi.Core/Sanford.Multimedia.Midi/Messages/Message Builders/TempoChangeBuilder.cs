@@ -58,7 +58,6 @@ namespace Sanford.Multimedia.Midi
         private int tempo = PpqnClock.DefaultTempo;
 
         // The built MetaMessage.
-        private MetaMessage result = null;
 
         // Indicates whether the tempo property has been changed since
         // the last time the message was built.
@@ -161,10 +160,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Tempo
         {
-            get
-            {
-                return tempo;
-            }
+            get => tempo;
             set
             {
                 #region Require
@@ -186,13 +182,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the built message.
         /// </summary>
-        public MetaMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public MetaMessage Result { get; private set; } = null;
 
         #endregion
 
@@ -235,7 +225,7 @@ namespace Sanford.Multimedia.Midi
 
                 changed = false;
 
-                result = new MetaMessage(MetaType.Tempo, data);
+                Result = new MetaMessage(MetaType.Tempo, data);
             }
         }
 

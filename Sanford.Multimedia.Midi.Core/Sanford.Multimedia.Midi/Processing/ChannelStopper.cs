@@ -43,15 +43,15 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
     /// </summary>
     public class ChannelStopper
     {
-        private ChannelMessage[,] noteOnMessage;
+        private readonly ChannelMessage[,] noteOnMessage;
 
-        private bool[] holdPedal1Message;
+        private readonly bool[] holdPedal1Message;
 
-        private bool[] holdPedal2Message;
+        private readonly bool[] holdPedal2Message;
 
-        private bool[] sustenutoMessage;
+        private readonly bool[] sustenutoMessage;
 
-        private ChannelMessageBuilder builder = new ChannelMessageBuilder();
+        private readonly ChannelMessageBuilder builder = new();
 
         /// <summary>
 		/// Handles the stopped event.
@@ -81,14 +81,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
             switch (message.Command)
             {
                 case ChannelCommand.NoteOn:
-                    if (message.Data2 > 0)
-                    {
-                        noteOnMessage[message.MidiChannel, message.Data1] = message;
-                    }
-                    else
-                    {
-                        noteOnMessage[message.MidiChannel, message.Data1] = null;
-                    }
+                    noteOnMessage[message.MidiChannel, message.Data1] = message.Data2 > 0 ? message : null;
                     break;
 
                 case ChannelCommand.NoteOff:
@@ -99,36 +92,15 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                     switch (message.Data1)
                     {
                         case (int)ControllerType.HoldPedal1:
-                            if (message.Data2 > 63)
-                            {
-                                holdPedal1Message[message.MidiChannel] = true;
-                            }
-                            else
-                            {
-                                holdPedal1Message[message.MidiChannel] = false;
-                            }
+                            holdPedal1Message[message.MidiChannel] = message.Data2 > 63;
                             break;
 
                         case (int)ControllerType.HoldPedal2:
-                            if (message.Data2 > 63)
-                            {
-                                holdPedal2Message[message.MidiChannel] = true;
-                            }
-                            else
-                            {
-                                holdPedal2Message[message.MidiChannel] = false;
-                            }
+                            holdPedal2Message[message.MidiChannel] = message.Data2 > 63;
                             break;
 
                         case (int)ControllerType.SustenutoPedal:
-                            if (message.Data2 > 63)
-                            {
-                                sustenutoMessage[message.MidiChannel] = true;
-                            }
-                            else
-                            {
-                                sustenutoMessage[message.MidiChannel] = false;
-                            }
+                            sustenutoMessage[message.MidiChannel] = message.Data2 > 63;
                             break;
                     }
                     break;
@@ -140,7 +112,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
 		/// </summary>
         public void AllSoundOff()
         {
-            ArrayList stoppedMessages = new ArrayList();
+            ArrayList stoppedMessages = [];
 
             for (int c = 0; c <= ChannelMessage.MidiChannelMaxValue; c++)
             {
@@ -153,7 +125,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                         builder.Data1 = noteOnMessage[c, n].Data1;
                         builder.Build();
 
-                        stoppedMessages.Add(builder.Result);
+                        _ = stoppedMessages.Add(builder.Result);
 
                         noteOnMessage[c, n] = null;
                     }
@@ -166,7 +138,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                     builder.Data1 = (int)ControllerType.HoldPedal1;
                     builder.Build();
 
-                    stoppedMessages.Add(builder.Result);
+                    _ = stoppedMessages.Add(builder.Result);
 
                     holdPedal1Message[c] = false;
                 }
@@ -178,7 +150,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                     builder.Data1 = (int)ControllerType.HoldPedal2;
                     builder.Build();
 
-                    stoppedMessages.Add(builder.Result);
+                    _ = stoppedMessages.Add(builder.Result);
 
                     holdPedal2Message[c] = false;
                 }
@@ -190,7 +162,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                     builder.Data1 = (int)ControllerType.SustenutoPedal;
                     builder.Build();
 
-                    stoppedMessages.Add(builder.Result);
+                    _ = stoppedMessages.Add(builder.Result);
 
                     sustenutoMessage[c] = false;
                 }
@@ -222,12 +194,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
 		/// </summary>
         protected virtual void OnStopped(StoppedEventArgs e)
         {
-            EventHandler<StoppedEventArgs> handler = Stopped;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Stopped?.Invoke(this, e);
         }
     }
 }

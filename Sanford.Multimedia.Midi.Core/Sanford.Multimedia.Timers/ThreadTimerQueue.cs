@@ -33,25 +33,21 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
     /// <summary>
     /// Queues and executes timer events in an internal worker thread.
     /// </summary>
-    class ThreadTimerQueue
+    internal class ThreadTimerQueue
     {
-        Stopwatch watch = Stopwatch.StartNew();
-        Thread loop;
-        List<Tick> tickQueue = new List<Tick>();
+        private readonly Stopwatch watch = Stopwatch.StartNew();
+        private Thread loop;
+        private readonly List<Tick> tickQueue = [];
 
         public static ThreadTimerQueue Instance
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ThreadTimerQueue();
-                }
-                return instance;
+                field ??= new ThreadTimerQueue();
+                return field;
 
             }
         }
-        static ThreadTimerQueue instance;
 
         private ThreadTimerQueue()
         {
@@ -61,7 +57,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         {
             lock (this)
             {
-                var tick = new Tick
+                Tick tick = new()
                 {
                     Timer = timer,
                     Time = watch.Elapsed
@@ -98,32 +94,20 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             }
         }
 
-        class Tick : IComparable
+        private class Tick : IComparable
         {
             public ThreadTimer Timer;
             public TimeSpan Time;
 
             public int CompareTo(object obj)
             {
-                var r = obj as Tick;
-                if (r == null)
-                {
-                    return -1;
-                }
-                return Time.CompareTo(r.Time);
+                return obj is not Tick r ? -1 : Time.CompareTo(r.Time);
             }
         }
 
-        static TimeSpan Min(TimeSpan x0, TimeSpan x1)
+        private static TimeSpan Min(TimeSpan x0, TimeSpan x1)
         {
-            if (x0 > x1)
-            {
-                return x1;
-            }
-            else
-            {
-                return x0;
-            }
+            return x0 > x1 ? x1 : x0;
         }
 
         /// <summary>
@@ -137,7 +121,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                 for (int queueEmptyCount = 0; queueEmptyCount < 3; ++queueEmptyCount)
                 {
-                    var waitTime = maxTimeout;
+                    TimeSpan waitTime = maxTimeout;
                     if (tickQueue.Count > 0)
                     {
                         waitTime = Min(tickQueue[0].Time - watch.Elapsed, waitTime);
@@ -146,13 +130,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
                     if (waitTime > TimeSpan.Zero)
                     {
-                        Monitor.Wait(this, waitTime);
+                        _ = Monitor.Wait(this, waitTime);
                     }
 
                     if (tickQueue.Count > 0)
                     {
-                        var tick = tickQueue[0];
-                        var mode = tick.Timer.Mode;
+                        Tick tick = tickQueue[0];
+                        TimerMode mode = tick.Timer.Mode;
                         Monitor.Exit(this);
                         tick.Timer.DoTick();
                         Monitor.Enter(this);

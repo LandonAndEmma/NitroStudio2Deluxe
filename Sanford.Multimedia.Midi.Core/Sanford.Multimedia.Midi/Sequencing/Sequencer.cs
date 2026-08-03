@@ -13,27 +13,23 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
     /// </summary>
     public class Sequencer : IComponent
     {
-        private Sequence sequence = null;
+        private readonly List<IEnumerator<int>> enumerators = [];
 
-        private List<IEnumerator<int>> enumerators = new List<IEnumerator<int>>();
+        private readonly MessageDispatcher dispatcher = new();
 
-        private MessageDispatcher dispatcher = new MessageDispatcher();
+        private readonly ChannelChaser chaser = new();
 
-        private ChannelChaser chaser = new ChannelChaser();
+        private readonly ChannelStopper stopper = new();
 
-        private ChannelStopper stopper = new ChannelStopper();
-
-        private MidiInternalClock clock = new MidiInternalClock();
+        private readonly MidiInternalClock clock = new();
 
         private int tracksPlayingCount;
 
-        private readonly object lockObject = new object();
+        private readonly object lockObject = new();
 
         private bool playing = false;
 
         private bool disposed = false;
-
-        private ISite site = null;
 
         #region Events
 
@@ -47,14 +43,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public event EventHandler<ChannelMessageEventArgs> ChannelMessagePlayed
         {
-            add
-            {
-                dispatcher.ChannelMessageDispatched += value;
-            }
-            remove
-            {
-                dispatcher.ChannelMessageDispatched -= value;
-            }
+            add => dispatcher.ChannelMessageDispatched += value; remove => dispatcher.ChannelMessageDispatched -= value;
         }
 
         /// <summary>
@@ -62,14 +51,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public event EventHandler<SysExMessageEventArgs> SysExMessagePlayed
         {
-            add
-            {
-                dispatcher.SysExMessageDispatched += value;
-            }
-            remove
-            {
-                dispatcher.SysExMessageDispatched -= value;
-            }
+            add => dispatcher.SysExMessageDispatched += value; remove => dispatcher.SysExMessageDispatched -= value;
         }
 
         /// <summary>
@@ -77,14 +59,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public event EventHandler<MetaMessageEventArgs> MetaMessagePlayed
         {
-            add
-            {
-                dispatcher.MetaMessageDispatched += value;
-            }
-            remove
-            {
-                dispatcher.MetaMessageDispatched -= value;
-            }
+            add => dispatcher.MetaMessageDispatched += value; remove => dispatcher.MetaMessageDispatched -= value;
         }
 
         /// <summary>
@@ -92,14 +67,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public event EventHandler<ChasedEventArgs> Chased
         {
-            add
-            {
-                chaser.Chased += value;
-            }
-            remove
-            {
-                chaser.Chased -= value;
-            }
+            add => chaser.Chased += value; remove => chaser.Chased -= value;
         }
 
         /// <summary>
@@ -107,14 +75,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public event EventHandler<StoppedEventArgs> Stopped
         {
-            add
-            {
-                stopper.Stopped += value;
-            }
-            remove
-            {
-                stopper.Stopped -= value;
-            }
+            add => stopper.Stopped += value; remove => stopper.Stopped -= value;
         }
 
         #endregion
@@ -159,7 +120,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
                     foreach (IEnumerator<int> enumerator in enumerators)
                     {
-                        enumerator.MoveNext();
+                        _ = enumerator.MoveNext();
                     }
                 }
             };
@@ -202,7 +163,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion           
@@ -226,7 +187,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -254,7 +215,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
                 tracksPlayingCount = Sequence.Count;
 
                 playing = true;
-                clock.Ppqn = sequence.Division;
+                clock.Ppqn = Sequence.Division;
                 clock.Continue();
             }
         }
@@ -268,7 +229,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -295,12 +256,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         protected virtual void OnPlayingCompleted(EventArgs e)
         {
-            EventHandler handler = PlayingCompleted;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            PlayingCompleted?.Invoke(this, e);
         }
 
         /// <summary>
@@ -308,12 +264,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         protected virtual void OnDisposed(EventArgs e)
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Disposed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -327,7 +278,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
                 if (disposed)
                 {
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 #endregion
@@ -340,7 +291,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
 
                 if (disposed)
                 {
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 else if (value < 0)
                 {
@@ -375,10 +326,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// </summary>
         public Sequence Sequence
         {
-            get
-            {
-                return sequence;
-            }
+            get;
             set
             {
                 #region Require
@@ -397,10 +345,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
                 lock (lockObject)
                 {
                     Stop();
-                    sequence = value;
+                    field = value;
                 }
             }
-        }
+        } = null;
 
         #region IComponent Members
 
@@ -412,17 +360,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Sequencing
         /// <summary>
         /// Gets the site and sets the site with a value.
         /// </summary>
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         #endregion
 

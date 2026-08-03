@@ -22,14 +22,10 @@ namespace Sanford.Collections.Immutable
         #region Instance Fields
 
         // The value represented by this node.
-        private readonly object value;
 
         // The number of nodes in the tree.
-        private readonly int count;
 
         // Left and right children.
-        private readonly RalTreeNode leftChild = null;
-        private readonly RalTreeNode rightChild = null;
 
         #endregion
 
@@ -53,18 +49,18 @@ namespace Sanford.Collections.Immutable
             RalTreeNode leftChild,
             RalTreeNode rightChild)
         {
-            this.value = value;
-            this.leftChild = leftChild;
-            this.rightChild = rightChild;
+            Value = value;
+            LeftChild = leftChild;
+            RightChild = rightChild;
 
-            count = 1;
+            Count = 1;
 
             if (leftChild != null)
             {
-                count += leftChild.Count * 2;
+                Count += leftChild.Count * 2;
 
                 Debug.Assert(rightChild != null);
-                Debug.Assert(count == 1 + leftChild.Count + rightChild.Count);
+                Debug.Assert(Count == 1 + leftChild.Count + rightChild.Count);
             }
         }
 
@@ -201,46 +197,22 @@ namespace Sanford.Collections.Immutable
         /// <summary>
         /// Gets the number of nodes in the tree.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; }
 
         /// <summary>
         /// Gets the left child.
         /// </summary>
-        public RalTreeNode LeftChild
-        {
-            get
-            {
-                return leftChild;
-            }
-        }
+        public RalTreeNode LeftChild { get; } = null;
 
         /// <summary>
         /// Gets the right child.
         /// </summary>
-        public RalTreeNode RightChild
-        {
-            get
-            {
-                return rightChild;
-            }
-        }
+        public RalTreeNode RightChild { get; } = null;
 
         /// <summary>
         /// Gets the value represented by this node.
         /// </summary>
-        public object Value
-        {
-            get
-            {
-                return value;
-            }
-        }
+        public object Value { get; }
 
         #endregion
 

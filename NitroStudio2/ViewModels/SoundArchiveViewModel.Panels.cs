@@ -85,10 +85,12 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Id inside an "[3] - NAME" entry, or null for the blank / other-index rows.</summary>
-        private static int? EntryId(string entry) =>
-            entry is null || entry == BlankEntry || entry == OtherIndexEntry
+        private static int? EntryId(string entry)
+        {
+            return entry is null or BlankEntry or OtherIndexEntry
                 ? null
                 : int.Parse(entry.Split('[')[1].Split(']')[0]);
+        }
 
         // ------------------------------------------------------------------ populate
 
@@ -475,14 +477,16 @@ namespace NitroStudio2.ViewModels
             GroupPanel.Entries.Add(placeholder);
         }
 
-        private static string FlagsLabel(GroupEntry e) =>
-            e.LoadSequence && e.LoadBank && e.LoadWaveArchive ? "Sequence + Bank + Wave Archive"
+        private static string FlagsLabel(GroupEntry e)
+        {
+            return e.LoadSequence && e.LoadBank && e.LoadWaveArchive ? "Sequence + Bank + Wave Archive"
             : e.LoadBank && e.LoadWaveArchive ? "Bank + Wave Archive"
             : e.LoadSequence && e.LoadWaveArchive ? "Sequence + Wave Archive"
             : e.LoadSequence && e.LoadBank ? "Sequence + Bank"
             : e.LoadWaveArchive ? "Wave Archive"
             : e.LoadBank ? "Bank"
             : "Sequence";
+        }
 
         /// <summary>
         /// Rebuilds the group's entry list from the grid, re-deriving each row's available load

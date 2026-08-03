@@ -8,26 +8,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
     /// </summary>
     public class OutputDeviceEventSink : IDisposable
     {
-        readonly OutputDevice FOutDevice;
-        readonly MidiEvents FEventSource;
+        private readonly OutputDevice FOutDevice;
+        private readonly MidiEvents FEventSource;
 
         /// <summary>
 		/// Gets the device ID and returns with a value of -1.
 		/// </summary>
-        public int DeviceID
-        {
-            get
-            {
-                if (FOutDevice != null)
-                {
-                    return FOutDevice.DeviceID;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-        }
+        public int DeviceID => FOutDevice != null ? FOutDevice.DeviceID : -1;
 
         /// <summary>
 		/// Initializes and registers the MIDI output device events.
@@ -64,16 +51,16 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
 
         private void FEventSource_MessageReceived(IMidiMessage message)
         {
-            var shortMessage = message as ShortMessage;
-            if (shortMessage != null)
+            if (message is ShortMessage shortMessage)
             {
                 FOutDevice.SendShort(shortMessage.Message);
                 return;
             }
 
-            var sysExMessage = message as SysExMessage;
-            if (sysExMessage != null)
+            if (message is SysExMessage sysExMessage)
+            {
                 FOutDevice.Send(sysExMessage);
+            }
         }
 
 
@@ -116,7 +103,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.MidiEven
 		/// </summary>
         public static OutputDeviceEventSink FromDeviceID(int deviceID, MidiEvents eventSource)
         {
-            var deviceCount = OutputDevice.DeviceCount;
+            int deviceCount = OutputDevice.DeviceCount;
             if (deviceCount > 0)
             {
                 deviceID %= deviceCount;

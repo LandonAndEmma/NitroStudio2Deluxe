@@ -531,7 +531,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
         internal ChannelMessage(int message)
         {
-            this.msg = message;
+            msg = message;
         }
 
         #endregion
@@ -564,7 +564,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Guard
 
-            if (!(obj is ChannelMessage))
+            if (obj is not ChannelMessage)
             {
                 return false;
             }
@@ -573,7 +573,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             ChannelMessage e = (ChannelMessage)obj;
 
-            return this.msg == e.msg;
+            return msg == e.msg;
         }
 
         /// <summary>
@@ -588,18 +588,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </returns>
         internal static int DataBytesPerType(ChannelCommand command)
         {
-            int result;
-
-            if (command == ChannelCommand.ChannelPressure ||
-                command == ChannelCommand.ProgramChange)
-            {
-                result = 1;
-            }
-            else
-            {
-                result = 2;
-            }
-
+            int result = command is ChannelCommand.ChannelPressure or
+                ChannelCommand.ProgramChange
+                ? 1
+                : 2;
             return result;
         }
 
@@ -652,7 +644,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Preconditons
 
-            if (midiChannel < 0 || midiChannel > MidiChannelMaxValue)
+            if (midiChannel is < 0 or > MidiChannelMaxValue)
             {
                 throw new ArgumentOutOfRangeException("midiChannel", midiChannel,
                     "MIDI channel out of range.");
@@ -687,57 +679,27 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the channel command value.
         /// </summary>
-        public ChannelCommand Command
-        {
-            get
-            {
-                return UnpackCommand(msg);
-            }
-        }
+        public ChannelCommand Command => UnpackCommand(msg);
 
         /// <summary>
         /// Gets the MIDI channel.
         /// </summary>
-        public int MidiChannel
-        {
-            get
-            {
-                return UnpackMidiChannel(msg);
-            }
-        }
+        public int MidiChannel => UnpackMidiChannel(msg);
 
         /// <summary>
         /// Gets the first data value.
         /// </summary>
-        public int Data1
-        {
-            get
-            {
-                return UnpackData1(msg);
-            }
-        }
+        public int Data1 => UnpackData1(msg);
 
         /// <summary>
         /// Gets the second data value.
         /// </summary>
-        public int Data2
-        {
-            get
-            {
-                return UnpackData2(msg);
-            }
-        }
+        public int Data2 => UnpackData2(msg);
 
         /// <summary>
         /// Gets the EventType.
         /// </summary>
-        public override MessageType MessageType
-        {
-            get
-            {
-                return MessageType.Channel;
-            }
-        }
+        public override MessageType MessageType => MessageType.Channel;
 
         #endregion
 

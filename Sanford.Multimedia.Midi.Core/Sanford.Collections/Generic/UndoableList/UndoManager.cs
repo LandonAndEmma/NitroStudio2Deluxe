@@ -4,9 +4,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Generic.UndoableList
 {
     internal class UndoManager
     {
-        private Stack<ICommand> undoStack = new Stack<ICommand>();
+        private readonly Stack<ICommand> undoStack = new();
 
-        private Stack<ICommand> redoStack = new Stack<ICommand>();
+        private readonly Stack<ICommand> redoStack = new();
 
         #region Methods
 
@@ -88,24 +88,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Generic.UndoableList
         /// <summary>
         /// The number of operations left to undo.
         /// </summary>
-        public int UndoCount
-        {
-            get
-            {
-                return undoStack.Count;
-            }
-        }
+        public int UndoCount => undoStack.Count;
 
         /// <summary>
         /// The number of operations left to redo.
         /// </summary>
-        public int RedoCount
-        {
-            get
-            {
-                return redoStack.Count;
-            }
-        }
+        public int RedoCount => redoStack.Count;
 
         #endregion
     }

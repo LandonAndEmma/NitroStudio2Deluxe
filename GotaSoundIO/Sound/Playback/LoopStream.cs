@@ -22,7 +22,6 @@ namespace GotaSoundIO.Sound.Playback
         private readonly StreamPlayer player;
 
         private bool hasLooped;
-        private bool ended;
         private long fadeSamplesLeft = -1;
         private long fadeSamplesTotal;
 
@@ -55,18 +54,18 @@ namespace GotaSoundIO.Sound.Playback
             set => sourceStream.Position = value;
         }
 
-        private int BlockAlign => WaveFormat.Channels * (WaveFormat.BitsPerSample / 8);
+        private new int BlockAlign => WaveFormat.Channels * (WaveFormat.BitsPerSample / 8);
 
         public uint CurrentSample
         {
             get => (uint)(sourceStream.Position / BlockAlign);
-            set => sourceStream.Position = (long)value * BlockAlign;
+            set => sourceStream.Position = value * BlockAlign;
         }
 
         public uint GetLengthInSamples => (uint)(sourceStream.Length / BlockAlign);
 
         /// <summary>True once the fade has run out and there is nothing left to play.</summary>
-        public bool Ended => ended;
+        public bool Ended { get; private set; }
 
         /// <summary>True while the post-loop fade is running.</summary>
         public bool IsFading => fadeSamplesLeft >= 0;
@@ -75,7 +74,7 @@ namespace GotaSoundIO.Sound.Playback
         public void Restart()
         {
             hasLooped = false;
-            ended = false;
+            Ended = false;
             fadeSamplesLeft = -1;
             sourceStream.Position = 0;
         }
@@ -83,10 +82,10 @@ namespace GotaSoundIO.Sound.Playback
         public override int Read(byte[] buffer, int offset, int count)
         {
             int total = 0;
-            while (total < count && !ended)
+            while (total < count && !Ended)
             {
                 // Never read past the loop end; whatever follows it is not part of the loop.
-                long limit = Math.Min((long)LoopEnd * BlockAlign, sourceStream.Length);
+                long limit = Math.Min(LoopEnd * BlockAlign, sourceStream.Length);
                 int room = (int)Math.Min(count - total, Math.Max(0, limit - sourceStream.Position));
                 int read = room == 0 ? 0 : sourceStream.Read(buffer, offset + total, room);
                 if (read <= 0)
@@ -124,7 +123,7 @@ namespace GotaSoundIO.Sound.Playback
                     CurrentSample = LoopStart;
                     return true;
                 }
-                ended = true;
+                Ended = true;
                 return false;
             }
             hasLooped = true;
@@ -161,7 +160,7 @@ namespace GotaSoundIO.Sound.Playback
             }
             if (fadeSamplesLeft == 0)
             {
-                ended = true;
+                Ended = true;
             }
         }
     }

@@ -155,7 +155,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
         internal SysCommonMessage(int message)
         {
-            this.msg = message;
+            msg = message;
         }
 
         #endregion
@@ -188,7 +188,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Guard
 
-            if (!(obj is SysCommonMessage))
+            if (obj is not SysCommonMessage)
             {
                 return false;
             }
@@ -197,9 +197,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             SysCommonMessage message = (SysCommonMessage)obj;
 
-            return (this.SysCommonType == message.SysCommonType &&
-                this.Data1 == message.Data1 &&
-                this.Data2 == message.Data2);
+            return SysCommonType == message.SysCommonType &&
+                Data1 == message.Data1 &&
+                Data2 == message.Data2;
         }
 
         #endregion
@@ -209,46 +209,22 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the SysCommonType.
         /// </summary>
-        public SysCommonType SysCommonType
-        {
-            get
-            {
-                return (SysCommonType)UnpackStatus(msg);
-            }
-        }
+        public SysCommonType SysCommonType => (SysCommonType)UnpackStatus(msg);
 
         /// <summary>
         /// Gets the first data value.
         /// </summary>
-        public int Data1
-        {
-            get
-            {
-                return UnpackData1(msg);
-            }
-        }
+        public int Data1 => UnpackData1(msg);
 
         /// <summary>
         /// Gets the second data value.
         /// </summary>
-        public int Data2
-        {
-            get
-            {
-                return UnpackData2(msg);
-            }
-        }
+        public int Data2 => UnpackData2(msg);
 
         /// <summary>
         /// Gets the MessageType.
         /// </summary>
-        public override MessageType MessageType
-        {
-            get
-            {
-                return MessageType.SystemCommon;
-            }
-        }
+        public override MessageType MessageType => MessageType.SystemCommon;
 
         #endregion
 

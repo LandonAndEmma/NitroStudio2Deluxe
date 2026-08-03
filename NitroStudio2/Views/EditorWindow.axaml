@@ -4,6 +4,7 @@
         xmlns:m="clr-namespace:NitroStudio2.Models"
         xmlns:p="clr-namespace:NitroStudio2.ViewModels.Panels"
         xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        xmlns:c="clr-namespace:NitroStudio2.Converters"
         x:Class="NitroStudio2.Views.EditorWindow"
         x:DataType="vm:EditorViewModelBase"
         Title="{Binding Title}"
@@ -715,7 +716,7 @@
                     <TreeView Name="Tree" ItemsSource="{Binding Nodes}"
                               SelectedItem="{Binding SelectedNode}"
                               DoubleTapped="OnTreeDoubleTapped"
-                              IsVisible="{Binding RightPane, Converter={x:Static vm:EnumConverters.IsTree}}">
+                              IsVisible="{Binding RightPane, Converter={x:Static c:EnumConverters.IsTree}}">
                         <!-- Expansion lives on the node so it survives a tree rebuild, which is
                              what EditorBase's BeginUpdateNodes/EndUpdateNodes preserved. -->
                         <TreeView.Styles>
@@ -726,7 +727,7 @@
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate x:DataType="m:EditorTreeNode" ItemsSource="{Binding Nodes}">
                                 <StackPanel Orientation="Horizontal" Spacing="4"
-                                            ContextMenu="{Binding ContextActions, Converter={x:Static vm:MenuConverters.ToContextMenu}}">
+                                            ContextMenu="{Binding ContextActions, Converter={x:Static c:MenuConverters.ToContextMenu}}">
                                     <Image Source="{Binding Icon}" Width="16" Height="16" />
                                     <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
                                 </StackPanel>
@@ -736,7 +737,7 @@
 
                     <controls:SequenceTextEditor
                         Name="SequenceEditor"
-                        IsVisible="{Binding RightPane, Converter={x:Static vm:EnumConverters.IsSequenceEditor}}" />
+                        IsVisible="{Binding RightPane, Converter={x:Static c:EnumConverters.IsSequenceEditor}}" />
                     </Panel>
                 </DockPanel>
             </Border>

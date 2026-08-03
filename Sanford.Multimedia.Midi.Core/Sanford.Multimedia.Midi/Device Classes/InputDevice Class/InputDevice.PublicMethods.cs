@@ -104,14 +104,7 @@ namespace Sanford.Multimedia.Midi
                     result = midiInStart(Handle);
                 }
 
-                if (result == MidiDeviceException.MMSYSERR_NOERROR)
-                {
-                    recording = true;
-                }
-                else
-                {
-                    throw new InputDeviceException(result);
-                }
+                recording = result == MidiDeviceException.MMSYSERR_NOERROR ? true : throw new InputDeviceException(result);
             }
         }
 
@@ -142,14 +135,7 @@ namespace Sanford.Multimedia.Midi
             {
                 int result = midiInStop(Handle);
 
-                if (result == MidiDeviceException.MMSYSERR_NOERROR)
-                {
-                    recording = false;
-                }
-                else
-                {
-                    throw new InputDeviceException(result);
-                }
+                recording = result == MidiDeviceException.MMSYSERR_NOERROR ? false : throw new InputDeviceException(result);
             }
         }
 
@@ -179,7 +165,7 @@ namespace Sanford.Multimedia.Midi
 
                     while (bufferCount > 0)
                     {
-                        Monitor.Wait(lockObject);
+                        _ = Monitor.Wait(lockObject);
                     }
 
                     resetting = false;
@@ -202,17 +188,12 @@ namespace Sanford.Multimedia.Midi
         public static MidiInCaps GetDeviceCapabilities(int deviceID)
         {
             int result;
-            MidiInCaps caps = new MidiInCaps();
+            MidiInCaps caps = new();
 
-            IntPtr devID = (IntPtr)deviceID;
+            IntPtr devID = deviceID;
             result = midiInGetDevCaps(devID, ref caps, SizeOfMidiHeader);
 
-            if (result != MidiDeviceException.MMSYSERR_NOERROR)
-            {
-                throw new InputDeviceException(result);
-            }
-
-            return caps;
+            return result != MidiDeviceException.MMSYSERR_NOERROR ? throw new InputDeviceException(result) : caps;
         }
 
         /// <summary>

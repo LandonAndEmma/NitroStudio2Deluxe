@@ -49,18 +49,16 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         #region Fields
 
         // Used for generating tick events.
-        private ITimer timer;
+        private readonly ITimer timer;
 
         // Parses meta message tempo change messages.
-        private TempoChangeBuilder builder = new TempoChangeBuilder();
+        private readonly TempoChangeBuilder builder = new();
 
         // Tick accumulator.
         private int ticks = 0;
 
         // Indicates whether the clock has been disposed.
         private bool disposed = false;
-
-        private ISite site = null;
 
         #endregion
 
@@ -69,7 +67,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// <summary>
         /// Initializes a new instance of the MidiInternalClock class.
         /// </summary>
-		public MidiInternalClock()
+        public MidiInternalClock()
             : this(TimerCaps.Default.periodMin)
         {
         }
@@ -254,7 +252,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
 
             #endregion
 
-            TempoChangeBuilder builder = new TempoChangeBuilder(message);
+            TempoChangeBuilder builder = new(message);
 
             // Set the new tempo.
             Tempo = builder.Tempo;
@@ -267,12 +265,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// </summary>
         protected virtual void OnDisposed(EventArgs e)
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Disposed?.Invoke(this, e);
         }
 
         #endregion
@@ -334,13 +327,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// <summary>
         /// Gets the ticks in microseconds per beat.
         /// </summary>
-        public override int Ticks
-        {
-            get
-            {
-                return ticks;
-            }
-        }
+        public override int Ticks => ticks;
 
         #endregion
 
@@ -356,17 +343,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Clocks
         /// <summary>
         /// Initializes the Site functionality using ISite.
         /// </summary>
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
     /// Caller is responsible for Dispose.
     public static class TimerFactory
     {
-        static bool IsRunningOnMono()
+        private static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;
         }
@@ -44,12 +44,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         /// <returns>Newly created instance of ITimer</returns>
         public static ITimer Create()
         {
-            if (IsRunningOnMono())
-            {
-                return new ThreadTimer();
-            }
-
-            return new Timer();
+            return IsRunningOnMono() ? new ThreadTimer() : new Timer();
         }
     }
 }

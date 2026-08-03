@@ -62,11 +62,11 @@ namespace GotaSoundIO.Sound.Playback
                 Context* newContext = alc.CreateContext(newDevice, null);
                 if (newContext is null)
                 {
-                    alc.CloseDevice(newDevice);
+                    _ = alc.CloseDevice(newDevice);
                     unavailable = true;
                     throw new InvalidOperationException("Could not create an OpenAL context.");
                 }
-                alc.MakeContextCurrent(newContext);
+                _ = alc.MakeContextCurrent(newContext);
 
                 Al = al;
                 Alc = alc;

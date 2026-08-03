@@ -20,9 +20,6 @@ namespace NitroStudio2.ViewModels
         private readonly int seqStart;
         private readonly string filePath;
 
-        private decimal loops = 1;
-        private bool fadeOut = true;
-
         public SequenceRecorderViewModel(
             PlayableBank[] banks,
             RiffWave[][] wars,
@@ -44,15 +41,15 @@ namespace NitroStudio2.ViewModels
 
         public decimal Loops
         {
-            get => loops;
-            set => SetProperty(ref loops, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = 1;
 
         public bool FadeOut
         {
-            get => fadeOut;
-            set => SetProperty(ref fadeOut, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = true;
 
         public ICommand ExportCommand { get; }
 

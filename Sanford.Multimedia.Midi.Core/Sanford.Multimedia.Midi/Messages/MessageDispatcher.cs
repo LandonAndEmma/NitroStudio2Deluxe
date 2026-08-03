@@ -88,7 +88,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
             #region Require
 
             // The IMidiMessage to dispatch.
-            var message = evt.MidiMessage;
+            IMidiMessage message = evt.MidiMessage;
 
             if (message == null)
             {
@@ -156,12 +156,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </summary>
         protected virtual void OnChannelMessageDispatched(ChannelMessageEventArgs e, Track track)
         {
-            EventHandler<ChannelMessageEventArgs> handler = ChannelMessageDispatched;
-
-            if (handler != null)
-            {
-                handler(track, e);
-            }
+            ChannelMessageDispatched?.Invoke(track, e);
         }
 
         /// <summary>
@@ -169,12 +164,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </summary>
         protected virtual void OnSysExMessageDispatched(SysExMessageEventArgs e, Track track)
         {
-            EventHandler<SysExMessageEventArgs> handler = SysExMessageDispatched;
-
-            if (handler != null)
-            {
-                handler(track, e);
-            }
+            SysExMessageDispatched?.Invoke(track, e);
         }
 
         /// <summary>
@@ -182,12 +172,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </summary>
         protected virtual void OnSysCommonMessageDispatched(SysCommonMessageEventArgs e, Track track)
         {
-            EventHandler<SysCommonMessageEventArgs> handler = SysCommonMessageDispatched;
-
-            if (handler != null)
-            {
-                handler(track, e);
-            }
+            SysCommonMessageDispatched?.Invoke(track, e);
         }
 
         /// <summary>
@@ -195,12 +180,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </summary>
         protected virtual void OnSysRealtimeMessageDispatched(SysRealtimeMessageEventArgs e, Track track)
         {
-            EventHandler<SysRealtimeMessageEventArgs> handler = SysRealtimeMessageDispatched;
-
-            if (handler != null)
-            {
-                handler(track, e);
-            }
+            SysRealtimeMessageDispatched?.Invoke(track, e);
         }
 
         /// <summary>
@@ -208,12 +188,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// </summary>
         protected virtual void OnMetaMessageDispatched(MetaMessageEventArgs e, Track track)
         {
-            EventHandler<MetaMessageEventArgs> handler = MetaMessageDispatched;
-
-            if (handler != null)
-            {
-                handler(track, e);
-            }
+            MetaMessageDispatched?.Invoke(track, e);
         }
 
         #endregion

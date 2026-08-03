@@ -59,21 +59,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
         private const int DefaultPollingInterval = 10;
 
         // For queuing the delegates in priority order.
-        private PriorityQueue queue = new PriorityQueue();
+        private readonly PriorityQueue queue = new();
 
         // Used for timing events for polling the delegate queue.
-        private System.Timers.Timer timer = new System.Timers.Timer(DefaultPollingInterval);
+        private readonly System.Timers.Timer timer = new(DefaultPollingInterval);
 
         // For storing tasks when the scheduler isn't running.
-        private List<Task> tasks = new List<Task>();
+        private readonly List<Task> tasks = [];
 
         // A value indicating whether the DelegateScheduler is running.
-        private bool running = false;
 
         // A value indicating whether the DelegateScheduler has been disposed.
         private bool disposed = false;
-
-        private ISite site = null;
 
         #endregion
 
@@ -187,13 +184,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
             #endregion    
 
-            Task t = new Task(count, millisecondsTimeout, method, args);
+            Task t = new(count, millisecondsTimeout, method, args);
 
             lock (queue.SyncRoot)
             {
                 // Only add the task to the DelegateScheduler if the count 
                 // is greater than zero or set to Infinite.
-                if (count > 0 || count == DelegateScheduler.Infinite)
+                if (count is > 0 or DelegateScheduler.Infinite)
                 {
                     if (IsRunning)
                     {
@@ -246,7 +243,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
                 }
                 else
                 {
-                    tasks.Remove(task);
+                    _ = tasks.Remove(task);
                 }
             }
         }
@@ -263,7 +260,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -283,7 +280,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
                 while (tasks.Count > 0)
                 {
-                    t = tasks[tasks.Count - 1];
+                    t = tasks[^1];
 
                     tasks.RemoveAt(tasks.Count - 1);
 
@@ -292,7 +289,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
                     queue.Enqueue(t);
                 }
 
-                running = true;
+                IsRunning = true;
 
                 timer.Start();
             }
@@ -310,7 +307,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -336,7 +333,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
                 timer.Stop();
 
-                running = false;
+                IsRunning = false;
             }
         }
 
@@ -352,7 +349,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 
             if (disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             #endregion
@@ -392,7 +389,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
                 while (queue.Count > 0 && tk.NextTimeout <= e.SignalTime)
                 {
                     // Remove task from queue.
-                    queue.Dequeue();
+                    _ = queue.Dequeue();
 
                     // While it's time for the task to run.
                     while ((tk.Count == Infinite || tk.Count > 0) && tk.NextTimeout <= e.SignalTime)
@@ -424,7 +421,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
                     }
 
                     // If this task should run again.
-                    if (tk.Count == Infinite || tk.Count > 0)
+                    if (tk.Count is Infinite or > 0)
                     {
                         // Enqueue task back into priority queue.
                         queue.Enqueue(tk);
@@ -446,12 +443,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 		/// </summary>
         protected virtual void OnDisposed(EventArgs e)
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Disposed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -459,12 +451,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
 		/// </summary>
         protected virtual void OnInvokeCompleted(InvokeCompletedEventArgs e)
         {
-            EventHandler<InvokeCompletedEventArgs> handler = InvokeCompleted;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            InvokeCompleted?.Invoke(this, e);
         }
 
         #endregion
@@ -509,27 +496,14 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
         /// <summary>
         /// Gets a value indicating whether the DelegateScheduler is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return running;
-            }
-        }
+        public bool IsRunning { get; private set; } = false;
 
         /// <summary>
         /// Gets or sets the object used to marshal event-handler calls and delegate invocations.
         /// </summary>
         public ISynchronizeInvoke SynchronizingObject
         {
-            get
-            {
-                return timer.SynchronizingObject;
-            }
-            set
-            {
-                timer.SynchronizingObject = value;
-            }
+            get => timer.SynchronizingObject; set => timer.SynchronizingObject = value;
         }
 
         #endregion
@@ -546,17 +520,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateScheduler
         /// <summary>
 		/// Gets and returns the site, sets the site with a value.
 		/// </summary>
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         #endregion
 

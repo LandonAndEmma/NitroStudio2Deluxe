@@ -45,7 +45,7 @@ namespace NitroStudio2.Services
             string pattern = types
                 .SelectMany(t => t.Patterns ?? [])
                 .FirstOrDefault(p => p.StartsWith("*.", StringComparison.Ordinal) && p != "*.*");
-            return pattern is null ? null : pattern[1..];
+            return pattern?[1..];
         }
     }
 }

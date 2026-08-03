@@ -22,19 +22,18 @@ namespace Sanford.Collections.Immutable
         #region Instance Fields
 
         // The root of the AVL tree.
-        private IAvlNode root;
+        private readonly IAvlNode root;
 
         // The number of nodes in the tree.
         private readonly int count;
 
         // The object at the current position.
-        private object current = null;
 
         // The current index.
         private int index;
 
         // Used for traversing the tree inorder.
-        private System.Collections.Stack nodeStack = new System.Collections.Stack();
+        private readonly System.Collections.Stack nodeStack = new();
 
         #endregion
 
@@ -49,7 +48,7 @@ namespace Sanford.Collections.Immutable
         public AvlEnumerator(IAvlNode root)
         {
             this.root = root;
-            this.count = root.Count;
+            count = root.Count;
 
             Reset();
         }
@@ -108,19 +107,15 @@ namespace Sanford.Collections.Immutable
         /// </exception>
         public object Current
         {
-            get
-            {
-                if (index == 0)
-                {
-                    throw new InvalidOperationException(
-                        "The enumerator is positioned before the first " +
-                        "element of the collection or after the last " +
-                        "element.");
-                }
+            get => index == 0
+                  ? throw new InvalidOperationException(
+                      "The enumerator is positioned before the first " +
+                      "element of the collection or after the last " +
+                      "element.")
+                  : (field);
 
-                return current;
-            }
-        }
+            private set;
+        } = null;
 
         /// <summary>
         /// Advances the enumerator to the next element of the AVL tree.
@@ -140,7 +135,7 @@ namespace Sanford.Collections.Immutable
                 // Get the next node.
                 IAvlNode currentNode = (IAvlNode)nodeStack.Pop();
 
-                current = currentNode.Data;
+                Current = currentNode.Data;
 
                 currentNode = currentNode.RightChild;
 

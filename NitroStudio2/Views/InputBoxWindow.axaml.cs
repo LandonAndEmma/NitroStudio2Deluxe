@@ -27,12 +27,18 @@ namespace NitroStudio2.Views
         {
             base.OnOpened(e);
             Input.SelectAll();
-            Input.Focus();
+            _ = Input.Focus();
         }
 
-        private void OnOk(object sender, RoutedEventArgs e) => Close(Input.Text ?? "");
+        private void OnOk(object sender, RoutedEventArgs e)
+        {
+            Close(Input.Text ?? "");
+        }
 
-        private void OnCancel(object sender, RoutedEventArgs e) => Close("");
+        private void OnCancel(object sender, RoutedEventArgs e)
+        {
+            Close("");
+        }
 
         private void OnInputKeyDown(object sender, KeyEventArgs e)
         {

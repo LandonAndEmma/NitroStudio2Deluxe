@@ -100,43 +100,43 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// The instance of the system realtime start message.
         /// </summary>
         public static readonly SysRealtimeMessage StartMessage =
-            new SysRealtimeMessage(SysRealtimeType.Start);
+            new(SysRealtimeType.Start);
 
         /// <summary>
         /// The instance of the system realtime continue message.
         /// </summary>
         public static readonly SysRealtimeMessage ContinueMessage =
-            new SysRealtimeMessage(SysRealtimeType.Continue);
+            new(SysRealtimeType.Continue);
 
         /// <summary>
         /// The instance of the system realtime stop message.
         /// </summary>
         public static readonly SysRealtimeMessage StopMessage =
-            new SysRealtimeMessage(SysRealtimeType.Stop);
+            new(SysRealtimeType.Stop);
 
         /// <summary>
         /// The instance of the system realtime clock message.
         /// </summary>
         public static readonly SysRealtimeMessage ClockMessage =
-            new SysRealtimeMessage(SysRealtimeType.Clock);
+            new(SysRealtimeType.Clock);
 
         /// <summary>
         /// The instance of the system realtime tick message.
         /// </summary>
         public static readonly SysRealtimeMessage TickMessage =
-            new SysRealtimeMessage(SysRealtimeType.Tick);
+            new(SysRealtimeType.Tick);
 
         /// <summary>
         /// The instance of the system realtime active sense message.
         /// </summary>
         public static readonly SysRealtimeMessage ActiveSenseMessage =
-            new SysRealtimeMessage(SysRealtimeType.ActiveSense);
+            new(SysRealtimeType.ActiveSense);
 
         /// <summary>
         /// The instance of the system realtime reset message.
         /// </summary>
         public static readonly SysRealtimeMessage ResetMessage =
-            new SysRealtimeMessage(SysRealtimeType.Reset);
+            new(SysRealtimeType.Reset);
 
         #endregion
 
@@ -181,7 +181,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         {
             #region Guard
 
-            if (!(obj is SysRealtimeMessage))
+            if (obj is not SysRealtimeMessage)
             {
                 return false;
             }
@@ -190,7 +190,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
 
             SysRealtimeMessage message = (SysRealtimeMessage)obj;
 
-            return this.msg == message.msg;
+            return msg == message.msg;
         }
 
         #endregion
@@ -200,24 +200,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages
         /// <summary>
         /// Gets the SysRealtimeType.
         /// </summary>
-        public SysRealtimeType SysRealtimeType
-        {
-            get
-            {
-                return (SysRealtimeType)msg;
-            }
-        }
+        public SysRealtimeType SysRealtimeType => (SysRealtimeType)msg;
 
         /// <summary>
         /// Gets the MessageType.
         /// </summary>
-        public override MessageType MessageType
-        {
-            get
-            {
-                return MessageType.SystemRealtime;
-            }
-        }
+        public override MessageType MessageType => MessageType.SystemRealtime;
 
         #endregion
 

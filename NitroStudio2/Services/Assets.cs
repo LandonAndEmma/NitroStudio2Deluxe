@@ -45,26 +45,42 @@ namespace NitroStudio2.Services
         ];
 
         /// <summary>Loads an asset by file name, e.g. "Save.png". Assets/ has no subfolders.</summary>
-        public static Bitmap Bitmap(string fileName) =>
-            Cache.GetOrAdd(
+        public static Bitmap Bitmap(string fileName)
+        {
+            return Cache.GetOrAdd(
                 fileName,
                 p => new Bitmap(AssetLoader.Open(new Uri(Root + p)))
             );
+        }
 
         /// <summary>An icon by name, without its extension. Menu, track and window icons all
         /// come from the same flat set, since many of them are the same picture.</summary>
-        public static Bitmap Icon(string name) => Bitmap(name + ".png");
+        public static Bitmap Icon(string name)
+        {
+            return Bitmap(name + ".png");
+        }
 
-        public static Bitmap Menu(string name) => Icon(name);
+        public static Bitmap Menu(string name)
+        {
+            return Icon(name);
+        }
 
-        public static Bitmap Track(string name) => Icon(name);
+        public static Bitmap Track(string name)
+        {
+            return Icon(name);
+        }
 
-        public static Bitmap WindowIcon(string name) => Icon(name);
+        public static Bitmap WindowIcon(string name)
+        {
+            return Icon(name);
+        }
 
         /// <summary>Tree icon by the same index the WinForms TreeNode ImageIndex used.</summary>
-        public static Bitmap TreeIcon(int index) =>
-            index >= 0 && index < TreeIconNames.Length
+        public static Bitmap TreeIcon(int index)
+        {
+            return index >= 0 && index < TreeIconNames.Length
                 ? Icon(TreeIconNames[index])
                 : Icon("Blank");
+        }
     }
 }

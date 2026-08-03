@@ -7,7 +7,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
     /// </summary>
     public class InvalidSysExMessageEventArgs : MidiEventArgs
     {
-        private byte[] messageData;
+        private readonly byte[] messageData;
 
         /// <summary>
         /// Main function for declared invalid exclusive system message events.
@@ -15,18 +15,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Messages.EventArg
         public InvalidSysExMessageEventArgs(byte[] messageData, int absoluteTicks = -1)
         {
             this.messageData = messageData;
-            this.AbsoluteTicks = absoluteTicks;
+            AbsoluteTicks = absoluteTicks;
         }
 
         /// <summary>
         /// Gets and returns the message data.
         /// </summary>
-        public ICollection MessageData
-        {
-            get
-            {
-                return messageData;
-            }
-        }
+        public ICollection MessageData => messageData;
     }
 }

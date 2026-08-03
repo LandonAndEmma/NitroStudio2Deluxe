@@ -15,17 +15,28 @@ namespace GotaSoundIO.Sound.Playback
 
         public PlaybackState PlaybackState { get; private set; } = PlaybackState.Stopped;
 
-        public void Init(IWaveProvider waveProvider) => OutputWaveProvider = waveProvider;
+        public void Init(IWaveProvider waveProvider)
+        {
+            OutputWaveProvider = waveProvider;
+        }
 
-        public void Play() => PlaybackState = PlaybackState.Playing;
+        public void Play()
+        {
+            PlaybackState = PlaybackState.Playing;
+        }
 
-        public void Stop() => PlaybackState = PlaybackState.Stopped;
+        public void Stop()
+        {
+            PlaybackState = PlaybackState.Stopped;
+        }
 
-        public void Pause() =>
+        public void Pause()
+        {
             PlaybackState =
                 PlaybackState == PlaybackState.Paused
                     ? PlaybackState.Playing
                     : PlaybackState.Paused;
+        }
 
         public void Dispose() { }
     }

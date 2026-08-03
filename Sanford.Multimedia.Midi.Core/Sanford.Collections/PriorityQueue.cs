@@ -57,10 +57,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         private int currentLevel = 1;
 
         // The header node of the skip list.
-        private Node header = new Node(null, LevelMaxValue);
+        private Node header = new(null, LevelMaxValue);
 
         // Used to generate node levels.
-        private Random rand = new Random();
+        private readonly Random rand = new();
 
         // The number of elements in the PriorityQueue.
         private int count = 0;
@@ -69,7 +69,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         private long version = 0;
 
         // Used for comparing and sorting elements.
-        private IComparer comparer;
+        private readonly IComparer comparer;
 
         #endregion
 
@@ -166,7 +166,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             }
 
             // Create new node.
-            Node newNode = new Node(element, nextLevel);
+            Node newNode = new(element, nextLevel);
 
             // Insert the new node into the list.
             for (int i = 0; i < nextLevel; i++)
@@ -276,7 +276,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
 
             Node x = header;
             Node[] update = new Node[LevelMaxValue];
-            int nextLevel = NextLevel();
+            _ = NextLevel();
 
             // Find the specified element.
             for (int i = currentLevel - 1; i >= 0; i--)
@@ -356,15 +356,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             x = x[0];
 
             // If the element is in the PriorityQueue.
-            if (x != null && comparer.Compare(x.Element, element) == 0)
-            {
-                found = true;
-            }
-            // Else the element is not in the PriorityQueue.
-            else
-            {
-                found = false;
-            }
+            found = x != null && comparer.Compare(x.Element, element) == 0;
 
             return found;
         }
@@ -489,8 +481,8 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         [Conditional("DEBUG")]
         public static void Test()
         {
-            Random r = new Random();
-            PriorityQueue queue = new PriorityQueue();
+            Random r = new();
+            PriorityQueue queue = new();
             int count = 1000;
             int element;
 
@@ -530,22 +522,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         // A synchronized wrapper for the PriorityQueue class.
         private class SynchronizedPriorityQueue : PriorityQueue
         {
-            private PriorityQueue queue;
+            private readonly PriorityQueue queue;
 
-            private object root;
+            private readonly object root;
 
             public SynchronizedPriorityQueue(PriorityQueue queue)
             {
-                #region Require
 
-                if (queue == null)
-                {
-                    throw new ArgumentNullException("queue");
-                }
+                #region Require
 
                 #endregion
 
-                this.queue = queue;
+                this.queue = queue ?? throw new ArgumentNullException("queue");
 
                 root = queue.SyncRoot;
             }
@@ -617,21 +605,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
                 }
             }
 
-            public override bool IsSynchronized
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public override bool IsSynchronized => true;
 
-            public override object SyncRoot
-            {
-                get
-                {
-                    return root;
-                }
-            }
+            public override object SyncRoot => root;
 
             public override IEnumerator GetEnumerator()
             {
@@ -655,7 +631,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
             {
                 #region Require
 
-                if (!(y is IComparable))
+                if (y is not IComparable)
                 {
                     throw new ArgumentException(
                         "Item does not implement IComparable.");
@@ -680,35 +656,20 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         // Represents a node in the list of nodes.
         private class Node
         {
-            private Node[] forward;
-
-            private object element;
+            private readonly Node[] forward;
 
             public Node(object element, int level)
             {
-                this.forward = new Node[level];
-                this.element = element;
+                forward = new Node[level];
+                Element = element;
             }
 
             public Node this[int index]
             {
-                get
-                {
-                    return forward[index];
-                }
-                set
-                {
-                    forward[index] = value;
-                }
+                get => forward[index]; set => forward[index] = value;
             }
 
-            public object Element
-            {
-                get
-                {
-                    return element;
-                }
-            }
+            public object Element { get; }
         }
 
         #endregion
@@ -718,20 +679,20 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         // Implements the IEnumerator interface for the PriorityQueue class.
         private class PriorityQueueEnumerator : IEnumerator
         {
-            private PriorityQueue owner;
+            private readonly PriorityQueue owner;
 
-            private Node head;
+            private readonly Node head;
 
             private Node currentNode;
 
             private bool moveResult;
 
-            private long version;
+            private readonly long version;
 
             public PriorityQueueEnumerator(PriorityQueue owner)
             {
                 this.owner = owner;
-                this.version = owner.version;
+                version = owner.version;
                 head = owner.header;
 
                 Reset();
@@ -813,24 +774,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// <summary>
         /// Gets a value indicating whenever PriorityQueue is synchronized.
         /// </summary>
-        public virtual bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsSynchronized => false;
 
         /// <summary>
         /// Gets the number of elements contained in PriorityQueue.
         /// </summary>
-        public virtual int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public virtual int Count => count;
 
         /// <summary>
         /// Copies the elements of the PriorityQueue to an array, starting at a particular array index.
@@ -880,13 +829,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections
         /// <summary>
         /// Gets an object that can be used to synchronize access to the PriorityQueue.
         /// </summary>
-        public virtual object SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public virtual object SyncRoot => this;
 
         #endregion
 

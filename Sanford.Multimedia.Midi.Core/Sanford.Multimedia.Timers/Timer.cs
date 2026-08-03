@@ -74,19 +74,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         /// <summary>
 		/// The default timer capabilities.
 		/// </summary>
-        public static TimerCaps Default
-        {
-            get
-            {
-                return new TimerCaps { periodMin = 1, periodMax = Int32.MaxValue };
-            }
-        }
+        public static TimerCaps Default => new() { periodMin = 1, periodMax = int.MaxValue };
     }
 
     /// <summary>
     /// Represents the Windows multimedia timer.
     /// </summary>
-    sealed class Timer : ITimer
+    internal sealed class Timer : ITimer
     {
         #region Timer Members
 
@@ -147,13 +141,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         private ISynchronizeInvoke synchronizingObject = null;
 
         // Indicates whether or not the timer is running.
-        private bool running = false;
 
         // Indicates whether or not the timer has been disposed.
         private volatile bool disposed = false;
 
         // For implementing IComponent.
-        private ISite site = null;
 
         // Multimedia timer capabilities.
         private static TimerCaps caps;
@@ -187,7 +179,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         static Timer()
         {
             // Get multimedia timer capabilities.
-            timeGetDevCaps(ref caps, Marshal.SizeOf(caps));
+            _ = timeGetDevCaps(ref caps, Marshal.SizeOf(caps));
         }
 
         /// <summary>
@@ -217,18 +209,18 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             if (IsRunning)
             {
                 // Stop and destroy timer.
-                timeKillEvent(timerID);
+                _ = timeKillEvent(timerID);
             }
         }
 
         // Initialize timer with default values.
         private void Initialize()
         {
-            this.mode = TimerMode.Periodic;
-            this.period = Capabilities.periodMin;
-            this.resolution = 1;
+            mode = TimerMode.Periodic;
+            period = Capabilities.periodMin;
+            resolution = 1;
 
-            running = false;
+            IsRunning = false;
 
             timeProcPeriodic = new TimeProc(TimerPeriodicEventCallback);
             timeProcOneShot = new TimeProc(TimerOneShotEventCallback);
@@ -284,11 +276,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
             // If the timer was created successfully.
             if (timerID != 0)
             {
-                running = true;
+                IsRunning = true;
 
                 if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
                 {
-                    SynchronizingObject.BeginInvoke(
+                    _ = SynchronizingObject.BeginInvoke(
                         new EventRaiser(OnStarted),
                         new object[] { EventArgs.Empty });
                 }
@@ -322,7 +314,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             #region Guard
 
-            if (!running)
+            if (!IsRunning)
             {
                 return;
             }
@@ -334,11 +326,11 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             Debug.Assert(result == TIMERR_NOERROR);
 
-            running = false;
+            IsRunning = false;
 
             if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
             {
-                SynchronizingObject.BeginInvoke(
+                _ = SynchronizingObject.BeginInvoke(
                     new EventRaiser(OnStopped),
                     new object[] { EventArgs.Empty });
             }
@@ -365,7 +357,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             if (synchronizingObject != null)
             {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
+                _ = synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
             }
             else
             {
@@ -388,7 +380,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             if (synchronizingObject != null)
             {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
+                _ = synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
                 Stop();
             }
             else
@@ -405,45 +397,25 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         // Raises the Disposed event.
         private void OnDisposed(EventArgs e)
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Disposed?.Invoke(this, e);
         }
 
         // Raises the Started event.
         private void OnStarted(EventArgs e)
         {
-            EventHandler handler = Started;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Started?.Invoke(this, e);
         }
 
         // Raises the Stopped event.
         private void OnStopped(EventArgs e)
         {
-            EventHandler handler = Stopped;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Stopped?.Invoke(this, e);
         }
 
         // Raises the Tick event.
         private void OnTick(EventArgs e)
         {
-            EventHandler handler = Tick;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Tick?.Invoke(this, e);
         }
 
         #endregion        
@@ -631,24 +603,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
         /// <summary>
         /// Gets a value indicating whether the Timer is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return running;
-            }
-        }
+        public bool IsRunning { get; private set; } = false;
 
         /// <summary>
         /// Gets the timer capabilities.
         /// </summary>
-        public static TimerCaps Capabilities
-        {
-            get
-            {
-                return caps;
-            }
-        }
+        public static TimerCaps Capabilities => caps;
 
         #endregion
 
@@ -658,17 +618,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
         public event System.EventHandler Disposed;
 
-        public ISite Site
-        {
-            get
-            {
-                return site;
-            }
-            set
-            {
-                site = value;
-            }
-        }
+        public ISite Site { get; set; } = null;
 
         #endregion
 
@@ -690,10 +640,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Timers
 
             disposed = true;
 
-            if (running)
+            if (IsRunning)
             {
                 // Stop and destroy timer.
-                timeKillEvent(timerID);
+                _ = timeKillEvent(timerID);
             }
 
             OnDisposed(EventArgs.Empty);

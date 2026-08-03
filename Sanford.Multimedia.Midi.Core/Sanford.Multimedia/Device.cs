@@ -52,15 +52,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia
         /// </summary>
         protected const int CALLBACK_EVENT = 0x50000;
 
-        private int deviceID;
-
         /// <summary>
         /// Synchronizes the context.
         /// </summary>
         protected SynchronizationContext context;
 
         // Indicates whether the device has been disposed.
-        private bool disposed = false;
 
         /// <summary>
         /// Outputs an error via ErrorEventArgs, if the EventHandler encounters an issue.
@@ -72,16 +69,9 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia
         /// </summary>
         public Device(int deviceID)
         {
-            this.deviceID = deviceID;
+            DeviceID = deviceID;
 
-            if (SynchronizationContext.Current == null)
-            {
-                context = new SynchronizationContext();
-            }
-            else
-            {
-                context = SynchronizationContext.Current;
-            }
+            context = SynchronizationContext.Current ?? new SynchronizationContext();
         }
 
         /// <summary>
@@ -91,7 +81,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia
         {
             if (disposing)
             {
-                disposed = true;
+                IsDisposed = true;
 
                 GC.SuppressFinalize(this);
             }
@@ -134,24 +124,12 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia
         /// <summary>
         /// Calls the DeviceID public integer.
         /// </summary>
-        public int DeviceID
-        {
-            get
-            {
-                return deviceID;
-            }
-        }
+        public int DeviceID { get; }
 
         /// <summary>
         /// Declares the device as disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get
-            {
-                return disposed;
-            }
-        }
+        public bool IsDisposed { get; private set; } = false;
 
         #region IDisposable
 

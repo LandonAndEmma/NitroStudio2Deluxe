@@ -66,7 +66,6 @@ namespace Sanford.Multimedia.Midi
         private byte[] data = new byte[MetaMessage.TimeSigLength];
 
         // The built time signature meta message.
-        private MetaMessage result = null;
 
         // Indicates whether any of the properties have changed since the
         // last time the message was built.
@@ -145,10 +144,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public byte Numerator
         {
-            get
-            {
-                return data[0];
-            }
+            get => data[0];
             set
             {
                 #region Require
@@ -178,15 +174,12 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public byte Denominator
         {
-            get
-            {
-                return Convert.ToByte(Math.Pow(2, data[1]));
-            }
+            get => Convert.ToByte(Math.Pow(2, data[1]));
             set
             {
                 #region Require
 
-                if (value < 2 || value > 32)
+                if (value is < 2 or > 32)
                 {
                     throw new ArgumentOutOfRangeException("Denominator must be between 2 and 32.");
                 }
@@ -212,10 +205,7 @@ namespace Sanford.Multimedia.Midi
         /// </remarks>
         public byte ClocksPerMetronomeClick
         {
-            get
-            {
-                return data[2];
-            }
+            get => data[2];
             set
             {
                 data[2] = value;
@@ -230,10 +220,7 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public byte ThirtySecondNotesPerQuarterNote
         {
-            get
-            {
-                return data[3];
-            }
+            get => data[3];
             set
             {
                 data[3] = value;
@@ -245,13 +232,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the built message.
         /// </summary>
-        public MetaMessage Result
-        {
-            get
-            {
-                return result;
-            }
-        }
+        public MetaMessage Result { get; private set; } = null;
 
         #endregion
 
@@ -268,7 +249,7 @@ namespace Sanford.Multimedia.Midi
             // message was built.
             if (changed)
             {
-                result = new MetaMessage(MetaType.TimeSignature, data);
+                Result = new MetaMessage(MetaType.TimeSignature, data);
                 changed = false;
             }
         }

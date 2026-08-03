@@ -6,7 +6,6 @@ using GotaSoundIO.Sound.Formats;
 using NitroFileLoader;
 using NitroFileLoader.Instrument;
 using NitroStudio2.Models;
-using NitroStudio2.ViewModels;
 using NitroStudio2.Services;
 using NitroStudio2.ViewModels.Panels;
 using System;
@@ -107,8 +106,9 @@ namespace NitroStudio2.ViewModels
         // ------------------------------------------------------------------ tree
 
         /// <summary>Tree label and icon for an instrument, by its type.</summary>
-        private static (string Label, int Icon) Describe(NitroInstrument e) =>
-            e.Type() switch
+        private static (string Label, int Icon) Describe(NitroInstrument e)
+        {
+            return e.Type() switch
             {
                 InstrumentType.PCM => ("[" + e.Index + "] PCM Instrument", 14),
                 InstrumentType.PSG => ("[" + e.Index + "] PSG Instrument", 17),
@@ -118,6 +118,7 @@ namespace NitroStudio2.ViewModels
                 InstrumentType.DrumSet => ("[" + e.Index + "] Drum Set", 15),
                 _ => ("[" + e.Index + "] Key-Split", 16),
             };
+        }
 
         public override void UpdateNodes()
         {
@@ -149,12 +150,14 @@ namespace NitroStudio2.ViewModels
             EndUpdateNodes();
         }
 
-        private NitroInstrument SelectedInstrument() =>
-            SelectedNode?.Parent is null
+        private NitroInstrument SelectedInstrument()
+        {
+            return SelectedNode?.Parent is null
                 ? null
                 : BK.Instruments.FirstOrDefault(x =>
                     x.Index == SoundArchiveViewModel.IdFromNode(SelectedNode)
                 );
+        }
 
         // ------------------------------------------------------------------ info panel
 
@@ -230,10 +233,10 @@ namespace NitroStudio2.ViewModels
                     Sustain = e.Sustain.ToString(),
                     Release = e.Release.ToString(),
                     Pan = e.Pan.ToString(),
+                    Edited = _ => RegionsChanged(),
+                    PlayRequested = PlayRegion,
+                    CanPlay = archive is not null
                 };
-                row.Edited = _ => RegionsChanged();
-                row.PlayRequested = PlayRegion;
-                row.CanPlay = archive is not null;
                 BankEditorPanel.Regions.Add(row);
             }
             AddRegionPlaceholder();
@@ -407,8 +410,10 @@ namespace NitroStudio2.ViewModels
         }
 
         /// <summary>Parses a grid cell, falling back to a default and capping at a maximum.</summary>
-        private static int Clamp(string text, int fallback, int maximum) =>
-            !int.TryParse(text, out int value) ? fallback : Math.Min(Math.Max(value, 0), maximum);
+        private static int Clamp(string text, int fallback, int maximum)
+        {
+            return !int.TryParse(text, out int value) ? fallback : Math.Min(Math.Max(value, 0), maximum);
+        }
 
         /// <summary>Swaps an instrument for one of another type, keeping index, order and regions.</summary>
         private void ReplaceInstrument(NitroInstrument existing, NitroInstrument replacement)
@@ -666,7 +671,7 @@ namespace NitroStudio2.ViewModels
             {
                 low = high;
             }
-            return (Notes)(byte)Math.Clamp((int)region.BaseNote, low, high);
+            return (Notes)(byte)Math.Clamp(region.BaseNote, low, high);
         }
 
         /// <summary>
@@ -695,7 +700,10 @@ namespace NitroStudio2.ViewModels
 
         // ------------------------------------------------------------------ node actions
 
-        public override void RootAdd() => _ = RootAddAsync();
+        public override void RootAdd()
+        {
+            _ = RootAddAsync();
+        }
 
         private async Task RootAddAsync()
         {
@@ -730,9 +738,15 @@ namespace NitroStudio2.ViewModels
             DoInfoStuff();
         }
 
-        public override void NodeAddAbove() => AddRelative(above: true);
+        public override void NodeAddAbove()
+        {
+            AddRelative(above: true);
+        }
 
-        public override void NodeAddBelow() => AddRelative(above: false);
+        public override void NodeAddBelow()
+        {
+            AddRelative(above: false);
+        }
 
         /// <summary>
         /// Inserts a blank instrument next to the selected one, shifting the indices of anything
@@ -750,7 +764,7 @@ namespace NitroStudio2.ViewModels
             {
                 foreach (NitroInstrument i in BK.Instruments)
                 {
-                    if (i.Index >= target && (above ? i != inst : true))
+                    if (i.Index >= target && (!above || i != inst))
                     {
                         i.Index++;
                     }
@@ -773,26 +787,34 @@ namespace NitroStudio2.ViewModels
             SelectByIndex(target);
         }
 
-        public override void NodeReplace() => _ = ReplaceInstrumentFileAsync();
+        public override void NodeReplace()
+        {
+            _ = ReplaceInstrumentFileAsync();
+        }
 
-        public override void NodeExport() => _ = ExportInstrumentAsync();
+        public override void NodeExport()
+        {
+            _ = ExportInstrumentAsync();
+        }
 
         public override void NodeDelete()
         {
             NitroInstrument inst = SelectedInstrument();
             if (inst is not null)
             {
-                BK.Instruments.Remove(inst);
+                _ = BK.Instruments.Remove(inst);
             }
             UpdateNodes();
             DoInfoStuff();
         }
 
         /// <summary>The four chosen wave archive ids, with -1 mapped back to 0xFFFF.</summary>
-        private ushort WarId(int slot) =>
-            WaveArchivePanel.Slots[slot].Id == -1
+        private ushort WarId(int slot)
+        {
+            return WaveArchivePanel.Slots[slot].Id == -1
                 ? (ushort)0xFFFF
                 : (ushort)WaveArchivePanel.Slots[slot].Id;
+        }
 
         private async Task ReplaceInstrumentFileAsync()
         {
@@ -805,36 +827,36 @@ namespace NitroStudio2.ViewModels
             switch (System.IO.Path.GetExtension(path))
             {
                 case ".ns2i":
-                {
-                    // Carries its own samples, so it may need a home archive for each of them.
-                    NitroStudio2Instrument file = new();
-                    file.Read(path);
-                    await file.WriteInstrument(
-                        BK,
-                        inst.Index,
-                        archive,
-                        WarId(0),
-                        WarId(1),
-                        WarId(2),
-                        WarId(3),
-                        MapWaveAsync
-                    );
-                    LoadWaveArchives();
-                    break;
-                }
-                case ".nist":
-                {
-                    NitroStudioInstrument file = new();
-                    file.Read(path);
-                    if (file.Inst is null)
                     {
-                        await Dialogs.ShowMessageAsync("An empty instrument cannot be used!");
-                        return;
+                        // Carries its own samples, so it may need a home archive for each of them.
+                        NitroStudio2Instrument file = new();
+                        file.Read(path);
+                        _ = await file.WriteInstrument(
+                            BK,
+                            inst.Index,
+                            archive,
+                            WarId(0),
+                            WarId(1),
+                            WarId(2),
+                            WarId(3),
+                            MapWaveAsync
+                        );
+                        LoadWaveArchives();
+                        break;
                     }
-                    file.Inst.Index = inst.Index;
-                    BK.Instruments[BK.Instruments.IndexOf(inst)] = file.Inst;
-                    break;
-                }
+                case ".nist":
+                    {
+                        NitroStudioInstrument file = new();
+                        file.Read(path);
+                        if (file.Inst is null)
+                        {
+                            await Dialogs.ShowMessageAsync("An empty instrument cannot be used!");
+                            return;
+                        }
+                        file.Inst.Index = inst.Index;
+                        BK.Instruments[BK.Instruments.IndexOf(inst)] = file.Inst;
+                        break;
+                    }
             }
             UpdateNodes();
             DoInfoStuff();
@@ -849,7 +871,7 @@ namespace NitroStudio2.ViewModels
             }
             WaveMapperViewModel mapper = new([wave], archives, true);
             await ShowWaveMapperRequested(mapper);
-            return mapper.WarMap is null ? null : mapper.WarMap[0];
+            return mapper.WarMap?[0];
         }
 
         /// <summary>Set by the host so the wave mapper dialog can be shown from here.</summary>
@@ -897,10 +919,7 @@ namespace NitroStudio2.ViewModels
             }
             int target = (int)IndexPanel.ItemIndex;
             NitroInstrument occupant = BK.Instruments.FirstOrDefault(x => x.Index == target);
-            if (occupant is not null)
-            {
-                occupant.Index = inst.Index;
-            }
+            occupant?.Index = inst.Index;
             inst.Index = target;
             BK.Instruments = [.. BK.Instruments.OrderBy(x => x.Index)];
             UpdateNodes();

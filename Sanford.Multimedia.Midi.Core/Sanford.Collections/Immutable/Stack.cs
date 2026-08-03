@@ -25,17 +25,16 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// An empty Stack.
         /// </summary>
-        public static readonly Stack Empty = new Stack();
+        public static readonly Stack Empty = new();
 
         #endregion
 
         #region Instance Fields
 
         // The number of elements in the stack.
-        private readonly int count;
 
         // The top node in the stack.
-        private Node top = null;
+        private readonly Node top = null;
 
         #endregion
 
@@ -46,7 +45,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// </summary>
 		public Stack()
         {
-            count = 0;
+            Count = 0;
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         private Stack(Node top, int count)
         {
             this.top = top;
-            this.count = count;
+            Count = count;
         }
 
         #endregion
@@ -80,7 +79,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// </returns>
         public Stack Push(object obj)
         {
-            Node newTop = new Node(obj, top);
+            Node newTop = new(obj, top);
 
             return new Stack(newTop, Count + 1);
         }
@@ -103,17 +102,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
                     "Cannot pop an empty stack.");
             }
 
-            Stack result;
-
-            if (Count - 1 == 0)
-            {
-                result = Empty;
-            }
-            else
-            {
-                result = new Stack(top.Next, Count - 1);
-            }
-
+            Stack result = Count - 1 == 0 ? Empty : new Stack(top.Next, Count - 1);
             return result;
         }
 
@@ -124,13 +113,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <summary>
         /// Gets the number of elements in the Stack.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; }
 
         /// <summary>
         /// Gets the top of the stack.
@@ -138,19 +121,10 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// <exception cref="InvalidOperationException">
         /// The Stack is empty.
         /// </exception>
-        public object Top
-        {
-            get
-            {
-                if (Count == 0)
-                {
-                    throw new InvalidOperationException(
-                        "Cannot access the top when the stack is empty.");
-                }
-
-                return top.Value;
-            }
-        }
+        public object Top => Count == 0
+                    ? throw new InvalidOperationException(
+                        "Cannot access the top when the stack is empty.")
+                    : top.Value;
 
         #endregion
 
@@ -161,31 +135,15 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
         /// </summary>
         private class Node
         {
-            private Node next = null;
-
-            private object value;
-
             public Node(object value, Node next)
             {
-                this.value = value;
-                this.next = next;
+                Value = value;
+                Next = next;
             }
 
-            public Node Next
-            {
-                get
-                {
-                    return next;
-                }
-            }
+            public Node Next { get; } = null;
 
-            public object Value
-            {
-                get
-                {
-                    return value;
-                }
-            }
+            public object Value { get; }
         }
 
         #endregion 
@@ -202,7 +160,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
             #region Instance Fields
 
             // The stack to iterate over.
-            private Stack owner;
+            private readonly Stack owner;
 
             // The current index into the stack.
             private int index;
@@ -253,21 +211,13 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Collections.Immutable
             /// The enumerator is positioned before the first element of the 
             /// Stack or after the last element.
             /// </exception>
-            public object Current
-            {
-                get
-                {
-                    // Preconditions.
-                    if (index < 0 || index >= owner.Count)
-                    {
-                        throw new InvalidOperationException(
+            public object Current =>
+                // Preconditions.
+                index < 0 || index >= owner.Count
+                        ? throw new InvalidOperationException(
                             "The enumerator is positioned before the first " +
-                            "element of the collection or after the last element.");
-                    }
-
-                    return current.Value;
-                }
-            }
+                            "element of the collection or after the last element.")
+                        : current.Value;
 
             /// <summary>
             /// Advances the enumerator to the next element of the Stack.

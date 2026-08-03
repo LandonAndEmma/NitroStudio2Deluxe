@@ -43,26 +43,19 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Threading.DelegateQueue
     /// </summary>
     public class PostCompletedEventArgs : AsyncCompletedEventArgs
     {
-        private SendOrPostCallback callback;
 
         /// <summary>
-		/// Main function for post completed events.
-		/// </summary>
+        /// Main function for post completed events.
+        /// </summary>
         public PostCompletedEventArgs(SendOrPostCallback callback, Exception error, object state)
             : base(error, false, state)
         {
-            this.callback = callback;
+            Callback = callback;
         }
 
         /// <summary>
 		/// Gets and returns the callback.
 		/// </summary>
-        public SendOrPostCallback Callback
-        {
-            get
-            {
-                return callback;
-            }
-        }
+        public SendOrPostCallback Callback { get; }
     }
 }

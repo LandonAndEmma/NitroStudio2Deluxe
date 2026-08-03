@@ -65,11 +65,10 @@ namespace Sanford.Multimedia.Midi
         private int tickScale;
 
         // Pulses per quarter note resolution.
-        private int ppqn;
 
         // Used for building the SysCommonMessage to represent the song
         // position pointer.
-        private SysCommonMessageBuilder builder;
+        private readonly SysCommonMessageBuilder builder;
 
         #endregion
 
@@ -80,8 +79,10 @@ namespace Sanford.Multimedia.Midi
         /// </summary>
         public SongPositionPointerBuilder()
         {
-            builder = new SysCommonMessageBuilder();
-            builder.Type = SysCommonType.SongPositionPointer;
+            builder = new SysCommonMessageBuilder
+            {
+                Type = SysCommonType.SongPositionPointer
+            };
 
             Ppqn = PpqnClock.PpqnMinValue;
         }
@@ -99,8 +100,10 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public SongPositionPointerBuilder(SysCommonMessage message)
         {
-            builder = new SysCommonMessageBuilder();
-            builder.Type = SysCommonType.SongPositionPointer;
+            builder = new SysCommonMessageBuilder
+            {
+                Type = SysCommonType.SongPositionPointer
+            };
 
             Initialize(message);
 
@@ -159,10 +162,7 @@ namespace Sanford.Multimedia.Midi
         /// </remarks>
         public int PositionInTicks
         {
-            get
-            {
-                return SongPosition * tickScale * TicksPer16thNote;
-            }
+            get => SongPosition * tickScale * TicksPer16thNote;
             set
             {
                 #region Require
@@ -187,10 +187,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int Ppqn
         {
-            get
-            {
-                return ppqn;
-            }
+            get;
             set
             {
                 #region Require
@@ -203,9 +200,9 @@ namespace Sanford.Multimedia.Midi
 
                 #endregion
 
-                ppqn = value;
+                field = value;
 
-                tickScale = ppqn / PpqnClock.PpqnMinValue;
+                tickScale = field / PpqnClock.PpqnMinValue;
             }
         }
 
@@ -217,10 +214,7 @@ namespace Sanford.Multimedia.Midi
         /// </exception>
         public int SongPosition
         {
-            get
-            {
-                return (builder.Data2 << Shift) | builder.Data1;
-            }
+            get => (builder.Data2 << Shift) | builder.Data1;
             set
             {
                 #region Require
@@ -241,13 +235,7 @@ namespace Sanford.Multimedia.Midi
         /// <summary>
         /// Gets the built song position pointer message.
         /// </summary>
-        public SysCommonMessage Result
-        {
-            get
-            {
-                return builder.Result;
-            }
-        }
+        public SysCommonMessage Result => builder.Result;
 
         #endregion
 

@@ -43,15 +43,15 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
     /// </summary>
     public class ChannelChaser
     {
-        private ChannelMessage[,] controllerMessages;
+        private readonly ChannelMessage[,] controllerMessages;
 
-        private ChannelMessage[] programChangeMessages;
+        private readonly ChannelMessage[] programChangeMessages;
 
-        private ChannelMessage[] pitchBendMessages;
+        private readonly ChannelMessage[] pitchBendMessages;
 
-        private ChannelMessage[] channelPressureMessages;
+        private readonly ChannelMessage[] channelPressureMessages;
 
-        private ChannelMessage[] polyPressureMessages;
+        private readonly ChannelMessage[] polyPressureMessages;
 
         /// <summary>
 		/// Handles the chased events.
@@ -108,7 +108,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
 		/// </summary>
         public void Chase()
         {
-            ArrayList chasedMessages = new ArrayList();
+            ArrayList chasedMessages = [];
 
             for (int c = 0; c <= ChannelMessage.MidiChannelMaxValue; c++)
             {
@@ -116,7 +116,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
                 {
                     if (controllerMessages[c, n] != null)
                     {
-                        chasedMessages.Add(controllerMessages[c, n]);
+                        _ = chasedMessages.Add(controllerMessages[c, n]);
 
                         controllerMessages[c, n] = null;
                     }
@@ -124,28 +124,28 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
 
                 if (programChangeMessages[c] != null)
                 {
-                    chasedMessages.Add(programChangeMessages[c]);
+                    _ = chasedMessages.Add(programChangeMessages[c]);
 
                     programChangeMessages[c] = null;
                 }
 
                 if (pitchBendMessages[c] != null)
                 {
-                    chasedMessages.Add(pitchBendMessages[c]);
+                    _ = chasedMessages.Add(pitchBendMessages[c]);
 
                     pitchBendMessages[c] = null;
                 }
 
                 if (channelPressureMessages[c] != null)
                 {
-                    chasedMessages.Add(channelPressureMessages[c]);
+                    _ = chasedMessages.Add(channelPressureMessages[c]);
 
                     channelPressureMessages[c] = null;
                 }
 
                 if (polyPressureMessages[c] != null)
                 {
-                    chasedMessages.Add(polyPressureMessages[c]);
+                    _ = chasedMessages.Add(polyPressureMessages[c]);
 
                     polyPressureMessages[c] = null;
                 }
@@ -178,12 +178,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi.Processing
 		/// </summary>
         protected virtual void OnChased(ChasedEventArgs e)
         {
-            EventHandler<ChasedEventArgs> handler = Chased;
-
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Chased?.Invoke(this, e);
         }
     }
 }

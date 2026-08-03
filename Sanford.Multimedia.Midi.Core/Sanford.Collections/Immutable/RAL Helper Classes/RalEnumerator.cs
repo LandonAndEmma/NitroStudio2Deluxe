@@ -22,22 +22,21 @@ namespace Sanford.Collections.Immutable
         #region Instance Fields
 
         // The object at the current position.
-        private object current = null;
 
         // The current index position.
         private int index;
 
         // For storing and traversing the nodes in the tree.
-        private System.Collections.Stack treeStack = new System.Collections.Stack();
+        private readonly System.Collections.Stack treeStack = new();
 
         // The first top node in the list.
-        private RalTopNode head;
+        private readonly RalTopNode head;
 
         // The current top node in the list.
         private RalTopNode currentTopNode;
 
         // The number of nodes in the list.
-        private int count;
+        private readonly int count;
 
         #endregion 
 
@@ -99,19 +98,16 @@ namespace Sanford.Collections.Immutable
         /// </exception>
         public object Current
         {
-            get
-            {
-                // Preconditions.
-                if (index < 0 || index >= count)
-                {
-                    throw new InvalidOperationException(
-                        "The enumerator is positioned before the first " +
-                        "element of the collection or after the last element.");
-                }
+            get =>
+              // Preconditions.
+              index < 0 || index >= count
+                  ? throw new InvalidOperationException(
+                      "The enumerator is positioned before the first " +
+                      "element of the collection or after the last element.")
+                  : (field);
 
-                return current;
-            }
-        }
+            private set;
+        } = null;
 
         /// <summary>
         /// Advances the enumerator to the next element in the random access 
@@ -129,7 +125,9 @@ namespace Sanford.Collections.Immutable
 
             // If the index has moved beyond the end of the list, return false.
             if (index >= count)
+            {
                 return false;
+            }
 
             RalTreeNode currentNode;
 
@@ -137,7 +135,7 @@ namespace Sanford.Collections.Immutable
             currentNode = (RalTreeNode)treeStack.Peek();
 
             // Get the value at the top of the stack.
-            current = currentNode.Value;
+            Current = currentNode.Value;
 
             // If there are still left children to traverse.
             if (currentNode.LeftChild != null)
@@ -157,7 +155,7 @@ namespace Sanford.Collections.Immutable
                 Debug.Assert(currentNode.RightChild == null);
 
                 // Move back up in the tree to the parent node.
-                treeStack.Pop();
+                _ = treeStack.Pop();
 
                 RalTreeNode previousNode;
 
@@ -184,7 +182,7 @@ namespace Sanford.Collections.Immutable
                         currentNode = previousNode;
 
                         // Pop the stack to move back up the tree.
-                        treeStack.Pop();
+                        _ = treeStack.Pop();
                     }
                 }
 

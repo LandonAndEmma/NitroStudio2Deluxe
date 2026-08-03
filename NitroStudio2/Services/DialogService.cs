@@ -5,10 +5,8 @@ using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Enums;
 using MsBox.Avalonia.Models;
 using NitroStudio2.Views;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NitroStudio2.Services
@@ -81,10 +79,12 @@ namespace NitroStudio2.Services
             return path ?? "";
         }
 
-        private async Task<IStorageFolder> StartLocationAsync() =>
-            string.IsNullOrEmpty(lastFolder)
+        private async Task<IStorageFolder> StartLocationAsync()
+        {
+            return string.IsNullOrEmpty(lastFolder)
                 ? null
                 : await owner.StorageProvider.TryGetFolderFromPathAsync(lastFolder);
+        }
 
         private static string Remember(string path)
         {
@@ -102,18 +102,24 @@ namespace NitroStudio2.Services
 
         // ------------------------------------------------------------------ message boxes
 
-        public Task ShowMessageAsync(string text, string caption = "Nitro Studio 2") =>
-            ShowStandardAsync(text, caption, Icon.Info);
+        public Task ShowMessageAsync(string text, string caption = "Nitro Studio 2")
+        {
+            return ShowStandardAsync(text, caption, Icon.Info);
+        }
 
-        public Task ShowWarningAsync(string text, string caption = "Nitro Studio 2") =>
-            ShowStandardAsync(text, caption, Icon.Warning);
+        public Task ShowWarningAsync(string text, string caption = "Nitro Studio 2")
+        {
+            return ShowStandardAsync(text, caption, Icon.Warning);
+        }
 
-        public Task ShowErrorAsync(string text, string caption = "Nitro Studio 2") =>
-            ShowStandardAsync(text, caption, Icon.Error);
+        public Task ShowErrorAsync(string text, string caption = "Nitro Studio 2")
+        {
+            return ShowStandardAsync(text, caption, Icon.Error);
+        }
 
         private async Task ShowStandardAsync(string text, string caption, Icon icon)
         {
-            await MessageBoxManager
+            _ = await MessageBoxManager
                 .GetMessageBoxStandard(
                     new MessageBoxStandardParams
                     {
@@ -128,15 +134,19 @@ namespace NitroStudio2.Services
                 .ShowWindowDialogAsync(owner);
         }
 
-        public Task<SavePrompt> AskSaveBeforeCloseAsync() =>
-            AskSaveAsync(
+        public Task<SavePrompt> AskSaveBeforeCloseAsync()
+        {
+            return AskSaveAsync(
                 "Do you want to save before you close the file?",
                 "Save and Close",
                 "Close"
             );
+        }
 
-        public Task<SavePrompt> AskSaveBeforeQuitAsync() =>
-            AskSaveAsync("Do you want to save before you exit?", "Save and Quit", "Quit");
+        public Task<SavePrompt> AskSaveBeforeQuitAsync()
+        {
+            return AskSaveAsync("Do you want to save before you exit?", "Save and Quit", "Quit");
+        }
 
         private async Task<SavePrompt> AskSaveAsync(string message, string save, string discard)
         {
@@ -159,11 +169,7 @@ namespace NitroStudio2.Services
                 )
                 .ShowWindowDialogAsync(owner);
 
-            if (result == save)
-            {
-                return SavePrompt.Save;
-            }
-            return result == discard ? SavePrompt.Discard : SavePrompt.Cancel;
+            return result == save ? SavePrompt.Save : result == discard ? SavePrompt.Discard : SavePrompt.Cancel;
         }
 
         // ------------------------------------------------------------------ text input

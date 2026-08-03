@@ -17,10 +17,6 @@ namespace NitroStudio2.Services
     /// </summary>
     public abstract class PlaybackTransport : ObservableObject, IDisposable
     {
-        private long position;
-        private long maxPosition = 1;
-        private int volume = 75;
-        private bool loop;
 
         /// <summary>
         /// False while the user is dragging the position bar, so the tick stops fighting them.
@@ -30,35 +26,35 @@ namespace NitroStudio2.Services
 
         public long Position
         {
-            get => position;
-            set => SetProperty(ref position, value);
+            get;
+            set => SetProperty(ref field, value);
         }
 
         public long MaxPosition
         {
-            get => maxPosition;
-            set => SetProperty(ref maxPosition, Math.Max(1, value));
-        }
+            get;
+            set => SetProperty(ref field, Math.Max(1, value));
+        } = 1;
 
         /// <summary>Volume as the 0-100 the slider used; engines scale it as they need.</summary>
         public int Volume
         {
-            get => volume;
+            get;
             set
             {
-                if (SetProperty(ref volume, value))
+                if (SetProperty(ref field, value))
                 {
                     OnVolumeChanged(value);
                 }
             }
-        }
+        } = 75;
 
         public bool Loop
         {
-            get => loop;
+            get;
             set
             {
-                if (SetProperty(ref loop, value))
+                if (SetProperty(ref field, value))
                 {
                     OnLoopChanged(value);
                 }
@@ -122,20 +118,34 @@ namespace NitroStudio2.Services
                 return false;
             }
             Player.LoadSong(commands, startOffset);
-            MaxPosition = (long)Player.MaxTicks;
+            MaxPosition = Player.MaxTicks;
             return true;
         }
 
-        protected override void OnVolumeChanged(int value) => Mixer.Volume = value / 100f;
+        protected override void OnVolumeChanged(int value)
+        {
+            Mixer.Volume = value / 100f;
+        }
 
-        protected override void OnLoopChanged(bool value) =>
+        protected override void OnLoopChanged(bool value)
+        {
             Player.NumLoops = value ? 0xFFFFFFFF : 0;
+        }
 
-        public override void Play() => Player.Play();
+        public override void Play()
+        {
+            Player.Play();
+        }
 
-        public override void Pause() => Player.Pause();
+        public override void Pause()
+        {
+            Player.Pause();
+        }
 
-        public override void Stop() => Player.Stop();
+        public override void Stop()
+        {
+            Player.Stop();
+        }
 
         public override void SeekToPosition()
         {
@@ -152,7 +162,7 @@ namespace NitroStudio2.Services
             {
                 return;
             }
-            long current = (long)Player.GetCurrentPosition();
+            long current = Player.GetCurrentPosition();
             Position = current > MaxPosition ? MaxPosition : current;
         }
 
@@ -203,13 +213,25 @@ namespace NitroStudio2.Services
         // no volume control, so it stays inert here too.
         protected override void OnVolumeChanged(int value) { }
 
-        protected override void OnLoopChanged(bool value) => Player.Loop = value;
+        protected override void OnLoopChanged(bool value)
+        {
+            Player.Loop = value;
+        }
 
-        public override void Play() => Player.Play();
+        public override void Play()
+        {
+            Player.Play();
+        }
 
-        public override void Pause() => Player.Pause();
+        public override void Pause()
+        {
+            Player.Pause();
+        }
 
-        public override void Stop() => Player.Stop();
+        public override void Stop()
+        {
+            Player.Stop();
+        }
 
         public override void SeekToPosition()
         {

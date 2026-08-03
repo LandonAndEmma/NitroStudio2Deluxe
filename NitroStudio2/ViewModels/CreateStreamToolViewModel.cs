@@ -21,10 +21,6 @@ namespace NitroStudio2.ViewModels
         private readonly IDialogService dialogs;
         private readonly bool swavMode;
 
-        private string inputFile = "";
-        private string outputFile = "";
-        private int outputFormatIndex = 2;
-
         public CreateStreamToolViewModel(IDialogService dialogs, bool swavMode)
         {
             this.dialogs = dialogs;
@@ -40,23 +36,23 @@ namespace NitroStudio2.ViewModels
 
         public string InputFile
         {
-            get => inputFile;
-            set => SetProperty(ref inputFile, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = "";
 
         public string OutputFile
         {
-            get => outputFile;
-            set => SetProperty(ref outputFile, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = "";
 
         public IReadOnlyList<string> OutputFormats { get; } = ["PCM8", "PCM16", "IMA-ADPCM"];
 
         public int OutputFormatIndex
         {
-            get => outputFormatIndex;
-            set => SetProperty(ref outputFormatIndex, value);
-        }
+            get;
+            set => SetProperty(ref field, value);
+        } = 2;
 
         public ICommand BrowseInputCommand { get; }
 

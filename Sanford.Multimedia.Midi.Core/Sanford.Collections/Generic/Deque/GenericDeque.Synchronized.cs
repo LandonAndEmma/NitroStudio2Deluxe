@@ -17,10 +17,10 @@ namespace Sanford.Collections.Generic
             #region Fields
 
             // The wrapped deque.
-            private Deque<T> deque;
+            private readonly Deque<T> deque;
 
             // The object to lock on.
-            private object root;
+            private readonly object root;
 
             #endregion
 
@@ -28,17 +28,13 @@ namespace Sanford.Collections.Generic
 
             public SynchronizedDeque(Deque<T> deque)
             {
-                #region Require
 
-                if (deque == null)
-                {
-                    throw new ArgumentNullException("deque");
-                }
+                #region Require
 
                 #endregion
 
-                this.deque = deque;
-                this.root = deque.SyncRoot;
+                this.deque = deque ?? throw new ArgumentNullException("deque");
+                root = deque.SyncRoot;
             }
 
             #endregion
@@ -170,13 +166,7 @@ namespace Sanford.Collections.Generic
                 }
             }
 
-            public override bool IsSynchronized
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public override bool IsSynchronized => true;
 
             #endregion
 

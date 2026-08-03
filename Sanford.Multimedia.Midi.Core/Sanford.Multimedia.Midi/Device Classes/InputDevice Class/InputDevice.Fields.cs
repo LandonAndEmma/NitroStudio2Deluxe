@@ -46,17 +46,17 @@ namespace Sanford.Multimedia.Midi
 
         private volatile int bufferCount = 0;
 
-        private readonly object lockObject = new object();
+        private readonly object lockObject = new();
 
         private MidiInProc midiInProc;
 
         private bool recording = false;
 
-        private MidiHeaderBuilder headerBuilder = new MidiHeaderBuilder();
+        private MidiHeaderBuilder headerBuilder = new();
 
-        private ChannelMessageBuilder cmBuilder = new ChannelMessageBuilder();
+        private ChannelMessageBuilder cmBuilder = new();
 
-        private SysCommonMessageBuilder scBuilder = new SysCommonMessageBuilder();
+        private SysCommonMessageBuilder scBuilder = new();
 
         private IntPtr handle;
 
@@ -64,6 +64,6 @@ namespace Sanford.Multimedia.Midi
 
         private int sysExBufferSize = 4096;
 
-        private List<byte> sysExData = new List<byte>();
+        private List<byte> sysExData = [];
     }
 }

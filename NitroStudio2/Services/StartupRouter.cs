@@ -53,24 +53,34 @@ namespace NitroStudio2.Services
 
         private sealed class SequenceEditorFactory : IEditorFactory
         {
-            public EditorViewModelBase Create(IDialogService dialogs) => new SequenceEditorViewModel(dialogs);
+            public EditorViewModelBase Create(IDialogService dialogs)
+            {
+                return new SequenceEditorViewModel(dialogs);
+            }
         }
 
         private sealed class SequenceArchiveEditorFactory : IEditorFactory
         {
-            public EditorViewModelBase Create(IDialogService dialogs) =>
-                new SequenceArchiveEditorViewModel(dialogs);
+            public EditorViewModelBase Create(IDialogService dialogs)
+            {
+                return new SequenceArchiveEditorViewModel(dialogs);
+            }
         }
 
         private sealed class BankEditorFactory : IEditorFactory
         {
-            public EditorViewModelBase Create(IDialogService dialogs) => new BankEditorViewModel(dialogs);
+            public EditorViewModelBase Create(IDialogService dialogs)
+            {
+                return new BankEditorViewModel(dialogs);
+            }
         }
 
         private sealed class WaveArchiveEditorFactory : IEditorFactory
         {
-            public EditorViewModelBase Create(IDialogService dialogs) =>
-                new WaveArchiveEditorViewModel(dialogs);
+            public EditorViewModelBase Create(IDialogService dialogs)
+            {
+                return new WaveArchiveEditorViewModel(dialogs);
+            }
         }
 
         private static Window OpenEditor(IEditorFactory factory, string path)

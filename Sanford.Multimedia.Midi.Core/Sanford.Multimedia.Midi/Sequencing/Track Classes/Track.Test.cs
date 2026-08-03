@@ -20,18 +20,17 @@ namespace Sanford.Multimedia.Midi
         [Conditional("DEBUG")]
         private static void TestInsert()
         {
-            Track track = new Track();
+            Track track = new();
             int midiEventCount = 2000;
             int positionMax = 32000;
             int endOfTrackOffset = 1000;
             int length = 0;
-            int position = 0;
-            ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOff, 0, 60, 0);
-            Random r = new Random();
+            ChannelMessage message = new(ChannelCommand.NoteOff, 0, 60, 0);
+            Random r = new();
 
             for (int i = 0; i < midiEventCount; i++)
             {
-                position = r.Next(positionMax);
+                int position = r.Next(positionMax);
 
                 if (position > length)
                 {
@@ -52,8 +51,8 @@ namespace Sanford.Multimedia.Midi
         [Conditional("DEBUG")]
         private static void TestRemoveAt()
         {
-            Track a = new Track();
-            ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOff, 0, 60, 0);
+            Track a = new();
+            ChannelMessage message = new(ChannelCommand.NoteOff, 0, 60, 0);
 
             a.Insert(0, message);
             a.Insert(10, message);
@@ -83,14 +82,14 @@ namespace Sanford.Multimedia.Midi
         [Conditional("DEBUG")]
         private static void TestMerge()
         {
-            Track a = new Track();
-            Track b = new Track();
+            Track a = new();
+            Track b = new();
 
             a.Merge(b);
 
             Debug.Assert(a.Count == 1);
 
-            ChannelMessage message = new ChannelMessage(ChannelCommand.NoteOff, 0, 60, 0);
+            ChannelMessage message = new(ChannelCommand.NoteOff, 0, 60, 0);
 
             b.Insert(0, message);
             b.Insert(10, message);

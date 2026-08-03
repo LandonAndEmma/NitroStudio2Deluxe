@@ -50,9 +50,9 @@ namespace Sanford.Collections.Generic
 
         #region Fields
 
-        private List<T> theList;
+        private readonly List<T> theList;
 
-        private UndoManager undoManager = new UndoManager();
+        private readonly UndoManager undoManager = new();
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public UndoableList()
         {
-            theList = new List<T>();
+            theList = [];
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public UndoableList(IEnumerable<T> collection)
         {
-            theList = new List<T>(collection);
+            theList = [.. collection];
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void AddRange(IEnumerable<T> collection)
         {
-            InsertRangeCommand command = new InsertRangeCommand(theList, theList.Count, collection);
+            InsertRangeCommand command = new(theList, theList.Count, collection);
 
             undoManager.Execute(command);
         }
@@ -303,7 +303,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void InsertRange(int index, IEnumerable<T> collection)
         {
-            InsertRangeCommand command = new InsertRangeCommand(theList, index, collection);
+            InsertRangeCommand command = new(theList, index, collection);
 
             undoManager.Execute(command);
         }
@@ -313,7 +313,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void RemoveRange(int index, int count)
         {
-            RemoveRangeCommand command = new RemoveRangeCommand(theList, index, count);
+            RemoveRangeCommand command = new(theList, index, count);
 
             undoManager.Execute(command);
         }
@@ -323,7 +323,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void Reverse()
         {
-            ReverseCommand command = new ReverseCommand(theList);
+            ReverseCommand command = new(theList);
 
             undoManager.Execute(command);
         }
@@ -333,7 +333,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void Reverse(int index, int count)
         {
-            ReverseCommand command = new ReverseCommand(theList, index, count);
+            ReverseCommand command = new(theList, index, count);
 
             undoManager.Execute(command);
         }
@@ -347,24 +347,12 @@ namespace Sanford.Collections.Generic
         /// <summary>
         /// The number of operations left to undo.
         /// </summary>
-        public int UndoCount
-        {
-            get
-            {
-                return undoManager.UndoCount;
-            }
-        }
+        public int UndoCount => undoManager.UndoCount;
 
         /// <summary>
         /// The number of operations left to redo.
         /// </summary>
-        public int RedoCount
-        {
-            get
-            {
-                return undoManager.RedoCount;
-            }
-        }
+        public int RedoCount => undoManager.RedoCount;
 
         #endregion
 
@@ -385,7 +373,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void Insert(int index, T item)
         {
-            InsertCommand command = new InsertCommand(theList, index, item);
+            InsertCommand command = new(theList, index, item);
 
             undoManager.Execute(command);
         }
@@ -395,7 +383,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void RemoveAt(int index)
         {
-            RemoveAtCommand command = new RemoveAtCommand(theList, index);
+            RemoveAtCommand command = new(theList, index);
 
             undoManager.Execute(command);
         }
@@ -405,13 +393,10 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public T this[int index]
         {
-            get
-            {
-                return theList[index];
-            }
+            get => theList[index];
             set
             {
-                SetCommand command = new SetCommand(theList, index, value);
+                SetCommand command = new(theList, index, value);
 
                 undoManager.Execute(command);
             }
@@ -426,7 +411,7 @@ namespace Sanford.Collections.Generic
         /// </summary>
         public void Add(T item)
         {
-            InsertCommand command = new InsertCommand(theList, Count, item);
+            InsertCommand command = new(theList, Count, item);
 
             undoManager.Execute(command);
         }
@@ -445,7 +430,7 @@ namespace Sanford.Collections.Generic
 
             #endregion
 
-            ClearCommand command = new ClearCommand(theList);
+            ClearCommand command = new(theList);
 
             undoManager.Execute(command);
         }
@@ -461,24 +446,12 @@ namespace Sanford.Collections.Generic
         /// <summary>
         /// Counts the list of undo/redo options from the list.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return theList.Count;
-            }
-        }
+        public int Count => theList.Count;
 
         /// <summary>
         /// Checks if the list is read only, and returns if it is false.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Removes an undo/redo option from the list.
@@ -490,7 +463,7 @@ namespace Sanford.Collections.Generic
 
             if (index >= 0)
             {
-                RemoveAtCommand command = new RemoveAtCommand(theList, index);
+                RemoveAtCommand command = new(theList, index);
 
                 undoManager.Execute(command);
 

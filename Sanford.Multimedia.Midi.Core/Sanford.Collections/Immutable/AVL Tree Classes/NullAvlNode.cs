@@ -55,68 +55,32 @@ namespace Sanford.Collections.Immutable
         /// <summary>
         /// Gets the balance factor of the subtree the node represents.
         /// </summary>
-        public int BalanceFactor
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int BalanceFactor => 0;
 
         /// <summary>
         /// Gets the number of nodes in the subtree.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int Count => 0;
 
         /// <summary>
         /// Gets the node's data.
         /// </summary>
-        public object Data
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public object Data => null;
 
         /// <summary>
         /// Gets the height of the subtree the node represents.
         /// </summary>
-        public int Height
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int Height => 0;
 
         /// <summary>
         /// Gets the node's left child.
         /// </summary>
-        public IAvlNode LeftChild
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public IAvlNode LeftChild => this;
 
         /// <summary>
         /// Gets the node's right child.
         /// </summary>
-        public IAvlNode RightChild
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public IAvlNode RightChild => this;
 
         #endregion
     }

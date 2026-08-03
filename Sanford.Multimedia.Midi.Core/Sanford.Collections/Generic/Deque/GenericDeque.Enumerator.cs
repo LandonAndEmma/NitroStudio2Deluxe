@@ -10,15 +10,15 @@ namespace Sanford.Collections.Generic
         [Serializable()]
         private class Enumerator : IEnumerator<T>
         {
-            private Deque<T> owner;
+            private readonly Deque<T> owner;
 
             private Node currentNode;
 
-            private T current = default(T);
+            private T current = default;
 
             private bool moveResult = false;
 
-            private long version;
+            private readonly long version;
 
             // A value indicating whether the enumerator has been disposed.
             private bool disposed = false;
@@ -27,7 +27,7 @@ namespace Sanford.Collections.Generic
             {
                 this.owner = owner;
                 currentNode = owner.front;
-                this.version = owner.version;
+                version = owner.version;
             }
 
             #region IEnumerator Members
@@ -38,7 +38,7 @@ namespace Sanford.Collections.Generic
 
                 if (disposed)
                 {
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 else if (version != owner.version)
                 {
@@ -60,7 +60,7 @@ namespace Sanford.Collections.Generic
 
                     if (disposed)
                     {
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     else if (!moveResult)
                     {
@@ -81,7 +81,7 @@ namespace Sanford.Collections.Generic
 
                 if (disposed)
                 {
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 else if (version != owner.version)
                 {
@@ -118,7 +118,7 @@ namespace Sanford.Collections.Generic
 
                     if (disposed)
                     {
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     else if (!moveResult)
                     {

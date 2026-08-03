@@ -52,7 +52,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi
         public const int NoteIDMaxValue = 127;
 
         // Table for holding frequency values.
-        private readonly static double[] NoteToFrequencyTable = new double[NoteIDMaxValue + 1];
+        private static readonly double[] NoteToFrequencyTable = new double[NoteIDMaxValue + 1];
 
         static MidiNoteConverter()
         {
@@ -95,7 +95,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi
         {
             #region Require
 
-            if (noteID < NoteIDMinValue || noteID > NoteIDMaxValue)
+            if (noteID is < NoteIDMinValue or > NoteIDMaxValue)
             {
                 throw new ArgumentOutOfRangeException("Note ID out of range.");
             }
@@ -135,7 +135,7 @@ namespace Sanford.Multimedia.Midi.Core.Sanford.Multimedia.Midi
             }
 
             // If the note is not the first or last note, narrow the results.
-            if (noteID > 0 && noteID < NoteIDMaxValue)
+            if (noteID is > 0 and < NoteIDMaxValue)
             {
                 // Get the frequency of the previous note.
                 double previousFrequncy = NoteToFrequency(noteID - 1);

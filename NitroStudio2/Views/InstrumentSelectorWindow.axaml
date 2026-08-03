@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.InstrumentSelectorWindow"
+        x:DataType="vm:InstrumentSelectorViewModel"
+        Title="Instrument Selector"
+        Width="542" Height="346"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Margin="12">
+        <Button DockPanel.Dock="Bottom" Margin="0,7,0,0"
+                Content="Finished" Command="{Binding FinishedCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+
+        <DataGrid ItemsSource="{Binding Rows}"
+                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                  GridLinesVisibility="All" AutoGenerateColumns="False">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Check All" Command="{Binding CheckAllCommand}" />
+                    <MenuItem Header="Uncheck All" Command="{Binding UncheckAllCommand}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Play Sample" Width="*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:InstrumentRow">
+                            <Button Content="Play" Margin="2"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Command="{Binding $parent[DataGrid].((vm:InstrumentSelectorViewModel)DataContext).PlayCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Instrument Id" Width="*" IsReadOnly="True"
+                                    CanUserSort="False" Binding="{Binding InstrumentId}" />
+
+                <DataGridTextColumn Header="Instrument Name" Width="*" IsReadOnly="True"
+                                    CanUserSort="False" Binding="{Binding Name}" />
+
+                <DataGridCheckBoxColumn Header="Use Instrument" Width="*" CanUserSort="False"
+                                        Binding="{Binding Use}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

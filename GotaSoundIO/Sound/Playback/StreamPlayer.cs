@@ -8,13 +8,29 @@ namespace GotaSoundIO.Sound.Playback
 {
     public class StreamPlayer : IDisposable
     {
-        public IWavePlayer SoundOut;
+        public IAudioOutput SoundOut;
         public bool Loop;
         private RiffWave Riff;
 
         public StreamPlayer()
         {
-            SoundOut = new WaveOut();
+            SoundOut = CreateSoundOut();
+        }
+
+        /// <summary>
+        /// OpenAL works on every platform, so there is no OS check here any more. A machine with
+        /// no usable audio device still gets working position and length plumbing.
+        /// </summary>
+        private static IAudioOutput CreateSoundOut()
+        {
+            try
+            {
+                return new OpenAlOutput();
+            }
+            catch
+            {
+                return new NullAudioOutput();
+            }
         }
 
         public LoopStream LoopStream;
@@ -28,21 +44,27 @@ namespace GotaSoundIO.Sound.Playback
             MemoryStream = new MemoryStream(Riff.Write());
             WaveFileReader = new WaveFileReader(MemoryStream);
             SoundOut.Dispose();
-            SoundOut = new WaveOut();
+            SoundOut = CreateSoundOut();
+            // The loop point comes from the file when it has one, otherwise the whole thing
+            // loops from the start. The Loop toggle is deliberately not part of this: it only
+            // decides how many times to loop, so it can be changed during playback. A loop end
+            // past the audio (or a zero end on a file that claims to loop) falls back to the
+            // sample count, since a short end would cut playback off immediately.
+            uint samples = (uint)s.Audio.NumSamples;
+            bool hasLoopPoint = Riff.Loops && s.LoopEnd > s.LoopStart && s.LoopStart < samples;
             LoopStream = new LoopStream(
                 this,
                 WaveFileReader,
-                Riff.Loops && Loop,
-                s.LoopStart,
-                (Riff.Loops && Loop) ? s.LoopEnd : (uint)s.Audio.NumSamples
+                hasLoopPoint ? s.LoopStart : 0,
+                hasLoopPoint ? Math.Min(s.LoopEnd, samples) : samples
             );
             try
             {
                 SoundOut.Init(LoopStream);
             }
-            catch (NAudio.MmException)
+            catch
             {
-                SoundOut = new NullWavePlayer();
+                SoundOut = new NullAudioOutput();
             }
         }
 
@@ -64,19 +86,18 @@ namespace GotaSoundIO.Sound.Playback
         public void Play()
         {
             SoundOut.Stop();
+            // Pressing Play after a fade has finished should start the track again rather than
+            // sit at the end with nothing left to read.
+            if (LoopStream is not null && LoopStream.Ended)
+            {
+                LoopStream.Restart();
+            }
             SoundOut.Play();
         }
 
         public void Pause()
         {
-            if (SoundOut.PlaybackState == PlaybackState.Paused)
-            {
-                (SoundOut as WaveOut)?.Resume();
-            }
-            else if (SoundOut.PlaybackState == PlaybackState.Playing)
-            {
-                SoundOut.Pause();
-            }
+            SoundOut.Pause();
         }
 
         public void Stop()

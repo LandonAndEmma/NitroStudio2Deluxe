@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.CreateStreamToolWindow"
+        x:DataType="vm:CreateStreamToolViewModel"
+        Title="{Binding Title}"
+        Width="369" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+
+    <StackPanel Margin="12" Spacing="4">
+        <TextBlock Text="Input File:" HorizontalAlignment="Center" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+            <TextBox Grid.Column="0" Text="{Binding InputFile}" IsReadOnly="True" />
+            <Button Grid.Column="1" Content="..." Width="44"
+                    Command="{Binding BrowseInputCommand}" />
+        </Grid>
+
+        <TextBlock Text="Output File:" HorizontalAlignment="Center" Margin="0,8,0,0" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+            <TextBox Grid.Column="0" Text="{Binding OutputFile}" IsReadOnly="True" />
+            <Button Grid.Column="1" Content="..." Width="44"
+                    Command="{Binding BrowseOutputCommand}" />
+        </Grid>
+
+        <TextBlock Text="Format:" HorizontalAlignment="Center" Margin="0,8,0,0" />
+        <ComboBox ItemsSource="{Binding OutputFormats}"
+                  SelectedIndex="{Binding OutputFormatIndex}"
+                  HorizontalAlignment="Stretch" />
+
+        <Button Content="Export" Command="{Binding ExportCommand}" Margin="0,8,0,0"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+    </StackPanel>
+</Window>

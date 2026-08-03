@@ -16,7 +16,7 @@ namespace GotaSequenceLib.Playback
         public bool[] Mutes = new bool[16];
         public float Volume = 1f;
         private readonly BufferedWaveProvider _buffer;
-        private IWavePlayer _out;
+        private IAudioOutput _out;
 
         public Mixer()
         {
@@ -38,13 +38,15 @@ namespace GotaSequenceLib.Playback
 
         protected void Init(IWaveProvider waveProvider)
         {
+            // OpenAL runs on every platform, so there is no OS check. If no device can be
+            // opened the silent output keeps sequence timing, note events and WAV rendering going.
             try
             {
-                _out = new WasapiOut();
+                _out = new OpenAlOutput();
             }
             catch
             {
-                _out = new NullWavePlayer();
+                _out = new NullAudioOutput();
             }
             _out.Init(waveProvider);
             _out.Play();

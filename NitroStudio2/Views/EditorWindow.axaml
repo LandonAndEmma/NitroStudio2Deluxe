@@ -1,0 +1,745 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:NitroStudio2.Controls"
+        xmlns:m="clr-namespace:NitroStudio2.Models"
+        xmlns:p="clr-namespace:NitroStudio2.ViewModels.Panels"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.EditorWindow"
+        x:DataType="vm:EditorViewModelBase"
+        Title="{Binding Title}"
+        Width="984" Height="586"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <!-- Every info panel uses the same centred caption above its control. -->
+        <ControlTheme x:Key="PanelCaption" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,1,0,0" />
+        </ControlTheme>
+    </Window.Resources>
+
+    <!-- The info panels were laid out for WinForms controls roughly 20px tall; Fluent's defaults
+         are half again as high, which pushed the sequence panel past the bottom of a pane that
+         used to fit it exactly. These pull the left pane back to the original's density. Scoped
+         to .leftPane so the tree, menus and dialogs keep Fluent's normal sizing. -->
+    <Window.Styles>
+        <!-- Shrink by lowering the minimum and tightening the padding, never with an explicit
+             Height. A fixed Height smaller than what the control theme lays out clips the
+             result, and the first thing to disappear is the top and bottom of its border. -->
+        <!-- One height for every drop down and number box in the pane. Stretch alone only
+             matched the pairs that share a grid row; a combo standing on its own in a stack
+             sized to its text and came out a third shorter than the boxes elsewhere. 32 is what
+             the number boxes measure, so this pins both to it rather than leaving the drop
+             downs to follow Fluent's internals. The grid cells override it further down. -->
+        <Style Selector="Border.leftPane ComboBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.leftPane NumericUpDown">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="Border.leftPane NumericUpDown /template/ TextBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.leftPane TextBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+        <Style Selector="Border.leftPane Button">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="8,1" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <!-- Left at their natural height: the tick box is a fixed 20px inside a taller control,
+             so forcing the outside smaller crops the box rather than tightening the layout. -->
+        <!-- 26 clears the tick box; at 24 its bottom edge is cropped. The sixteen track rows are
+             the tallest thing in the pane, so this is what decides whether the sequence and
+             sequence archive editors fit without a scrollbar. -->
+        <Style Selector="Border.leftPane CheckBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Height" Value="26" />
+        </Style>
+
+        <Style Selector="Border.leftPane RadioButton">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="0" />
+        </Style>
+        <!-- Sliders keep Fluent's height. Their template lays the thumb out against a taller
+             inner container, so constraining the outside crops the thumb instead of shrinking
+             it. The negative margin reclaims the slack around the thumb at layout time, which
+             tightens the stack without cutting anything off. -->
+        <Style Selector="Border.leftPane Slider">
+            <Setter Property="Margin" Value="0,-4" />
+        </Style>
+        <!-- This one also catches the text inside combo boxes and buttons, so it sets the
+             density for the whole pane. The panels were drawn for WinForms' 8.25pt text and
+             Fluent defaults to 14px, which is what made them outgrow the pane. -->
+        <Style Selector="Border.leftPane TextBlock">
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <!-- The grids sit in the same pane, so they follow the same density. -->
+        <Style Selector="Border.leftPane DataGrid">
+            <Setter Property="RowHeight" Value="26" />
+            <Setter Property="ColumnHeaderHeight" Value="26" />
+        </Style>
+        <Style Selector="Border.leftPane DataGrid ComboBox">
+            <Setter Property="MinHeight" Value="22" />
+            <Setter Property="Margin" Value="1" />
+        </Style>
+    </Window.Styles>
+
+    <!-- One template per info panel view model. The left pane binds a single ContentControl to
+         ActivePanel, replacing the 17 overlapping Panels the WinForms editor toggled with
+         BringToFront/Visible. Panel contents keep the original order, labels and tooltips. -->
+    <Window.DataTemplates>
+    <!-- Order follows the original designer's y coordinates: label 3, play 25, the
+         pause/stop + volume/loop table 49, and the position bar last at 118. -->
+    <DataTemplate DataType="p:SoundPlayerPanelViewModel">
+        <StackPanel Margin="10,2">
+            <TextBlock Text="{Binding Label}" HorizontalAlignment="Center" />
+            <Button Content="Play" Command="{Binding PlayCommand}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="6">
+                <Button Grid.Row="0" Grid.Column="0" Content="Pause / Resume"
+                        Command="{Binding PauseCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                <Button Grid.Row="0" Grid.Column="1" Content="Stop"
+                        Command="{Binding StopCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Volume:"
+                           HorizontalAlignment="Center" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Loop:"
+                           HorizontalAlignment="Center" />
+                <Slider Grid.Row="2" Grid.Column="0" Value="{Binding Playback.Volume}"
+                        Minimum="0" Maximum="100" />
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Playback.Loop}"
+                          HorizontalAlignment="Center" />
+            </Grid>
+            <Slider Tag="Position" Value="{Binding Playback.Position}" Minimum="0"
+                    Maximum="{Binding Playback.MaxPosition}"
+                    ToolTip.Tip="Sound position." />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="p:NoInfoPanelViewModel">
+            <TextBlock Text="No Valid Info Selected!" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </DataTemplate>
+
+        <DataTemplate DataType="p:BlankPanelViewModel">
+            <Panel />
+        </DataTemplate>
+
+        <DataTemplate DataType="p:SettingsPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Write Names:" />
+                <CheckBox IsChecked="{Binding WriteNames}" HorizontalAlignment="Center"
+                          ToolTip.Tip="If the editor should export names for the sound archive." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Sequence Import Mode:" />
+                <ComboBox ItemsSource="{Binding ImportModes}" SelectedIndex="{Binding ImportMode}"
+                          HorizontalAlignment="Stretch" />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Sequence Export Mode:" />
+                <ComboBox ItemsSource="{Binding ExportModes}" SelectedIndex="{Binding ExportMode}"
+                          HorizontalAlignment="Stretch"
+                          ToolTip.Tip="What program should be used to export sequences. Nitro Studio is my custom exporter, while Sseq2Midi is the exe included. I recommend you use my exporter." />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:IndexPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Item Index:" />
+                <NumericUpDown Value="{Binding ItemIndex}" Minimum="0" Maximum="{Binding Maximum}"
+                               Increment="1" FormatString="0"
+                               ToolTip.Tip="The index of the item as referenced to by the game." />
+                <Button Content="Swap With Index" Command="{Binding SwapCommand}" Margin="0,3,0,0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        ToolTip.Tip="Swap this entry with the one at the new index. If that entry doesn't exist, simply just change the index." />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:ForceUniqueFilePanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Force Unique File:" />
+                <CheckBox IsChecked="{Binding ForceUniqueFile}" HorizontalAlignment="Center"
+                          ToolTip.Tip="Write this file in the sound archive as its own file, even if it has the exact same data as another one. If this is not checked, files will be shared between entries for efficiency." />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:WaveArchivePanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Load Individually:" />
+                <CheckBox IsChecked="{Binding LoadIndividually}" HorizontalAlignment="Center"
+                          ToolTip.Tip="If the wave archive should be loaded individually." />
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- One "Wave Archive N" row: name combo plus a numeric id box. -->
+        <DataTemplate DataType="p:WaveArchiveSlotViewModel">
+            <StackPanel>
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="{Binding Label}" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}"
+                              ToolTip.Tip="Wave archive to be used for the bank." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding Id}" Minimum="-1" Maximum="65534"
+                                   Increment="1" FormatString="0" ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the wave archive to use for this bank." />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:BankPanelViewModel">
+            <ItemsControl ItemsSource="{Binding Slots}" Margin="10,2" />
+        </DataTemplate>
+
+        <DataTemplate DataType="p:BankEditorWarsViewModel">
+            <ItemsControl ItemsSource="{Binding Slots}" Margin="10,2" />
+        </DataTemplate>
+
+        <DataTemplate DataType="p:GroupPanelViewModel">
+            <!-- Combo boxes live in the editing template only. A live two-way SelectedItem in
+                 the cell template gets recycled along with the row, and the recycled control
+                 writes its stale selection into whichever row it lands on. -->
+            <DataGrid ItemsSource="{Binding Entries}" Margin="10,2"
+                      AutoGenerateColumns="False" GridLinesVisibility="All"
+                      CanUserReorderColumns="False" CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Item" Width="*" MinWidth="175"
+                                            CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:GroupEntryRow">
+                                <TextBlock Text="{Binding Item}" Margin="4,0"
+                                           VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate x:DataType="p:GroupEntryRow">
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding ItemOptions}"
+                                          SelectedItem="{Binding Item}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Load Flags" Width="*" MinWidth="120"
+                                            CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:GroupEntryRow">
+                                <TextBlock Text="{Binding LoadFlags}" Margin="4,0"
+                                           VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate x:DataType="p:GroupEntryRow">
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding LoadFlagOptions}"
+                                          SelectedItem="{Binding LoadFlags}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:StreamPlayerPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Channel Type:" />
+                <ComboBox ItemsSource="{Binding ChannelTypes}" SelectedIndex="{Binding ChannelType}"
+                          HorizontalAlignment="Stretch"
+                          ToolTip.Tip="If the stream is stereo or mono." />
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="6" Margin="0,8,0,0">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Theme="{StaticResource PanelCaption}" Text="Left Channel:" />
+                        <NumericUpDown Value="{Binding LeftChannel}" Minimum="0" Maximum="15"
+                                       Increment="1" FormatString="0"
+                                       ToolTip.Tip="Channel to use for the stream." />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" IsVisible="{Binding IsStereo}">
+                        <TextBlock Theme="{StaticResource PanelCaption}" Text="Right Channel:" />
+                        <NumericUpDown Value="{Binding RightChannel}" Minimum="0" Maximum="15"
+                                       Increment="1" FormatString="0"
+                                       ToolTip.Tip="Channel to use for the stream." />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:StreamPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Volume:" />
+                <NumericUpDown Value="{Binding Volume}" Minimum="0" Maximum="127" Increment="1"
+                               FormatString="0" ToolTip.Tip="The volume of the stream." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Priority:" />
+                <NumericUpDown Value="{Binding Priority}" Minimum="0" Maximum="127" Increment="1"
+                               FormatString="0"
+                               ToolTip.Tip="If the sounds can not all be played at once, the one with the highest priority will play." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Player:" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding PlayerOptions}" SelectedItem="{Binding Player}"
+                              ToolTip.Tip="The player to play the stream." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding PlayerId}" Minimum="0" Maximum="3"
+                                   Increment="1" FormatString="0" ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the player to play the stream." />
+                </Grid>
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Mono To Stereo:" />
+                <CheckBox IsChecked="{Binding MonoToStereo}" HorizontalAlignment="Center"
+                          ToolTip.Tip="If the stream is mono, play it through two channels." />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:PlayerPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Max Sequences:" />
+                <NumericUpDown Value="{Binding MaxSequences}" Minimum="0" Maximum="65535"
+                               Increment="1" FormatString="0"
+                               ToolTip.Tip="Max number of sequences the player can play." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Heap Size:" />
+                <NumericUpDown Value="{Binding HeapSize}" Minimum="0" Maximum="4294967295"
+                               Increment="1" FormatString="0"
+                               ToolTip.Tip="How much memory to reserve in the sound heap for the player." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Channel Flags:" />
+                <ItemsControl ItemsSource="{Binding ChannelFlags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="p:ChannelFlag">
+                            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSet}"
+                                      Margin="0,0,4,0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:SequencePanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Bank:" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding BankOptions}" SelectedItem="{Binding Bank}"
+                              ToolTip.Tip="Bank to use with the sequence." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding BankId}" Minimum="0" Maximum="65535"
+                                   Increment="1" FormatString="0" ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the bank to use with the sequence." />
+                </Grid>
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Volume:" />
+                <NumericUpDown Value="{Binding Volume}" Minimum="0" Maximum="127" Increment="1"
+                               FormatString="0" ToolTip.Tip="The volume of the sequence." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Channel Priority:" />
+                <NumericUpDown Value="{Binding ChannelPriority}" Minimum="0" Maximum="127"
+                               Increment="1" FormatString="0"
+                               ToolTip.Tip="If the sounds can not all be played at once, the one with the highest priority will play." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Player Priority:" />
+                <NumericUpDown Value="{Binding PlayerPriority}" Minimum="0" Maximum="127"
+                               Increment="1" FormatString="0"
+                               ToolTip.Tip="If the sounds can not all be played at once, the one with the highest priority will play." />
+
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Player:" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding PlayerOptions}" SelectedItem="{Binding Player}"
+                              ToolTip.Tip="Player to play the sequence." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding PlayerId}" Minimum="0" Maximum="31"
+                                   Increment="1" FormatString="0" ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the player to play the sequence." />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:SequenceBankPanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Preview Bank:" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4"
+                      IsEnabled="{Binding BankSelectionEnabled}">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding BankOptions}" SelectedItem="{Binding Bank}"
+                              ToolTip.Tip="Bank to use with the sequence." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding BankId}" Minimum="0" Maximum="65535"
+                                   Increment="1" FormatString="0" ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the bank to use with the sequence." />
+                </Grid>
+
+                <ItemsControl ItemsSource="{Binding Tracks}" Margin="0,2,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="p:TrackViewModel">
+                            <!-- Solo sizes to its own text and the light to the image; an equal
+                                 three-way split left the button too narrow to read "Solo". -->
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="3" Margin="0,0,4,0">
+                                <CheckBox Grid.Column="0" Content="{Binding Label}"
+                                          IsChecked="{Binding IsEnabled}" />
+                                <Button Grid.Column="1" Content="Solo" Padding="5,0"
+                                        Command="{Binding SoloCommand}" />
+                                <Image Grid.Column="2" Source="{Binding StateImage}"
+                                       Width="16" Height="16" Stretch="Uniform" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="0" Margin="0,2,0,0">
+                    <Button Grid.Column="0" Content="Export MIDI" Command="{Binding ExportMidiCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <Button Grid.Column="1" Content="Export WAV" Command="{Binding ExportWavCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:SequenceArchivePanelViewModel">
+            <StackPanel Margin="10,2">
+                <Button Content="Open File" Command="{Binding OpenFileCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:SequenceArchiveSequencePanelViewModel">
+            <StackPanel Margin="10,2">
+                <TextBlock Theme="{StaticResource PanelCaption}" Text="Preview Sequence:" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding SequenceOptions}"
+                              SelectedItem="{Binding Sequence}"
+                              ToolTip.Tip="Sequence to play." />
+                    <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding SequenceId}" Minimum="0"
+                                   Maximum="65535" Increment="1" FormatString="0"
+                                   ShowButtonSpinner="False"
+                                   ToolTip.Tip="Id of the sequence to play." />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="p:BankEditorPanelViewModel">
+            <DockPanel Margin="10,2">
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Theme="{StaticResource PanelCaption}" Text="Instrument Type:" />
+                    <UniformGrid Columns="3" ToolTip.Tip="Type of instrument.">
+                        <RadioButton Content="Direct" GroupName="InstrumentType"
+                                     IsChecked="{Binding IsDirect}" />
+                        <RadioButton Content="Drum Set" GroupName="InstrumentType"
+                                     IsChecked="{Binding IsDrumSet}" />
+                        <RadioButton Content="Key Split" GroupName="InstrumentType"
+                                     IsChecked="{Binding IsKeySplit}" />
+                    </UniformGrid>
+
+                    <StackPanel IsVisible="{Binding ShowsDrumSetRange}">
+                        <TextBlock Theme="{StaticResource PanelCaption}" Text="Drum Set Range Start:" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                            <ComboBox Grid.Column="0" HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding NoteOptions}"
+                                      SelectedItem="{Binding DrumSetStartNote}"
+                                      ToolTip.Tip="What note to start the drum set range at." />
+                            <NumericUpDown Grid.Column="1" Width="58" MinWidth="58" Value="{Binding DrumSetStartId}" Minimum="0"
+                                           Maximum="127" Increment="1" FormatString="0"
+                                           ShowButtonSpinner="False"
+                                           ToolTip.Tip="What note to start the drum set range at." />
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Theme="{StaticResource PanelCaption}" Text="Regions:" />
+                </StackPanel>
+
+                <DataGrid ItemsSource="{Binding Regions}" AutoGenerateColumns="False"
+                          GridLinesVisibility="All" CanUserReorderColumns="False"
+                          CanUserSortColumns="False">
+                    <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Play" Width="Auto" MinWidth="45"
+                                            CanUserSort="False" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <Button Content="Play" Margin="2" Padding="4,0"
+                                        IsVisible="{Binding CanPlay}"
+                                        Command="{Binding PlayCommand}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="End Note" Width="Auto" MinWidth="52"
+                                            CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <TextBlock Text="{Binding EndNote}" Margin="4,0"
+                                           VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding NoteOptions}"
+                                          SelectedItem="{Binding EndNote}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Instrument Type" Width="Auto" MinWidth="80"
+                                            CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <TextBlock Text="{Binding InstrumentType}" Margin="4,0"
+                                           VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding InstrumentTypeOptions}"
+                                          SelectedItem="{Binding InstrumentType}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Wave Id/PSG Cycle" Width="Auto" MinWidth="99"
+                                        CanUserSort="False" Binding="{Binding WaveId}" />
+                    <DataGridTextColumn Header="Wave Archive Id" Width="Auto" MinWidth="99"
+                                        CanUserSort="False" Binding="{Binding WaveArchiveId}" />
+                    <DataGridTemplateColumn Header="Base Note" Width="Auto" MinWidth="57"
+                                            CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <TextBlock Text="{Binding BaseNote}" Margin="4,0"
+                                           VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate x:DataType="p:BankRegionRow">
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding NoteOptions}"
+                                          SelectedItem="{Binding BaseNote}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Attack" Width="Auto" MinWidth="44"
+                                        CanUserSort="False" Binding="{Binding Attack}" />
+                    <DataGridTextColumn Header="Decay" Width="Auto" MinWidth="44"
+                                        CanUserSort="False" Binding="{Binding Decay}" />
+                    <DataGridTextColumn Header="Sustain" Width="Auto" MinWidth="48"
+                                        CanUserSort="False" Binding="{Binding Sustain}" />
+                    <DataGridTextColumn Header="Release" Width="Auto" MinWidth="52"
+                                        CanUserSort="False" Binding="{Binding Release}" />
+                    <DataGridTextColumn Header="Pan" Width="Auto" MinWidth="32"
+                                        CanUserSort="False" Binding="{Binding Pan}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Command="{Binding NewCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/New.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open" Command="{Binding OpenCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Open.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Save.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/SaveAs.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Close" Command="{Binding CloseFileCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Close.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Quit" Command="{Binding QuitCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Quit.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="Edit">
+                <MenuItem Header="Blank File" Command="{Binding BlankFileCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Rename.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Import File" Command="{Binding ImportFileCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Import.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Export File" Command="{Binding ExportFileCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Export.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <!-- Only the sound archive window shows Tools, matching toolsToolStripMenuItem.Visible. -->
+            <MenuItem Header="Tools" IsVisible="{Binding ShowToolsMenu}">
+                <MenuItem Header="Sequence Editor" Click="OnOpenSequenceEditor">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Sequence.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Sequence Archive Editor" Click="OnOpenSequenceArchiveEditor">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/SequenceArchive.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Bank Editor" Click="OnOpenBankEditor">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Bank.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Wave Archive Editor" Click="OnOpenWaveArchiveEditor">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/WaveArchive.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Bank Generator" Click="OnOpenBankGenerator">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/BankGenerator.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Creave Wave" Click="OnCreateWave">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Wave.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Create Stream" Click="OnCreateStream">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Stream.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Export SDK Project" Click="OnExportSdkProject">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/NSM.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="About">
+                <MenuItem Header="About Nitro Studio 2" Click="OnAbout">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/Ico.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <!-- Status bar: selection description on the left, hovered note on the right. -->
+        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" Padding="6,2"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Text="{Binding Status}" />
+                <TextBlock Grid.Column="1" Text="{Binding CurrentNote}" />
+            </Grid>
+        </Border>
+
+        <!-- Replaces SplitContainer: info panel on the left, tree or sequence text on the right. -->
+        <Grid ColumnDefinitions="327,Auto,*">
+            <Border Grid.Column="0" Classes="leftPane" IsVisible="{Binding ShowLeftPane}"
+                    BorderThickness="1" Margin="1"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <!-- WinForms docked the sound player, item index, force-unique and preview
+                     sequence sections to the top of Panel1 and let one Fill panel take the
+                     rest, so several are on screen at once. Only the fill slot scrolls: the
+                     docked sections must stay put, and a grid in the fill slot then gets the
+                     pane's width and shows its own horizontal scrollbar. -->
+                <DockPanel LastChildFill="True">
+                    <ContentControl DockPanel.Dock="Top" Content="{Binding ForceUniqueFilePanel}"
+                                    IsVisible="{Binding ShowForceUniqueFilePanel}" />
+                    <ContentControl DockPanel.Dock="Top" Content="{Binding IndexPanel}"
+                                    IsVisible="{Binding ShowIndexPanel}" />
+                    <ContentControl DockPanel.Dock="Top" Content="{Binding SoundPlayerPanel}"
+                                    IsVisible="{Binding ShowSoundPlayer}" />
+                    <ContentControl DockPanel.Dock="Top" Content="{Binding SeqArcSeqPanel}"
+                                    IsVisible="{Binding ShowSeqArcSeqPanel}" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ContentControl Content="{Binding ActivePanel}" />
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="4" ResizeDirection="Columns"
+                          IsVisible="{Binding ShowLeftPane}" />
+
+            <Border Grid.Column="2" BorderThickness="1" Margin="1"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <!-- Docked, not stacked: the piano used to float over the tree and hide the
+                     instruments behind it. The bar spans the full width so the space to the right
+                     of the keys is filled rather than showing tree through it. -->
+                <DockPanel LastChildFill="True">
+                    <!-- The bar behind the keys follows the theme; the keys themselves do not,
+                         since a piano is white and black in either one. -->
+                    <Border DockPanel.Dock="Bottom" IsVisible="{Binding ShowPiano}"
+                            Background="{DynamicResource WindowSurfaceBrush}"
+                            BorderThickness="0,1,0,0"
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                        <controls:PianoKeyboard Name="Piano" Width="565" Height="46"
+                                                HorizontalAlignment="Left" />
+                    </Border>
+
+                    <!-- Tree and sequence text swap in place, so they share the fill slot. -->
+                    <Panel>
+                    <TreeView Name="Tree" ItemsSource="{Binding Nodes}"
+                              SelectedItem="{Binding SelectedNode}"
+                              DoubleTapped="OnTreeDoubleTapped"
+                              IsVisible="{Binding RightPane, Converter={x:Static vm:EnumConverters.IsTree}}">
+                        <!-- Expansion lives on the node so it survives a tree rebuild, which is
+                             what EditorBase's BeginUpdateNodes/EndUpdateNodes preserved. -->
+                        <TreeView.Styles>
+                            <Style Selector="TreeViewItem" x:DataType="m:EditorTreeNode">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            </Style>
+                        </TreeView.Styles>
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate x:DataType="m:EditorTreeNode" ItemsSource="{Binding Nodes}">
+                                <StackPanel Orientation="Horizontal" Spacing="4"
+                                            ContextMenu="{Binding ContextActions, Converter={x:Static vm:MenuConverters.ToContextMenu}}">
+                                    <Image Source="{Binding Icon}" Width="16" Height="16" />
+                                    <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+
+                    <controls:SequenceTextEditor
+                        Name="SequenceEditor"
+                        IsVisible="{Binding RightPane, Converter={x:Static vm:EnumConverters.IsSequenceEditor}}" />
+                    </Panel>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

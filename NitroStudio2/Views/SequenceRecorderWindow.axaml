@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.SequenceRecorderWindow"
+        x:DataType="vm:SequenceRecorderViewModel"
+        Title="Sequence Recorder"
+        Width="315" SizeToContent="Height"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="8" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="7*,3*" ColumnSpacing="6"
+          RowSpacing="4">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Number Of Loops:"
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Fade Out:"
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+
+        <NumericUpDown Grid.Row="1" Grid.Column="0"
+                       Value="{Binding Loops}" Minimum="0" Maximum="2147483647"
+                       Increment="1" FormatString="0" />
+        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding FadeOut}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8,0,0"
+                Content="Export" Command="{Binding ExportCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+    </Grid>
+</Window>

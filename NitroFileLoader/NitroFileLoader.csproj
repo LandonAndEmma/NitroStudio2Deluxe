@@ -1,30 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>NitroFileLoader</RootNamespace>
     <AssemblyName>NitroFileLoader</AssemblyName>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <NoWarn>$(NoWarn);NU1902;NU1903;NU1904;NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EndianBinaryIO" Version="2.1.1" />
     <PackageReference Include="log4net" Version="3.3.0" />
-    <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="NAudio.Asio" Version="2.2.1" />
     <PackageReference Include="NAudio.Core" Version="2.2.1" />
-    <PackageReference Include="NAudio.Midi" Version="2.2.1" />
-    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
-    <PackageReference Include="NAudio.WinForms" Version="2.2.1" />
-    <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-    <PackageReference Include="Scintilla5.NET" Version="6.1.1" />
     <PackageReference Include="VGAudio" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GotaSequenceLib\GotaSequenceLib.csproj" />
     <ProjectReference Include="..\GotaSoundBank\GotaSoundBank.csproj" />
-    <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj" />
     <ProjectReference Include="..\GotaSoundIO\GotaSoundIO.csproj" />
   </ItemGroup>
 </Project>

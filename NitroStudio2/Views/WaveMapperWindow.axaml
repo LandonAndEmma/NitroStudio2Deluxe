@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.WaveMapperWindow"
+        x:DataType="vm:WaveMapperViewModel"
+        Title="Wave Mapper"
+        Width="565" Height="322"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Margin="12">
+        <Button DockPanel.Dock="Bottom" Margin="0,7,0,0"
+                Content="Finished" Command="{Binding FinishedCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+
+        <DataGrid Name="MapGrid" ItemsSource="{Binding Rows}"
+                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                  GridLinesVisibility="All" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Play Sample" Width="0.19*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:WaveMapRow">
+                            <Button Content="Play" Margin="2"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Command="{Binding $parent[DataGrid].((vm:WaveMapperViewModel)DataContext).PlayCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Wave Id" Width="0.18*"
+                                    IsReadOnly="True" CanUserSort="False"
+                                    Binding="{Binding WaveId}" />
+
+                <DataGridTemplateColumn Header="Wave Archive" Width="0.63*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:WaveMapRow">
+                            <ComboBox Margin="2" HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding $parent[DataGrid].((vm:WaveMapperViewModel)DataContext).WaveArchiveOptions}"
+                                      SelectedItem="{Binding WaveArchive}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

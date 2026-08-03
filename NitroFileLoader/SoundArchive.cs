@@ -5,12 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace NitroFileLoader
 {
     public class SoundArchive : IOFile
     {
+        /// <summary>
+        /// Raised when reading an archive turns up a recoverable problem the user should see,
+        /// as (caption, message). The host app supplies the presentation so this assembly stays
+        /// free of any UI framework.
+        /// </summary>
+        public static Action<string, string> Warn;
+
         public const uint MaxSequenceId = 0xFFFFFFFF;
         public const uint MaxSequenceArchiveId = 0xFFFFFFFF;
         public const uint MaxBankId = 0xFFFF;
@@ -475,12 +481,7 @@ namespace NitroFileLoader
                 message += string.Join("\n", invalidWaveErrors);
                 message +=
                     "\n\nThe file will continue loading with these unverified waves. Click OK to proceed.";
-                _ = MessageBox.Show(
-                    message,
-                    "Invalid Wave Data Detected",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                Warn?.Invoke("Invalid Wave Data Detected", message);
             }
         }
 

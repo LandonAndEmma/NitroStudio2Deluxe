@@ -1,0 +1,41 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NitroStudio2.App"
+             RequestedThemeVariant="Default">
+
+    <!-- Default means "whatever the OS is set to". Avalonia resolves it through
+         IPlatformSettings.GetColorValues() and re-resolves on ColorValuesChanged, so the window
+         follows the desktop's light/dark preference live and on every platform. Naming a variant
+         here instead is what pinned the app to light. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Fluent's dark SystemAltHighColor is pure black, which the window picks up for
+                 every surface that does not paint its own background. That is darker than the
+                 theme's own flyouts (43,43,43) and darker than any desktop's title bar, and it
+                 swallows the icons: the tree and menu artwork is black line work with a light
+                 outline, so on grey it reads and on black it disappears entirely. Sitting the
+                 window on the same surface colour Fluent uses for its flyouts fixes that and
+                 matches what a dark desktop looks like. -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="WindowSurfaceBrush" Color="#FFFFFFFF" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="WindowSurfaceBrush" Color="#FF2B2B2B" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+
+        <!-- DynamicResource, so switching the desktop between light and dark repaints live. -->
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{DynamicResource WindowSurfaceBrush}" />
+        </Style>
+    </Application.Styles>
+</Application>

@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NitroStudio2.ViewModels"
+        x:Class="NitroStudio2.Views.BankGeneratorWindow"
+        x:DataType="vm:BankGeneratorViewModel"
+        Title="Bank Generator"
+        Width="552" Height="343"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Margin="15,9">
+        <TextBlock DockPanel.Dock="Top" Text="Instruments:" HorizontalAlignment="Center"
+                   Margin="0,0,0,6" />
+
+        <Button DockPanel.Dock="Bottom" Margin="0,6,0,0"
+                Content="Create Bank And Wave Archive" Command="{Binding CreateBankCommand}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+
+        <DataGrid Name="Instruments" ItemsSource="{Binding Rows}"
+                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                  GridLinesVisibility="All" AutoGenerateColumns="False"
+                  KeyDown="OnGridKeyDown">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Play" Width="45" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BankGeneratorRow">
+                            <Button Content="Play" Margin="2" Padding="4,2"
+                                    ToolTip.Tip="Play the instrument sample."
+                                    Command="{Binding $parent[DataGrid].((vm:BankGeneratorViewModel)DataContext).PlayCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Bank" Width="200" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BankGeneratorRow">
+                            <ComboBox Margin="2" HorizontalAlignment="Stretch"
+                                      ToolTip.Tip="Bank to copy the instrument from."
+                                      ItemsSource="{Binding $parent[DataGrid].((vm:BankGeneratorViewModel)DataContext).BankOptions}"
+                                      SelectedItem="{Binding Bank}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Instrument" Width="130" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BankGeneratorRow">
+                            <ComboBox Margin="2" HorizontalAlignment="Stretch"
+                                      ToolTip.Tip="Instrument to copy."
+                                      ItemsSource="{Binding InstrumentOptions}"
+                                      SelectedItem="{Binding Instrument}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="New Id" Width="60" CanUserSort="False"
+                                    Binding="{Binding NewId}" />
+
+                <DataGridTemplateColumn Header="Wave Archive Mode" Width="*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BankGeneratorRow">
+                            <ComboBox Margin="2" HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding WaveArchiveModeOptions}"
+                                      SelectedItem="{Binding WaveArchiveMode}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>
